@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>step26 benchmark 播放器</title>
+<style>
+  :root { --bg:#101410; --fg:#cfe3cf; --dim:#7d937d; --ac:#6cf; --warn:#f86; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font:13px/1.45 Consolas, "Microsoft YaHei", monospace; display:flex;
+         flex-direction:column; height:100vh; }
+  header { padding:6px 12px; border-bottom:1px solid #2a3a2a; display:flex;
+           gap:14px; align-items:center; flex-wrap:wrap; }
+  header b { color:#9c9; }
+  #libs button { background:#1b261b; color:var(--fg); border:1px solid #3a4a3a;
+                 border-radius:4px; padding:3px 12px; cursor:pointer; }
+  #libs button.on { background:#2c4; color:#04140a; font-weight:bold; }
+  #stats { color:var(--dim); }
+  main { flex:1; display:flex; min-height:0; }
+  #list { width:46%; overflow:auto; border-right:1px solid #2a3a2a; }
+  table { border-collapse:collapse; width:100%; }
+  th { position:sticky; top:0; background:#182018; color:var(--dim);
+       text-align:left; padding:4px 8px; font-weight:normal;
+       border-bottom:1px solid #2a3a2a; cursor:pointer; }
+  td { padding:3px 8px; border-bottom:1px solid #1a241a; white-space:nowrap;
+       overflow:hidden; text-overflow:ellipsis; max-width:220px; }
+  tr:hover td { background:#182418; }
+  tr.sel td { background:#1e301e; }
+  .bad { color:var(--warn); font-weight:bold; }
+  .ok  { color:#8d8; }
+  #side { flex:1; overflow:auto; padding:10px 14px; }
+  h3 { margin:8px 0 4px; color:#9c9; }
+  .telbox { display:flex; gap:10px; flex-wrap:wrap; }
+  pre.tel { background:#0a0e0a; border:1px solid #233023; padding:6px 10px;
+            border-radius:4px; margin:0; }
+  #player { border-top:1px solid #2a3a2a; padding:8px 12px;
+            background:#0c120c; }
+  #pbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+          margin-bottom:6px; }
+  #pbar button { background:#1b261b; color:var(--fg);
+                 border:1px solid #3a4a3a; border-radius:4px;
+                 padding:3px 12px; cursor:pointer; }
+  #pbar input[type=range] { width:420px; }
+  canvas { background:#0a0e0a; border:1px solid #233023; display:block;
+           max-width:100%; max-height:48vh; height:auto; }
+  .legend { color:var(--dim); }
+  .t0c { color:#6cf; } .t1c { color:#f86; }
+  #pinfo { color:var(--dim); }
+  .deltabadge { background:#402; color:#faa; border-radius:3px;
+                padding:0 6px; margin-left:8px; }
+</style>
+</head>
+<body>
+<header>
+  <b>benchmark 播放器</b>
+  <span id="libs">
+    <button data-lib="s24">s24 全覆盖</button>
+    <button data-lib="s25" class="on">s25 锚批</button>
+    <button data-lib="s26">s26 官方阵容</button>
+    <button data-lib="s27">s27 无科技对照</button>
+    <button data-lib="s28">s28 兵种×科技</button>
+    <button data-lib="s29p">s29 探针+NT</button>
+    <button data-lib="s29cal">s29 维修剑齿虎标定</button>
+    <button data-lib="s29c">s29 爬虫推挤</button>
+  </span>
+  <input id="q" placeholder="过滤 场名/对阵/科技" style="width:200px;
+         background:#1b261b; color:var(--fg); border:1px solid #3a4a3a;">
+  <label class="legend"><input type="checkbox" id="onlymiss"> 只看 oracle/pysim 分歧</label>
+  <span id="stats"></span>
+</header>
+<main>
+  <div id="list"><table>
+    <thead><tr>
+      <th data-k="name">场名</th><th data-k="group">组</th>
+      <th data-k="desc">对阵/科技</th><th data-k="value">价值</th>
+      <th data-k="wo">oracle</th><th data-k="wp">pysim</th>
+      <th data-k="agree">一致</th>
+    </tr></thead>
+    <tbody id="rows"></tbody>
+  </table></div>
+  <div id="side">
+    <h3>选择左侧一场 → 详情 + 播放</h3>
+    <div id="detail"></div>
+  </div>
+</main>
+<div id="player">
+  <div id="pbar">
+    <button id="pp">播放/暂停</button>
+    <button id="firstDiff">跳到转折点</button>
+    <span>速度</span>
+    <input type="range" id="spd" min="1" max="10" value="5" style="width:90px">
+    <input type="range" id="scr" min="0" max="0" value="0" style="width:420px">
+    <span id="pinfo">（未加载对局 —— 点左侧行加载）</span>
+  </div>
+  <canvas id="cv" width="1050" height="660"></canvas>
+</div>
+<script>
+const NAMES = {"1":"堡垒","2":"长弓","3":"火神","4":"熔点","5":"犀牛","6":"兵蜂",
+"7":"野马","8":"钢球","9":"尖牙","10":"爬虫","11":"霸主","12":"暴雨","13":"铁锤",
+"14":"骇客","15":"弧光","16":"凤凰","17":"战争工厂","18":"恶灵","19":"狂蝎","20":"火獾",
+"21":"剑齿虎","22":"台风","23":"沙虫","24":"狼蛛","25":"鬼鳐","26":"先知","27":"雷霆",
+"28":"猎犬","29":"深渊","30":"魔眼","31":"磁暴","2002":"泰山","-1":"塔","-11":"墙",
+"-12":"反装甲炮","-13":"速射炮","-14":"磁力路障"};
+let LIB = "s25", ROWS = [], SEL = null, sortKey = "name", sortAsc = true;
+
+document.querySelectorAll("#libs button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("#libs button").forEach(x => x.classList.remove("on"));
+  b.classList.add("on"); LIB = b.dataset.lib; loadList();
+});
+async function loadBadges(){
+  // step28 P2 徽标: 每库当前一致率/版本号 (定版刷新后一眼确认)
+  try {
+    const r = await fetch("/api/bench/badges");
+    const bs = await r.json();
+    document.querySelectorAll("#libs button").forEach(b => {
+      const e = bs[b.dataset.lib];
+      b.querySelectorAll(".bdg").forEach(x => x.remove());
+      if (!e) return;
+      const s = document.createElement("span");
+      s.className = "bdg";
+      s.style.cssText = "margin-left:6px;font-size:10px;opacity:.85";
+      s.textContent = (e.acc !== null ? e.acc + "%" : "-") +
+        (e.ver && e.ver !== "factory" ? "·" + e.ver : "");
+      b.appendChild(s);
+    });
+  } catch (e) { /* badges 可选 */ }
+}
+document.querySelectorAll("th").forEach(th => th.onclick = () => {
+  const k = th.dataset.k;
+  if (sortKey === k) sortAsc = !sortAsc; else { sortKey = k; sortAsc = true; }
+  renderRows();
+});
+document.getElementById("q").oninput = renderRows;
+document.getElementById("onlymiss").oninput = renderRows;
+
+async function loadList(){
+  const r = await fetch("/api/bench/list?lib=" + LIB);
+  const j = await r.json();
+  ROWS = j.scenarios;
+  const ok = ROWS.filter(x => x.wo !== null && x.wo !== undefined);
+  const agree = ok.filter(x => Object.values(x.arms).some(a => a.winner === x.wo));
+  document.getElementById("stats").textContent =
+    ` ${ok.length} 场有效 · 一致 ${agree.length} = ` +
+    `${ok.length ? (100*agree.length/ok.length).toFixed(1) : 0}%`;
+  renderRows();
+}
+function wpOf(x){ const a = x.arms && (x.arms.factory || x.arms.mech);
+  return a ? a.winner : null; }
+function renderRows(){
+  const q = document.getElementById("q").value.trim();
+  const only = document.getElementById("onlymiss").checked;
+  let rows = ROWS.filter(x => !q || (x.name + x.desc +
+      JSON.stringify(x.techs)).includes(q));
+  if (only) rows = rows.filter(x => x.wo !== null && x.wo !== undefined &&
+      wpOf(x) !== x.wo);
+  const k = sortKey;
+  rows.sort((a, b) => {
+    let va, vb;
+    if (k === "value") { va = (a.value||[0])[0]; vb = (b.value||[0])[0]; }
+    else if (k === "wo") { va = a.wo; vb = b.wo; }
+    else if (k === "wp") { va = wpOf(a); vb = wpOf(b); }
+    else if (k === "agree") { va = a.wo !== null && wpOf(a) === a.wo ? 1 : 0;
+                              vb = b.wo !== null && wpOf(b) === b.wo ? 1 : 0; }
+    else { va = a[k] || ""; vb = b[k] || ""; }
+    return (va < vb ? -1 : va > vb ? 1 : 0) * (sortAsc ? 1 : -1);
+  });
+  const tb = document.getElementById("rows");
+  tb.innerHTML = "";
+  for (const x of rows){
+    const tr = document.createElement("tr");
+    const wp = wpOf(x), hasO = x.wo !== null && x.wo !== undefined;
+    const agree = hasO && wp === x.wo;
+    const techs = [0,1].map(t =>
+      Object.entries(x.techs["p"+t] || {}).map(([m, ts]) =>
+        (NAMES[m] || m) + ":" + ts.length).join(" ")).join(" | ");
+    tr.innerHTML = `<td>${x.name}</td><td>${x.group || ""}</td>` +
+      `<td title="${x.desc}">${x.desc.slice(0, 34)}</td>` +
+      `<td>${(x.value || []).join("/")}</td>` +
+      `<td class="${hasO ? "" : "legend"}">${hasO ? x.wo : "-"}</td>` +
+      `<td class="${hasO && !agree ? "bad" : ""}">${wp ?? "-"}</td>` +
+      `<td class="${agree ? "ok" : (hasO ? "bad" : "legend")}">` +
+      `${hasO ? (agree ? "✓" : "✗") : "-"}</td>`;
+    tr.onclick = () => select(x, tr);
+    tr.dataset.name = x.name;
+    tb.appendChild(tr);
+  }
+}
+async function select(x, tr){
+  document.querySelectorAll("tr.sel").forEach(e => e.classList.remove("sel"));
+  if (tr) tr.classList.add("sel");
+  SEL = x;
+  const side = document.getElementById("detail");
+  side.innerHTML = `<h3>${x.name} · ${x.desc}</h3><div class="legend">加载详情…</div>`;
+  const r = await fetch(`/api/bench/detail?lib=${LIB}&name=${encodeURIComponent(x.name)}`);
+  const rec = await r.json();
+  window.SELREC = rec;
+  const arm = (rec.arms && (rec.arms.factory || rec.arms.mech)) || {};
+  const t = rec.oracle_tel || {};
+  const pd = (rec.dmg && (rec.dmg.factory || rec.dmg.mech)) || {};
+  const pk = (rec.kills && (rec.kills.factory || rec.kills.mech)) || {};
+  const keys = [...new Set([...Object.keys(t), ...Object.keys(pd)])].sort();
+  let telTxt = " team:兵种  oracle杀伤/击杀  pysim杀伤/击杀\n";
+  for (const k of keys){
+    const [tm, mid] = k.split(":");
+    const o = t[k] || {};
+    telTxt += ` ${tm === "0" ? "蓝" : "红"}:${NAMES[mid] || mid}` +
+      `  ${(o.dmgReal || 0).toFixed(0)}/${o.kills || 0}` +
+      `  ${(pd[k] || 0).toFixed(0)}/${pk[k] || 0}\n`;
+  }
+  const os = rec.oracle_summary || {};
+  const mismatch = rec.winner_oracle !== null && rec.winner_oracle !== undefined
+      && arm.winner !== rec.winner_oracle;
+  side.innerHTML = `<h3>${x.name}</h3><div>${x.desc}</div>` +
+    `<div class="telbox">` +
+    `<pre class="tel">oracle 胜者 ${os.winner ?? "-"}  alive ${JSON.stringify(os.alive ?? "-")}</pre>` +
+    `<pre class="tel">pysim 胜者 ${arm.winner ?? "-"}  alive ${JSON.stringify(arm.alive ?? "-")}  end ${arm.end_t ?? "-"}s` +
+    `${mismatch ? `<span class="deltabadge">胜负分歧</span>` : ""}</pre></div>` +
+    `<h3>逐兵种遥测 (dmgReal/kills: oracle vs pysim)</h3>` +
+    `<pre class="tel">${telTxt}</pre>` +
+    `<div class="legend" style="margin-top:8px">oracle 侧无录像 —— 真值是数值遥测;` +
+    `下方画面是 pysim 复算的弹道/走位动画, 用来肉眼审引擎行为。</div>`;
+  loadPlay(x);
+}
+/* ---------------- 播放器 ---------------- */
+const cv = document.getElementById("cv"), ctx = cv.getContext("2d");
+const W = cv.width, H = cv.height, SX = W / 700, SY = H / 600;
+function toPx(x, y){ return [(x + 350) * SX, (300 - y) * SY]; }
+let frames = [], spawnDone = {}, cur = 0, timer = null, curWinner = null;
+
+async function loadPlay(x){
+  document.getElementById("pinfo").textContent = "引擎重算中 (~2-4s)…";
+  const r = await fetch("/api/bench/play", { method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ lib: LIB, name: x.name }) });
+  if (!r.ok){ document.getElementById("pinfo").textContent = "重算失败 " + r.status;
+    return; }
+  const j = await r.json();
+  frames = []; spawnDone = {}; cur = 0; curWinner = j.winner;
+  for (const ln of j.frames){
+    if (ln.startsWith("E|")){ const f = ln.split("|");
+      if (f[2] === "spawn") spawnDone[+f[3]] = +f[1];
+      frames.push({ ev: ln }); continue; }
+    const parts = ln.split("|");
+    const fr = { t: +parts[0], u: [] };
+    for (let i = 1; i < parts.length; i++){
+      const f = parts[i].split(",");
+      fr.u.push({ uid:+f[0], team:+f[1], mech:+f[2], alive:+f[3],
+                  x:+f[4], y:+f[5], hp:+f[6] });
+    }
+    frames.push(fr);
+  }
+  const nfr = frames.filter(f => !f.ev);
+  document.getElementById("scr").max = Math.max(0, nfr.length - 1);
+  document.getElementById("pinfo").textContent =
+    ` ${x.name} w=${j.winner} alive=${j.alive} end=${j.end_t}s (${j.sim_ms}ms)`;
+  if (timer){ clearInterval(timer); timer = null; }
+  show(0);
+}
+function show(i){
+  // i 是"帧索引" (跳过事件行); 事件行只用于 spawnDone
+  const nfr = frames.filter(f => !f.ev);
+  cur = i;
+  const fr = nfr[i];
+  if (!fr) return;
+  ctx.clearRect(0, 0, W, H);
+  ctx.strokeStyle = "#223022"; ctx.lineWidth = 1;
+  for (let gx = -350; gx <= 350; gx += 50){ const [a] = toPx(gx, 0);
+    ctx.beginPath(); ctx.moveTo(a, 0); ctx.lineTo(a, H); ctx.stroke(); }
+  for (let gy = -300; gy <= 300; gy += 50){ const [, b] = toPx(0, gy);
+    ctx.beginPath(); ctx.moveTo(0, b); ctx.lineTo(W, b); ctx.stroke(); }
+  let a0 = 0, a1 = 0;
+  for (const u of fr.u){
+    const [a, b] = toPx(u.x, u.y);
+    if (u.alive){ if (u.team === 0) a0++; else a1++; }
+    const tp = u.alive && spawnDone[u.uid] !== undefined && fr.t < spawnDone[u.uid];
+    ctx.globalAlpha = u.alive ? (tp ? 0.5 : 1) : 0.13;
+    ctx.fillStyle = u.team === 0 ? "#6cf" : "#f86";
+    if (u.mech < 0){                       // 塔/建筑特殊标记
+      ctx.save(); ctx.translate(a, b);
+      ctx.strokeStyle = ctx.fillStyle; ctx.lineWidth = 2;
+      ctx.beginPath();
+      if (u.mech === -1){ ctx.moveTo(0, -9); ctx.lineTo(9, 0);
+        ctx.lineTo(0, 9); ctx.lineTo(-9, 0); ctx.closePath(); }
+      else { ctx.rect(-7, -7, 14, 14); }
+      ctx.stroke(); ctx.restore();
+    } else {
+      ctx.beginPath();
+      ctx.arc(a, b, u.alive ? 6 : 4, 0, 7);
+      ctx.fill();
+    }
+    if (tp){
+      ctx.strokeStyle = "#ffd54a"; ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(a, b, 10, -Math.PI / 2,
+              -Math.PI / 2 + 2 * Math.PI * Math.min(1, fr.t / spawnDone[u.uid]));
+      ctx.stroke();
+    }
+    if (u.alive && u.mech > 0 && u.hp > 0){
+      ctx.font = "9px Consolas"; ctx.fillStyle = "#9c9";
+      ctx.fillText(NAMES[u.mech] || u.mech, a - 8, b - 9);
+    }
+  }
+  ctx.globalAlpha = 1;
+  document.getElementById("scr").value = i;
+  document.getElementById("pinfo").textContent =
+    ` ${SEL ? SEL.name : ""} t=${fr.t.toFixed(1)}s  ${a0} vs ${a1}` +
+    `  w=${curWinner}`;
+}
+document.getElementById("pp").onclick = () => {
+  if (timer){ clearInterval(timer); timer = null; return; }
+  const nfr = frames.filter(f => !f.ev);
+  if (!nfr.length) return;
+  const stepMs = 100 / (+document.getElementById("spd").value / 5);
+  timer = setInterval(() => {
+    if (cur >= nfr.length - 1){ clearInterval(timer); timer = null; return; }
+    show(cur + 1);
+  }, stepMs);
+};
+document.getElementById("scr").oninput = e => show(+e.target.value);
+document.getElementById("firstDiff").onclick = () => {
+  // 转折点: 负方存活首次 < 胜方 60% 且此后未再反超的帧 (胜负分歧事件近似)
+  const nfr = frames.filter(f => !f.ev);
+  if (!nfr.length || curWinner === null || curWinner < 0) return;
+  const lose = 1 - curWinner;
+  let peak = -1;
+  for (let i = 0; i < nfr.length; i++){
+    const fr = nfr[i];
+    let a0 = 0, a1 = 0;
+    for (const u of fr.u) if (u.alive){ if (u.team === 0) a0++; else a1++; }
+    const al = lose === 0 ? a0 : a1, aw = lose === 0 ? a1 : a0;
+    if (aw > 0 && al < aw * 0.6){ peak = i; break; }
+  }
+  if (peak >= 0){ show(peak); }
+};
+loadBadges();
+loadList();
+</script>
+</body>
+</html>

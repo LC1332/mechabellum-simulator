@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>Mechabellum 沙盒模拟器</title>
+<style>
+  :root { --blue:#6cf; --red:#f86; }
+  * { box-sizing: border-box; }
+  body { margin:0; font: 13px/1.4 "Segoe UI", "Microsoft YaHei", sans-serif; background:#1b1e24; color:#dde; display:flex; height:100vh; overflow:hidden; }
+  #shop { width:240px; overflow-y:auto; padding:8px; background:#14161b; }
+  #shop h3, #right h3 { margin:4px 0 8px; font-size:14px; color:#9ab; }
+  .cardbtn { display:block; width:100%; margin-bottom:5px; padding:6px 8px; text-align:left;
+    background:#232732; color:#dde; border:1px solid #333a4a; border-radius:6px; cursor:pointer; }
+  .cardbtn:hover { border-color:var(--pick,#6cf); }
+  .cardbtn.sel { border-color:#ffd54a; background:#2c3140; }
+  .cardbtn .nm { font-weight:600; }
+  .cardbtn .sub { color:#89a; font-size:11px; }
+  #mid { flex:1; display:flex; flex-direction:column; padding:8px; }
+  #toolbar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:6px; }
+  #toolbar select, #toolbar button { background:#232732; color:#dde; border:1px solid #333a4a; border-radius:6px; padding:5px 10px; cursor:pointer; }
+  #toolbar button.primary { background:#2e6da4; border-color:#4a8ac0; }
+  #toolbar button.warn { background:#8a4a3a; border-color:#b06a5a; }
+  #stage { position:relative; background:#22262e; border:1px solid #333a4a; border-radius:8px; }
+  canvas { display:block; border-radius:8px; cursor:crosshair; }
+  #info { margin-top:6px; color:#9ab; min-height:18px; }
+  #right { width:250px; padding:8px; background:#14161b; overflow-y:auto; }
+  #killlog { font-size:12px; }
+  #killlog div { padding:2px 4px; border-bottom:1px solid #22262e; }
+  .t0 { color:var(--blue); } .t1 { color:var(--red); }
+  #selcard { background:#1d2129; border:1px solid #333a4a; border-radius:6px; padding:8px; margin-bottom:10px; }
+  #selcard button { background:#232732; color:#dde; border:1px solid #333a4a; border-radius:4px; padding:3px 8px; margin:2px; cursor:pointer; }
+  #seltechs { margin-top:6px; max-height:220px; overflow-y:auto; }
+  #seltechs label { display:flex; align-items:flex-start; gap:5px; padding:2px 0; cursor:pointer; }
+  #seltechs input { margin-top:2px; }
+  #seltechs .tnm { font-size:12px; }
+  #seltechs .tdesc { color:#788; font-size:10px; line-height:1.25; }
+  .rep { font-size:12px; color:#9ab; }
+  .ok { color:#7d7; } .bad { color:#f77; }
+  .tag { display:inline-block; padding:0 5px; border-radius:8px; background:#2a2f3a; font-size:11px; margin-left:4px; }
+</style>
+</head>
+<body>
+<div id="shop">
+  <h3>兵种商店 <span class="tag" id="moneytag">自由沙盒·无限资源</span></h3>
+  <div style="margin-bottom:8px;">
+    放置方：
+    <button id="teamBtn" style="width:100%;margin-top:4px;">蓝方 (左/下)</button>
+  </div>
+  <div id="shoplist"></div>
+</div>
+<div id="mid">
+  <div id="toolbar">
+    <select id="repSel"><option value="">— 选择回放 —</option></select>
+    <select id="roundSel"><option value="">回合</option></select>
+    <button id="impBtn">导入该回合</button>
+    <button id="clearBtn" class="warn">清空部署</button>
+    <label style="cursor:pointer;"><input type="checkbox" id="towerChk"> 核心塔×4</label>
+    <label>偷袭传送：
+      <select id="teleSel">
+        <option value="10" selected>10s</option>
+        <option value="5">5s（快速传送）</option>
+        <option value="off">关闭</option>
+      </select>
+    </label>
+    <select id="skillSel"><option value="">— 战场技能 —</option></select>
+    <button id="simBtn" class="primary">▶ 开始模拟</button>
+    <button id="backBtn" style="display:none;">← 返回编辑</button>
+    <button id="playBtn" style="display:none;">⏸</button>
+    <input id="seek" type="range" min="0" max="0" value="0" style="flex:1; display:none;">
+    <span id="ptime" style="display:none; color:#9ab;"></span>
+  </div>
+  <div id="stage"><canvas id="cv" width="760" height="660"></canvas></div>
+  <div id="info">点商店选卡 → 点战场放置。点击已放置的卡可选中（升级/旋转/删除/拖动）。多模组卡会展开为 N 个单位。</div>
+</div>
+<div id="right">
+  <h3>选中卡牌</h3>
+  <div id="selcard" style="display:none;">
+    <div id="selname" style="font-weight:600; margin-bottom:4px;"></div>
+    <div>等级 <span id="sellv"></span>：
+      <button onclick="setLv(-1)">-</button><button onclick="setLv(1)">+</button>
+    </div>
+    <div style="margin-top:4px;">
+      <button onclick="rotCard()">旋转编队</button>
+      <button onclick="delCard()" class="warn" style="background:#8a4a3a;">删除</button>
+    </div>
+    <div style="margin-top:6px; color:#9ab;">科技（勾选生效）</div>
+    <div id="seltechs"></div>
+  </div>
+  <h3>战斗结果</h3>
+  <div id="result" class="rep">尚未模拟</div>
+  <h3>战场技能</h3>
+  <div id="sknote" class="rep" style="margin-bottom:4px;">工具栏选择技能 → 点击战场放置（归属当前放置方）</div>
+  <div id="sklist" class="rep"></div>
+  <h3>击杀记录</h3>
+  <div id="killlog" class="rep">—</div>
+</div>
+<script>
+"use strict";
+const W=760,H=660, X0=350,Y0=300;
+const cv=document.getElementById("cv"), ctx=cv.getContext("2d");
+let GD=null;                 // {mechs, cards, skills, techs}
+let cards=[];                // deployment: {id, mechID, level, x, y, isRotate, team, uid, techs[]}
+let uidNext=1, pickMech=0, placeTeam=0, selUid=0;
+let mode="edit";             // edit | play
+let sim=null;                // last simulate result
+let frames=[], events=[], evIdx=0, floats=[], playT=0, playing=false, timer=null;
+let repInfo=null;            // imported round info {label, report, file, round}
+let spawnDone={};            // step9: uid -> teleport completion time (s)
+let towerLv={0:[0,0],1:[0,0]};  // imported strengthen levels per team
+let mods={0:null,1:null};     // imported round buffs {range,speed}
+let skillEv={0:[],1:[]};      // step8-B battlefield skill events (per team)
+let pickSkill=null;           // catalog entry while placing a skill
+let SKILL_CATALOG=[];
+let drag=null;
+let TOWER_POS={0:[[-140,-170],[140,-170]],1:[[-140,170],[140,170]]}; // replaced by /api/gamedata
+const towersOn = () => document.getElementById("towerChk").checked;
+// step9 flank zone: enemy half of the map (y-judgment); |x|>=310 strips are
+// where real deploys land (census), but ANY enemy-half card eats the delay
+const FLANK_X = 310;
+const teleSel = () => document.getElementById("teleSel").value;
+const inEnemyHalf = c => c.team===0 ? c.y>0 : c.y<0;
+function teleDelay(team, x, y){
+  const on = teleSel()!=="off";
+  if(!on) return 0;
+  if(team===0 ? y<=0 : y>=0) return 0;
+  return teleSel()==="5" ? 5 : 10;
+}
+
+const px = x => (x+X0)/(2*X0)*W;
+const py = y => (Y0-y)/(2*Y0)*H;
+const mechName = id => (GD.mechs[id]&&GD.mechs[id].name) || ("#"+id);
+const mechCount = id => { const c=GD.cards.find(c=>c.mechID===id); return c?c.mechCount:1; };
+const baseSize = id => { const c=GD.cards.find(c=>c.mechID===id); return (c&&c.cardBaseSize&&c.cardBaseSize[0])?c.cardBaseSize:[20,20]; };
+const cardDef = id => GD.cards.find(c=>c.mechID===id);
+const defaultTechs = id => { const c=cardDef(id); return c?[...c.defaultTechnologies]:[]; };
+function techDesc(tid){
+  const t=GD.techs&&GD.techs[tid]; if(!t) return {name:"#"+tid, desc:""};
+  let desc=t.description||"";
+  const ps=(t.descParams||"").split(";");
+  let i=0; desc=desc.replace(/\{(\d+)\}/g,(_,n)=>(ps[+n]!=null&&ps[+n]!==""?ps[+n]:"?"));
+  return {name:t.name||("#"+tid), desc};
+}
+
+async function loadAll(){
+  GD = await (await fetch("/api/gamedata")).json();
+  if(GD.towerPos) TOWER_POS=GD.towerPos;   // single source: pysim.deploy
+  const shop=document.getElementById("shoplist");
+  GD.cards.slice().sort((a,b)=>(a.group-b.group)||(a.sort-b.sort)).forEach(c=>{
+    if(!GD.mechs[c.mechID]) return;
+    const m=GD.mechs[c.mechID];
+    const b=document.createElement("button");
+    b.className="cardbtn"; b.dataset.mid=c.mechID;
+    const tg = m.canAttackAir&&m.canAttackGround?"空地":(m.canAttackAir?"对空":"对地");
+    b.innerHTML=`<span class="nm">${c.name}</span> <span class="sub">×${c.mechCount}</span>
+      <div class="sub">￥${c.baseMoney} · ${tg} · 血${Math.round(m.life)} 攻${Math.round(m.damage)}</div>`;
+    b.onclick=()=>{ pickMech = pickMech===c.mechID?0:c.mechID;
+      if(pickMech){ pickSkill=null; document.getElementById("skillSel").value=""; }
+      document.querySelectorAll(".cardbtn").forEach(e=>e.classList.toggle("sel", +e.dataset.mid===pickMech)); };
+    shop.appendChild(b);
+  });
+  // step8-B battlefield skill catalog (params included, engine-format events)
+  SKILL_CATALOG=GD.battleSkills||[];
+  const ss=document.getElementById("skillSel");
+  SKILL_CATALOG.forEach((s,i)=>{ const o=document.createElement("option");
+    o.value=i; o.textContent=`⚔${s.name}`; ss.appendChild(o); });
+  ss.onchange=()=>{ const v=ss.value;
+    pickSkill = v==="" ? null : SKILL_CATALOG[+v];
+    if(pickSkill){ pickMech=0; document.querySelectorAll(".cardbtn").forEach(e=>e.classList.remove("sel")); }
+    draw(); };
+  // replays
+  const reps = await (await fetch("/api/replays")).json();
+  const rs=document.getElementById("repSel");
+  if(!reps.length){ const o=document.createElement("option");
+    o.value=""; o.disabled=true;
+    o.textContent="无回放语料：将 rounds_new11.json / rounds.json 放入 local_data/";
+    rs.appendChild(o); }
+  reps.forEach(r=>{ const o=document.createElement("option"); o.value=r.idx;
+    o.textContent=`${r.idx}: ${r.p0name} vs ${r.p1name} (${r.pairs.length}回合)`; rs.appendChild(o); });
+  rs.onchange=()=>{ const rr=document.getElementById("roundSel"); rr.innerHTML="";
+    const rep=reps[rs.value]; if(!rep) return;
+    rep.pairs.forEach(p=>{ const o=document.createElement("option"); o.value=p.round;
+      o.textContent=`第${p.round}回合 ${p.n0}v${p.n1}卡 ${p.label==="Win"?"蓝胜":"红胜"}`; rr.appendChild(o); }); };
+  drawSkillList();
+  draw();
+}
+document.getElementById("impBtn").onclick=async()=>{
+  const ri=document.getElementById("repSel").value, rd=document.getElementById("roundSel").value;
+  if(ri===""||rd==="") return;
+  const data = await (await fetch(`/api/replay/${ri}/${rd}`)).json();
+  cards=[]; uidNext=1;
+  for(const tm of [0,1]){
+    const pd=data[tm?"p1":"p0"], tmap=pd.techs||{};
+    towerLv[tm]=(pd.towerLevels||[0,0]).slice();
+    mods[tm]=pd.mods&&((pd.mods.range||pd.mods.speed))?pd.mods:null;
+  pd.units.forEach(u=>cards.push(
+    {uid:uidNext++, mechID:u.id, level:u.level||1, x:u.x, y:u.y, isRotate:!!u.isRotate, team:tm,
+     techs:(tmap[String(u.id)]||defaultTechs(u.id)).slice(), spawnAt:u.spawnAt||0}));
+  }
+  const nTele = cards.filter(c=>c.spawnAt).length;
+  // step18 T4: base towers are ALWAYS present (level-0 = 3400 HP crystals);
+  // auto-check on every import regardless of upgrade/buff state. The old
+  // "only when some towerLv>0 or buff" rule left 0-level towers undrawn on a
+  // cold start, then a leftover checked box made them "appear" on later
+  // imports (user-reproduced on 2119_20260712--268451842 round 2).
+  document.getElementById("towerChk").checked=true;
+  skillEv={0:(data.p0.skills||[]).slice(),1:(data.p1.skills||[]).slice()};
+  repInfo=data;
+  const nSk=skillEv[0].length+skillEv[1].length;
+  document.getElementById("info").textContent=
+    `已导入 ${data.file} 第${data.round}回合（${data.p0.units.length} v ${data.p1.units.length} 卡）。真值：${data.label==="Win"?"蓝方胜":"红方胜"}`+
+    (nTele?`；偷袭传送 ${nTele} 卡（⏱标记）`:"")+
+    (nSk?`；战场技能 ${nSk} 项（⚔标记）`:"")+
+    (data.p0.quickTeleport||data.p1.quickTeleport?"；含快速传送专家":"" )+
+    (data.report&&data.report.length?`；胜方存活机体 ${data.report[data.label==="Win"?0:1].aliveMechCount} 台`:"")+
+    (towersOn()?`；塔等级 蓝[${towerLv[0]}] 红[${towerLv[1]}]（0级=3400血）${mods[0]||mods[1]?" +中心技能":""}`:"");
+  selUid=0; drawSkillList(); draw();
+};
+document.getElementById("clearBtn").onclick=()=>{ cards=[]; repInfo=null; selUid=0;
+  skillEv={0:[],1:[]}; drawSkillList(); draw(); };
+document.getElementById("teamBtn").onclick=(e)=>{ placeTeam=1-placeTeam;
+  e.target.textContent = placeTeam?"红方 (右/上)":"蓝方 (左/下)";
+  e.target.style.color = placeTeam?"#f86":"#6cf"; };
+document.getElementById("backBtn").onclick=()=>{ mode="edit"; stopPlay(); toolbar(false); draw(); };
+document.getElementById("playBtn").onclick=()=> playing?pause():resume();
+document.getElementById("seek").oninput=(e)=>{ playT=+e.target.value; evIdx=events.findIndex(ev=>ev.t>frames[playT].t); if(evIdx<0)evIdx=events.length; drawPlay(); };
+
+function toolbar(playing_mode){
+  document.getElementById("backBtn").style.display=playing_mode?"":"none";
+  document.getElementById("playBtn").style.display=playing_mode?"":"none";
+  document.getElementById("seek").style.display=playing_mode?"":"none";
+  document.getElementById("ptime").style.display=playing_mode?"":"none";
+  document.getElementById("simBtn").style.display=playing_mode?"none":"";
+  document.getElementById("impBtn").style.display=playing_mode?"none":"";
+  document.getElementById("clearBtn").style.display=playing_mode?"none":"";
+  document.getElementById("repSel").style.display=playing_mode?"none":"";
+  document.getElementById("roundSel").style.display=playing_mode?"none":"";
+  document.getElementById("skillSel").style.display=playing_mode?"none":"";
+}
+
+document.getElementById("simBtn").onclick=async()=>{
+  const body={p0:[],p1:[],towers:towersOn()};
+  // spawnAt is carried on the card: set at import (replay-derived, 0 for
+  // zone survivors), at placement, or re-derived on drag; "off" disables all
+  cards.forEach(c=>body[c.team?"p1":"p0"].push(
+    {id:c.mechID,level:c.level,x:c.x,y:c.y,isRotate:c.isRotate,techs:(c.techs||defaultTechs(c.mechID)).slice(),
+     spawnAt:teleSel()==="off" ? 0 : (c.spawnAt||0)}));
+  if(body.towers){ body.towers0=towerLv[0]; body.towers1=towerLv[1];
+    if(mods[0]) body.mods0=mods[0]; if(mods[1]) body.mods1=mods[1]; }
+  body.skills0=skillEv[0]; body.skills1=skillEv[1];
+  if(!body.p0.length||!body.p1.length){ alert("双方都需要至少一张卡"); return; }
+  document.getElementById("simBtn").textContent="模拟中…";
+  const r=await fetch("/api/simulate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  sim=await r.json();
+  document.getElementById("simBtn").textContent="▶ 开始模拟";
+  // parse trace
+  frames=[]; events=[]; floats=[]; spawnDone={};
+  for(const ln of sim.trace){
+    const f=ln.split("|");
+    if(f[0]==="E"){
+      if(f[2]==="kill") events.push({t:+f[1],ku:+f[3],km:+f[4],vu:+f[5],vm:+f[6]});
+      else if(f[2]==="tower_down") events.push({t:+f[1],team:+f[3],kind:"tdown"});
+      else if(f[2]==="paralyse") events.push({t:+f[1],team:+f[3],kind:"par",until:+f[4]});
+      else if(f[2]==="skill"){ const xy=(f[5]||"0,0").split(",");
+        events.push({t:+f[1],team:+f[3],kind:"skl",sub:f[4],x:+xy[0],y:+xy[1]}); }
+      else if(f[2]==="device_down") events.push({t:+f[1],team:+f[3],kind:"ddown",mid:+f[4]});
+      else if(f[2]==="spawn") spawnDone[+f[3]]=+f[1];
+      continue; }
+    frames.push({t:+f[0], u:f.slice(1).map(s=>{const a=s.split(",");return {uid:+a[0],team:+a[1],mech:+a[2],alive:+a[3],x:+a[4],y:+a[5],hp:+a[6]};})});
+  }
+  const res=document.getElementById("result");
+  const truth = repInfo ? (repInfo.label==="Win"?"蓝胜":"红胜") : null;
+  const simw = sim.winner===0?"蓝胜":sim.winner===1?"红胜":"平局";
+  res.innerHTML = `模拟：<b class="${sim.winner===0?"t0":"t1"}">${simw}</b> @ ${sim.end_time}s · ${sim.sim_ms}ms<br>`+
+    `存活机体 <span class="t0">${sim.survivors[0].mechs}</span> vs <span class="t1">${sim.survivors[1].mechs}</span> · 击杀 ${sim.stats.kills} · 总伤 ${Math.round(sim.stats.damage)}`+
+    (sim.towers_down?` · 塔破 <span class="t0">${sim.towers_down[0]||0}</span>/<span class="t1">${sim.towers_down[1]||0}</span>`:"")+
+    (truth?`<br>回放真值：${truth} ${truth===simw?"<span class='ok'>✓ 一致</span>":"<span class='bad'>✗ 不一致</span>"}`:"");
+  document.getElementById("killlog").innerHTML = sim.kills.map(k=>{
+    const kn=mechName(k.kmech), vn=mechName(k.vmech);
+    return `<div><span class="t${k.kteam}">${kn}</span> 击杀 <span class="t${1-k.kteam}">${vn}</span> <span style="color:#667">@${k.t}s</span></div>`;}).join("");
+  mode="play"; toolbar(true); playT=0; evIdx=0; resume();
+};
+
+function resume(){ playing=true; document.getElementById("playBtn").textContent="⏸";
+  timer=setInterval(()=>{ if(playT<frames.length-1){playT++; drawPlay();} else pause(); },100); }
+function pause(){ playing=false; clearInterval(timer); document.getElementById("playBtn").textContent="▶"; }
+function stopPlay(){ pause(); }
+
+function setLv(d){ const c=cards.find(c=>c.uid===selUid); if(!c)return;
+  c.level=Math.min(9,Math.max(1,c.level+d)); draw(); selDraw(); }
+function rotCard(){ const c=cards.find(c=>c.uid===selUid); if(!c)return; c.isRotate=!c.isRotate; draw(); }
+function delCard(){ cards=cards.filter(c=>c.uid!==selUid); selUid=0; document.getElementById("selcard").style.display="none"; draw(); }
+function selDraw(){ const c=cards.find(c=>c.uid===selUid); const el=document.getElementById("selcard");
+  if(!c){ el.style.display="none"; return; }
+  el.style.display=""; document.getElementById("selname").textContent=`${mechName(c.mechID)} ×${mechCount(c.mechID)} · ${c.team?"红":"蓝"}方`;
+  document.getElementById("sellv").textContent=c.level+(c.isRotate?" (旋转)":"");
+  const tb=document.getElementById("seltechs"); tb.innerHTML="";
+  const def=cardDef(c.mechID), tids=(def&&def.technologies)||[];
+  if(!c.techs) c.techs=defaultTechs(c.mechID);
+  tids.forEach(tid=>{
+    const {name,desc}=techDesc(tid);
+    const lb=document.createElement("label");
+    const cb=document.createElement("input");
+    cb.type="checkbox"; cb.checked=c.techs.includes(tid);
+    cb.onchange=()=>{ c.techs = Array.from(tb.querySelectorAll("input:checked"))
+        .map(x=>+x.dataset.tid); };
+    cb.dataset.tid=tid;
+    const sp=document.createElement("span");
+    sp.innerHTML=`<div class="tnm">${name}${(def.defaultTechnologies||[]).includes(tid)?' <span style="color:#788;">默认</span>':""}</div>`+
+      (desc?`<div class="tdesc">${desc}</div>`:"");
+    lb.appendChild(cb); lb.appendChild(sp); tb.appendChild(lb);
+  });
+}
+
+cv.addEventListener("mousedown",e=>{
+  if(mode!=="edit") return;
+  const r=cv.getBoundingClientRect(), mx=e.clientX-r.left, my=e.clientY-r.top;
+  const wx=mx/W*2*X0-X0, wy=Y0-my/H*2*Y0;
+  if(pickSkill){ // step8-B: place a battlefield skill event for placeTeam
+    skillEv[placeTeam].push(Object.assign(
+      {kind:pickSkill.kind, x:+wx.toFixed(1), y:+wy.toFixed(1), name:pickSkill.name},
+      pickSkill.params||{}));
+    drawSkillList(); draw(); return; }
+  if(pickMech){ cards.push({uid:uidNext++, mechID:pickMech, level:1, x:wx, y:wy, isRotate:false, team:placeTeam, techs:defaultTechs(pickMech), spawnAt:teleDelay(placeTeam,wx,wy)}); draw(); return; }
+  // select / start drag: nearest card within its rect
+  const hit = cards.slice().reverse().find(c=>{
+    let [w,h]=baseSize(c.mechID); if(c.isRotate)[w,h]=[h,w];
+    return Math.abs(wx-c.x)<=Math.max(w,20)/2+6 && Math.abs(wy-c.y)<=Math.max(h,20)/2+6; });
+  selUid = hit?hit.uid:0; selDraw(); draw();
+  if(hit) drag={uid:hit.uid, ox:wx-hit.x, oy:wy-hit.y};
+});
+cv.addEventListener("mousemove",e=>{
+  if(mode!=="edit"||!drag) return;
+  const r=cv.getBoundingClientRect(), wx=(e.clientX-r.left)/W*2*X0-X0, wy=Y0-(e.clientY-r.top)/H*2*Y0;
+  const c=cards.find(c=>c.uid===drag.uid); if(!c)return;
+  c.x=Math.max(-X0,Math.min(X0,wx-drag.ox)); c.y=Math.max(-Y0,Math.min(Y0,wy-drag.oy)); draw();
+});
+window.addEventListener("mouseup",()=>{
+  if(drag){ const c=cards.find(c=>c.uid===drag.uid);
+    if(c){ const d=teleDelay(c.team,c.x,c.y);          // re-derive on drop
+      c.spawnAt = (d===10 && c.spawnAt===5) ? 5 : d; } // keep QT 5s cards
+    draw(); }
+  drag=null;
+});
+
+function drawCardRect(c){
+  const m=GD.mechs[c.mechID]; let [w,h]=baseSize(c.mechID); if(c.isRotate)[w,h]=[h,w];
+  w=Math.max(w,m.radius*2.4); h=Math.max(h,m.radius*2.4);
+  const x0=px(c.x-w/2), y0=py(c.y+h/2), pw=w/(2*X0)*W, ph=h/(2*Y0)*H;
+  ctx.fillStyle = c.team? "rgba(248,120,96,.18)":"rgba(102,190,255,.18)";
+  ctx.strokeStyle = c.uid===selUid? "#ffd54a" : (c.team?"#f86":"#6cf");
+  ctx.lineWidth = c.uid===selUid?2.5:1;
+  ctx.fillRect(x0,y0,pw,ph); ctx.strokeRect(x0,y0,pw,ph);
+  // formation preview dots
+  const n=mechCount(c.mechID);
+  ctx.fillStyle = c.team? "rgba(248,140,110,.8)":"rgba(120,200,255,.8)";
+  for(let i=0;i<Math.min(n,40);i++){
+    const gx=(i% Math.max(1,Math.round(Math.sqrt(n*w/Math.max(h,1))))), gy=Math.floor(i/Math.max(1,Math.round(Math.sqrt(n*w/Math.max(h,1)))));
+    ctx.beginPath(); ctx.arc(x0+ (gx+0.5)*(pw/Math.max(1,Math.round(Math.sqrt(n*w/Math.max(h,1))))), y0+(gy+0.5)*(ph/Math.max(1,Math.ceil(n/Math.max(1,Math.round(Math.sqrt(n*w/Math.max(h,1))))))), 2, 0, 7); ctx.fill();
+  }
+  ctx.fillStyle=c.team?"#fda":"#adf"; ctx.font="11px sans-serif"; ctx.textAlign="center";
+  ctx.fillText(`${mechName(c.mechID)}${c.level>1?" L"+c.level:""}×${n}${c.spawnAt?` ⏱${c.spawnAt}s`:""}`, px(c.x), y0-3);
+  if(c.spawnAt){       // teleport marker: dashed frame
+    ctx.setLineDash([4,3]); ctx.strokeStyle="#ffd54a"; ctx.lineWidth=1.5;
+    ctx.strokeRect(x0-2,y0-2,pw+4,ph+4); ctx.setLineDash([]);
+  }
+}
+
+function drawTowerSlot(team, x, y, lv, alive){
+  const s = 18, x0 = px(x - s/2), y0 = py(y + s/2);
+  ctx.fillStyle = alive ? (team ? "rgba(248,120,96,.30)" : "rgba(102,190,255,.30)") : "rgba(120,120,120,.12)";
+  ctx.strokeStyle = alive ? (team ? "#f86" : "#6cf") : "#555";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(px(x), y0); ctx.lineTo(x0+s, py(y-s/4)); ctx.lineTo(x0+s, py(y+s/4));
+  ctx.lineTo(px(x), y0-s); ctx.lineTo(x0, py(y+s/4)); ctx.lineTo(x0, py(y-s/4));
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+  if (alive && lv > 0){
+    ctx.fillStyle = "#ffd54a"; ctx.font = "10px sans-serif"; ctx.textAlign = "center";
+    ctx.fillText("+" + lv, px(x), y0 + 10);
+  }
+}
+
+function drawSkillMark(e, team){
+  // step8-B edit-mode marker for a placed battlefield skill event
+  const col = team?"#f86":"#6cf";
+  const X=px(e.x), Y=py(e.y), rpx=r=>r/(2*X0)*W;
+  if(e.kind==="barrier"){ ctx.setLineDash([5,4]); ctx.strokeStyle=col; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.arc(X,Y,rpx(e.radius||30),0,7); ctx.stroke(); ctx.setLineDash([]); }
+  if(e.kind==="strike"){ ctx.strokeStyle="#ffd54a"; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.arc(X,Y,rpx(e.splash||20),0,7); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(X-5,Y); ctx.lineTo(X+5,Y); ctx.moveTo(X,Y-5); ctx.lineTo(X,Y+5); ctx.stroke(); }
+  ctx.fillStyle=col; ctx.font="bold 15px sans-serif"; ctx.textAlign="center";
+  ctx.fillText("⚔", X, Y+5);
+  ctx.font="10px sans-serif";
+  ctx.fillText(e.name||e.kind, X, Y-9);
+}
+function drawSkillList(){
+  const el=document.getElementById("sklist"); const rows=[];
+  for(const tm of [0,1]) skillEv[tm].forEach((e,i)=>{
+    rows.push(`<div class="t${tm}" style="display:flex;justify-content:space-between;padding:2px 4px;border-bottom:1px solid #22262e;">
+      <span>⚔${e.name||e.kind} (${Math.round(e.x)},${Math.round(e.y)})</span>
+      <span style="cursor:pointer;color:#f77;" onclick="delSkill(${tm},${i})">✕</span></div>`); });
+  el.innerHTML=rows.join("")||"<div style='color:#556'>（无）</div>";
+}
+window.delSkill=(tm,i)=>{ skillEv[tm].splice(i,1); drawSkillList(); draw(); };
+
+function drawFlankZones(){
+  // step9: enemy-half edge strips hatched. Blue (team0) sneaks into y>0,
+  // red into y<0. Zone unlocks at round 2 in the real game - sandbox just
+  // hints at it.
+  const on = teleSel()!=="off";
+  for(const tm of [0,1]){
+    const yTop = tm===0 ? py(300) : py(0);      // enemy half rows [yTop..yBot)
+    const yBot = tm===0 ? py(0) : py(-300);
+    for(const x0 of [-350, 350-FLANK_X]){
+      const a = px(x0), w = px(x0===-350?-350+FLANK_X:350)-a;
+      ctx.fillStyle = on ? (tm? "rgba(248,120,96,.10)":"rgba(102,190,255,.10)") : "rgba(120,120,120,.05)";
+      ctx.fillRect(a, yTop, w, yBot-yTop);
+      ctx.save(); ctx.beginPath(); ctx.rect(a, yTop, w, yBot-yTop); ctx.clip();
+      ctx.strokeStyle = on ? (tm? "rgba(248,120,96,.16)":"rgba(102,190,255,.16)") : "rgba(120,120,120,.08)";
+      ctx.beginPath();
+      for(let d=-H; d<W+H; d+=12){ ctx.moveTo(a+d, yTop); ctx.lineTo(a+d+(yBot-yTop), yBot); }
+      ctx.stroke(); ctx.restore();
+    }
+    ctx.fillStyle = on ? (tm? "rgba(248,150,120,.55)":"rgba(140,200,255,.55)") : "#667";
+    ctx.font="11px sans-serif"; ctx.textAlign="center";
+    const lab = on ? `偷袭区·传送${teleSel()==="5"?"5":"10"}s` : "偷袭区(关闭)";
+    ctx.fillText(lab, px(-350+FLANK_X/2), tm===0?py(280):py(-272));
+    ctx.fillText(lab, px(350-FLANK_X/2), tm===0?py(280):py(-272));
+  }
+}
+
+function draw(){
+  if(mode!=="edit") return;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle="#22262e"; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle="#2c313c"; ctx.beginPath();
+  for(let x=-300;x<=300;x+=50){ ctx.moveTo(px(x),py(300)); ctx.lineTo(px(x),py(-300)); }
+  for(let y=-250;y<=250;y+=50){ ctx.moveTo(px(-350),py(y)); ctx.lineTo(px(350),py(y)); }
+  ctx.stroke();
+  ctx.strokeStyle="#3a4152"; ctx.beginPath(); ctx.moveTo(px(-350),py(0)); ctx.lineTo(px(350),py(0)); ctx.stroke();
+  drawFlankZones();
+  if(towersOn()) for(const tm of [0,1]) TOWER_POS[tm].forEach((p,i)=>drawTowerSlot(tm,p[0],p[1],towerLv[tm][i]||0,true));
+  cards.forEach(drawCardRect);
+  for(const tm of [0,1]) skillEv[tm].forEach(e=>drawSkillMark(e,tm));
+  if(pickMech){ ctx.fillStyle="#ffd54a"; ctx.font="12px sans-serif"; ctx.textAlign="left";
+    ctx.fillText(`放置：${mechName(pickMech)} ×${mechCount(pickMech)}（${placeTeam?"红":"蓝"}方）——点击战场放置`, 8, 16); }
+  else if(pickSkill){ ctx.fillStyle="#ffd54a"; ctx.font="12px sans-serif"; ctx.textAlign="left";
+    ctx.fillText(`放置技能：${pickSkill.name}（${placeTeam?"红":"蓝"}方）——点击战场放置，再点选择器可取消`, 8, 16); }
+}
+
+function drawPlay(){
+  const fr=frames[playT]; if(!fr) return;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle="#22262e"; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle="#2c313c"; ctx.beginPath();
+  for(let x=-300;x<=300;x+=50){ ctx.moveTo(px(x),py(300)); ctx.lineTo(px(x),py(-300)); }
+  for(let y=-250;y<=250;y+=50){ ctx.moveTo(px(-350),py(y)); ctx.lineTo(px(350),py(y)); }
+  ctx.stroke();
+  let a0=0,a1=0;
+  for(const u of fr.u){
+    if(u.mech===-1){ drawTowerSlot(u.team, u.x, u.y, 0, !!u.alive); continue; }
+    if(u.mech===-2){    // step8-B shield barrier: dome + pool ring
+      const R=30/(2*X0)*W, X=px(u.x), Y=py(u.y);
+      ctx.fillStyle = u.team?"rgba(248,120,96,.10)":"rgba(102,190,255,.10)";
+      ctx.strokeStyle = u.alive?(u.team?"#f86":"#6cf"):"#444"; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.arc(X,Y,R,0,7); ctx.fill(); ctx.stroke();
+      if(u.alive && u.hp>0){ ctx.fillStyle="#ffd54a"; ctx.font="10px sans-serif"; ctx.textAlign="center";
+        ctx.fillText("🛡"+Math.round(u.hp), X, Y+3); }
+      continue; }
+    if(u.mech===-3){    // step8-B sentry missile turret: diamond
+      const s=7, X=px(u.x), Y=py(u.y);
+      ctx.fillStyle = u.alive?(u.team?"#f86":"#6cf"):"#444";
+      ctx.beginPath(); ctx.moveTo(X,Y-s); ctx.lineTo(X+s,Y); ctx.lineTo(X,Y+s); ctx.lineTo(X-s,Y);
+      ctx.closePath(); ctx.fill();
+      if(u.alive){ ctx.fillStyle="#fff"; ctx.font="9px sans-serif"; ctx.textAlign="center";
+        ctx.fillText(Math.round(u.hp), X, Y-s-3); }
+      continue; }
+    if(!u.alive) continue; (u.team?a1++:a0++);
+    const tp = spawnDone[u.uid]!==undefined && fr.t < spawnDone[u.uid];   // teleporting
+    const r = 4+ (GD.mechs[u.mech]?GD.mechs[u.mech].radius*0.5:2);
+    ctx.globalAlpha = tp ? 0.45 : 1;
+    ctx.fillStyle = u.team?"#f86":"#6cf";
+    ctx.beginPath(); ctx.arc(px(u.x),py(u.y), r, 0, 7); ctx.fill();
+    if(tp){      // materializing: progress ring + hp text (HP grows linearly)
+      ctx.strokeStyle="#ffd54a"; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(px(u.x),py(u.y), r+4, -Math.PI/2,
+        -Math.PI/2 + 2*Math.PI*Math.min(1, fr.t/spawnDone[u.uid])); ctx.stroke();
+      ctx.fillStyle="#ffd54a"; ctx.font="9px sans-serif"; ctx.textAlign="center";
+      ctx.fillText(Math.round(u.hp), px(u.x), py(u.y)-r-8);
+    }
+    ctx.globalAlpha = 1; }
+  // dead units faded
+  for(const u of fr.u){ if(u.alive||u.mech<0) continue;
+    ctx.fillStyle = u.team?"rgba(248,120,96,.13)":"rgba(102,190,255,.13)";
+    ctx.beginPath(); ctx.arc(px(u.x),py(u.y),3,0,7); ctx.fill(); }
+  // kill + tower + skill floats
+  while(evIdx<events.length && events[evIdx].t<=fr.t){
+    const ev=events[evIdx++];
+    if(ev.kind==="tdown"){ floats.push({txt:`💥核心塔破！`, x:0, y:ev.team===0?-55:55, born:playT}); continue; }
+    if(ev.kind==="par"){ floats.push({txt:`⚡瘫痪${(ev.until-ev.t).toFixed(0)}s`, x:0, y:ev.team===0?-55:55, born:playT}); continue; }
+    if(ev.kind==="skl"){ const lbl = ev.sub==="strike_hit" ? "💥打击" :
+        (ev.sub==="summon" ? "⚔召唤" : (ev.sub==="strike" ? "⚔打击待发" : "⚔"+ev.sub));
+      floats.push({txt:lbl, x:ev.x, y:ev.y, born:playT}); continue; }
+    if(ev.kind==="ddown"){ floats.push({txt:ev.mid===-2?"🛡护盾破碎":"💥飞弹被毁",
+      x:0, y:ev.team===0?-55:55, born:playT}); continue; }
+    const v=fr.u.find(u=>u.uid===ev.vu);
+    floats.push({txt:`${mechName(ev.km)}✖`, x:v?v.x:0, y:v?v.y:0, born:playT, vt:ev.vu});
+  }
+  floats=floats.filter(f=>playT-f.born<12);
+  for(const f of floats){
+    const age=(playT-f.born)/12;
+    ctx.fillStyle=`rgba(255,210,80,${1-age})`; ctx.font="bold 13px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(f.txt, px(f.x), py(f.y)-8-age*24);
+  }
+  document.getElementById("seek").value=playT;
+  document.getElementById("ptime").textContent=`${fr.t.toFixed(1)}s  存活 蓝${a0} : 红${a1}  |  击杀 ${Math.min(evIdx,events.length)}/${events.length}`;
+}
+
+loadAll();
+</script>
+</body>
+</html>
