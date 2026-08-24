@@ -1,0 +1,149 @@
+{
+ "name": "sk_base_strike",
+ "group": "SK",
+ "desc": "SK 台风镜像 无技能基线 (P3 差分对照)",
+ "pair": [
+  22,
+  22
+ ],
+ "value": [
+  600,
+  600
+ ],
+ "anchor_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 22,
+    "level": 0,
+    "x": -165.0,
+    "y": -168.0,
+    "index": 0
+   },
+   {
+    "id": 22,
+    "level": 0,
+    "x": -165.0,
+    "y": -132.0,
+    "index": 1
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 22,
+    "level": 0,
+    "x": 165.0,
+    "y": 132.0,
+    "index": 100
+   },
+   {
+    "id": 22,
+    "level": 0,
+    "x": 165.0,
+    "y": 168.0,
+    "index": 101
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s25_sk_base_strike",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   250,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 32824,
+    "dmgReal": 32679,
+    "kills": 5
+   },
+   {
+    "team": 0,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12300,
+    "dmgReal": 12237,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 27192,
+    "dmgReal": 27057,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12504,
+    "dmgReal": 12441,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": -1,
+   "alive": [
+    0,
+    0
+   ],
+   "end_t": 60.1
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:22": 41516.0,
+   "1:22": 41516.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:22": 5,
+   "0:22": 5
+  }
+ },
+ "ts": "09:46:03"
+}

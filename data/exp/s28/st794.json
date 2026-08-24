@@ -1,0 +1,121 @@
+{
+ "name": "st794",
+ "group": "ST",
+ "desc": "ST 沙虫·机械狂暴 vs 堡垒·防空弹幕 等经济600 #794 (两塔正中)",
+ "value": [
+  550,
+  600
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 23,
+    "level": 0,
+    "x": 6.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "23": [
+    10523
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 1,
+    "level": 0,
+    "x": 6.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "1": [
+    1105
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st794",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   350,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 48630,
+    "dmgReal": 43938,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 32620,
+    "dmgReal": 32620,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 13.2
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:23": 29178.0,
+   "1:1": 48645.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:1": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:24:30"
+}

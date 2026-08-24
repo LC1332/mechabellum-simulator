@@ -1,0 +1,153 @@
+{
+ "name": "a18_12",
+ "group": "A",
+ "desc": "A 恶灵 vs 锚[沙虫+熔点] 等经济800 t4418",
+ "pair": [
+  18,
+  -100
+ ],
+ "value": [
+  800,
+  800
+ ],
+ "anchor_team": 0,
+ "p0": {
+  "units": [
+   {
+    "id": 18,
+    "level": 0,
+    "x": 165.0,
+    "y": 132.0,
+    "index": 0
+   },
+   {
+    "id": 18,
+    "level": 0,
+    "x": 165.0,
+    "y": 168.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "18": [
+    4418
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 23,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 100
+   },
+   {
+    "id": 4,
+    "level": 0,
+    "x": -193.0,
+    "y": -150.0,
+    "index": 101
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s25_a18_12",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   700
+  ],
+  "alive": [
+   0,
+   2
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 18,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4953,
+    "dmgReal": 4924,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 18,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10661,
+    "dmgReal": 10632,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 15558,
+    "dmgReal": 6800,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 29001,
+    "dmgReal": 28230,
+    "kills": 2
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    2
+   ],
+   "end_t": 120.0
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:18": 26231.0,
+   "1:23": 6800.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:23": 2,
+   "0:18": 2
+  }
+ },
+ "ts": "09:38:17"
+}

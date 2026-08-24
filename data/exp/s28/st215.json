@@ -1,0 +1,297 @@
+{
+ "name": "st215",
+ "group": "ST",
+ "desc": "ST 爬虫·冲击钻头 vs 犀牛·战地维修 等经济2000 #215 (两塔正中,换位)",
+ "value": [
+  950,
+  1200
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 10,
+    "level": 0,
+    "x": -119.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -85.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -51.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -17.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 17.0,
+    "y": -150.0,
+    "index": 4
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 51.0,
+    "y": -150.0,
+    "index": 5
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 85.0,
+    "y": -150.0,
+    "index": 6
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 119.0,
+    "y": -150.0,
+    "index": 7
+   }
+  ],
+  "techs": {
+   "10": [
+    10710
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 5,
+    "level": 0,
+    "x": 68.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 34.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -0.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -34.0,
+    "y": 150.0,
+    "index": 103
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -68.0,
+    "y": 150.0,
+    "index": 104
+   }
+  ],
+  "techs": {
+   "5": [
+    905
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st215",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   304,
+   0
+  ],
+  "alive": [
+   76,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11328,
+    "dmgReal": 11328,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14514,
+    "dmgReal": 14341,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11859,
+    "dmgReal": 11859,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13629,
+    "dmgReal": 13456,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8142,
+    "dmgReal": 7969,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11151,
+    "dmgReal": 10978,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13806,
+    "dmgReal": 13806,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12921,
+    "dmgReal": 12748,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 64080,
+    "dmgReal": 4734,
+    "kills": 18
+   },
+   {
+    "team": 1,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 89000,
+    "dmgReal": 6575,
+    "kills": 25
+   },
+   {
+    "team": 1,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 74760,
+    "dmgReal": 5523,
+    "kills": 21
+   },
+   {
+    "team": 1,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 81880,
+    "dmgReal": 6049,
+    "kills": 23
+   },
+   {
+    "team": 1,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 103240,
+    "dmgReal": 7627,
+    "kills": 29
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    5
+   ],
+   "end_t": 15.5
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:10": 47281.5,
+   "1:5": 50496.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:5": 192
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:18:59"
+}

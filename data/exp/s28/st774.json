@@ -1,0 +1,168 @@
+{
+ "name": "st774",
+ "group": "ST",
+ "desc": "ST 钢球·能量汲取 vs 战争工厂·发射器过载 等经济1200 #774 (两塔正中)",
+ "value": [
+  800,
+  1200
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 8,
+    "level": 0,
+    "x": -34.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": 34.0,
+    "y": -150.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "8": [
+    308
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 17,
+    "level": 0,
+    "x": -0.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -0.0,
+    "y": 178.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "17": [
+    10317
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st774",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   608
+  ],
+  "alive": [
+   0,
+   19
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2841,
+    "dmgReal": 2841,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13,
+    "dmgReal": 13,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 884,
+    "dmgReal": 884,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 17,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 90240,
+    "dmgReal": 54600,
+    "kills": 12
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 252,
+    "dmgReal": 252,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    19
+   ],
+   "end_t": 4.9
+  }
+ },
+ "dmg": {
+  "factory": {
+   "1:17": 76792.8
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:17": 12
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:23:40"
+}

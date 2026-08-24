@@ -1,0 +1,179 @@
+{
+ "name": "bp_archer_wall",
+ "group": "BP",
+ "desc": "长弓x2 vs 墙x9+后场尖牙 (b279 补尖牙)",
+ "value": [
+  200,
+  100
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 2,
+    "level": 0,
+    "x": -29.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": 5.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": -0.0,
+    "y": 185.0,
+    "index": 100
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": [
+   {
+    "cid": 1,
+    "x": -100.0,
+    "y": 70.0
+   },
+   {
+    "cid": 1,
+    "x": -75.0,
+    "y": 70.0
+   },
+   {
+    "cid": 1,
+    "x": -50.0,
+    "y": 70.0
+   },
+   {
+    "cid": 1,
+    "x": -25.0,
+    "y": 70.0
+   },
+   {
+    "cid": 1,
+    "x": 0.0,
+    "y": 70.0
+   },
+   {
+    "cid": 1,
+    "x": 25.0,
+    "y": 70.0
+   },
+   {
+    "cid": 1,
+    "x": 50.0,
+    "y": 70.0
+   },
+   {
+    "cid": 1,
+    "x": 75.0,
+    "y": 70.0
+   },
+   {
+    "cid": 1,
+    "x": 100.0,
+    "y": 70.0
+   }
+  ]
+ },
+ "use_construction": true,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s27_bp_archer_wall",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   30
+  ],
+  "alive": [
+   0,
+   5
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13974,
+    "dmgReal": 702,
+    "kills": 6
+   },
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 16303,
+    "dmgReal": 819,
+    "kills": 7
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3276,
+    "dmgReal": 3244,
+    "kills": 2
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 36.5
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:2": 19458.0,
+   "1:9": 1386.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:2": 30
+  }
+ },
+ "alive_mech": {
+  "factory": {
+   "0:2": 2
+  }
+ },
+ "ts": "16:18:20"
+}

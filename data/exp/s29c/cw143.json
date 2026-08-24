@@ -1,0 +1,305 @@
+{
+ "name": "cw143",
+ "group": "CW",
+ "desc": "CW 野马[野马·装甲强化] vs 深渊 + 爬虫5/4卡 等经济1400 (两塔正中)",
+ "p0": {
+  "units": [
+   {
+    "id": 10,
+    "level": 0,
+    "x": -68.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -34.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 34.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 68.0,
+    "y": -150.0,
+    "index": 4
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": -51.0,
+    "y": -178.0,
+    "index": 5
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": -17.0,
+    "y": -178.0,
+    "index": 6
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": 17.0,
+    "y": -178.0,
+    "index": 7
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": 51.0,
+    "y": -178.0,
+    "index": 8
+   }
+  ],
+  "techs": {
+   "7": [
+    3001
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 10,
+    "level": 0,
+    "x": 51.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 17.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -17.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -51.0,
+    "y": 150.0,
+    "index": 103
+   },
+   {
+    "id": 29,
+    "level": 0,
+    "x": -0.0,
+    "y": 178.0,
+    "index": 104
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s29_cw143",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   768,
+   0
+  ],
+  "alive": [
+   49,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 18252,
+    "dmgReal": 17674,
+    "kills": 27
+   },
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 23616,
+    "dmgReal": 23298,
+    "kills": 15
+   },
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 22968,
+    "dmgReal": 22734,
+    "kills": 15
+   },
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 20736,
+    "dmgReal": 20344,
+    "kills": 16
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1501,
+    "dmgReal": 1416,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7268,
+    "dmgReal": 6759,
+    "kills": 9
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2212,
+    "dmgReal": 2106,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 632,
+    "dmgReal": 632,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3239,
+    "dmgReal": 2615,
+    "kills": 12
+   },
+   {
+    "team": 1,
+    "uid": 29,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 300993,
+    "dmgReal": 21542,
+    "kills": 87
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1501,
+    "dmgReal": 1448,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2133,
+    "dmgReal": 1921,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4582,
+    "dmgReal": 3840,
+    "kills": 14
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3792,
+    "dmgReal": 3103,
+    "kills": 13
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    64
+   ],
+   "end_t": 13.9
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:7": 8787.0,
+   "1:29": 56256.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:29": 168,
+   "0:7": 33
+  }
+ },
+ "ts": "12:44:55"
+}

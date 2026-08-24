@@ -1,0 +1,45 @@
+{
+ "scenario": "t3_storm_fang_near",
+ "group": "T3",
+ "desc": "暴雨 vs 尖牙12卡 近距 (盲区70 刚好够到, 飞行短)",
+ "mech": 12,
+ "mech_name": "暴雨",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   264
+  ],
+  "alive": [
+   0,
+   44
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 20124.0,
+    "kills": 172
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   9,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 25272.0,
+    "kills": 216,
+    "r": 1.256
+   }
+  ]
+ },
+ "mech_note": "齐射=本体攻击(projectileCount4+randomTargetRange30+bulletSpeed60): 弹道化/目标分散建模, 换靶不清武器循环(旧机器枪 8s 扫墙 vs oracle 30s); 慢弹飞行时间已建模",
+ "ts": "2026-08-23 03:10:16"
+}

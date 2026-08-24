@@ -1,0 +1,137 @@
+{
+ "name": "st580",
+ "group": "ST",
+ "desc": "ST 尖牙·随身护盾 vs 犀牛·机械狂暴 等经济600 #580 (两塔正中)",
+ "value": [
+  600,
+  500
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "9": [
+    209
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 5,
+    "level": 0,
+    "x": 17.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -17.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "5": [
+    10505
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st580",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   400
+  ],
+  "alive": [
+   0,
+   2
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5103,
+    "dmgReal": 5103,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 71200,
+    "dmgReal": 2340,
+    "kills": 10
+   },
+   {
+    "team": 1,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 56960,
+    "dmgReal": 1872,
+    "kills": 8
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    2
+   ],
+   "end_t": 14.4
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:9": 3402.0,
+   "1:5": 4212.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:5": 18
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:14:51"
+}

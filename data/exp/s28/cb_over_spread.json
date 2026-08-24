@@ -1,0 +1,178 @@
+{
+ "name": "cb_over_spread",
+ "group": "CB",
+ "desc": "霸主弹数探针: 霸主x1 vs 野马x5 (散射弹着分布, pc=4 vs 2 裁决)",
+ "value": [
+  500,
+  1000
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 11,
+    "level": 0,
+    "x": -6.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 7,
+    "level": 0,
+    "x": 62.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": 28.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": -6.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": -40.0,
+    "y": 150.0,
+    "index": 103
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": -74.0,
+    "y": 150.0,
+    "index": 104
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_cb_over_spread",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   765
+  ],
+  "alive": [
+   0,
+   45
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 71130,
+    "dmgReal": 5145,
+    "kills": 15
+   },
+   {
+    "team": 1,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5580,
+    "dmgReal": 5580,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5220,
+    "dmgReal": 5220,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3096,
+    "dmgReal": 3096,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4500,
+    "dmgReal": 4491,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2952,
+    "dmgReal": 2952,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    42
+   ],
+   "end_t": 12.2
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:11": 6174.0,
+   "1:7": 21339.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:11": 18,
+   "1:7": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:20:38"
+}

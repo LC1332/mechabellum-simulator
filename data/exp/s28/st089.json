@@ -1,0 +1,151 @@
+{
+ "name": "st089",
+ "group": "ST",
+ "desc": "ST 爬虫·复制 vs 火獾·逆火  等经济800 #89 (两塔正中,换位)",
+ "value": [
+  550,
+  600
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 10,
+    "level": 0,
+    "x": -17.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 17.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 0.0,
+    "y": -178.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "10": [
+    180110
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 20,
+    "level": 0,
+    "x": 17.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -17.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "20": [
+    180620
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st089",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   402
+  ],
+  "alive": [
+   0,
+   6
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1008,
+    "dmgReal": 1008,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6075,
+    "dmgReal": 5758,
+    "kills": 28
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9315,
+    "dmgReal": 8972,
+    "kills": 38
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    6
+   ],
+   "end_t": 21.9
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:9": 441.0,
+   "1:20": 14730.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:20": 66
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:13:33"
+}

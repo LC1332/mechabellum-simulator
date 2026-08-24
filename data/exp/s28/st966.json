@@ -1,0 +1,177 @@
+{
+ "name": "st966",
+ "group": "ST",
+ "desc": "ST 霸主·射程强化+狂蝎·酸性攻击 vs 深渊·暗黑伙伴+猎犬·机械狂暴 等经济1900 #966 (两塔正中)",
+ "value": [
+  1650,
+  1600
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 11,
+    "level": 0,
+    "x": -6.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": -23.0,
+    "y": -178.0,
+    "index": 1
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": 11.0,
+    "y": -178.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "11": [
+    10211
+   ],
+   "19": [
+    180519
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 29,
+    "level": 0,
+    "x": -6.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": 11.0,
+    "y": 178.0,
+    "index": 101
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": -23.0,
+    "y": 178.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "29": [
+    12029
+   ],
+   "28": [
+    10528
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st966",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   500
+  ],
+  "alive": [
+   0,
+   1
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 52162,
+    "dmgReal": 52051,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 53250,
+    "dmgReal": 4395,
+    "kills": 5
+   },
+   {
+    "team": 0,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 53250,
+    "dmgReal": 4395,
+    "kills": 5
+   },
+   {
+    "team": 1,
+    "uid": 29,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 61744,
+    "dmgReal": 58603,
+    "kills": 3
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    2
+   ],
+   "end_t": 25.8
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:11": 31089.0,
+   "0:19": 27453.0,
+   "1:29": 55407.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:11": 3,
+   "0:19": 7,
+   "1:29": 2,
+   "1:18": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:31:56"
+}

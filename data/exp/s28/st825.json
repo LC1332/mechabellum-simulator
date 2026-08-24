@@ -1,0 +1,188 @@
+{
+ "name": "st825",
+ "group": "ST",
+ "desc": "ST 骇客·多重控制 vs 火獾·液态火 等经济900 #825 (两塔正中,换位)",
+ "value": [
+  650,
+  650
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 14,
+    "level": 0,
+    "x": -29.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": 5.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "14": [
+    11014
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 20,
+    "level": 0,
+    "x": 5.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -29.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "20": [
+    820
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st825",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   496,
+   0
+  ],
+  "alive": [
+   8,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 20,
+    "dmgMax": 999,
+    "dmgReal": 999,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 20,
+    "dmgMax": 1215,
+    "dmgReal": 1215,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 20,
+    "dmgMax": 621,
+    "dmgReal": 621,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 20,
+    "dmgMax": 540,
+    "dmgReal": 540,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 20,
+    "dmgMax": 135,
+    "dmgReal": 135,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 20,
+    "dmgMax": 27,
+    "dmgReal": 27,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2295,
+    "dmgReal": 2295,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2430,
+    "dmgReal": 2430,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    6
+   ],
+   "end_t": 17.6
+  }
+ },
+ "dmg": {
+  "factory": {
+   "1:20": 6498.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:20": 2
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:26:03"
+}

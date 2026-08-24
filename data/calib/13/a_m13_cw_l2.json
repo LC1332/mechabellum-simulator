@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m13_cw_l2",
+ "group": "A",
+ "desc": "A 铁锤(high) L2 vs crawler墙 (r=1.74 N=536)",
+ "mech": 13,
+ "mech_name": "铁锤",
+ "tech": null,
+ "level": 2,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   200,
+   0
+  ],
+  "alive": [
+   5,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 13,
+    "dmg": 100992.0,
+    "kills": 384
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   167
+  ],
+  "rows": [
+   {
+    "mech": 13,
+    "dmg": 57071.0,
+    "kills": 217,
+    "r": 0.565
+   }
+  ]
+ },
+ "mech_note": "同暴雨族的武器循环语义修复; attackDuration=4.5 单发追踪弹(bs300)",
+ "ts": "2026-08-23 03:10:16"
+}

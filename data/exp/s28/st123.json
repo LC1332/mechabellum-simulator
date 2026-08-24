@@ -1,0 +1,137 @@
+{
+ "name": "st123",
+ "group": "ST",
+ "desc": "ST 鬼鳐·隐形 vs 尖牙·随身护盾 等经济600 #123 (两塔正中,换位)",
+ "value": [
+  500,
+  600
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 25,
+    "level": 0,
+    "x": -11.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 25,
+    "level": 0,
+    "x": 23.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "25": [
+    3925
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": 6.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "9": [
+    209
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st123",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   402,
+   0
+  ],
+  "alive": [
+   6,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 20653,
+    "dmgReal": 2223,
+    "kills": 10
+   },
+   {
+    "team": 0,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 18479,
+    "dmgReal": 1989,
+    "kills": 8
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5229,
+    "dmgReal": 5229,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    6,
+    0
+   ],
+   "end_t": 14.5
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:25": 4212.0,
+   "1:9": 882.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:25": 18
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:15:01"
+}

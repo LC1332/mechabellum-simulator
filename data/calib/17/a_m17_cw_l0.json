@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m17_cw_l0",
+ "group": "A",
+ "desc": "A 战争工厂(low) L0 vs crawler墙 (r=0.70 N=39)",
+ "mech": 17,
+ "mech_name": "战争工厂",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   2000,
+   0
+  ],
+  "alive": [
+   4,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 17,
+    "dmg": 100992.0,
+    "kills": 384
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   329
+  ],
+  "rows": [
+   {
+    "mech": 17,
+    "dmg": 14465.0,
+    "kills": 55,
+    "r": 0.143
+   }
+  ]
+ },
+ "mech_note": "4 独立炮座(weapons×4 distinct): wraith_guns 多目标炮 + kite 走打 → A/C 组 1.00",
+ "ts": "2026-08-23 03:10:16"
+}

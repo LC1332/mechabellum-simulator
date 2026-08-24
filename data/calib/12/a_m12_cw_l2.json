@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m12_cw_l2",
+ "group": "A",
+ "desc": "A 暴雨(high) L2 vs crawler墙 (r=2.20 N=139)",
+ "mech": 12,
+ "mech_name": "暴雨",
+ "tech": null,
+ "level": 2,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   384
+  ],
+  "alive": [
+   0,
+   96
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 75744.0,
+    "kills": 288
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   204
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 47340.0,
+    "kills": 180,
+    "r": 0.625
+   }
+  ]
+ },
+ "mech_note": "齐射=本体攻击(projectileCount4+randomTargetRange30+bulletSpeed60): 弹道化/目标分散建模, 换靶不清武器循环(旧机器枪 8s 扫墙 vs oracle 30s); 慢弹飞行时间已建模",
+ "ts": "2026-08-23 03:10:16"
+}

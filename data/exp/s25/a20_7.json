@@ -1,0 +1,155 @@
+{
+ "name": "a20_7",
+ "group": "A",
+ "desc": "A 火獾 vs 锚[台风+熔点] 等经济700 t10620",
+ "pair": [
+  20,
+  -100
+ ],
+ "value": [
+  700,
+  700
+ ],
+ "anchor_team": 1,
+ "p0": {
+  "units": [
+   {
+    "id": 22,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 0
+   },
+   {
+    "id": 4,
+    "level": 0,
+    "x": 193.0,
+    "y": 150.0,
+    "index": 1
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 20,
+    "level": 0,
+    "x": -165.0,
+    "y": -168.0,
+    "index": 100
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -165.0,
+    "y": -132.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "20": [
+    10620
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s25_a20_7",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   600,
+   0
+  ],
+  "alive": [
+   3,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 15320,
+    "dmgReal": 15253,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 20457,
+    "dmgReal": 16879,
+    "kills": 5
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11848,
+    "dmgReal": 11819,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7176,
+    "dmgReal": 7133,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    3,
+    0
+   ],
+   "end_t": 61.6
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:22": 12305.6,
+   "0:4": 19826.4,
+   "1:20": 8997.8
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:20": 2,
+   "0:4": 7,
+   "0:22": 1
+  }
+ },
+ "ts": "10:21:35"
+}

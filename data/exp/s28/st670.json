@@ -1,0 +1,228 @@
+{
+ "name": "st670",
+ "group": "ST",
+ "desc": "ST 凤凰·发射器过载 vs 尖牙 等经济800 #670 (两塔正中)",
+ "value": [
+  600,
+  800
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 16,
+    "level": 0,
+    "x": -29.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 16,
+    "level": 0,
+    "x": 5.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "16": [
+    10316
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": 107.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 73.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 39.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 5.0,
+    "y": 150.0,
+    "index": 103
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -29.0,
+    "y": 150.0,
+    "index": 104
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -63.0,
+    "y": 150.0,
+    "index": 105
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -97.0,
+    "y": 150.0,
+    "index": 106
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -131.0,
+    "y": 150.0,
+    "index": 107
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st670",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   768
+  ],
+  "alive": [
+   0,
+   128
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 16,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 22512,
+    "dmgReal": 936,
+    "kills": 8
+   },
+   {
+    "team": 0,
+    "uid": 16,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 22512,
+    "dmgReal": 936,
+    "kills": 8
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2205,
+    "dmgReal": 2163,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2016,
+    "dmgReal": 1974,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 756,
+    "dmgReal": 756,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 693,
+    "dmgReal": 693,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 252,
+    "dmgReal": 252,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 126,
+    "dmgReal": 126,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    130
+   ],
+   "end_t": 15.9
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:16": 1638.0,
+   "1:9": 5964.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:16": 14,
+   "1:9": 4
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:18:48"
+}

@@ -1,0 +1,1325 @@
+{
+ "name": "L14_02",
+ "group": "M",
+ "lineup": 14,
+ "desc": "L14 犀牛+兵蜂 镜像#2 p0[犀牛:机械狂暴 兵蜂:穿甲弹] p1[兵蜂:电磁弹/引燃 爬虫:复制] 1800/1850 补爬虫+爬虫+爬虫+爬虫",
+ "pair": [
+  5,
+  6
+ ],
+ "value": [
+  1800,
+  1850
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 5,
+    "level": 0,
+    "x": -165.0,
+    "y": -167.0,
+    "index": 0
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -165.0,
+    "y": -133.0,
+    "index": 1
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": -193.0,
+    "y": -167.0,
+    "index": 2
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": -193.0,
+    "y": -133.0,
+    "index": 3
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -221.0,
+    "y": -269.0,
+    "index": 4
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -221.0,
+    "y": -235.0,
+    "index": 5
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -221.0,
+    "y": -201.0,
+    "index": 6
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -221.0,
+    "y": -167.0,
+    "index": 7
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -221.0,
+    "y": -133.0,
+    "index": 8
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -221.0,
+    "y": -99.0,
+    "index": 9
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -221.0,
+    "y": -65.0,
+    "index": 10
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -221.0,
+    "y": -31.0,
+    "index": 11
+   }
+  ],
+  "techs": {
+   "5": [
+    10505
+   ],
+   "6": [
+    10606
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 5,
+    "level": 0,
+    "x": 165.0,
+    "y": 167.0,
+    "index": 100
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 165.0,
+    "y": 133.0,
+    "index": 101
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": 193.0,
+    "y": 167.0,
+    "index": 102
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": 193.0,
+    "y": 133.0,
+    "index": 103
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 221.0,
+    "y": 201.0,
+    "index": 104
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 221.0,
+    "y": 167.0,
+    "index": 105
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 221.0,
+    "y": 133.0,
+    "index": 106
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 221.0,
+    "y": 99.0,
+    "index": 107
+   }
+  ],
+  "techs": {
+   "6": [
+    1806,
+    180206
+   ],
+   "10": [
+    180110
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s26_L14_02",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   265
+  ],
+  "alive": [
+   0,
+   40
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6873,
+    "dmgReal": 6341,
+    "kills": 14
+   },
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 160200,
+    "dmgReal": 27384,
+    "kills": 40
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1968,
+    "dmgReal": 1681,
+    "kills": 4
+   },
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 160200,
+    "dmgReal": 19358,
+    "kills": 44
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3392,
+    "dmgReal": 2892,
+    "kills": 8
+   },
+   {
+    "team": 0,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 23331,
+    "dmgReal": 17601,
+    "kills": 56
+   },
+   {
+    "team": 0,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 16059,
+    "dmgReal": 11868,
+    "kills": 38
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4661,
+    "dmgReal": 4466,
+    "kills": 5
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4187,
+    "dmgReal": 4028,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3871,
+    "dmgReal": 3676,
+    "kills": 5
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3713,
+    "dmgReal": 3501,
+    "kills": 4
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3318,
+    "dmgReal": 3141,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 26636,
+    "dmgReal": 22846,
+    "kills": 46
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4710,
+    "dmgReal": 4491,
+    "kills": 7
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 24534,
+    "dmgReal": 21456,
+    "kills": 41
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4524,
+    "dmgReal": 4011,
+    "kills": 11
+   },
+   {
+    "team": 1,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 202564,
+    "dmgReal": 15095,
+    "kills": 65
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 165,
+    "dmgReal": 112,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 32396,
+    "dmgReal": 12100,
+    "kills": 7
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1372,
+    "dmgReal": 1237,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4452,
+    "dmgReal": 4204,
+    "kills": 6
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 105,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 474,
+    "dmgReal": 368,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 237,
+    "dmgReal": 237,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 316,
+    "dmgReal": 263,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 237,
+    "dmgReal": 184,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 316,
+    "dmgReal": 263,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 105,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 474,
+    "dmgReal": 474,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 474,
+    "dmgReal": 403,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 105,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 316,
+    "dmgReal": 263,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 237,
+    "dmgReal": 237,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 105,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 237,
+    "dmgReal": 184,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 316,
+    "dmgReal": 157,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 26,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 395,
+    "dmgReal": 342,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 316,
+    "dmgReal": 263,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 474,
+    "dmgReal": 421,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 316,
+    "dmgReal": 316,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 316,
+    "dmgReal": 263,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 237,
+    "dmgReal": 237,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 474,
+    "dmgReal": 421,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 316,
+    "dmgReal": 263,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 395,
+    "dmgReal": 342,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 105,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 105,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 26,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 237,
+    "dmgReal": 237,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 105,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 395,
+    "dmgReal": 289,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 105,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 26,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 237,
+    "dmgReal": 184,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 237,
+    "dmgReal": 237,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 237,
+    "dmgReal": 237,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    9
+   ],
+   "end_t": 69.5
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:5": 25480.0,
+   "0:6": 16825.4,
+   "0:10": 29434.9,
+   "1:5": 50366.4,
+   "1:6": 31358.9,
+   "1:10": 11673.7
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:10": 43,
+   "1:6": 39,
+   "1:5": 144,
+   "0:5": 30,
+   "1:10": 37,
+   "0:6": 42
+  }
+ },
+ "alive_mech": {
+  "factory": {
+   "0:6": 23,
+   "0:10": 33
+  }
+ },
+ "ts": "12:29:37"
+}

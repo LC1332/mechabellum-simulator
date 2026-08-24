@@ -1,0 +1,45 @@
+{
+ "scenario": "c_m4_t10204",
+ "group": "C",
+ "desc": "C 3卡熔点+射程强化 (总值1500) vs 等经济对手",
+ "mech": 4,
+ "mech_name": "熔点",
+ "tech": 10204,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1236
+  ],
+  "alive": [
+   0,
+   309
+  ],
+  "rows": [
+   {
+    "mech": 4,
+    "dmg": 15045.0,
+    "kills": 51
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   324
+  ],
+  "rows": [
+   {
+    "mech": 4,
+    "dmg": 10230.3,
+    "kills": 36,
+    "r": 0.68
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

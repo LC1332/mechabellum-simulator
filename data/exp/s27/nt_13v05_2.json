@@ -1,0 +1,149 @@
+{
+ "name": "nt_13v05_2",
+ "group": "NT",
+ "desc": "NT 铁锤 vs 犀牛 等经济400 #2 (两塔正中,无科技)",
+ "value": [
+  400,
+  400
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 13,
+    "level": 0,
+    "x": -23.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 13,
+    "level": 0,
+    "x": 11.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 5,
+    "level": 0,
+    "x": 11.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -23.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s27_nt_13v05_2",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   400
+  ],
+  "alive": [
+   0,
+   2
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 13,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7904,
+    "dmgReal": 7904,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 13,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7296,
+    "dmgReal": 7296,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14240,
+    "dmgReal": 13912,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 21360,
+    "dmgReal": 20868,
+    "kills": 6
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    2
+   ],
+   "end_t": 17.3
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:13": 12160.0,
+   "1:5": 34780.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:5": 10
+  }
+ },
+ "alive_mech": {
+  "factory": {
+   "1:5": 2
+  }
+ },
+ "ts": "16:14:40"
+}

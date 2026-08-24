@@ -1,0 +1,187 @@
+{
+ "name": "u124",
+ "group": "U",
+ "desc": "U 霸主(11) vs 雷霆(27) 等经济1000",
+ "pair": [
+  11,
+  27
+ ],
+ "value": [
+  1000,
+  1000
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 11,
+    "level": 0,
+    "x": -165.0,
+    "y": -168.0,
+    "index": 0
+   },
+   {
+    "id": 11,
+    "level": 0,
+    "x": -165.0,
+    "y": -132.0,
+    "index": 1
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 27,
+    "level": 0,
+    "x": 165.0,
+    "y": 132.0,
+    "index": 100
+   },
+   {
+    "id": 27,
+    "level": 0,
+    "x": 165.0,
+    "y": 168.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "27": [
+    4027
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u124",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   800,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 15648,
+    "dmgReal": 14306,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 27028,
+    "dmgReal": 21224,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 27,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10556,
+    "dmgReal": 8427,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 27,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 17594,
+    "dmgReal": 17594,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    2
+   ],
+   "end_t": 37.7,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 1,
+   "alive": [
+    0,
+    2
+   ],
+   "end_t": 37.4,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:11": 6245.2,
+   "1:27": 46078.0
+  },
+  "mech": {
+   "0:11": 6245.2,
+   "1:27": 46078.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:11": 1,
+   "1:27": 3
+  },
+  "mech": {
+   "0:11": 1,
+   "1:27": 3
+  }
+ },
+ "ts": "06:31:40",
+ "alive_mech": {
+  "mech": {
+   "1:27": 2
+  },
+  "factory": {
+   "1:27": 2
+  }
+ }
+}

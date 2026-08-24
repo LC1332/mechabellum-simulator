@@ -1,0 +1,162 @@
+{
+ "name": "st847",
+ "group": "ST",
+ "desc": "ST 泰山·增程炮弹 vs 骇客·射程强化 等经济2500 #847 (两塔正中,换位)",
+ "value": [
+  2100,
+  1300
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 2002,
+    "level": 0,
+    "x": -23.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 2002,
+    "level": 0,
+    "x": 11.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -6.0,
+    "y": -178.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "2002": [
+    1032002
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 14,
+    "level": 0,
+    "x": 62.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": 28.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": -6.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": -40.0,
+    "y": 150.0,
+    "index": 103
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": -74.0,
+    "y": 150.0,
+    "index": 104
+   }
+  ],
+  "techs": {
+   "14": [
+    10214
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st847",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   1108,
+   0
+  ],
+  "alive": [
+   20,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8844,
+    "dmgReal": 7671,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13266,
+    "dmgReal": 8574,
+    "kills": 4
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    20,
+    0
+   ],
+   "end_t": 15.0
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:2002": 16245.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:2002": 5
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:26:55"
+}

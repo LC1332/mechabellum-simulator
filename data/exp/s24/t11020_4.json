@@ -1,0 +1,196 @@
+{
+ "name": "t11020_4",
+ "group": "TECH",
+ "desc": "U 火獾(20) vs 磁暴(31) 等经济500  [p0:火獾+长弓 p1:磁暴]",
+ "pair": [
+  20,
+  31
+ ],
+ "value": [
+  500,
+  500
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 20,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": -193.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "20": [
+    11020
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 31,
+    "level": 0,
+    "x": 165.0,
+    "y": 132.0,
+    "index": 100
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": 165.0,
+    "y": 168.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "31": [
+    10231
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_t11020_4",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   67,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7683,
+    "dmgReal": 7683,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12178,
+    "dmgReal": 10634,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 17797,
+    "dmgReal": 15747,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5236,
+    "dmgReal": 5236,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    2
+   ],
+   "end_t": 51.9,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 57.9,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:20": 372.3,
+   "0:2": 10014.7,
+   "1:31": 19551.9
+  },
+  "mech": {
+   "0:20": 2316.3,
+   "0:2": 9480.7,
+   "1:31": 19421.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:31": 2,
+   "0:20": 1,
+   "-1:0": 3
+  },
+  "mech": {
+   "1:31": 2,
+   "0:20": 1,
+   "-1:0": 3,
+   "0:2": 1
+  }
+ },
+ "ts": "06:24:02",
+ "alive_mech": {
+  "mech": {
+   "1:31": 1
+  },
+  "factory": {
+   "1:31": 2
+  }
+ }
+}

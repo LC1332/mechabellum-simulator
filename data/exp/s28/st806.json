@@ -1,0 +1,185 @@
+{
+ "name": "st806",
+ "group": "ST",
+ "desc": "ST 犀牛·装甲强化+尖牙·机械狂暴 vs 兵蜂·引燃+狂蝎·装甲强化 等经济1100 #806 (两塔正中)",
+ "value": [
+  850,
+  1000
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 5,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -17.0,
+    "y": -178.0,
+    "index": 1
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 17.0,
+    "y": -178.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "5": [
+    3005
+   ],
+   "9": [
+    10509
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 6,
+    "level": 0,
+    "x": -0.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": 17.0,
+    "y": 178.0,
+    "index": 101
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": -17.0,
+    "y": 178.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "6": [
+    180206
+   ],
+   "19": [
+    3019
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st806",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   500
+  ],
+  "alive": [
+   0,
+   2
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3780,
+    "dmgReal": 3748,
+    "kills": 8
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2583,
+    "dmgReal": 2567,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9022,
+    "dmgReal": 8467,
+    "kills": 7
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 117090,
+    "dmgReal": 11760,
+    "kills": 10
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 223590,
+    "dmgReal": 12930,
+    "kills": 20
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    2
+   ],
+   "end_t": 22.4
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:9": 3732.0,
+   "1:6": 8467.5,
+   "1:19": 24690.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:9": 12,
+   "1:6": 7,
+   "1:19": 30
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:25:10"
+}

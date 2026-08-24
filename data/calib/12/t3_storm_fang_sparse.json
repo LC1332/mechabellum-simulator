@@ -1,0 +1,45 @@
+{
+ "scenario": "t3_storm_fang_sparse",
+ "group": "T3",
+ "desc": "暴雨 vs 尖牙12卡 疏散 (单发密度低 → 齐射内目标分散假说)",
+ "mech": 12,
+ "mech_name": "暴雨",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   174
+  ],
+  "alive": [
+   0,
+   29
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 21879.0,
+    "kills": 187
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   55
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 18837.0,
+    "kills": 161,
+    "r": 0.861
+   }
+  ]
+ },
+ "mech_note": "齐射=本体攻击(projectileCount4+randomTargetRange30+bulletSpeed60): 弹道化/目标分散建模, 换靶不清武器循环(旧机器枪 8s 扫墙 vs oracle 30s); 慢弹飞行时间已建模",
+ "ts": "2026-08-23 03:10:16"
+}

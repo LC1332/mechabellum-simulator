@@ -1,0 +1,162 @@
+{
+ "name": "st156",
+ "group": "ST",
+ "desc": "ST 狂蝎·射程强化+弧光·装甲强化 vs 犀牛·装甲强化+长弓·射程强化 等经济800 #156 (两塔正中)",
+ "value": [
+  800,
+  800
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 19,
+    "level": 0,
+    "x": -12.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": -12.0,
+    "y": -178.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "19": [
+    10219
+   ],
+   "15": [
+    3015
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 5,
+    "level": 0,
+    "x": -12.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": -12.0,
+    "y": 178.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "5": [
+    3005
+   ],
+   "2": [
+    10202
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st156",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   350,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 42420,
+    "dmgReal": 28432,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 15,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2135,
+    "dmgReal": 2135,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9316,
+    "dmgReal": 9316,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7120,
+    "dmgReal": 7120,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    2
+   ],
+   "end_t": 18.6
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:19": 21180.0,
+   "0:15": 2745.0,
+   "1:5": 20974.0,
+   "1:2": 4877.5
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:5": 1,
+   "1:2": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:16:30"
+}

@@ -1,0 +1,89 @@
+{
+ "_ts": "2026-08-24",
+ "_note": "step29 定版烘焙 (最后一次兵种修正轮)",
+ "baked": {
+  "no_stack_set": "27",
+  "inc_stack": 1,
+  "summon_max_batch": 3,
+  "scatter5": 1
+ },
+ "ab": {
+  "s28": {
+   "base": "801/1004",
+   "bake": "803/1004",
+   "combo_all(chaffx+cs27+beampair+wc)": "813-816/1004"
+  },
+  "gates": {
+   "s24": "271/320",
+   "s25": "140/186",
+   "s26": "284/450",
+   "s27": "124/140",
+   "note_s26": "bake 集 s26 284 vs 基线 288, 组件隔离见下"
+  },
+  "isolation": {
+   "beam_pair=1": {
+    "s25": "137 (-3)",
+    "s27": "124 (0)"
+   },
+   "chaff_xsep=1": {
+    "s26": "280 (-8)",
+    "s27": "124 (0)",
+    "s28": "808 (+7)",
+    "crawler": "116/150 (+4)"
+   },
+   "wc_set=2002:2": {
+    "s25": "134 (-6)",
+    "s27": "124 (0)"
+   },
+   "cycle_set=+27": {
+    "s27": "119 (-5)",
+    "s25": "140 (0)"
+   },
+   "inc_stack/smb3/scatter5/no_stack": {
+    "s25": "140 (0)",
+    "s27": "124 (0)"
+   }
+  },
+  "not_baked": {
+   "chaff_xsep": "用户 Q-B(a) 口径 + 新爬虫库 74.7→77.3% + s28 +7, 但 s26 旧库 -8 卡门禁 —— opts 保留, 语料臂/后续裁决",
+   "cycle_set=7,9,10,11,17,27": "雷霆击杀后 1s 再射 (机枪化) 修复, st292/354 改善方向但 s27 -5",
+   "wc_set=2002:2": "泰山对大目标 DPS 校准 (泰山 flip 24→21) 但 s25 -6",
+   "beam_pair=1": "熔点换靶重升温 (st963 用户口径) 但 s25 -3",
+   "mine_summon": "蜘蛛雷实装; oracle 探针 (pr_mine/pr_mine2) 蜘蛛雷零伤害零击杀 = 游戏侧需主动激活, 保持关",
+   "scorch_spd": "焦土冲锋加速; pr_sc 探针不敏感 (火獾被泰山秒杀), st346 翻车主因非焦土, 保持 0",
+   "prep_over=4:x": "熔点 prep +0.5/+1.5 探针负 (-3), 弃",
+   "sep_tan": "切向滑开 crawler 库负, 弃"
+  },
+  "final": {
+   "s24": "271/320 (gate 271 OK)",
+   "s25": "140/186 (gate 140 OK)",
+   "s26": "284/450 (gate 288, -4; components: smb3 -2 / no_stack -1 / scatter5 -1, all user-defined true rules, conflict documented)",
+   "s27": "124/140 (gate 124 OK)",
+   "s28": "803/1004 (gate 801, +2)",
+   "s29p": "39/57",
+   "s29cal": "20/42",
+   "s29c": "112/150 (74.7%)",
+   "corpus": "s29 full combo stop10 309 / combo1+bake 305; old combo1 312 still best, >=319 not reached (ratchet stays 312)"
+  },
+  "cs27_evidence": "bake+cycle_set=7,9,10,11,17,27: st292 thunder dmg o=7464 p=5598 (r 3.50->0.75), st354 o=9330 p=5598 (r 2.00->0.60), st293 OK -- review thunder 3/3; s28 803 (flat), s27 119 (-5) blocks gate, not baked; step30 first pick for case-by-case audit",
+  "chaffx_evidence": "crawler lib 112->116/150, crawler flip 76->68; s28 801->808; s26 288->280 (-8) blocks gate -- conflicts with old-lib oracle crawler-fight distribution, needs case-by-case adjudication"
+ },
+ "calib": {
+  "desc": "维修剑齿虎标定体系 (用户配方) 42 场 + 机制探针 22 + NT 35",
+  "dps_probe_findings": {
+   "雷霆": "cal r 2.86-2.92 → no_stack 修复 (独目标 1x)",
+   "熔点": "cal_dps r 1.01-1.02 (DPS 对靶精确)",
+   "野马": "cal_dps r 0.41-0.71 (对靶仍弱; 掩护尖牙 r 0.19-0.21 是杂兵流动学问题)",
+   "堡垒/火神/鬼鳐/先知/暴雨": "cal 战斗受活体靶清杂速率影响 (pysim 9级剑齿虎清尖牙 ~2/s vs oracle ~0.43/s)"
+  },
+  "emp": "st283/292 语义复核: EMP 不关护盾 ✓ (护盾只因伤害扣减), 作用域=被命中者 ✓ (12/240 行被 EMP)",
+  "st307": "猎犬 2 kills = 泰山经验升级 2 次的击杀归因 (65 猎犬经验跨 2 阈值; pr_hound 30 猎犬未跨=0 自洽); pysim exp_levelup=0 与 oracle 冲突, A/B s28 ±0 未采纳",
+  "st315": "pysim 母舰 1 批因霸主 24s 死亡; oracle 霸主存活出满 3 批; 批次上限 3 已实装 (行池硬顶)"
+ },
+ "oracle_new": {
+  "s29p": 57,
+  "s29cal": 42,
+  "s29c": 150,
+  "libs": "data/step29_scenarios.json + step29_cal_scenarios.json + step29_crawler_scenarios.json"
+ }
+}

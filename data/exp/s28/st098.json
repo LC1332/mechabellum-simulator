@@ -1,0 +1,153 @@
+{
+ "name": "st098",
+ "group": "ST",
+ "desc": "ST 深渊·暗黑伙伴 vs 长弓·双发 等经济1100 #98 (两塔正中)",
+ "value": [
+  1100,
+  550
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 29,
+    "level": 0,
+    "x": 12.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "29": [
+    12029
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 2,
+    "level": 0,
+    "x": 46.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": 12.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": -22.0,
+    "y": 150.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "2": [
+    702
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st098",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   500,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 29,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11577,
+    "dmgReal": 4866,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6987,
+    "dmgReal": 4799,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4658,
+    "dmgReal": 4658,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9316,
+    "dmgReal": 9316,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 12.1
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:29": 4866.0,
+   "1:2": 27948.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:29": 3
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:13:53"
+}

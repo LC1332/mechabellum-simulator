@@ -1,0 +1,56 @@
+{
+ "scenario": "bench_fort_steel",
+ "group": "BENCH",
+ "desc": "bench 堡垒+爬虫(600) vs 钢球(600)",
+ "mech": 1,
+ "mech_name": "堡垒",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   406,
+   0
+  ],
+  "alive": [
+   15,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 1,
+    "dmg": 31580.0,
+    "kills": 9
+   },
+   {
+    "mech": 10,
+    "dmg": 23272.0,
+    "kills": 3
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   33,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 1,
+    "dmg": 30474.0,
+    "kills": 9,
+    "r": 0.965
+   },
+   {
+    "mech": 10,
+    "dmg": 24378.0,
+    "kills": 3,
+    "r": 1.048
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

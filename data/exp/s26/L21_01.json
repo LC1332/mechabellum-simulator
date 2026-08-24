@@ -1,0 +1,435 @@
+{
+ "name": "L21_01",
+ "group": "M",
+ "lineup": 21,
+ "desc": "L21 火神+鬼鳐 镜像#1 p0[火神:装甲强化 爬虫:复制] p1[火神:燃烧弹 爬虫:复制 鬼鳐:对地锁定] 2000/2100 补爬虫+爬虫",
+ "pair": [
+  3,
+  25
+ ],
+ "value": [
+  2000,
+  2100
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 3,
+    "level": 0,
+    "x": -165.0,
+    "y": -167.0,
+    "index": 0
+   },
+   {
+    "id": 3,
+    "level": 0,
+    "x": -165.0,
+    "y": -133.0,
+    "index": 1
+   },
+   {
+    "id": 25,
+    "level": 0,
+    "x": -193.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -221.0,
+    "y": -235.0,
+    "index": 3
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -221.0,
+    "y": -201.0,
+    "index": 4
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -221.0,
+    "y": -167.0,
+    "index": 5
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -221.0,
+    "y": -133.0,
+    "index": 6
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -221.0,
+    "y": -99.0,
+    "index": 7
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -221.0,
+    "y": -65.0,
+    "index": 8
+   }
+  ],
+  "techs": {
+   "10": [
+    180110
+   ],
+   "3": [
+    3003
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 3,
+    "level": 0,
+    "x": 165.0,
+    "y": 167.0,
+    "index": 100
+   },
+   {
+    "id": 3,
+    "level": 0,
+    "x": 165.0,
+    "y": 133.0,
+    "index": 101
+   },
+   {
+    "id": 25,
+    "level": 0,
+    "x": 193.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 221.0,
+    "y": 201.0,
+    "index": 103
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 221.0,
+    "y": 167.0,
+    "index": 104
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 221.0,
+    "y": 133.0,
+    "index": 105
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 221.0,
+    "y": 99.0,
+    "index": 106
+   }
+  ],
+  "techs": {
+   "3": [
+    1103
+   ],
+   "25": [
+    3225
+   ],
+   "10": [
+    180110
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s26_L21_01",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": -1,
+  "reportCount": 2,
+  "score": [
+   0,
+   0
+  ],
+  "alive": [
+   0,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3393,
+    "dmgReal": 3393,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 66777,
+    "dmgReal": 61038,
+    "kills": 7
+   },
+   {
+    "team": 0,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 20474,
+    "dmgReal": 19406,
+    "kills": 28
+   },
+   {
+    "team": 0,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 20518,
+    "dmgReal": 17320,
+    "kills": 65
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1015,
+    "dmgReal": 810,
+    "kills": 5
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 237,
+    "dmgReal": 196,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 158,
+    "dmgReal": 105,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 217,
+    "dmgReal": 138,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 99,
+    "dmgReal": 58,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 99,
+    "dmgReal": 58,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 916,
+    "dmgReal": 916,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1107,
+    "dmgReal": 1107,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 138,
+    "dmgReal": 138,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 68900,
+    "dmgReal": 65780,
+    "kills": 6
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14,
+    "dmgReal": 14,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 29067,
+    "dmgReal": 25487,
+    "kills": 89
+   },
+   {
+    "team": 1,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 27998,
+    "dmgReal": 25578,
+    "kills": 64
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 711,
+    "dmgReal": 658,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 237,
+    "dmgReal": 184,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 10,
+    "dmgMax": 79,
+    "dmgReal": 79,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 158,
+    "dmgReal": 158,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": -1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    5,
+    0
+   ],
+   "end_t": 77.4
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:3": 58210.0,
+   "0:25": 42319.0,
+   "0:10": 2313.0,
+   "1:3": 39261.0,
+   "1:25": 31927.8,
+   "1:10": 791.2
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:10": 1,
+   "1:10": 1,
+   "1:25": 27,
+   "1:3": 117,
+   "0:3": 97,
+   "0:25": 5
+  }
+ },
+ "alive_mech": {
+  "factory": {
+   "0:3": 1,
+   "1:25": 3
+  }
+ },
+ "ts": "12:43:18"
+}

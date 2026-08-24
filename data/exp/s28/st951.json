@@ -1,0 +1,172 @@
+{
+ "name": "st951",
+ "group": "ST",
+ "desc": "ST 爬虫·潜地行动 vs 长弓·射击小队 等经济900 #951 (两塔正中,换位)",
+ "value": [
+  550,
+  600
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 10,
+    "level": 0,
+    "x": -17.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 17.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "10": [
+    2610
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 2,
+    "level": 0,
+    "x": 17.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": -17.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -0.0,
+    "y": 178.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "2": [
+    1202
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st951",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   128,
+   0
+  ],
+  "alive": [
+   32,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2054,
+    "dmgReal": 1812,
+    "kills": 6
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4108,
+    "dmgReal": 3538,
+    "kills": 14
+   },
+   {
+    "team": 1,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2560,
+    "dmgReal": 526,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4889,
+    "dmgReal": 726,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4173,
+    "dmgReal": 3649,
+    "kills": 11
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    32,
+    0
+   ],
+   "end_t": 22.5
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:10": 8158.0,
+   "1:2": 863.0,
+   "1:9": 1693.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:2": 4,
+   "1:9": 12,
+   "0:10": 28
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:31:10"
+}

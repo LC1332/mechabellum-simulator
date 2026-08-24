@@ -1,0 +1,440 @@
+{
+ "name": "L11_03",
+ "group": "M",
+ "lineup": 11,
+ "desc": "L11 铁锤+长弓 镜像#3 p0[尖牙:随身护盾/穿甲弹/引燃 铁锤:战地维修] p1[长弓:防空专精 尖牙:穿甲弹 铁锤:战地维修/射程强化] 2550/2450 补尖牙+尖牙+尖牙+尖牙",
+ "pair": [
+  13,
+  2
+ ],
+ "value": [
+  2550,
+  2450
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 13,
+    "level": 0,
+    "x": -165.0,
+    "y": -167.0,
+    "index": 0
+   },
+   {
+    "id": 13,
+    "level": 0,
+    "x": -165.0,
+    "y": -133.0,
+    "index": 1
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": -193.0,
+    "y": -167.0,
+    "index": 2
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": -193.0,
+    "y": -133.0,
+    "index": 3
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -151.0,
+    "y": -201.0,
+    "index": 4
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -151.0,
+    "y": -167.0,
+    "index": 5
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -151.0,
+    "y": -133.0,
+    "index": 6
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -151.0,
+    "y": -99.0,
+    "index": 7
+   }
+  ],
+  "techs": {
+   "9": [
+    209,
+    10609,
+    180209
+   ],
+   "13": [
+    913
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 13,
+    "level": 0,
+    "x": 165.0,
+    "y": 167.0,
+    "index": 100
+   },
+   {
+    "id": 13,
+    "level": 0,
+    "x": 165.0,
+    "y": 133.0,
+    "index": 101
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": 193.0,
+    "y": 167.0,
+    "index": 102
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": 193.0,
+    "y": 133.0,
+    "index": 103
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 151.0,
+    "y": 269.0,
+    "index": 104
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 151.0,
+    "y": 235.0,
+    "index": 105
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 151.0,
+    "y": 201.0,
+    "index": 106
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 151.0,
+    "y": 167.0,
+    "index": 107
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 151.0,
+    "y": 133.0,
+    "index": 108
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 151.0,
+    "y": 99.0,
+    "index": 109
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 151.0,
+    "y": 65.0,
+    "index": 110
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 151.0,
+    "y": 31.0,
+    "index": 111
+   }
+  ],
+  "techs": {
+   "13": [
+    913,
+    10213
+   ],
+   "9": [
+    10609
+   ],
+   "2": [
+    3202
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s26_L11_03",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   632
+  ],
+  "alive": [
+   0,
+   23
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 33997,
+    "dmgReal": 5363,
+    "kills": 14
+   },
+   {
+    "team": 0,
+    "uid": 13,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 25228,
+    "dmgReal": 4719,
+    "kills": 43
+   },
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 23754,
+    "dmgReal": 3783,
+    "kills": 9
+   },
+   {
+    "team": 0,
+    "uid": 13,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 20732,
+    "dmgReal": 3849,
+    "kills": 34
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 945,
+    "dmgReal": 909,
+    "kills": 4
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2457,
+    "dmgReal": 2270,
+    "kills": 19
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 567,
+    "dmgReal": 522,
+    "kills": 5
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 945,
+    "dmgReal": 891,
+    "kills": 6
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6551,
+    "dmgReal": 6549,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 19795,
+    "dmgReal": 12352,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 13,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 41040,
+    "dmgReal": 16553,
+    "kills": 24
+   },
+   {
+    "team": 1,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 31440,
+    "dmgReal": 15730,
+    "kills": 10
+   },
+   {
+    "team": 1,
+    "uid": 13,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 37392,
+    "dmgReal": 17770,
+    "kills": 19
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 693,
+    "dmgReal": 666,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1323,
+    "dmgReal": 1233,
+    "kills": 8
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1890,
+    "dmgReal": 1773,
+    "kills": 7
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1260,
+    "dmgReal": 1206,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1260,
+    "dmgReal": 1179,
+    "kills": 5
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1827,
+    "dmgReal": 1764,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2929,
+    "dmgReal": 2902,
+    "kills": 3
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    33
+   ],
+   "end_t": 72.1
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:13": 14639.2,
+   "0:2": 7504.8,
+   "0:9": 758.7,
+   "1:13": 58758.5,
+   "1:2": 8657.5,
+   "1:9": 8132.4
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:2": 2,
+   "1:13": 75,
+   "0:2": 13,
+   "0:9": 5,
+   "0:13": 106,
+   "1:9": 8
+  }
+ },
+ "alive_mech": {
+  "factory": {
+   "1:13": 10,
+   "1:2": 2,
+   "1:9": 38
+  }
+ },
+ "ts": "12:23:30"
+}

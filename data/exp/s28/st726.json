@@ -1,0 +1,134 @@
+{
+ "name": "st726",
+ "group": "ST",
+ "desc": "ST 长弓·射程强化 vs 凤凰·电磁弹 等经济800 #726 (两塔正中)",
+ "value": [
+  500,
+  600
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 2,
+    "level": 0,
+    "x": -5.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": 29.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "2": [
+    10202
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 16,
+    "level": 0,
+    "x": 29.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 16,
+    "level": 0,
+    "x": -5.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "16": [
+    1816
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st726",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   200,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4658,
+    "dmgReal": 2982,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4658,
+    "dmgReal": 2982,
+    "kills": 2
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 8.1
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:2": 5964.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:2": 4
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:21:30"
+}

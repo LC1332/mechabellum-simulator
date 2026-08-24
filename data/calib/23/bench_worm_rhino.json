@@ -1,0 +1,45 @@
+{
+ "scenario": "bench_worm_rhino",
+ "group": "BENCH",
+ "desc": "bench 沙虫(400) vs 犀牛(400)",
+ "mech": 23,
+ "mech_name": "沙虫",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   350,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 23,
+    "dmg": 38594.0,
+    "kills": 2
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   1,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 23,
+    "dmg": 38594.0,
+    "kills": 2,
+    "r": 1.0
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

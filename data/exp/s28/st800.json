@@ -1,0 +1,149 @@
+{
+ "name": "st800",
+ "group": "ST",
+ "desc": "ST 尖牙·随身护盾 vs 钢球 等经济600 #800 (两塔正中)",
+ "value": [
+  600,
+  600
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": 6.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "9": [
+    209
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 8,
+    "level": 0,
+    "x": 40.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": 6.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": -28.0,
+    "y": 150.0,
+    "index": 102
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st800",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   600
+  ],
+  "alive": [
+   0,
+   12
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5481,
+    "dmgReal": 5481,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3818,
+    "dmgReal": 2500,
+    "kills": 12
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 960,
+    "dmgReal": 831,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1020,
+    "dmgReal": 881,
+    "kills": 3
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    12
+   ],
+   "end_t": 17.6
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:9": 3843.0,
+   "1:8": 4212.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:8": 18
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:24:54"
+}

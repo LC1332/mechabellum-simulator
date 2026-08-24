@@ -1,0 +1,170 @@
+{
+ "name": "a19_2",
+ "group": "A",
+ "desc": "A 狂蝎 vs 锚[沙虫+战争工厂] 等经济1200 t10219",
+ "pair": [
+  19,
+  -100
+ ],
+ "value": [
+  1200,
+  1200
+ ],
+ "anchor_team": 1,
+ "p0": {
+  "units": [
+   {
+    "id": 23,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 0
+   },
+   {
+    "id": 17,
+    "level": 0,
+    "x": 193.0,
+    "y": 150.0,
+    "index": 1
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 19,
+    "level": 0,
+    "x": -165.0,
+    "y": -186.0,
+    "index": 100
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 101
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": -165.0,
+    "y": -114.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "19": [
+    10219
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s25_a19_2",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   850,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 19452,
+    "dmgReal": 6800,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 17,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 71440,
+    "dmgReal": 55896,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 31950,
+    "dmgReal": 24700,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 21300,
+    "dmgReal": 21300,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 22365,
+    "dmgReal": 22365,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    3
+   ],
+   "end_t": 57.8
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:23": 16526.0,
+   "0:17": 15040.0,
+   "1:19": 169038.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:23": 2,
+   "1:19": 4
+  }
+ },
+ "ts": "09:38:59"
+}

@@ -1,0 +1,157 @@
+{
+ "name": "u054",
+ "group": "U",
+ "desc": "U 尖牙(9) vs 雷霆(27) 等经济600",
+ "pair": [
+  9,
+  27
+ ],
+ "value": [
+  600,
+  600
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "9": [
+    209
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 27,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "27": [
+    4127
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u054",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   30,
+   0
+  ],
+  "alive": [
+   5,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 19525,
+    "dmgReal": 19465,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 27,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 42824,
+    "dmgReal": 7430,
+    "kills": 15
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 45.1,
+   "towers_down": {
+    "0": 1,
+    "1": 0
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 89.9,
+   "towers_down": {
+    "0": 2,
+    "1": 1
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "1:27": 7612.0
+  },
+  "mech": {
+   "0:9": 4408.0,
+   "1:27": 8906.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:27": 19
+  },
+  "mech": {
+   "1:27": 20,
+   "0:9": 1
+  }
+ },
+ "ts": "06:26:11",
+ "alive_mech": {
+  "mech": {
+   "1:27": 1
+  },
+  "factory": {
+   "1:27": 1
+  }
+ }
+}

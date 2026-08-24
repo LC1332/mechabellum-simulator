@@ -1,0 +1,45 @@
+{
+ "scenario": "t3_hammer_cw",
+ "group": "T3",
+ "desc": "铁锤(bs300) vs 爬虫墙: 快弹对照 (r=1.74 偏高)",
+ "mech": 13,
+ "mech_name": "铁锤",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   916
+  ],
+  "alive": [
+   0,
+   229
+  ],
+  "rows": [
+   {
+    "mech": 13,
+    "dmg": 40765.0,
+    "kills": 155
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   275
+  ],
+  "rows": [
+   {
+    "mech": 13,
+    "dmg": 28667.0,
+    "kills": 109,
+    "r": 0.703
+   }
+  ]
+ },
+ "mech_note": "同暴雨族的武器循环语义修复; attackDuration=4.5 单发追踪弹(bs300)",
+ "ts": "2026-08-23 03:10:16"
+}

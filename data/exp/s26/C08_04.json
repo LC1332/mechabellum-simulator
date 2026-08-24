@@ -1,0 +1,368 @@
+{
+ "name": "C08_04",
+ "group": "MC",
+ "lineup": 8,
+ "desc": "C08 猎犬+凤凰 镜像#4(两塔正中) p0[凤凰:射程强化 猎犬:装甲强化] p1[凤凰:精英射手 猎犬:机械狂暴] 1650/1700 补爬虫",
+ "pair": [
+  28,
+  16
+ ],
+ "value": [
+  1650,
+  1700
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 28,
+    "level": 0,
+    "x": -17.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": 17.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 16,
+    "level": 0,
+    "x": -17.0,
+    "y": -178.0,
+    "index": 2
+   },
+   {
+    "id": 16,
+    "level": 0,
+    "x": 17.0,
+    "y": -178.0,
+    "index": 3
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -68.0,
+    "y": -206.0,
+    "index": 4
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -34.0,
+    "y": -206.0,
+    "index": 5
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 0.0,
+    "y": -206.0,
+    "index": 6
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 34.0,
+    "y": -206.0,
+    "index": 7
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 68.0,
+    "y": -206.0,
+    "index": 8
+   }
+  ],
+  "techs": {
+   "28": [
+    3028
+   ],
+   "16": [
+    10216
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 28,
+    "level": 0,
+    "x": 17.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": -17.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 16,
+    "level": 0,
+    "x": 17.0,
+    "y": 178.0,
+    "index": 102
+   },
+   {
+    "id": 16,
+    "level": 0,
+    "x": -17.0,
+    "y": 178.0,
+    "index": 103
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 51.0,
+    "y": 206.0,
+    "index": 104
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 17.0,
+    "y": 206.0,
+    "index": 105
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -17.0,
+    "y": 206.0,
+    "index": 106
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -51.0,
+    "y": 206.0,
+    "index": 107
+   }
+  ],
+  "techs": {
+   "16": [
+    10816
+   ],
+   "28": [
+    10528
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s26_C08_04",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   684,
+   0
+  ],
+  "alive": [
+   35,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 16,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14070,
+    "dmgReal": 4520,
+    "kills": 5
+   },
+   {
+    "team": 0,
+    "uid": 16,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 19698,
+    "dmgReal": 5258,
+    "kills": 7
+   },
+   {
+    "team": 0,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13530,
+    "dmgReal": 9759,
+    "kills": 23
+   },
+   {
+    "team": 0,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11070,
+    "dmgReal": 6877,
+    "kills": 23
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1580,
+    "dmgReal": 1350,
+    "kills": 4
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4029,
+    "dmgReal": 3366,
+    "kills": 12
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4819,
+    "dmgReal": 3928,
+    "kills": 16
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2607,
+    "dmgReal": 1944,
+    "kills": 12
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3476,
+    "dmgReal": 3000,
+    "kills": 8
+   },
+   {
+    "team": 1,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 18696,
+    "dmgReal": 12053,
+    "kills": 35
+   },
+   {
+    "team": 1,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9840,
+    "dmgReal": 6483,
+    "kills": 18
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3792,
+    "dmgReal": 2801,
+    "kills": 17
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1817,
+    "dmgReal": 1330,
+    "kills": 8
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3318,
+    "dmgReal": 2823,
+    "kills": 9
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3476,
+    "dmgReal": 2804,
+    "kills": 12
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    49,
+    0
+   ],
+   "end_t": 23.9
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:28": 21636.0,
+   "0:16": 12399.0,
+   "0:10": 5967.0,
+   "1:28": 13639.0,
+   "1:16": 5339.2,
+   "1:10": 7422.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:16": 13,
+   "1:16": 12,
+   "1:28": 40,
+   "0:28": 56,
+   "0:10": 41,
+   "1:10": 33
+  }
+ },
+ "alive_mech": {
+  "factory": {
+   "0:28": 2,
+   "0:16": 4,
+   "0:10": 29
+  }
+ },
+ "ts": "13:13:39"
+}

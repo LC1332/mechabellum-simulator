@@ -1,0 +1,165 @@
+{
+ "name": "st071",
+ "group": "ST",
+ "desc": "ST 火獾 vs 长弓·突击模式 等经济600 #71 (两塔正中,换位)",
+ "value": [
+  600,
+  400
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 20,
+    "level": 0,
+    "x": -34.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": 34.0,
+    "y": -150.0,
+    "index": 2
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 2,
+    "level": 0,
+    "x": 17.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": -17.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "2": [
+    10102
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st071",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   335,
+   0
+  ],
+  "alive": [
+   5,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1215,
+    "dmgReal": 1190,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1539,
+    "dmgReal": 1539,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 540,
+    "dmgReal": 515,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9316,
+    "dmgReal": 8444,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9316,
+    "dmgReal": 8444,
+    "kills": 2
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    2
+   ],
+   "end_t": 20.2
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:20": 12960.0,
+   "1:2": 37998.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:2": 9
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:12:50"
+}

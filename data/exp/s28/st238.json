@@ -1,0 +1,169 @@
+{
+ "name": "st238",
+ "group": "ST",
+ "desc": "ST 火神·高温火焰 vs 狂蝎·战地维修 等经济1400 #238 (两塔正中)",
+ "value": [
+  1100,
+  1050
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 3,
+    "level": 0,
+    "x": -5.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 3,
+    "level": 0,
+    "x": 29.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "3": [
+    10603
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 19,
+    "level": 0,
+    "x": 46.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": 12.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": -22.0,
+    "y": 150.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "19": [
+    919
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st238",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   750
+  ],
+  "alive": [
+   0,
+   3
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13800,
+    "dmgReal": 13800,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12696,
+    "dmgReal": 12696,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 21300,
+    "dmgReal": 19629,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 21300,
+    "dmgReal": 19629,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 21300,
+    "dmgReal": 21300,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    3
+   ],
+   "end_t": 21.9
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:3": 20812.5,
+   "1:19": 60558.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:19": 2
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:19:59"
+}

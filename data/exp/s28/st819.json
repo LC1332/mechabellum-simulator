@@ -1,0 +1,298 @@
+{
+ "name": "st819",
+ "group": "ST",
+ "desc": "ST 尖牙·引燃 vs 钢球·能量汲取 等经济2000 #819 (两塔正中,换位)",
+ "value": [
+  950,
+  1200
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": -125.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -91.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -57.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -23.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 11.0,
+    "y": -150.0,
+    "index": 4
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 45.0,
+    "y": -150.0,
+    "index": 5
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 79.0,
+    "y": -150.0,
+    "index": 6
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 113.0,
+    "y": -150.0,
+    "index": 7
+   }
+  ],
+  "techs": {
+   "9": [
+    180209
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 8,
+    "level": 0,
+    "x": 62.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": 28.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": -6.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": -40.0,
+    "y": 150.0,
+    "index": 103
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": -74.0,
+    "y": 150.0,
+    "index": 104
+   }
+  ],
+  "techs": {
+   "8": [
+    308
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st819",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   522,
+   0
+  ],
+  "alive": [
+   87,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6993,
+    "dmgReal": 6968,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7749,
+    "dmgReal": 7681,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8883,
+    "dmgReal": 8809,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6741,
+    "dmgReal": 6707,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8757,
+    "dmgReal": 8720,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8127,
+    "dmgReal": 8040,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11340,
+    "dmgReal": 11223,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12159,
+    "dmgReal": 12066,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1372,
+    "dmgReal": 929,
+    "kills": 7
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1198,
+    "dmgReal": 903,
+    "kills": 7
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2183,
+    "dmgReal": 1494,
+    "kills": 14
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2241,
+    "dmgReal": 1617,
+    "kills": 15
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2483,
+    "dmgReal": 1853,
+    "kills": 14
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    15
+   ],
+   "end_t": 42.4
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:9": 61252.1,
+   "1:8": 20248.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:8": 145,
+   "0:9": 5
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:25:46"
+}

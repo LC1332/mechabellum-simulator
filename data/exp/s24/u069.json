@@ -1,0 +1,173 @@
+{
+ "name": "u069",
+ "group": "U",
+ "desc": "U 钢球(8) vs 狂蝎(19) 等经济550",
+ "pair": [
+  8,
+  19
+ ],
+ "value": [
+  550,
+  550
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 8,
+    "level": 0,
+    "x": -165.0,
+    "y": -168.0,
+    "index": 0
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": -165.0,
+    "y": -132.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "8": [
+    180808
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 19,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "19": [
+    180519
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u069",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   400,
+   0
+  ],
+  "alive": [
+   8,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10384,
+    "dmgReal": 10156,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 15442,
+    "dmgReal": 15276,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3195,
+    "dmgReal": 3195,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    8,
+    0
+   ],
+   "end_t": 31.3,
+   "towers_down": {
+    "0": 0,
+    "1": 2
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 0,
+   "alive": [
+    8,
+    0
+   ],
+   "end_t": 32.1,
+   "towers_down": {
+    "0": 0,
+    "1": 2
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:8": 25432.0,
+   "1:19": 1065.0
+  },
+  "mech": {
+   "0:8": 25432.0,
+   "1:19": 8520.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:8": 3
+  },
+  "mech": {
+   "0:8": 3
+  }
+ },
+ "ts": "06:27:29",
+ "alive_mech": {
+  "mech": {
+   "0:8": 8
+  },
+  "factory": {
+   "0:8": 8
+  }
+ }
+}

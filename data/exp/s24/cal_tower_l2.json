@@ -1,0 +1,175 @@
+{
+ "name": "cal_tower_l2",
+ "group": "CAL",
+ "desc": "CAL 双塔L2: 塔血/瘫痪同步校验 (craft+engine 同 [2,2])",
+ "pair": [
+  2,
+  10
+ ],
+ "value": [
+  450,
+  450
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 2,
+    "level": 0,
+    "x": -165.0,
+    "y": -168.0,
+    "index": 0
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": -165.0,
+    "y": -132.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "2": [
+    3202
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 10,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "10": [
+    2610
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   2,
+   2
+  ],
+  "1": [
+   2,
+   2
+  ]
+ },
+ "oracle": {
+  "job": "s24_cal_tower_l2",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   40
+  ],
+  "alive": [
+   0,
+   10
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 50791,
+    "dmgReal": 33083,
+    "kills": 8
+   },
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 43804,
+    "dmgReal": 29999,
+    "kills": 7
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 122162,
+    "dmgReal": 122044,
+    "kills": 4
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    15
+   ],
+   "end_t": 74.8,
+   "towers_down": {
+    "0": 2,
+    "1": 1
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 1,
+   "alive": [
+    0,
+    18
+   ],
+   "end_t": 84.4,
+   "towers_down": {
+    "0": 2,
+    "1": 1
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:2": 41767.0,
+   "1:10": 82044.0
+  },
+  "mech": {
+   "0:2": 40978.0,
+   "1:10": 82044.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:10": 4,
+   "0:2": 10
+  },
+  "mech": {
+   "1:10": 4,
+   "0:2": 7
+  }
+ },
+ "ts": "06:19:25",
+ "alive_mech": {
+  "mech": {
+   "1:10": 18
+  },
+  "factory": {
+   "1:10": 15
+  }
+ }
+}

@@ -1,0 +1,140 @@
+{
+ "name": "st555",
+ "group": "ST",
+ "desc": "ST 剑齿虎 vs 先知·射程强化 等经济600 #555 (两塔正中,换位)",
+ "value": [
+  600,
+  600
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 21,
+    "level": 0,
+    "x": -46.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 21,
+    "level": 0,
+    "x": -12.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 21,
+    "level": 0,
+    "x": 22.0,
+    "y": -150.0,
+    "index": 2
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 26,
+    "level": 0,
+    "x": -12.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "26": [
+    10226
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st555",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   600,
+   0
+  ],
+  "alive": [
+   3,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6881,
+    "dmgReal": 6881,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6881,
+    "dmgReal": 5110,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13480,
+    "dmgReal": 13480,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    3,
+    0
+   ],
+   "end_t": 13.3
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:21": 11991.0,
+   "1:26": 5392.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:21": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:13:49"
+}

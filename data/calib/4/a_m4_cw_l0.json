@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m4_cw_l0",
+ "group": "A",
+ "desc": "A 熔点(low) L0 vs crawler墙 (r=0.52 N=58)",
+ "mech": 4,
+ "mech_name": "熔点",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1276
+  ],
+  "alive": [
+   0,
+   319
+  ],
+  "rows": [
+   {
+    "mech": 4,
+    "dmg": 18943.0,
+    "kills": 65
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   326
+  ],
+  "rows": [
+   {
+    "mech": 4,
+    "dmg": 16353.2,
+    "kills": 58,
+    "r": 0.863
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

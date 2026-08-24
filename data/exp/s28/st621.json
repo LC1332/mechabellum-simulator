@@ -1,0 +1,169 @@
+{
+ "name": "st621",
+ "group": "ST",
+ "desc": "ST 犀牛·机械狂暴 vs 弧光·蓄能攻击 等经济600 #621 (两塔正中,换位)",
+ "value": [
+  500,
+  400
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 5,
+    "level": 0,
+    "x": -23.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 11.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "5": [
+    10505
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 15,
+    "level": 0,
+    "x": 28.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": -6.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": -40.0,
+    "y": 150.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "15": [
+    10915
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st621",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   400,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14240,
+    "dmgReal": 9626,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7120,
+    "dmgReal": 4813,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 15,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7300,
+    "dmgReal": 7300,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 15,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7300,
+    "dmgReal": 7300,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 15,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8760,
+    "dmgReal": 8760,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 13.3
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:5": 14439.0,
+   "1:15": 18980.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:5": 3
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:16:36"
+}

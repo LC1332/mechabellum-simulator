@@ -1,0 +1,305 @@
+{
+ "name": "cw066",
+ "group": "CW",
+ "desc": "CW 野马 vs 弧光 + 爬虫4/6卡 等经济800 (两塔正中)",
+ "p0": {
+  "units": [
+   {
+    "id": 10,
+    "level": 0,
+    "x": -51.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -17.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 17.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 51.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": -17.0,
+    "y": -178.0,
+    "index": 4
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": 17.0,
+    "y": -178.0,
+    "index": 5
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 10,
+    "level": 0,
+    "x": 85.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 51.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 17.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -17.0,
+    "y": 150.0,
+    "index": 103
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -51.0,
+    "y": 150.0,
+    "index": 104
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -85.0,
+    "y": 150.0,
+    "index": 105
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": 17.0,
+    "y": 178.0,
+    "index": 106
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": -17.0,
+    "y": 178.0,
+    "index": 107
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s29_cw066",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   200
+  ],
+  "alive": [
+   0,
+   2
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13572,
+    "dmgReal": 12493,
+    "kills": 46
+   },
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14256,
+    "dmgReal": 13172,
+    "kills": 50
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4424,
+    "dmgReal": 3961,
+    "kills": 9
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4503,
+    "dmgReal": 4008,
+    "kills": 10
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4108,
+    "dmgReal": 3652,
+    "kills": 9
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5293,
+    "dmgReal": 4510,
+    "kills": 20
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3713,
+    "dmgReal": 3344,
+    "kills": 7
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1738,
+    "dmgReal": 1685,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5846,
+    "dmgReal": 4892,
+    "kills": 18
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4819,
+    "dmgReal": 4130,
+    "kills": 13
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3950,
+    "dmgReal": 3367,
+    "kills": 11
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5609,
+    "dmgReal": 4553,
+    "kills": 20
+   },
+   {
+    "team": 1,
+    "uid": 15,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8030,
+    "dmgReal": 5243,
+    "kills": 22
+   },
+   {
+    "team": 1,
+    "uid": 15,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10220,
+    "dmgReal": 6266,
+    "kills": 28
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    45
+   ],
+   "end_t": 25.6
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:10": 13170.0,
+   "0:7": 14221.0,
+   "1:10": 23611.0,
+   "1:15": 9869.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:7": 65,
+   "0:10": 36,
+   "1:10": 78,
+   "1:15": 42
+  }
+ },
+ "ts": "12:32:18"
+}

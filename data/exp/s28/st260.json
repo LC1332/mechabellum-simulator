@@ -1,0 +1,153 @@
+{
+ "name": "st260",
+ "group": "ST",
+ "desc": "ST 鬼鳐·装甲强化+恶灵·高爆弹药 vs 兵蜂·能量护盾+铁锤·战地维修 等经济900 #260 (两塔正中)",
+ "value": [
+  900,
+  900
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 25,
+    "level": 0,
+    "x": -12.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 18,
+    "level": 0,
+    "x": -12.0,
+    "y": -178.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "25": [
+    3025
+   ],
+   "18": [
+    418
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 6,
+    "level": 0,
+    "x": -12.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 13,
+    "level": 0,
+    "x": -12.0,
+    "y": 178.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "6": [
+    206
+   ],
+   "13": [
+    913
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st260",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   451,
+   0
+  ],
+  "alive": [
+   4,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 30436,
+    "dmgReal": 17626,
+    "kills": 10
+   },
+   {
+    "team": 0,
+    "uid": 18,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8382,
+    "dmgReal": 7228,
+    "kills": 7
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5254,
+    "dmgReal": 5254,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    4,
+    0
+   ],
+   "end_t": 38.6
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:25": 29877.0,
+   "0:18": 12188.2,
+   "1:6": 710.0,
+   "1:13": 608.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:25": 16,
+   "0:18": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:01:32"
+}

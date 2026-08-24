@@ -1,0 +1,202 @@
+{
+ "name": "st443",
+ "group": "ST",
+ "desc": "ST 铁锤·机械狂暴 vs 火獾·战地维修 等经济1400 #443 (两塔正中,换位)",
+ "value": [
+  850,
+  950
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 13,
+    "level": 0,
+    "x": -34.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 13,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 13,
+    "level": 0,
+    "x": 34.0,
+    "y": -150.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "13": [
+    10513
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 20,
+    "level": 0,
+    "x": 51.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": 17.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -17.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -51.0,
+    "y": 150.0,
+    "index": 103
+   }
+  ],
+  "techs": {
+   "20": [
+    920
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st443",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   80,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 13,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13376,
+    "dmgReal": 13274,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 13,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11552,
+    "dmgReal": 11450,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 13,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 26144,
+    "dmgReal": 25940,
+    "kills": 6
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2160,
+    "dmgReal": 2160,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8370,
+    "dmgReal": 8360,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 16767,
+    "dmgReal": 16747,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 22518,
+    "dmgReal": 22483,
+    "kills": 7
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    10
+   ],
+   "end_t": 20.9
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:13": 22036.0,
+   "1:20": 52170.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:13": 2,
+   "1:20": 15
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:09:15"
+}

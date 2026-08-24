@@ -1,0 +1,169 @@
+{
+ "name": "st204",
+ "group": "ST",
+ "desc": "ST 鬼鳐·隐形 vs 尖牙·穿甲弹 等经济600 #204 (两塔正中)",
+ "value": [
+  500,
+  400
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 25,
+    "level": 0,
+    "x": -5.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 25,
+    "level": 0,
+    "x": 29.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "25": [
+    3925
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": 46.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 12.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -22.0,
+    "y": 150.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "9": [
+    10609
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st204",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   180
+  ],
+  "alive": [
+   0,
+   30
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11957,
+    "dmgReal": 1287,
+    "kills": 11
+   },
+   {
+    "team": 0,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14131,
+    "dmgReal": 1521,
+    "kills": 13
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5229,
+    "dmgReal": 5123,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7182,
+    "dmgReal": 7182,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8379,
+    "dmgReal": 8167,
+    "kills": 4
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    6,
+    0
+   ],
+   "end_t": 17.0
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:25": 6318.0,
+   "1:9": 6048.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:25": 54
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:18:31"
+}

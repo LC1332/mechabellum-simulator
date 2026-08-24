@@ -1,0 +1,200 @@
+{
+ "name": "st600",
+ "group": "ST",
+ "desc": "ST 野马·高爆弹药+霸主·母舰 vs 先知·搜索雷达+铁锤·射程强化 等经济1000 #600 (两塔正中)",
+ "value": [
+  1000,
+  1000
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 7,
+    "level": 0,
+    "x": -12.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 11,
+    "level": 0,
+    "x": -12.0,
+    "y": -178.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "7": [
+    407
+   ],
+   "11": [
+    1211
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 26,
+    "level": 0,
+    "x": -12.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 13,
+    "level": 0,
+    "x": -12.0,
+    "y": 178.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "26": [
+    180526
+   ],
+   "13": [
+    10213
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st600",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   408,
+   0
+  ],
+  "alive": [
+   3,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1610,
+    "dmgReal": 1610,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 37936,
+    "dmgReal": 23327,
+    "kills": 6
+   },
+   {
+    "team": 0,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 6,
+    "dmgMax": 202,
+    "dmgReal": 202,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 6,
+    "dmgMax": 202,
+    "dmgReal": 202,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 6,
+    "dmgMax": 1818,
+    "dmgReal": 1818,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 6,
+    "dmgMax": 2222,
+    "dmgReal": 2222,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14828,
+    "dmgReal": 3677,
+    "kills": 11
+   },
+   {
+    "team": 1,
+    "uid": 13,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2432,
+    "dmgReal": 1372,
+    "kills": 4
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    6,
+    0
+   ],
+   "end_t": 20.5
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:7": 444.6,
+   "0:11": 25458.4,
+   "1:26": 7474.0,
+   "1:13": 2510.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:26": 10,
+   "1:13": 2,
+   "0:11": 5,
+   "0:6": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:15:45"
+}

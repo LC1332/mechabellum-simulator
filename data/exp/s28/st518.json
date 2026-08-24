@@ -1,0 +1,193 @@
+{
+ "name": "st518",
+ "group": "ST",
+ "desc": "ST 火神·黏油弹 vs 尖牙 等经济1100 #518 (两塔正中)",
+ "value": [
+  950,
+  1100
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 3,
+    "level": 0,
+    "x": -17.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 3,
+    "level": 0,
+    "x": 17.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "3": [
+    11010
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": 170.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 136.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 102.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 68.0,
+    "y": 150.0,
+    "index": 103
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 34.0,
+    "y": 150.0,
+    "index": 104
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -0.0,
+    "y": 150.0,
+    "index": 105
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -34.0,
+    "y": 150.0,
+    "index": 106
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -68.0,
+    "y": 150.0,
+    "index": 107
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -102.0,
+    "y": 150.0,
+    "index": 108
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -136.0,
+    "y": 150.0,
+    "index": 109
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -170.0,
+    "y": 150.0,
+    "index": 110
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st518",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   700,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14850,
+    "dmgReal": 11583,
+    "kills": 99
+   },
+   {
+    "team": 0,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14850,
+    "dmgReal": 11583,
+    "kills": 99
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 26.3
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:3": 23166.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:3": 198
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:12:24"
+}

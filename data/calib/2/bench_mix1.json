@@ -1,0 +1,56 @@
+{
+ "scenario": "bench_mix1",
+ "group": "BENCH",
+ "desc": "bench 长弓+钢球(600) vs 铁锤+爬虫(600)",
+ "mech": 2,
+ "mech_name": "长弓",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   436
+  ],
+  "alive": [
+   0,
+   19
+  ],
+  "rows": [
+   {
+    "mech": 2,
+    "dmg": 3510.0,
+    "kills": 14
+   },
+   {
+    "mech": 8,
+    "dmg": 6986.0,
+    "kills": 25
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   30
+  ],
+  "rows": [
+   {
+    "mech": 2,
+    "dmg": 1118.6,
+    "kills": 6,
+    "r": 0.319
+   },
+   {
+    "mech": 8,
+    "dmg": 6245.4,
+    "kills": 22,
+    "r": 0.894
+   }
+  ]
+ },
+ "mech_note": "对射站桩语义: 长弓140 vs 铁锤95 停在95对射全灭(oracle), 不维持最大射程",
+ "ts": "2026-08-23 03:10:16"
+}

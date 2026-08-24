@@ -1,0 +1,154 @@
+{
+ "name": "st395",
+ "group": "ST",
+ "desc": "ST 兵蜂·防空专精 vs 凤凰·发射器过载 等经济800 #395 (两塔正中,换位)",
+ "value": [
+  600,
+  600
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 6,
+    "level": 0,
+    "x": -11.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": 23.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "6": [
+    3206
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 16,
+    "level": 0,
+    "x": 23.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 16,
+    "level": 0,
+    "x": -11.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "16": [
+    10316
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st395",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   340,
+   0
+  ],
+  "alive": [
+   20,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3447,
+    "dmgReal": 3365,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2681,
+    "dmgReal": 2599,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 16,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5628,
+    "dmgReal": 622,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 16,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5628,
+    "dmgReal": 622,
+    "kills": 2
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    14,
+    0
+   ],
+   "end_t": 11.8
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:6": 5964.0,
+   "1:16": 3110.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:16": 10,
+   "0:6": 4
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:07:08"
+}

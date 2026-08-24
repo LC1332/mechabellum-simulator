@@ -1,0 +1,201 @@
+{
+ "name": "st953",
+ "group": "ST",
+ "desc": "ST 霸主·射程强化+火獾·逆火  vs 长弓·双发+泰山·饱和打击 等经济2000 #953 (两塔正中,换位)",
+ "value": [
+  1600,
+  1750
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 11,
+    "level": 0,
+    "x": 12.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -22.0,
+    "y": -178.0,
+    "index": 1
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": 12.0,
+    "y": -178.0,
+    "index": 2
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": 46.0,
+    "y": -178.0,
+    "index": 3
+   }
+  ],
+  "techs": {
+   "11": [
+    10211
+   ],
+   "20": [
+    180620
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 2,
+    "level": 0,
+    "x": 29.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": -5.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 2002,
+    "level": 0,
+    "x": 12.0,
+    "y": 178.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "2": [
+    702
+   ],
+   "2002": [
+    72002
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st953",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   400,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 142260,
+    "dmgReal": 133664,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 675,
+    "dmgReal": 675,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1863,
+    "dmgReal": 1863,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3699,
+    "dmgReal": 3699,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4658,
+    "dmgReal": 4658,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 106182,
+    "dmgReal": 56997,
+    "kills": 9
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 94.9
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:11": 138821.0,
+   "0:20": 1080.0,
+   "1:2": 4658.0,
+   "1:2002": 63797.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:11": 3,
+   "1:2002": 11
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:31:20"
+}

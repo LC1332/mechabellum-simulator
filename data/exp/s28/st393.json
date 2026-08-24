@@ -1,0 +1,137 @@
+{
+ "name": "st393",
+ "group": "ST",
+ "desc": "ST 雷霆·能量护盾 vs 兵蜂·穿甲弹 等经济600 #393 (两塔正中,换位)",
+ "value": [
+  550,
+  500
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 27,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "27": [
+    227
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 6,
+    "level": 0,
+    "x": 17.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": -17.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "6": [
+    10606
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st393",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   255
+  ],
+  "alive": [
+   0,
+   15
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 27,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 45243,
+    "dmgReal": 2799,
+    "kills": 9
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8888,
+    "dmgReal": 8793,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7272,
+    "dmgReal": 7272,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 14.4
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:27": 7464.0,
+   "1:6": 4545.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:27": 24
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:07:02"
+}

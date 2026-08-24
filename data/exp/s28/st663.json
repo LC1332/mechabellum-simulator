@@ -1,0 +1,160 @@
+{
+ "name": "st663",
+ "group": "ST",
+ "desc": "ST 先知·导弹拦截 vs 野马·斩杀弹 等经济1000 #663 (两塔正中,换位)",
+ "value": [
+  800,
+  750
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 26,
+    "level": 0,
+    "x": -11.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 26,
+    "level": 0,
+    "x": 23.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "26": [
+    3326
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 7,
+    "level": 0,
+    "x": 23.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": -11.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 6.0,
+    "y": 178.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "7": [
+    4607
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st663",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   500,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 29656,
+    "dmgReal": 5512,
+    "kills": 22
+   },
+   {
+    "team": 0,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 26960,
+    "dmgReal": 4826,
+    "kills": 20
+   },
+   {
+    "team": 1,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2714,
+    "dmgReal": 2714,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1817,
+    "dmgReal": 1817,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 15.7
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:26": 10338.0,
+   "1:7": 2948.4
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:26": 42
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:18:33"
+}

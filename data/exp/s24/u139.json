@@ -1,0 +1,190 @@
+{
+ "name": "u139",
+ "group": "U",
+ "desc": "U 霸主(11) vs 磁暴(31) 等经济800  [p0:霸主 p1:磁暴+钢球]",
+ "pair": [
+  11,
+  31
+ ],
+ "value": [
+  800,
+  800
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 11,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "11": [
+    10311
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 31,
+    "level": 0,
+    "x": 165.0,
+    "y": 132.0,
+    "index": 100
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": 165.0,
+    "y": 168.0,
+    "index": 101
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": 193.0,
+    "y": 132.0,
+    "index": 102
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": 193.0,
+    "y": 168.0,
+    "index": 103
+   }
+  ],
+  "techs": {
+   "31": [
+    631
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u139",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   400,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 62592,
+    "dmgReal": 54818,
+    "kills": 11
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4800,
+    "dmgReal": 4464,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2336,
+    "dmgReal": 2336,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 63.2,
+   "towers_down": {
+    "0": 2,
+    "1": 1
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 57.3,
+   "towers_down": {
+    "0": 2,
+    "1": 1
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:11": 49838.9,
+   "1:8": 6800.0
+  },
+  "mech": {
+   "0:11": 51498.6,
+   "1:8": 6800.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:8": 2,
+   "0:11": 11
+  },
+  "mech": {
+   "1:8": 2,
+   "0:11": 9,
+   "-1:0": 2
+  }
+ },
+ "ts": "06:32:57",
+ "alive_mech": {
+  "mech": {
+   "0:11": 1
+  },
+  "factory": {
+   "0:11": 1
+  }
+ }
+}

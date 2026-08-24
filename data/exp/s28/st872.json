@@ -1,0 +1,283 @@
+{
+ "name": "st872",
+ "group": "ST",
+ "desc": "ST 泰山·巨山装甲 vs 爬虫 等经济1200 #872 (两塔正中)",
+ "value": [
+  1200,
+  1200
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 2002,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "2002": [
+    302002
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 10,
+    "level": 0,
+    "x": 187.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 153.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 119.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 85.0,
+    "y": 150.0,
+    "index": 103
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 51.0,
+    "y": 150.0,
+    "index": 104
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 17.0,
+    "y": 150.0,
+    "index": 105
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -17.0,
+    "y": 150.0,
+    "index": 106
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -51.0,
+    "y": 150.0,
+    "index": 107
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -85.0,
+    "y": 150.0,
+    "index": 108
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -119.0,
+    "y": 150.0,
+    "index": 109
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -153.0,
+    "y": 150.0,
+    "index": 110
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -187.0,
+    "y": 150.0,
+    "index": 111
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st872",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   500,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1125432,
+    "dmgReal": 75744,
+    "kills": 288
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3296,
+    "dmgReal": 3296,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 77,
+    "dmgReal": 77,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 188,
+    "dmgReal": 188,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 229,
+    "dmgReal": 229,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 127,
+    "dmgReal": 127,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 384,
+    "dmgReal": 384,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 652,
+    "dmgReal": 576,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 695,
+    "dmgReal": 695,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3634,
+    "dmgReal": 3634,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 976,
+    "dmgReal": 976,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 423,
+    "dmgReal": 347,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 41.1
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:2002": 75744.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:2002": 288
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:27:36"
+}

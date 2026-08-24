@@ -1,0 +1,230 @@
+{
+ "name": "st110",
+ "group": "ST",
+ "desc": "ST 爬虫·冲击钻头 vs 钢球 等经济1000 #110 (两塔正中)",
+ "value": [
+  550,
+  1000
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 10,
+    "level": 0,
+    "x": -45.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -11.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 23.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 57.0,
+    "y": -150.0,
+    "index": 3
+   }
+  ],
+  "techs": {
+   "10": [
+    10710
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 8,
+    "level": 0,
+    "x": 74.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": 40.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": 6.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": -28.0,
+    "y": 150.0,
+    "index": 103
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": -62.0,
+    "y": 150.0,
+    "index": 104
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st110",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   164,
+   0
+  ],
+  "alive": [
+   41,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 29205,
+    "dmgReal": 29019,
+    "kills": 6
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 20178,
+    "dmgReal": 20147,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 24072,
+    "dmgReal": 23886,
+    "kills": 6
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 18585,
+    "dmgReal": 18368,
+    "kills": 7
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1342,
+    "dmgReal": 1116,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5077,
+    "dmgReal": 4380,
+    "kills": 16
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3517,
+    "dmgReal": 3077,
+    "kills": 10
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2638,
+    "dmgReal": 2251,
+    "kills": 9
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4564,
+    "dmgReal": 4071,
+    "kills": 17
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    9
+   ],
+   "end_t": 24.6
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:10": 57213.2,
+   "1:8": 25248.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:8": 96,
+   "0:10": 11
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:14:25"
+}

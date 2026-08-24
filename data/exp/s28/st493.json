@@ -1,0 +1,185 @@
+{
+ "name": "st493",
+ "group": "ST",
+ "desc": "ST 狂蝎·收束射击 vs 魔眼·蓄能攻击 等经济800 #493 (两塔正中,换位)",
+ "value": [
+  700,
+  500
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 19,
+    "level": 0,
+    "x": -5.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": 29.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "19": [
+    10419
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 30,
+    "level": 0,
+    "x": 63.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": 29.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": -5.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": -39.0,
+    "y": 150.0,
+    "index": 103
+   }
+  ],
+  "techs": {
+   "30": [
+    10930
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st493",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": -1,
+  "reportCount": 2,
+  "score": [
+   0,
+   0
+  ],
+  "alive": [
+   0,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 74550,
+    "dmgReal": 10654,
+    "kills": 7
+   },
+   {
+    "team": 0,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 53250,
+    "dmgReal": 7610,
+    "kills": 5
+   },
+   {
+    "team": 1,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8752,
+    "dmgReal": 8752,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2188,
+    "dmgReal": 2188,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 17504,
+    "dmgReal": 16444,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10940,
+    "dmgReal": 9880,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": -1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 15.4
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:19": 18264.0,
+   "1:30": 4378.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:19": 12
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:11:21"
+}

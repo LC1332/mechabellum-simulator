@@ -1,0 +1,137 @@
+{
+ "name": "st566",
+ "group": "ST",
+ "desc": "ST 堡垒·实心弹 vs 战争工厂·导弹拦截 等经济1200 #566 (两塔正中)",
+ "value": [
+  1000,
+  1150
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 1,
+    "level": 0,
+    "x": -11.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 1,
+    "level": 0,
+    "x": 23.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "1": [
+    10401
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 17,
+    "level": 0,
+    "x": 6.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "17": [
+    3317
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st566",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   500
+  ],
+  "alive": [
+   0,
+   1
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 39144,
+    "dmgReal": 39144,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 39144,
+    "dmgReal": 39144,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 17,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 90240,
+    "dmgReal": 87876,
+    "kills": 2
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 19.2
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:1": 113593.0,
+   "1:17": 15040.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:1": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:14:15"
+}

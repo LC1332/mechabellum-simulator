@@ -1,0 +1,190 @@
+{
+ "name": "u092",
+ "group": "U",
+ "desc": "U 火神(3) vs 尖牙(9) 等经济400",
+ "pair": [
+  3,
+  9
+ ],
+ "value": [
+  400,
+  400
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 3,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": 165.0,
+    "y": 96.0,
+    "index": 100
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 165.0,
+    "y": 132.0,
+    "index": 101
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 165.0,
+    "y": 168.0,
+    "index": 102
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 165.0,
+    "y": 204.0,
+    "index": 103
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u092",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   350,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13628,
+    "dmgReal": 11824,
+    "kills": 73
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5859,
+    "dmgReal": 5855,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 226,
+    "dmgReal": 226,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 945,
+    "dmgReal": 945,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 87.1,
+   "towers_down": {
+    "0": 2,
+    "1": 1
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 82.6,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:3": 11824.0,
+   "1:9": 6800.0
+  },
+  "mech": {
+   "0:3": 11824.0,
+   "1:9": 6109.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:9": 2,
+   "0:3": 73
+  },
+  "mech": {
+   "1:9": 1,
+   "0:3": 73
+  }
+ },
+ "ts": "06:29:10",
+ "alive_mech": {
+  "mech": {
+   "0:3": 1
+  },
+  "factory": {
+   "0:3": 1
+  }
+ }
+}

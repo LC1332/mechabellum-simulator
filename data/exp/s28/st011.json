@@ -1,0 +1,209 @@
+{
+ "name": "st011",
+ "group": "ST",
+ "desc": "ST 弧光 vs 战争工厂·射程强化 等经济1300 #11 (两塔正中,换位)",
+ "value": [
+  1300,
+  1300
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 15,
+    "level": 0,
+    "x": -204.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": -170.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": -136.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": -102.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": -68.0,
+    "y": -150.0,
+    "index": 4
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": -34.0,
+    "y": -150.0,
+    "index": 5
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 6
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": 34.0,
+    "y": -150.0,
+    "index": 7
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": 68.0,
+    "y": -150.0,
+    "index": 8
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": 102.0,
+    "y": -150.0,
+    "index": 9
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": 136.0,
+    "y": -150.0,
+    "index": 10
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": 170.0,
+    "y": -150.0,
+    "index": 11
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": 204.0,
+    "y": -150.0,
+    "index": 12
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 17,
+    "level": 0,
+    "x": -0.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "17": [
+    10217
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st011",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   500
+  ],
+  "alive": [
+   0,
+   1
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 15,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2190,
+    "dmgReal": 1940,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 15,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1460,
+    "dmgReal": 1460,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 17,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 113552,
+    "dmgReal": 65969,
+    "kills": 14
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 19.1
+  }
+ },
+ "dmg": {
+  "factory": {
+   "1:17": 62569.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:17": 13
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:10:18"
+}

@@ -1,0 +1,130 @@
+{
+ "name": "st987",
+ "group": "ST",
+ "desc": "ST 犀牛 vs 狂蝎·射程强化 等经济600 #987 (两塔正中,换位)",
+ "value": [
+  600,
+  600
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 5,
+    "level": 0,
+    "x": -34.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 34.0,
+    "y": -150.0,
+    "index": 2
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 19,
+    "level": 0,
+    "x": -0.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "19": [
+    10219
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st987",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   250
+  ],
+  "alive": [
+   0,
+   1
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3560,
+    "dmgReal": 3560,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 63900,
+    "dmgReal": 57891,
+    "kills": 3
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 12.2
+  }
+ },
+ "dmg": {
+  "factory": {
+   "1:19": 57891.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:19": 3
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:32:44"
+}

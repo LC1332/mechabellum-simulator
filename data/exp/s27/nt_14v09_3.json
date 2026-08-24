@@ -1,0 +1,201 @@
+{
+ "name": "nt_14v09_3",
+ "group": "NT",
+ "desc": "NT 尖牙 vs 骇客 等经济400 #3 (两塔正中,无科技,换位)",
+ "value": [
+  400,
+  400
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": -57.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -23.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 11.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 45.0,
+    "y": -150.0,
+    "index": 3
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 14,
+    "level": 0,
+    "x": 11.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": -23.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s27_nt_14v09_3",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   336,
+   0
+  ],
+  "alive": [
+   56,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 504,
+    "dmgReal": 468,
+    "kills": 4
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2961,
+    "dmgReal": 2934,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2646,
+    "dmgReal": 2556,
+    "kills": 8
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2205,
+    "dmgReal": 2160,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 9,
+    "dmgMax": 63,
+    "dmgReal": 63,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 9,
+    "dmgMax": 63,
+    "dmgReal": 63,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 9,
+    "dmgMax": 63,
+    "dmgReal": 63,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 9,
+    "dmgMax": 63,
+    "dmgReal": 63,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    56,
+    0
+   ],
+   "end_t": 40.2
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:9": 6687.0,
+   "1:9": 2313.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:9": 15,
+   "1:9": 3
+  }
+ },
+ "alive_mech": {
+  "factory": {
+   "1:9": 2,
+   "1:14": 2
+  }
+ },
+ "ts": "16:16:18"
+}

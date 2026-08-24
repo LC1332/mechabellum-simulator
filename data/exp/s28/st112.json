@@ -1,0 +1,269 @@
+{
+ "name": "st112",
+ "group": "ST",
+ "desc": "ST 骇客·电磁干扰 vs 狼蛛·穿甲弹 等经济2100 #112 (两塔正中)",
+ "value": [
+  1500,
+  1350
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 14,
+    "level": 0,
+    "x": -90.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": -56.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": -22.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": 12.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": 46.0,
+    "y": -150.0,
+    "index": 4
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": 80.0,
+    "y": -150.0,
+    "index": 5
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": 114.0,
+    "y": -150.0,
+    "index": 6
+   }
+  ],
+  "techs": {
+   "14": [
+    1814
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 24,
+    "level": 0,
+    "x": 97.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 24,
+    "level": 0,
+    "x": 63.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 24,
+    "level": 0,
+    "x": 29.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 24,
+    "level": 0,
+    "x": -5.0,
+    "y": 150.0,
+    "index": 103
+   },
+   {
+    "id": 24,
+    "level": 0,
+    "x": -39.0,
+    "y": 150.0,
+    "index": 104
+   },
+   {
+    "id": 24,
+    "level": 0,
+    "x": -73.0,
+    "y": 150.0,
+    "index": 105
+   }
+  ],
+  "techs": {
+   "24": [
+    10624
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st112",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   1500,
+   0
+  ],
+  "alive": [
+   12,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 24,
+    "rectype": 0,
+    "mechid": 24,
+    "dmgMax": 1984,
+    "dmgReal": 1984,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 24,
+    "rectype": 0,
+    "mechid": 24,
+    "dmgMax": 3472,
+    "dmgReal": 3472,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 24,
+    "rectype": 0,
+    "mechid": 24,
+    "dmgMax": 2480,
+    "dmgReal": 2480,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 24,
+    "rectype": 0,
+    "mechid": 24,
+    "dmgMax": 1488,
+    "dmgReal": 1488,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 24,
+    "rectype": 0,
+    "mechid": 24,
+    "dmgMax": 992,
+    "dmgReal": 992,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 24,
+    "rectype": 0,
+    "mechid": 24,
+    "dmgMax": 496,
+    "dmgReal": 496,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 24,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4464,
+    "dmgReal": 4241,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 24,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2480,
+    "dmgReal": 2480,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 24,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 992,
+    "dmgReal": 992,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 24,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 992,
+    "dmgReal": 992,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    6
+   ],
+   "end_t": 22.8
+  }
+ },
+ "dmg": {
+  "factory": {
+   "1:24": 22743.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:24": 7
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:14:30"
+}

@@ -1,0 +1,153 @@
+{
+ "name": "st547",
+ "group": "ST",
+ "desc": "ST 弧光·精英射手 vs 沙虫·对空 等经济1000 #547 (两塔正中,换位)",
+ "value": [
+  600,
+  900
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 15,
+    "level": 0,
+    "x": -5.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": 29.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "15": [
+    10815
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 23,
+    "level": 0,
+    "x": 29.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 23,
+    "level": 0,
+    "x": -5.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "23": [
+    3123
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st547",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   700
+  ],
+  "alive": [
+   0,
+   2
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 15,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 854,
+    "dmgReal": 854,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 15,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 854,
+    "dmgReal": 854,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9726,
+    "dmgReal": 4813,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9726,
+    "dmgReal": 4813,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    2
+   ],
+   "end_t": 9.8
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:15": 854.1,
+   "1:23": 9626.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:23": 2
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:13:33"
+}

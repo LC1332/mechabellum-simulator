@@ -1,0 +1,176 @@
+{
+ "name": "st727",
+ "group": "ST",
+ "desc": "ST 火神·黏油弹 vs 狂蝎·收束射击 等经济1200 #727 (两塔正中,换位)",
+ "value": [
+  1050,
+  1000
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 3,
+    "level": 0,
+    "x": -17.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 3,
+    "level": 0,
+    "x": 17.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 0.0,
+    "y": -178.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "3": [
+    11010
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 19,
+    "level": 0,
+    "x": 34.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": -0.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": -34.0,
+    "y": 150.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "19": [
+    10419
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st727",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   750
+  ],
+  "alive": [
+   0,
+   3
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1800,
+    "dmgReal": 1800,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 189,
+    "dmgReal": 189,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 117150,
+    "dmgReal": 22353,
+    "kills": 9
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 95850,
+    "dmgReal": 29310,
+    "kills": 8
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 42600,
+    "dmgReal": 11001,
+    "kills": 3
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    3
+   ],
+   "end_t": 23.8
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:3": 1500.0,
+   "1:19": 62664.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:19": 20
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:21:32"
+}

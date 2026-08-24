@@ -1,0 +1,173 @@
+{
+ "name": "bp_hacker_cannon",
+ "group": "BP",
+ "desc": "骇客x3 vs 反装甲炮x7+后场尖牙 (b253 补尖牙)",
+ "value": [
+  600,
+  100
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 14,
+    "level": 0,
+    "x": -40.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": -6.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": 28.0,
+    "y": -150.0,
+    "index": 2
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": -0.0,
+    "y": 185.0,
+    "index": 100
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": [
+   {
+    "cid": 2,
+    "x": -75.0,
+    "y": 70.0
+   },
+   {
+    "cid": 2,
+    "x": -50.0,
+    "y": 70.0
+   },
+   {
+    "cid": 2,
+    "x": -25.0,
+    "y": 70.0
+   },
+   {
+    "cid": 2,
+    "x": 0.0,
+    "y": 70.0
+   },
+   {
+    "cid": 2,
+    "x": 25.0,
+    "y": 70.0
+   },
+   {
+    "cid": 2,
+    "x": 50.0,
+    "y": 70.0
+   },
+   {
+    "cid": 2,
+    "x": 75.0,
+    "y": 70.0
+   }
+  ]
+ },
+ "use_construction": true,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s27_bp_hacker_cannon",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   108
+  ],
+  "alive": [
+   0,
+   18
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 1,
+    "uid": 2,
+    "rectype": 1,
+    "mechid": 0,
+    "dmgMax": 5496,
+    "dmgReal": 3249,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 2,
+    "rectype": 1,
+    "mechid": 0,
+    "dmgMax": 5496,
+    "dmgReal": 3249,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 2,
+    "rectype": 1,
+    "mechid": 0,
+    "dmgMax": 5496,
+    "dmgReal": 3249,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    18
+   ],
+   "end_t": 13.0
+  }
+ },
+ "dmg": {
+  "factory": {}
+ },
+ "kills": {
+  "factory": {
+   "1:-12": 3
+  }
+ },
+ "alive_mech": {
+  "factory": {
+   "1:9": 18
+  }
+ },
+ "ts": "16:18:01"
+}

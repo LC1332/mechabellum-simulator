@@ -1,0 +1,188 @@
+{
+ "name": "a7_12",
+ "group": "A",
+ "desc": "A 野马+狂蝎 vs 锚[台风+沙虫] 等经济1000 t10207",
+ "pair": [
+  7,
+  -100
+ ],
+ "value": [
+  1000,
+  1000
+ ],
+ "anchor_team": 1,
+ "p0": {
+  "units": [
+   {
+    "id": 22,
+    "level": 0,
+    "x": 165.0,
+    "y": 132.0,
+    "index": 0
+   },
+   {
+    "id": 22,
+    "level": 0,
+    "x": 165.0,
+    "y": 168.0,
+    "index": 1
+   },
+   {
+    "id": 23,
+    "level": 0,
+    "x": 193.0,
+    "y": 150.0,
+    "index": 2
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 7,
+    "level": 0,
+    "x": -165.0,
+    "y": -168.0,
+    "index": 100
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": -165.0,
+    "y": -132.0,
+    "index": 101
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": -193.0,
+    "y": -150.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "7": [
+    10207
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s25_a7_12",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   350,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2304,
+    "dmgReal": 2303,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10516,
+    "dmgReal": 10282,
+    "kills": 11
+   },
+   {
+    "team": 0,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 155616,
+    "dmgReal": 21079,
+    "kills": 15
+   },
+   {
+    "team": 1,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 24060,
+    "dmgReal": 23985,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 31635,
+    "dmgReal": 31604,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 23430,
+    "dmgReal": 16033,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    5,
+    0
+   ],
+   "end_t": 46.8
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:22": 8936.0,
+   "0:23": 24728.0,
+   "1:7": 15127.4,
+   "1:19": 11715.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:23": 3,
+   "1:7": 2,
+   "0:22": 24
+  }
+ },
+ "ts": "10:21:07"
+}

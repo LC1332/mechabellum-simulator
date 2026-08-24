@@ -1,0 +1,153 @@
+{
+ "name": "st210",
+ "group": "ST",
+ "desc": "ST 犀牛·战斗进化 vs 火獾·战地维修 等经济700 #210 (两塔正中)",
+ "value": [
+  550,
+  550
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 5,
+    "level": 0,
+    "x": -17.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 17.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "5": [
+    180805
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 20,
+    "level": 0,
+    "x": 17.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -17.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "20": [
+    920
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st210",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   400,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 17727,
+    "dmgReal": 12666,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 17567,
+    "dmgReal": 12666,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4806,
+    "dmgReal": 4806,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4779,
+    "dmgReal": 4779,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 16.0
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:5": 32931.6,
+   "1:20": 8586.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:5": 6
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:18:44"
+}

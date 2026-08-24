@@ -1,0 +1,177 @@
+{
+ "name": "at4607_1",
+ "group": "A",
+ "desc": "A 泰山+尖牙(t4607) vs 锚[台风+沙虫](t3001) 等经济1150",
+ "pair": [
+  2002,
+  -100
+ ],
+ "value": [
+  1150,
+  1150
+ ],
+ "anchor_team": 0,
+ "p0": {
+  "units": [
+   {
+    "id": 2002,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 0
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 193.0,
+    "y": 150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "2002": [
+    4607
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 22,
+    "level": 0,
+    "x": -165.0,
+    "y": -168.0,
+    "index": 100
+   },
+   {
+    "id": 22,
+    "level": 0,
+    "x": -165.0,
+    "y": -132.0,
+    "index": 101
+   },
+   {
+    "id": 23,
+    "level": 0,
+    "x": -193.0,
+    "y": -150.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "22": [
+    3001
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s25_at4607_1",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   608,
+   0
+  ],
+  "alive": [
+   19,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 102630,
+    "dmgReal": 89954,
+    "kills": 6
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 207,
+    "dmgReal": 207,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3344,
+    "dmgReal": 3312,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1848,
+    "dmgReal": 1848,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 19452,
+    "dmgReal": 13126,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    4
+   ],
+   "end_t": 60.0
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:2002": 40221.2,
+   "0:9": 44.1,
+   "1:22": 63530.0,
+   "1:23": 82033.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:23": 3,
+   "0:9": 1,
+   "0:2002": 2,
+   "1:22": 18
+  }
+ },
+ "ts": "10:21:58"
+}

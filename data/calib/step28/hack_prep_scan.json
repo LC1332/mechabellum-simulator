@@ -1,0 +1,47 @@
+{
+ "arms": [
+  {
+   "prep": 0.0,
+   "atk_dur_mult": 1.0,
+   "agree": 10,
+   "n": 11
+  },
+  {
+   "prep": 1.0,
+   "atk_dur_mult": 1.0,
+   "agree": 10,
+   "n": 11
+  },
+  {
+   "prep": 1.5,
+   "atk_dur_mult": 1.0,
+   "agree": 10,
+   "n": 11
+  },
+  {
+   "prep": 2.0,
+   "atk_dur_mult": 1.0,
+   "agree": 10,
+   "n": 11
+  },
+  {
+   "prep": 3.0,
+   "atk_dur_mult": 1.0,
+   "agree": 10,
+   "n": 11
+  }
+ ],
+ "targets": [
+  "nt_14v09_0",
+  "nt_14v09_1",
+  "nt_14v09_2",
+  "nt_14v09_3",
+  "nt_14v09_4",
+  "nt_07v14_0",
+  "nt_07v14_1",
+  "nt_07v14_2",
+  "nt_07v14_3",
+  "nt_07v14_4",
+  "u150"
+ ]
+}

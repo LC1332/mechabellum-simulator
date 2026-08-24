@@ -1,0 +1,177 @@
+{
+ "name": "u198",
+ "group": "U",
+ "desc": "U 野马(7) vs 先知(26) 等经济500  [p0:野马+凤凰 p1:先知]",
+ "pair": [
+  7,
+  26
+ ],
+ "value": [
+  500,
+  500
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 7,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 16,
+    "level": 0,
+    "x": -193.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "16": [
+    1616
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 26,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "26": [
+    3326
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u198",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   250
+  ],
+  "alive": [
+   0,
+   1
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 16,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14070,
+    "dmgReal": 11662,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4356,
+    "dmgReal": 4356,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 25068,
+    "dmgReal": 10498,
+    "kills": 15
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    14,
+    0
+   ],
+   "end_t": 26.7,
+   "towers_down": {
+    "0": 0,
+    "1": 1
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 30.8,
+   "towers_down": {
+    "0": 0,
+    "1": 1
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:7": 2772.0,
+   "0:16": 12619.0,
+   "1:26": 3370.0
+  },
+  "mech": {
+   "0:7": 108.0,
+   "0:16": 14656.0,
+   "1:26": 10131.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:16": 2
+  },
+  "mech": {
+   "0:16": 1,
+   "1:26": 14
+  }
+ },
+ "ts": "06:37:39",
+ "alive_mech": {
+  "mech": {
+   "1:26": 1
+  },
+  "factory": {
+   "0:7": 12,
+   "0:16": 2
+  }
+ }
+}

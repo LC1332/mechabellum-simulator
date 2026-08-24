@@ -1,0 +1,169 @@
+{
+ "name": "st445",
+ "group": "ST",
+ "desc": "ST 雷霆·电磁弹 vs 野马·穿甲弹 等经济1400 #445 (两塔正中,换位)",
+ "value": [
+  1100,
+  850
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 27,
+    "level": 0,
+    "x": -29.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 27,
+    "level": 0,
+    "x": 5.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "27": [
+    1827
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 7,
+    "level": 0,
+    "x": 22.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": -12.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": -46.0,
+    "y": 150.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "7": [
+    10607
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st445",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   153
+  ],
+  "alive": [
+   0,
+   9
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 27,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 75405,
+    "dmgReal": 5145,
+    "kills": 15
+   },
+   {
+    "team": 0,
+    "uid": 27,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 60324,
+    "dmgReal": 4116,
+    "kills": 12
+   },
+   {
+    "team": 1,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3888,
+    "dmgReal": 3888,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12060,
+    "dmgReal": 12033,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 16236,
+    "dmgReal": 16209,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 13.3
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:27": 12348.0,
+   "1:7": 12042.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:27": 36
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:09:21"
+}

@@ -1,0 +1,189 @@
+{
+ "name": "u235",
+ "group": "U",
+ "desc": "U 尖牙(9) vs 台风(22) 等经济800",
+ "pair": [
+  9,
+  22
+ ],
+ "value": [
+  800,
+  800
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": -165.0,
+    "y": -186.0,
+    "index": 0
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -165.0,
+    "y": -114.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "9": [
+    209
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 22,
+    "level": 0,
+    "x": 165.0,
+    "y": 132.0,
+    "index": 100
+   },
+   {
+    "id": 22,
+    "level": 0,
+    "x": 165.0,
+    "y": 168.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "22": [
+    5222
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u235",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   500
+  ],
+  "alive": [
+   0,
+   4
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3402,
+    "dmgReal": 3400,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6760,
+    "dmgReal": 6167,
+    "kills": 9
+   },
+   {
+    "team": 1,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 15956,
+    "dmgReal": 13269,
+    "kills": 47
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    4
+   ],
+   "end_t": 62.0,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 1,
+   "alive": [
+    0,
+    4
+   ],
+   "end_t": 60.3,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:9": 4124.5,
+   "1:22": 16036.0
+  },
+  "mech": {
+   "0:9": 3557.5,
+   "1:22": 9718.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:22": 55,
+   "0:9": 1
+  },
+  "mech": {
+   "1:22": 55,
+   "0:9": 1
+  }
+ },
+ "ts": "06:40:36",
+ "alive_mech": {
+  "mech": {
+   "1:22": 4
+  },
+  "factory": {
+   "1:22": 4
+  }
+ }
+}

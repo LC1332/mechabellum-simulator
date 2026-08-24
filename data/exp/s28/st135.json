@@ -1,0 +1,159 @@
+{
+ "name": "st135",
+ "group": "ST",
+ "desc": "ST 长弓·防空专精+战争工厂·高爆弹药 vs 犀牛·战地维修+熔点·爬虫制造 等经济1500 #135 (两塔正中,换位)",
+ "value": [
+  1500,
+  1300
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 2,
+    "level": 0,
+    "x": -12.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 17,
+    "level": 0,
+    "x": -12.0,
+    "y": -178.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "2": [
+    3202
+   ],
+   "17": [
+    417
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 5,
+    "level": 0,
+    "x": 5.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -29.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 4,
+    "level": 0,
+    "x": -12.0,
+    "y": 178.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "5": [
+    905
+   ],
+   "4": [
+    1204
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st135",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   500,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11645,
+    "dmgReal": 10565,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 17,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 63168,
+    "dmgReal": 58936,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 60073,
+    "dmgReal": 59784,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 26.4
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:2": 9316.0,
+   "0:17": 46024.5,
+   "1:4": 115215.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:17": 10,
+   "1:4": 2
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:15:35"
+}

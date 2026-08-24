@@ -1,0 +1,118 @@
+{
+ "name": "st984",
+ "group": "ST",
+ "desc": "ST 尖牙·随身护盾 vs 火神·高温火焰 等经济700 #984 (两塔正中)",
+ "value": [
+  700,
+  700
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": -23.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 11.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "9": [
+    209
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 3,
+    "level": 0,
+    "x": -6.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "3": [
+    10603
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st984",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   350
+  ],
+  "alive": [
+   0,
+   1
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 1,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9936,
+    "dmgReal": 8424,
+    "kills": 36
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 19.0
+  }
+ },
+ "dmg": {
+  "factory": {
+   "1:3": 8424.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:3": 36
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:32:37"
+}

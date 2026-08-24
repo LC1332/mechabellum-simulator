@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m8_hw_l0",
+ "group": "A",
+ "desc": "A 钢球(low) L0 vs hammer墙 (r=0.38 N=205)",
+ "mech": 8,
+ "mech_name": "钢球",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1040
+  ],
+  "alive": [
+   0,
+   26
+  ],
+  "rows": [
+   {
+    "mech": 8,
+    "dmg": 54423.0,
+    "kills": 14
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   19
+  ],
+  "rows": [
+   {
+    "mech": 8,
+    "dmg": 77706.4,
+    "kills": 21,
+    "r": 1.428
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

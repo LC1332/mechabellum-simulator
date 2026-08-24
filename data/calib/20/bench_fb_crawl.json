@@ -1,0 +1,45 @@
+{
+ "scenario": "bench_fb_crawl",
+ "group": "BENCH",
+ "desc": "bench 火獾(800) vs 爬虫(800)",
+ "mech": 20,
+ "mech_name": "火獾",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   804,
+   0
+  ],
+  "alive": [
+   12,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 20,
+    "dmg": 50496.0,
+    "kills": 192
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   10,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 20,
+    "dmg": 50496.0,
+    "kills": 192,
+    "r": 1.0
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

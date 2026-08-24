@@ -1,0 +1,192 @@
+{
+ "name": "u099",
+ "group": "U",
+ "desc": "U 鬼鳐(25) vs 泰山(2002) 等经济800  [p0:鬼鳐+骇客 p1:泰山]",
+ "pair": [
+  25,
+  2002
+ ],
+ "value": [
+  800,
+  800
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 25,
+    "level": 0,
+    "x": -165.0,
+    "y": -186.0,
+    "index": 0
+   },
+   {
+    "id": 25,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 25,
+    "level": 0,
+    "x": -165.0,
+    "y": -114.0,
+    "index": 2
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": -193.0,
+    "y": -150.0,
+    "index": 3
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 2002,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u099",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   603,
+   0
+  ],
+  "alive": [
+   9,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 28691,
+    "dmgReal": 27743,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 62809,
+    "dmgReal": 62764,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 53898,
+    "dmgReal": 52950,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14747,
+    "dmgReal": 6649,
+    "kills": 2
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    9,
+    0
+   ],
+   "end_t": 86.9,
+   "towers_down": {
+    "0": 2,
+    "1": 2
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 0,
+   "alive": [
+    11,
+    0
+   ],
+   "end_t": 106.8,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:25": 143457.0,
+   "1:2002": 10049.0
+  },
+  "mech": {
+   "0:25": 111937.0,
+   "0:2002": 3400.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:25": 3,
+   "1:2002": 3
+  },
+  "mech": {
+   "0:25": 1,
+   "1:2002": 1
+  }
+ },
+ "ts": "06:29:49",
+ "alive_mech": {
+  "mech": {
+   "0:25": 9,
+   "0:14": 1,
+   "0:2002": 1
+  },
+  "factory": {
+   "0:25": 9
+  }
+ }
+}

@@ -1,0 +1,45 @@
+{
+ "scenario": "b_m8_cw_t180808",
+ "group": "B",
+ "desc": "B +滚动充能 t180808(在用, 语料65侧)",
+ "mech": 8,
+ "mech_name": "钢球",
+ "tech": 180808,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1368
+  ],
+  "alive": [
+   0,
+   342
+  ],
+  "rows": [
+   {
+    "mech": 8,
+    "dmg": 12021.0,
+    "kills": 42
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   366
+  ],
+  "rows": [
+   {
+    "mech": 8,
+    "dmg": 5033.9,
+    "kills": 18,
+    "r": 0.419
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

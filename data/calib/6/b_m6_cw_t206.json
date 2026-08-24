@@ -1,0 +1,45 @@
+{
+ "scenario": "b_m6_cw_t206",
+ "group": "B",
+ "desc": "B +能量护盾 t206(在用, 语料13侧)",
+ "mech": 6,
+ "mech_name": "兵蜂",
+ "tech": 206,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   816,
+   0
+  ],
+  "alive": [
+   48,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 6,
+    "dmg": 100992.0,
+    "kills": 384
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   48,
+   8
+  ],
+  "rows": [
+   {
+    "mech": 6,
+    "dmg": 98888.0,
+    "kills": 376,
+    "r": 0.979
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

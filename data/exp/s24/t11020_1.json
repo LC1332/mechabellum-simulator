@@ -1,0 +1,161 @@
+{
+ "name": "t11020_1",
+ "group": "TECH",
+ "desc": "U 火獾(20) vs 长弓(2) 等经济400",
+ "pair": [
+  20,
+  2
+ ],
+ "value": [
+  400,
+  400
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 20,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "20": [
+    11020
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 2,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "2": [
+    10202
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_t11020_1",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   134,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7813,
+    "dmgReal": 5022,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9548,
+    "dmgReal": 8290,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 56.2,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 52.7,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:20": 5022.0,
+   "1:2": 15743.7
+  },
+  "mech": {
+   "0:20": 5022.0,
+   "1:2": 8756.7
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:2": 1,
+   "0:20": 2,
+   "-1:0": 2
+  },
+  "mech": {
+   "1:2": 1,
+   "0:20": 2,
+   "-1:0": 1
+  }
+ },
+ "ts": "06:23:48",
+ "alive_mech": {
+  "mech": {
+   "0:20": 2
+  },
+  "factory": {
+   "0:20": 1
+  }
+ }
+}

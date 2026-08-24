@@ -1,0 +1,45 @@
+{
+ "scenario": "t3_storm_fang_lv3",
+ "group": "T3",
+ "desc": "step22 fang_lv3 复现 (oracle 120s 险胜 vs pysim 3.6s 全歼)",
+ "mech": 12,
+ "mech_name": "暴雨",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   144
+  ],
+  "alive": [
+   0,
+   24
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 89856.0,
+    "kills": 192
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   20
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 96360.0,
+    "kills": 196,
+    "r": 1.072
+   }
+  ]
+ },
+ "mech_note": "齐射=本体攻击(projectileCount4+randomTargetRange30+bulletSpeed60): 弹道化/目标分散建模, 换靶不清武器循环(旧机器枪 8s 扫墙 vs oracle 30s); 慢弹飞行时间已建模",
+ "ts": "2026-08-23 03:10:16"
+}

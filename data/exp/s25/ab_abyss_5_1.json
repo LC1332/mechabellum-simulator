@@ -1,0 +1,142 @@
+{
+ "name": "ab_abyss_5_1",
+ "group": "A2",
+ "desc": "A 深渊(1张) vs 犀牛+熔点 等经济800 (C2)",
+ "pair": [
+  29,
+  5
+ ],
+ "value": [
+  800,
+  800
+ ],
+ "anchor_team": 0,
+ "p0": {
+  "units": [
+   {
+    "id": 29,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 0
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 5,
+    "level": 0,
+    "x": -165.0,
+    "y": -168.0,
+    "index": 100
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -165.0,
+    "y": -132.0,
+    "index": 101
+   },
+   {
+    "id": 4,
+    "level": 0,
+    "x": -193.0,
+    "y": -150.0,
+    "index": 102
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s25_ab_abyss_5_1",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   750
+  ],
+  "alive": [
+   0,
+   3
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 29,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5399,
+    "dmgReal": 4940,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7120,
+    "dmgReal": 6800,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 74163,
+    "dmgReal": 66955,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 89.7
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:29": 76301.0,
+   "1:5": 6248.0,
+   "1:4": 552.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:29": 5,
+   "1:4": 1,
+   "1:5": 1
+  }
+ },
+ "ts": "09:43:00"
+}

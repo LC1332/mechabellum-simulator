@@ -1,0 +1,307 @@
+{
+ "name": "st019",
+ "group": "ST",
+ "desc": "ST 犀牛 vs 火神·装甲强化 等经济2200 #19 (两塔正中,换位)",
+ "value": [
+  2200,
+  1750
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 5,
+    "level": 0,
+    "x": -158.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -124.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -90.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -56.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -22.0,
+    "y": -150.0,
+    "index": 4
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 12.0,
+    "y": -150.0,
+    "index": 5
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 46.0,
+    "y": -150.0,
+    "index": 6
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 80.0,
+    "y": -150.0,
+    "index": 7
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 114.0,
+    "y": -150.0,
+    "index": 8
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 148.0,
+    "y": -150.0,
+    "index": 9
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 182.0,
+    "y": -150.0,
+    "index": 10
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 3,
+    "level": 0,
+    "x": 63.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 3,
+    "level": 0,
+    "x": 29.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 3,
+    "level": 0,
+    "x": -5.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 3,
+    "level": 0,
+    "x": -39.0,
+    "y": 150.0,
+    "index": 103
+   }
+  ],
+  "techs": {
+   "3": [
+    3003
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st019",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   2200,
+   0
+  ],
+  "alive": [
+   11,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 24920,
+    "dmgReal": 24920,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 21360,
+    "dmgReal": 17838,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 17800,
+    "dmgReal": 17800,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14240,
+    "dmgReal": 12479,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14240,
+    "dmgReal": 14240,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14240,
+    "dmgReal": 14240,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14240,
+    "dmgReal": 12479,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3560,
+    "dmgReal": 3560,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3560,
+    "dmgReal": 3560,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 19950,
+    "dmgReal": 19950,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12000,
+    "dmgReal": 12000,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 20625,
+    "dmgReal": 20625,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 17550,
+    "dmgReal": 17550,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    11,
+    0
+   ],
+   "end_t": 18.3
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:5": 181674.0,
+   "1:3": 76200.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:5": 4
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:10:42"
+}

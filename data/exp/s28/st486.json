@@ -1,0 +1,154 @@
+{
+ "name": "st486",
+ "group": "ST",
+ "desc": "ST 泰山·烟雾弹 vs 狂蝎·双发 等经济1200 #486 (两塔正中)",
+ "value": [
+  1150,
+  1000
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 2002,
+    "level": 0,
+    "x": 6.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "2002": [
+    11020022
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 19,
+    "level": 0,
+    "x": 40.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": 6.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": -28.0,
+    "y": 150.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "19": [
+    719
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st486",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   500,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 70788,
+    "dmgReal": 55896,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 21300,
+    "dmgReal": 21300,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 21300,
+    "dmgReal": 21300,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 21300,
+    "dmgReal": 21300,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    2
+   ],
+   "end_t": 23.7
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:2002": 30430.0,
+   "1:19": 136657.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:2002": 1,
+   "1:19": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:11:06"
+}

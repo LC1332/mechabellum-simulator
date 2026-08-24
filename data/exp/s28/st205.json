@@ -1,0 +1,168 @@
+{
+ "name": "st205",
+ "group": "ST",
+ "desc": "ST 丧钟·能量汲取 vs 火獾·引燃 等经济1200 #205 (两塔正中,换位)",
+ "value": [
+  1200,
+  900
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 2001,
+    "level": 0,
+    "x": 12.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "2001": [
+    32001
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 20,
+    "level": 0,
+    "x": 63.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": 29.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -5.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -39.0,
+    "y": 150.0,
+    "index": 103
+   }
+  ],
+  "techs": {
+   "20": [
+    180220
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st205",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   500,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2001,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 53131,
+    "dmgReal": 50664,
+    "kills": 12
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 297,
+    "dmgReal": 297,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4293,
+    "dmgReal": 4293,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 999,
+    "dmgReal": 999,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3375,
+    "dmgReal": 3375,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 15.9
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:2001": 50664.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:2001": 12
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:18:33"
+}

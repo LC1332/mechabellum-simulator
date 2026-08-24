@@ -1,0 +1,133 @@
+{
+ "name": "cb_over_tts",
+ "group": "CB",
+ "desc": "霸主杀泰山: 霸主x2 vs 泰山L4 (u228 无科技复刻)",
+ "value": [
+  1000,
+  3200
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 11,
+    "level": 0,
+    "x": -23.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 11,
+    "level": 0,
+    "x": 11.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 2002,
+    "level": 3,
+    "x": -6.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s27_cb_over_tts",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   800,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 277878,
+    "dmgReal": 273492,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 273136,
+    "dmgReal": 273136,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 47192,
+    "dmgReal": 6800,
+    "kills": 2
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    1
+   ],
+   "end_t": 120.0
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:11": 405915.2,
+   "1:2002": 6800.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:2002": 2
+  }
+ },
+ "alive_mech": {
+  "factory": {
+   "0:11": 2
+  }
+ },
+ "ts": "16:17:50"
+}

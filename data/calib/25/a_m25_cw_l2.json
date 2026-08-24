@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m25_cw_l2",
+ "group": "A",
+ "desc": "A 鬼鳐(low) L2 vs crawler墙 (r=0.81 N=271)",
+ "mech": 25,
+ "mech_name": "鬼鳐",
+ "tech": null,
+ "level": 2,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   804,
+   0
+  ],
+  "alive": [
+   12,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 25,
+    "dmg": 100992.0,
+    "kills": 384
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   12,
+   2
+  ],
+  "rows": [
+   {
+    "mech": 25,
+    "dmg": 100466.0,
+    "kills": 382,
+    "r": 0.995
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

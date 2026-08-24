@@ -1,0 +1,159 @@
+{
+ "name": "u135",
+ "group": "U",
+ "desc": "U 犀牛(5) vs 魔眼(30) 等经济400",
+ "pair": [
+  5,
+  30
+ ],
+ "value": [
+  400,
+  400
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 5,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "5": [
+    3005
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 30,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "30": [
+    10230
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u135",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   200,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 17800,
+    "dmgReal": 11366,
+    "kills": 5
+   },
+   {
+    "team": 1,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13461,
+    "dmgReal": 12683,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 51.9,
+   "towers_down": {
+    "0": 1,
+    "1": 2
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 52.9,
+   "towers_down": {
+    "0": 1,
+    "1": 2
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:5": 11366.0,
+   "1:30": 9844.0
+  },
+  "mech": {
+   "0:5": 11366.0,
+   "1:30": 7377.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:5": 5,
+   "1:30": 1
+  },
+  "mech": {
+   "0:5": 5,
+   "1:30": 1
+  }
+ },
+ "ts": "06:32:34",
+ "alive_mech": {
+  "mech": {
+   "0:5": 1
+  },
+  "factory": {
+   "0:5": 1
+  }
+ }
+}

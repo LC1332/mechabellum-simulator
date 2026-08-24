@@ -1,0 +1,170 @@
+{
+ "name": "a9_9",
+ "group": "A",
+ "desc": "A 尖牙+狂蝎 vs 锚[沙虫+熔点] 等经济800 t3925",
+ "pair": [
+  9,
+  -100
+ ],
+ "value": [
+  800,
+  800
+ ],
+ "anchor_team": 1,
+ "p0": {
+  "units": [
+   {
+    "id": 23,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 0
+   },
+   {
+    "id": 4,
+    "level": 0,
+    "x": 193.0,
+    "y": 150.0,
+    "index": 1
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 100
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": -193.0,
+    "y": -168.0,
+    "index": 101
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": -193.0,
+    "y": -132.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "9": [
+    3925
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s25_a9_9",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   350,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4521,
+    "dmgReal": 4077,
+    "kills": 6
+   },
+   {
+    "team": 0,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 177012,
+    "dmgReal": 42093,
+    "kills": 16
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 47925,
+    "dmgReal": 33425,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5166,
+    "dmgReal": 5166,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 26625,
+    "dmgReal": 25582,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 46.8
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:23": 46591.2,
+   "1:9": 1905.1,
+   "1:19": 45455.7
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:23": 22,
+   "1:19": 1
+  }
+ },
+ "ts": "09:41:15"
+}

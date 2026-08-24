@@ -1,0 +1,137 @@
+{
+ "name": "st102",
+ "group": "ST",
+ "desc": "ST 狼蛛·战地维修 vs 沙虫·装甲强化 等经济700 #102 (两塔正中)",
+ "value": [
+  550,
+  650
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 24,
+    "level": 0,
+    "x": -11.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 24,
+    "level": 0,
+    "x": 23.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "24": [
+    924
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 23,
+    "level": 0,
+    "x": 6.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "23": [
+    3023
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st102",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   350
+  ],
+  "alive": [
+   0,
+   1
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 24,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3472,
+    "dmgReal": 3472,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 24,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3472,
+    "dmgReal": 3472,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 38904,
+    "dmgReal": 29546,
+    "kills": 2
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 21.4
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:24": 13516.0,
+   "1:23": 47103.9
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:23": 2
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:14:04"
+}

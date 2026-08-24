@@ -1,0 +1,193 @@
+{
+ "name": "u076",
+ "group": "U",
+ "desc": "U 火神(3) vs 暴雨(12) 等经济550  [p0:火神 p1:暴雨+长弓]",
+ "pair": [
+  3,
+  12
+ ],
+ "value": [
+  550,
+  550
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 3,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "3": [
+    11010
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 12,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": 193.0,
+    "y": 132.0,
+    "index": 101
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": 193.0,
+    "y": 168.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "12": [
+    412
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u076",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   400
+  ],
+  "alive": [
+   0,
+   6
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3450,
+    "dmgReal": 3400,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14437,
+    "dmgReal": 12261,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7682,
+    "dmgReal": 7682,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 17136,
+    "dmgReal": 17136,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 62.4,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 57.9,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:3": 11240.0,
+   "1:12": 5510.0,
+   "1:2": 7918.6
+  },
+  "mech": {
+   "0:3": 11240.0,
+   "1:12": 1061.5,
+   "1:2": 3985.5
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:12": 1,
+   "0:3": 7
+  },
+  "mech": {
+   "1:2": 1,
+   "0:3": 7
+  }
+ },
+ "ts": "06:28:03",
+ "alive_mech": {
+  "mech": {
+   "0:3": 1
+  },
+  "factory": {
+   "0:3": 1
+  }
+ }
+}

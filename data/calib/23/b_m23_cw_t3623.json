@@ -1,0 +1,56 @@
+{
+ "scenario": "b_m23_cw_t3623",
+ "group": "B",
+ "desc": "B +? t3623(在用, 语料9侧)",
+ "mech": 23,
+ "mech_name": "沙虫",
+ "tech": 3623,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   1050,
+   0
+  ],
+  "alive": [
+   3,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 23,
+    "dmg": 91524.0,
+    "kills": 348
+   },
+   {
+    "mech": 1001,
+    "dmg": 9468.0,
+    "kills": 36
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   269
+  ],
+  "rows": [
+   {
+    "mech": 23,
+    "dmg": 30245.0,
+    "kills": 115,
+    "r": 0.33
+   },
+   {
+    "mech": 1001,
+    "dmg": 0.0,
+    "kills": 0,
+    "r": null
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

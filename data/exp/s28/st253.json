@@ -1,0 +1,176 @@
+{
+ "name": "st253",
+ "group": "ST",
+ "desc": "ST 沙虫·潜地维修 vs 狂蝎·装甲强化 等经济1200 #253 (两塔正中,换位)",
+ "value": [
+  1050,
+  1000
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 23,
+    "level": 0,
+    "x": -29.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 23,
+    "level": 0,
+    "x": 5.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -12.0,
+    "y": -178.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "23": [
+    923
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 19,
+    "level": 0,
+    "x": 22.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": -12.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": -46.0,
+    "y": 150.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "19": [
+    3019
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st253",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   808,
+   0
+  ],
+  "alive": [
+   20,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 19452,
+    "dmgReal": 18632,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 38904,
+    "dmgReal": 37264,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10650,
+    "dmgReal": 10650,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10650,
+    "dmgReal": 10650,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10650,
+    "dmgReal": 10650,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    20,
+    0
+   ],
+   "end_t": 19.6
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:23": 83844.0,
+   "1:19": 85200.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:23": 3
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:01:12"
+}

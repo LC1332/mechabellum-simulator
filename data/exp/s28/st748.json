@@ -1,0 +1,167 @@
+{
+ "name": "st748",
+ "group": "ST",
+ "desc": "ST 霸主·高爆弹药 vs 先知·导弹拦截 等经济1500 #748 (两塔正中)",
+ "value": [
+  1300,
+  1100
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 11,
+    "level": 0,
+    "x": -5.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 11,
+    "level": 0,
+    "x": 29.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 12.0,
+    "y": -178.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "11": [
+    411
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 26,
+    "level": 0,
+    "x": 46.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 26,
+    "level": 0,
+    "x": 12.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 26,
+    "level": 0,
+    "x": -22.0,
+    "y": 150.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "26": [
+    3326
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st748",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   750
+  ],
+  "alive": [
+   0,
+   3
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4742,
+    "dmgReal": 4742,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 18872,
+    "dmgReal": 15179,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 21568,
+    "dmgReal": 13953,
+    "kills": 7
+   },
+   {
+    "team": 1,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 26960,
+    "dmgReal": 15652,
+    "kills": 10
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    3
+   ],
+   "end_t": 29.8
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:9": 63.0,
+   "1:26": 44784.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:26": 20
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:22:23"
+}

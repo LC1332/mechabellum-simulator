@@ -1,0 +1,208 @@
+{
+ "name": "st501",
+ "group": "ST",
+ "desc": "ST 先知·全弹发射 vs 泰山·光子循环 等经济2400 #501 (两塔正中,换位)",
+ "value": [
+  1750,
+  2000
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 26,
+    "level": 0,
+    "x": -74.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 26,
+    "level": 0,
+    "x": -40.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 26,
+    "level": 0,
+    "x": -6.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 26,
+    "level": 0,
+    "x": 28.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 26,
+    "level": 0,
+    "x": 62.0,
+    "y": -150.0,
+    "index": 4
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -6.0,
+    "y": -178.0,
+    "index": 5
+   }
+  ],
+  "techs": {
+   "26": [
+    726
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 2002,
+    "level": 0,
+    "x": 11.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 2002,
+    "level": 0,
+    "x": -23.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "2002": [
+    18032002
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st501",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   1000
+  ],
+  "alive": [
+   0,
+   2
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5392,
+    "dmgReal": 5392,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8088,
+    "dmgReal": 8088,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8088,
+    "dmgReal": 8088,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13480,
+    "dmgReal": 13480,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10784,
+    "dmgReal": 10784,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 82586,
+    "dmgReal": 24918,
+    "kills": 10
+   },
+   {
+    "team": 1,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 112081,
+    "dmgReal": 37143,
+    "kills": 13
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    2
+   ],
+   "end_t": 27.2
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:26": 192764.0,
+   "1:2002": 62061.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:2002": 23
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:11:42"
+}

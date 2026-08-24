@@ -1,0 +1,151 @@
+{
+ "name": "st972",
+ "group": "ST",
+ "desc": "ST 爬虫·机械狂暴 vs 火獾·引燃 等经济600 #972 (两塔正中)",
+ "value": [
+  400,
+  500
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 10,
+    "level": 0,
+    "x": -22.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 12.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 46.0,
+    "y": -150.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "10": [
+    10510
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 20,
+    "level": 0,
+    "x": 29.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -5.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "20": [
+    180220
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st972",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   402
+  ],
+  "alive": [
+   0,
+   6
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 474,
+    "dmgReal": 474,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11178,
+    "dmgReal": 10870,
+    "kills": 44
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8262,
+    "dmgReal": 8066,
+    "kills": 28
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    6
+   ],
+   "end_t": 11.9
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:10": 158.0,
+   "1:20": 18936.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:20": 72
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:32:09"
+}

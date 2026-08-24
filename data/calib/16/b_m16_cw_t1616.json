@@ -1,0 +1,45 @@
+{
+ "scenario": "b_m16_cw_t1616",
+ "group": "B",
+ "desc": "B +高速引擎 t1616(在用, 语料26侧)",
+ "mech": 16,
+ "mech_name": "凤凰",
+ "tech": 1616,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   800,
+   448
+  ],
+  "alive": [
+   8,
+   112
+  ],
+  "rows": [
+   {
+    "mech": 16,
+    "dmg": 71536.0,
+    "kills": 272
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   8,
+   233
+  ],
+  "rows": [
+   {
+    "mech": 16,
+    "dmg": 39713.0,
+    "kills": 151,
+    "r": 0.555
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

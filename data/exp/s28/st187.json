@@ -1,0 +1,137 @@
+{
+ "name": "st187",
+ "group": "ST",
+ "desc": "ST 熔点·电磁弹幕 vs 堡垒·实心弹 等经济700 #187 (两塔正中,换位)",
+ "value": [
+  700,
+  700
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 4,
+    "level": 0,
+    "x": -12.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "4": [
+    1106
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 1,
+    "level": 0,
+    "x": -12.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -12.0,
+    "y": 178.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "1": [
+    10401
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st187",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   350,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 52539,
+    "dmgReal": 46044,
+    "kills": 19
+   },
+   {
+    "team": 1,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13048,
+    "dmgReal": 13048,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 504,
+    "dmgReal": 504,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    19
+   ],
+   "end_t": 16.0
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:4": 167.7,
+   "1:1": 30907.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:1": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:17:43"
+}

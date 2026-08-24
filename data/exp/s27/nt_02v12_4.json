@@ -1,0 +1,162 @@
+{
+ "name": "nt_02v12_4",
+ "group": "NT",
+ "desc": "NT 长弓 vs 暴雨 等经济400 #4 (两塔正中,无科技)",
+ "value": [
+  400,
+  400
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 2,
+    "level": 0,
+    "x": -57.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": -23.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": 11.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": 45.0,
+    "y": -150.0,
+    "index": 3
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 12,
+    "level": 0,
+    "x": 11.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": -23.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s27_nt_02v12_4",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   200
+  ],
+  "alive": [
+   0,
+   4
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4658,
+    "dmgReal": 2298,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4658,
+    "dmgReal": 2298,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6176,
+    "dmgReal": 4094,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3088,
+    "dmgReal": 2394,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    8
+   ],
+   "end_t": 7.5
+  }
+ },
+ "dmg": {
+  "factory": {
+   "1:12": 6488.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:12": 4
+  }
+ },
+ "alive_mech": {
+  "factory": {
+   "1:12": 8
+  }
+ },
+ "ts": "16:12:27"
+}

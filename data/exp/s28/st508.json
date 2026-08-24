@@ -1,0 +1,169 @@
+{
+ "name": "st508",
+ "group": "ST",
+ "desc": "ST 暴雨·发射器过载 vs 堡垒·双发 等经济1000 #508 (两塔正中)",
+ "value": [
+  750,
+  900
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 12,
+    "level": 0,
+    "x": -23.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": 11.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -6.0,
+    "y": -178.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "12": [
+    10312
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 1,
+    "level": 0,
+    "x": 11.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 1,
+    "level": 0,
+    "x": -23.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "1": [
+    701
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st508",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   700
+  ],
+  "alive": [
+   0,
+   2
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 23932,
+    "dmgReal": 23932,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 26248,
+    "dmgReal": 26248,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 63,
+    "dmgReal": 63,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 91336,
+    "dmgReal": 6798,
+    "kills": 14
+   },
+   {
+    "team": 1,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 78288,
+    "dmgReal": 4500,
+    "kills": 12
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    2
+   ],
+   "end_t": 22.5
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:12": 19300.0,
+   "1:1": 11298.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:1": 26
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:12:01"
+}

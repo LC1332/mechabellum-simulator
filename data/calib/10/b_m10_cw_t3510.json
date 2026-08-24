@@ -1,0 +1,45 @@
+{
+ "scenario": "b_m10_cw_t3510",
+ "group": "B",
+ "desc": "B +? t3510(在用, 语料20侧)",
+ "mech": 10,
+ "mech_name": "爬虫",
+ "tech": 3510,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1416
+  ],
+  "alive": [
+   0,
+   354
+  ],
+  "rows": [
+   {
+    "mech": 10,
+    "dmg": 15237.0,
+    "kills": 30
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   360
+  ],
+  "rows": [
+   {
+    "mech": 10,
+    "dmg": 8208.0,
+    "kills": 24,
+    "r": 0.539
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

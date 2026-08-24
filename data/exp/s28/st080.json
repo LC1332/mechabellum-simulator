@@ -1,0 +1,148 @@
+{
+ "name": "st080",
+ "group": "ST",
+ "desc": "ST 泰山·饱和打击 vs 火獾·高温火焰 等经济1500 #80 (两塔正中)",
+ "value": [
+  1500,
+  900
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 2002,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 0.0,
+    "y": -178.0,
+    "index": 1
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 0.0,
+    "y": -206.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "2002": [
+    72002
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 20,
+    "level": 0,
+    "x": 34.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -0.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -34.0,
+    "y": 150.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "20": [
+    10620
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st080",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   656,
+   0
+  ],
+  "alive": [
+   31,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 53091,
+    "dmgReal": 37998,
+    "kills": 9
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3724,
+    "dmgReal": 3352,
+    "kills": 12
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    43,
+    0
+   ],
+   "end_t": 6.5
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:2002": 37998.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:2002": 9
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:13:09"
+}

@@ -1,0 +1,193 @@
+{
+ "name": "u204",
+ "group": "U",
+ "desc": "U 熔点(4) vs 狂蝎(19) 等经济900  [p0:熔点+磁暴 p1:狂蝎]",
+ "pair": [
+  4,
+  19
+ ],
+ "value": [
+  900,
+  900
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 4,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": -193.0,
+    "y": -168.0,
+    "index": 1
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": -193.0,
+    "y": -132.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "4": [
+    10204
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 19,
+    "level": 0,
+    "x": 165.0,
+    "y": 132.0,
+    "index": 100
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": 165.0,
+    "y": 168.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "19": [
+    10019
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u204",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   550,
+   0
+  ],
+  "alive": [
+   3,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 43557,
+    "dmgReal": 39355,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1309,
+    "dmgReal": 1309,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12780,
+    "dmgReal": 3400,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    3,
+    0
+   ],
+   "end_t": 42.4,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 0,
+   "alive": [
+    3,
+    0
+   ],
+   "end_t": 45.9,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:4": 39355.0,
+   "0:31": 1309.0,
+   "1:19": 17458.0
+  },
+  "mech": {
+   "0:4": 39355.0,
+   "0:31": 1309.0,
+   "1:19": 11707.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:19": 1,
+   "0:4": 3
+  },
+  "mech": {
+   "1:19": 1,
+   "0:4": 3
+  }
+ },
+ "ts": "06:38:04",
+ "alive_mech": {
+  "mech": {
+   "0:4": 1,
+   "0:31": 2
+  },
+  "factory": {
+   "0:4": 1,
+   "0:31": 2
+  }
+ }
+}

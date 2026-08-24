@@ -1,0 +1,186 @@
+{
+ "name": "nt_07v14_1",
+ "group": "NT",
+ "desc": "NT 骇客 vs 野马 等经济400 #1 (两塔正中,无科技,换位)",
+ "value": [
+  400,
+  400
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 14,
+    "level": 0,
+    "x": -5.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": 29.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 7,
+    "level": 0,
+    "x": 29.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": -5.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s27_nt_07v14_1",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   306
+  ],
+  "alive": [
+   0,
+   18
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 7,
+    "dmgMax": 108,
+    "dmgReal": 108,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 7,
+    "dmgMax": 180,
+    "dmgReal": 180,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 7,
+    "dmgMax": 252,
+    "dmgReal": 252,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 7,
+    "dmgMax": 108,
+    "dmgReal": 108,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 7,
+    "dmgMax": 108,
+    "dmgReal": 108,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 7,
+    "dmgMax": 72,
+    "dmgReal": 72,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3816,
+    "dmgReal": 3731,
+    "kills": 5
+   },
+   {
+    "team": 1,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4572,
+    "dmgReal": 4501,
+    "kills": 3
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    22
+   ],
+   "end_t": 11.5
+  }
+ },
+ "dmg": {
+  "factory": {
+   "1:7": 7184.0,
+   "0:7": 360.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:7": 4
+  }
+ },
+ "alive_mech": {
+  "factory": {
+   "0:14": 2,
+   "0:7": 2
+  }
+ },
+ "ts": "16:11:48"
+}

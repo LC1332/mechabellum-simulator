@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m30_cw_l0",
+ "group": "A",
+ "desc": "A 魔眼(high) L0 vs crawler墙 (r=1.31 N=298)",
+ "mech": 30,
+ "mech_name": "魔眼",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1412
+  ],
+  "alive": [
+   0,
+   353
+  ],
+  "rows": [
+   {
+    "mech": 30,
+    "dmg": 8153.0,
+    "kills": 31
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   362
+  ],
+  "rows": [
+   {
+    "mech": 30,
+    "dmg": 5786.0,
+    "kills": 22,
+    "r": 0.71
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

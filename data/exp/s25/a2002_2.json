@@ -1,0 +1,135 @@
+{
+ "name": "a2002_2",
+ "group": "A",
+ "desc": "A 泰山 vs 锚[沙虫+熔点] 等经济800",
+ "pair": [
+  2002,
+  -100
+ ],
+ "value": [
+  800,
+  800
+ ],
+ "anchor_team": 1,
+ "p0": {
+  "units": [
+   {
+    "id": 23,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 0
+   },
+   {
+    "id": 4,
+    "level": 0,
+    "x": 193.0,
+    "y": 150.0,
+    "index": 1
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 2002,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 100
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s25_a2002_2",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   700,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 129168,
+    "dmgReal": 128908,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 21396,
+    "dmgReal": 14549,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 29495,
+    "dmgReal": 26996,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 59.1
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:23": 65156.0,
+   "0:4": 78301.0,
+   "1:2002": 69742.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:23": 2,
+   "1:2002": 2,
+   "0:4": 1
+  }
+ },
+ "ts": "09:38:22"
+}

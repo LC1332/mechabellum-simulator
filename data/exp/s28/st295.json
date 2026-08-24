@@ -1,0 +1,181 @@
+{
+ "name": "st295",
+ "group": "ST",
+ "desc": "ST 犀牛 vs 爬虫·机械狂暴 等经济600 #295 (两塔正中,换位)",
+ "value": [
+  600,
+  400
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 5,
+    "level": 0,
+    "x": -40.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -6.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 28.0,
+    "y": -150.0,
+    "index": 2
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 10,
+    "level": 0,
+    "x": 28.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -6.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -40.0,
+    "y": 150.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "10": [
+    10510
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st295",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   600,
+   0
+  ],
+  "alive": [
+   3,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 89000,
+    "dmgReal": 6575,
+    "kills": 25
+   },
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 89000,
+    "dmgReal": 6575,
+    "kills": 25
+   },
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 78320,
+    "dmgReal": 5786,
+    "kills": 22
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9875,
+    "dmgReal": 9875,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6794,
+    "dmgReal": 6794,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12877,
+    "dmgReal": 12877,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    3,
+    0
+   ],
+   "end_t": 12.4
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:5": 18936.0,
+   "1:10": 8137.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:5": 72
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:02:55"
+}

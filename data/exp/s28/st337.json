@@ -1,0 +1,237 @@
+{
+ "name": "st337",
+ "group": "ST",
+ "desc": "ST 磁暴 vs 魔眼·射程强化 等经济800 #337 (两塔正中,换位)",
+ "value": [
+  800,
+  500
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 31,
+    "level": 0,
+    "x": -131.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": -97.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": -63.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": -29.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": 5.0,
+    "y": -150.0,
+    "index": 4
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": 39.0,
+    "y": -150.0,
+    "index": 5
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": 73.0,
+    "y": -150.0,
+    "index": 6
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": 107.0,
+    "y": -150.0,
+    "index": 7
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 30,
+    "level": 0,
+    "x": 5.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": -29.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "30": [
+    10230
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st337",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   700,
+   0
+  ],
+  "alive": [
+   7,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3927,
+    "dmgReal": 1735,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1309,
+    "dmgReal": 1309,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2618,
+    "dmgReal": 1522,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1309,
+    "dmgReal": 1309,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2618,
+    "dmgReal": 1522,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2618,
+    "dmgReal": 1522,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1309,
+    "dmgReal": 213,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8955,
+    "dmgReal": 8955,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8955,
+    "dmgReal": 8420,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    6,
+    0
+   ],
+   "end_t": 19.0
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:31": 9132.0,
+   "1:30": 18830.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:30": 2,
+   "0:31": 6
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:04:45"
+}

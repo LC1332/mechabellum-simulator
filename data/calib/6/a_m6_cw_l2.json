@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m6_cw_l2",
+ "group": "A",
+ "desc": "A 兵蜂(low) L2 vs crawler墙 (r=0.47 N=177)",
+ "mech": 6,
+ "mech_name": "兵蜂",
+ "tech": null,
+ "level": 2,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   816,
+   0
+  ],
+  "alive": [
+   48,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 6,
+    "dmg": 100992.0,
+    "kills": 384
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   48,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 6,
+    "dmg": 100992.0,
+    "kills": 384,
+    "r": 1.0
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

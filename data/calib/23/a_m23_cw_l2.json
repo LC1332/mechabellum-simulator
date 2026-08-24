@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m23_cw_l2",
+ "group": "A",
+ "desc": "A 沙虫(high) L2 vs crawler墙 (r=1.47 N=41)",
+ "mech": 23,
+ "mech_name": "沙虫",
+ "tech": null,
+ "level": 2,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   1400,
+   0
+  ],
+  "alive": [
+   4,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 23,
+    "dmg": 100992.0,
+    "kills": 384
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   269
+  ],
+  "rows": [
+   {
+    "mech": 23,
+    "dmg": 30245.0,
+    "kills": 115,
+    "r": 0.299
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

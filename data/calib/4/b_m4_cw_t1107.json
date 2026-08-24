@@ -1,0 +1,45 @@
+{
+ "scenario": "b_m4_cw_t1107",
+ "group": "B",
+ "desc": "B +能量散射 t1107(在用, 语料11侧)",
+ "mech": 4,
+ "mech_name": "熔点",
+ "tech": 1107,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   980
+  ],
+  "alive": [
+   0,
+   245
+  ],
+  "rows": [
+   {
+    "mech": 4,
+    "dmg": 44228.0,
+    "kills": 139
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   348
+  ],
+  "rows": [
+   {
+    "mech": 4,
+    "dmg": 9817.4,
+    "kills": 36,
+    "r": 0.222
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

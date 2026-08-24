@@ -1,0 +1,56 @@
+{
+ "scenario": "b_m17_cw_t12117",
+ "group": "B",
+ "desc": "B +钢球制造 t12117(在用, 语料10侧)",
+ "mech": 17,
+ "mech_name": "战争工厂",
+ "tech": 12117,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   2108,
+   0
+  ],
+  "alive": [
+   13,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 8,
+    "dmg": 3372.0,
+    "kills": 7
+   },
+   {
+    "mech": 17,
+    "dmg": 97620.0,
+    "kills": 377
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   283
+  ],
+  "rows": [
+   {
+    "mech": 8,
+    "dmg": 0.0,
+    "kills": 17,
+    "r": null
+   },
+   {
+    "mech": 17,
+    "dmg": 22078.8,
+    "kills": 84,
+    "r": 0.226
+   }
+  ]
+ },
+ "mech_note": "4 独立炮座(weapons×4 distinct): wraith_guns 多目标炮 + kite 走打 → A/C 组 1.00",
+ "ts": "2026-08-23 03:10:16"
+}

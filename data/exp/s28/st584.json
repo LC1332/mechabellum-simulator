@@ -1,0 +1,214 @@
+{
+ "name": "st584",
+ "group": "ST",
+ "desc": "ST 沙虫·对空 vs 兵蜂·对地专精 等经济2000 #584 (两塔正中)",
+ "value": [
+  1700,
+  1200
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 23,
+    "level": 0,
+    "x": -63.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 23,
+    "level": 0,
+    "x": -29.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 23,
+    "level": 0,
+    "x": 5.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 23,
+    "level": 0,
+    "x": 39.0,
+    "y": -150.0,
+    "index": 3
+   }
+  ],
+  "techs": {
+   "23": [
+    3123
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 6,
+    "level": 0,
+    "x": 56.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": 22.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": -12.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": -46.0,
+    "y": 150.0,
+    "index": 103
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": -80.0,
+    "y": 150.0,
+    "index": 104
+   }
+  ],
+  "techs": {
+   "6": [
+    506
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st584",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   1020
+  ],
+  "alive": [
+   0,
+   60
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9726,
+    "dmgReal": 3400,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9726,
+    "dmgReal": 3400,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 50672,
+    "dmgReal": 50672,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 32492,
+    "dmgReal": 32230,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 30674,
+    "dmgReal": 30674,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 44188,
+    "dmgReal": 44145,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 36896,
+    "dmgReal": 36859,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    4,
+    0
+   ],
+   "end_t": 9.2
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:23": 18660.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:23": 60
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:15:06"
+}

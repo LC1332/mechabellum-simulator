@@ -1,0 +1,197 @@
+{
+ "name": "bp_crawl_wall",
+ "group": "BP",
+ "desc": "爬虫x3 vs 墙x11+后场尖牙 (b240 补尖牙)",
+ "value": [
+  300,
+  100
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 10,
+    "level": 0,
+    "x": -40.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -6.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 28.0,
+    "y": -150.0,
+    "index": 2
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": -0.0,
+    "y": 185.0,
+    "index": 100
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": [
+   {
+    "cid": 1,
+    "x": -125.0,
+    "y": 70.0
+   },
+   {
+    "cid": 1,
+    "x": -100.0,
+    "y": 70.0
+   },
+   {
+    "cid": 1,
+    "x": -75.0,
+    "y": 70.0
+   },
+   {
+    "cid": 1,
+    "x": -50.0,
+    "y": 70.0
+   },
+   {
+    "cid": 1,
+    "x": -25.0,
+    "y": 70.0
+   },
+   {
+    "cid": 1,
+    "x": 0.0,
+    "y": 70.0
+   },
+   {
+    "cid": 1,
+    "x": 25.0,
+    "y": 70.0
+   },
+   {
+    "cid": 1,
+    "x": 50.0,
+    "y": 70.0
+   },
+   {
+    "cid": 1,
+    "x": 75.0,
+    "y": 70.0
+   },
+   {
+    "cid": 1,
+    "x": 100.0,
+    "y": 70.0
+   },
+   {
+    "cid": 1,
+    "x": 125.0,
+    "y": 70.0
+   }
+  ]
+ },
+ "use_construction": true,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s27_bp_crawl_wall",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   248,
+   0
+  ],
+  "alive": [
+   62,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1027,
+    "dmgReal": 781,
+    "kills": 6
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1817,
+    "dmgReal": 1325,
+    "kills": 12
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3969,
+    "dmgReal": 3449,
+    "kills": 10
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    54,
+    0
+   ],
+   "end_t": 37.7
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:10": 56477.0,
+   "1:9": 5679.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:9": 18,
+   "0:10": 55
+  }
+ },
+ "alive_mech": {
+  "factory": {
+   "1:9": 13
+  }
+ },
+ "ts": "16:18:12"
+}

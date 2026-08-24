@@ -1,0 +1,153 @@
+{
+ "name": "n2_03_26_2",
+ "group": "NT",
+ "desc": "N2 火神+长弓 vs 先知+犀牛 等经济500 #2 (两塔正中,无科技)",
+ "value": [
+  500,
+  500
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 3,
+    "level": 0,
+    "x": 12.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": 12.0,
+    "y": -178.0,
+    "index": 1
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 26,
+    "level": 0,
+    "x": 12.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 12.0,
+    "y": 178.0,
+    "index": 101
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s27_n2_03_26_2",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   200
+  ],
+  "alive": [
+   0,
+   1
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11645,
+    "dmgReal": 11645,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11475,
+    "dmgReal": 11454,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13480,
+    "dmgReal": 13480,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 21360,
+    "dmgReal": 18421,
+    "kills": 2
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 23.9
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:3": 14850.0,
+   "0:2": 13578.0,
+   "1:26": 16176.0,
+   "1:5": 15725.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:2": 1,
+   "1:5": 2
+  }
+ },
+ "alive_mech": {
+  "factory": {
+   "0:3": 1,
+   "0:2": 1
+  }
+ },
+ "ts": "16:16:51"
+}

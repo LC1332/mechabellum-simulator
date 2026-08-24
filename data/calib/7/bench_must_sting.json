@@ -1,0 +1,45 @@
+{
+ "scenario": "bench_must_sting",
+ "group": "BENCH",
+ "desc": "bench 野马(800) vs 鬼鳐(800)",
+ "mech": 7,
+ "mech_name": "野马",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   306,
+   0
+  ],
+  "alive": [
+   18,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 7,
+    "dmg": 40944.0,
+    "kills": 12
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   5
+  ],
+  "rows": [
+   {
+    "mech": 7,
+    "dmg": 33496.0,
+    "kills": 7,
+    "r": 0.818
+   }
+  ]
+ },
+ "mech_note": "走打 AI: 与爬虫同速(16)边退边打全清墙(oracle L2 全清存活9); 慢速单位只延长窗口",
+ "ts": "2026-08-23 03:10:16"
+}

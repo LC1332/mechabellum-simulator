@@ -1,0 +1,175 @@
+{
+ "name": "u104",
+ "group": "U",
+ "desc": "U 长弓(2) vs 野马(7) 等经济450",
+ "pair": [
+  2,
+  7
+ ],
+ "value": [
+  450,
+  450
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 2,
+    "level": 0,
+    "x": -165.0,
+    "y": -168.0,
+    "index": 0
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": -165.0,
+    "y": -132.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "2": [
+    3202
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 7,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "7": [
+    4607
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u104",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   200,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14201,
+    "dmgReal": 5004,
+    "kills": 5
+   },
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 16998,
+    "dmgReal": 2512,
+    "kills": 8
+   },
+   {
+    "team": 1,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8466,
+    "dmgReal": 8446,
+    "kills": 2
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 54.9,
+   "towers_down": {
+    "0": 2,
+    "1": 1
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 1,
+   "alive": [
+    0,
+    9
+   ],
+   "end_t": 53.6,
+   "towers_down": {
+    "0": 2,
+    "1": 1
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:2": 7516.0,
+   "1:7": 8381.9
+  },
+  "mech": {
+   "0:2": 4661.9,
+   "1:7": 8922.4
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:7": 3,
+   "0:2": 13
+  },
+  "mech": {
+   "1:7": 4,
+   "0:2": 4
+  }
+ },
+ "ts": "06:30:09",
+ "alive_mech": {
+  "mech": {
+   "1:7": 9
+  },
+  "factory": {
+   "0:2": 1
+  }
+ }
+}

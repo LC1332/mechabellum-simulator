@@ -1,0 +1,382 @@
+{
+ "name": "L16_09",
+ "group": "M",
+ "lineup": 16,
+ "desc": "L16 磁暴+尖牙 镜像#9 p0[尖牙:榴弹发射器 磁暴:电磁云/射程强化] p1[尖牙:机械狂暴 磁暴:战地维修/电磁云] 1950/2000 [p1主卡L3] 补尖牙",
+ "pair": [
+  31,
+  9
+ ],
+ "value": [
+  1950,
+  2000
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 31,
+    "level": 0,
+    "x": -165.0,
+    "y": -167.0,
+    "index": 0
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": -165.0,
+    "y": -133.0,
+    "index": 1
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -193.0,
+    "y": -252.0,
+    "index": 2
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -193.0,
+    "y": -218.0,
+    "index": 3
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -193.0,
+    "y": -184.0,
+    "index": 4
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -193.0,
+    "y": -150.0,
+    "index": 5
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -193.0,
+    "y": -116.0,
+    "index": 6
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -193.0,
+    "y": -82.0,
+    "index": 7
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -193.0,
+    "y": -48.0,
+    "index": 8
+   }
+  ],
+  "techs": {
+   "31": [
+    4531,
+    10231
+   ],
+   "9": [
+    3109
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 31,
+    "level": 2,
+    "x": 165.0,
+    "y": 167.0,
+    "index": 100
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": 165.0,
+    "y": 133.0,
+    "index": 101
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 193.0,
+    "y": 235.0,
+    "index": 102
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 193.0,
+    "y": 201.0,
+    "index": 103
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 193.0,
+    "y": 167.0,
+    "index": 104
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 193.0,
+    "y": 133.0,
+    "index": 105
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 193.0,
+    "y": 99.0,
+    "index": 106
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 193.0,
+    "y": 65.0,
+    "index": 107
+   }
+  ],
+  "techs": {
+   "9": [
+    10509
+   ],
+   "31": [
+    931,
+    4531
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s26_L16_09",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   728,
+   0
+  ],
+  "alive": [
+   90,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 27487,
+    "dmgReal": 15244,
+    "kills": 8
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7938,
+    "dmgReal": 7911,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 25523,
+    "dmgReal": 12717,
+    "kills": 8
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8846,
+    "dmgReal": 8028,
+    "kills": 53
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7245,
+    "dmgReal": 7038,
+    "kills": 23
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5607,
+    "dmgReal": 5607,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6489,
+    "dmgReal": 6426,
+    "kills": 7
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5922,
+    "dmgReal": 5881,
+    "kills": 4
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4977,
+    "dmgReal": 4915,
+    "kills": 5
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3843,
+    "dmgReal": 3805,
+    "kills": 5
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 756,
+    "dmgReal": 720,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 315,
+    "dmgReal": 288,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 315,
+    "dmgReal": 306,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 39270,
+    "dmgReal": 1170,
+    "kills": 10
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 504,
+    "dmgReal": 468,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 567,
+    "dmgReal": 531,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10472,
+    "dmgReal": 873,
+    "kills": 8
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    72,
+    0
+   ],
+   "end_t": 79.0
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:31": 4724.0,
+   "0:9": 84822.4,
+   "1:31": 17667.0,
+   "1:9": 6964.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:9": 11,
+   "0:9": 93,
+   "0:31": 18,
+   "1:31": 46
+  }
+ },
+ "alive_mech": {
+  "factory": {
+   "1:31": 1
+  }
+ },
+ "ts": "12:35:33"
+}

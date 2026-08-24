@@ -1,0 +1,191 @@
+{
+ "name": "u091",
+ "group": "U",
+ "desc": "U 堡垒(1) vs 火神(3) 等经济1100",
+ "pair": [
+  1,
+  3
+ ],
+ "value": [
+  1100,
+  1100
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 1,
+    "level": 0,
+    "x": -165.0,
+    "y": -168.0,
+    "index": 0
+   },
+   {
+    "id": 1,
+    "level": 0,
+    "x": -165.0,
+    "y": -132.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "1": [
+    10201
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 3,
+    "level": 0,
+    "x": 165.0,
+    "y": 132.0,
+    "index": 100
+   },
+   {
+    "id": 3,
+    "level": 0,
+    "x": 165.0,
+    "y": 168.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "3": [
+    180203
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u091",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   700,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 32620,
+    "dmgReal": 29496,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 41100,
+    "dmgReal": 34462,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7575,
+    "dmgReal": 7525,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5250,
+    "dmgReal": 5250,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 57.3,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 59.0,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:1": 63958.0,
+   "1:3": 4150.0
+  },
+  "mech": {
+   "0:1": 63958.0,
+   "1:3": 7300.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:1": 3,
+   "1:3": 1
+  },
+  "mech": {
+   "0:1": 3,
+   "1:3": 1
+  }
+ },
+ "ts": "06:29:02",
+ "alive_mech": {
+  "mech": {
+   "0:1": 2
+  },
+  "factory": {
+   "0:1": 2
+  }
+ }
+}

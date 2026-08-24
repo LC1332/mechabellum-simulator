@@ -1,0 +1,166 @@
+{
+ "name": "nt_09v27_2",
+ "group": "NT",
+ "desc": "NT 尖牙 vs 雷霆 等经济400 #2 (两塔正中,无科技)",
+ "value": [
+  400,
+  400
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": -63.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -29.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 5.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 39.0,
+    "y": -150.0,
+    "index": 3
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 27,
+    "level": 0,
+    "x": -12.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s27_nt_09v27_2",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   360,
+   0
+  ],
+  "alive": [
+   60,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3339,
+    "dmgReal": 3339,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5166,
+    "dmgReal": 5166,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4599,
+    "dmgReal": 4599,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2961,
+    "dmgReal": 2961,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 27,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 60324,
+    "dmgReal": 1404,
+    "kills": 12
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    15,
+    0
+   ],
+   "end_t": 30.3
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:9": 16065.0,
+   "1:27": 6669.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:27": 57,
+   "0:9": 1
+  }
+ },
+ "alive_mech": {
+  "factory": {
+   "0:9": 15
+  }
+ },
+ "ts": "16:12:11"
+}

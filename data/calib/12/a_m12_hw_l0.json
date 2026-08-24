@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m12_hw_l0",
+ "group": "A",
+ "desc": "A 暴雨(high) L0 vs hammer墙 (r=2.20 N=139)",
+ "mech": 12,
+ "mech_name": "暴雨",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   920
+  ],
+  "alive": [
+   0,
+   23
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 81514.0,
+    "kills": 17
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   28
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 79178.0,
+    "kills": 12,
+    "r": 0.971
+   }
+  ]
+ },
+ "mech_note": "齐射=本体攻击(projectileCount4+randomTargetRange30+bulletSpeed60): 弹道化/目标分散建模, 换靶不清武器循环(旧机器枪 8s 扫墙 vs oracle 30s); 慢弹飞行时间已建模",
+ "ts": "2026-08-23 03:10:16"
+}

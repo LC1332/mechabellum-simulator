@@ -1,0 +1,127 @@
+{
+ "name": "st027",
+ "group": "ST",
+ "desc": "ST 狂蝎·攻城模式 vs 骇客·射程强化 等经济600 #27 (两塔正中,换位)",
+ "value": [
+  600,
+  600
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 19,
+    "level": 0,
+    "x": 12.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "19": [
+    10019
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 14,
+    "level": 0,
+    "x": 12.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 12.0,
+    "y": 178.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "14": [
+    10214
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st027",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   250,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 202350,
+    "dmgReal": 5355,
+    "kills": 19
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 252,
+    "dmgReal": 252,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 19.8
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:19": 5355.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:19": 19
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:10:56"
+}

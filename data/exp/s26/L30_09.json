@@ -1,0 +1,433 @@
+{
+ "name": "L30_09",
+ "group": "M",
+ "lineup": 30,
+ "desc": "L30 沙虫+台风 镜像#9 p0[沙虫:对空/机械狂暴/机械分裂] p1[爬虫:冲击钻头 沙虫:装甲强化] 2550/2500 补爬虫+爬虫+爬虫+爬虫+爬虫+爬虫",
+ "pair": [
+  23,
+  22
+ ],
+ "value": [
+  2550,
+  2500
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 23,
+    "level": 0,
+    "x": -165.0,
+    "y": -167.0,
+    "index": 0
+   },
+   {
+    "id": 23,
+    "level": 0,
+    "x": -165.0,
+    "y": -133.0,
+    "index": 1
+   },
+   {
+    "id": 22,
+    "level": 0,
+    "x": -193.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -151.0,
+    "y": -201.0,
+    "index": 3
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -151.0,
+    "y": -167.0,
+    "index": 4
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -151.0,
+    "y": -133.0,
+    "index": 5
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -151.0,
+    "y": -99.0,
+    "index": 6
+   }
+  ],
+  "techs": {
+   "23": [
+    3123,
+    10523,
+    13023
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 23,
+    "level": 0,
+    "x": 165.0,
+    "y": 167.0,
+    "index": 100
+   },
+   {
+    "id": 23,
+    "level": 0,
+    "x": 165.0,
+    "y": 133.0,
+    "index": 101
+   },
+   {
+    "id": 22,
+    "level": 0,
+    "x": 193.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 151.0,
+    "y": 303.0,
+    "index": 103
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 151.0,
+    "y": 269.0,
+    "index": 104
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 151.0,
+    "y": 235.0,
+    "index": 105
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 151.0,
+    "y": 201.0,
+    "index": 106
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 151.0,
+    "y": 167.0,
+    "index": 107
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 151.0,
+    "y": 133.0,
+    "index": 108
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 151.0,
+    "y": 99.0,
+    "index": 109
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 151.0,
+    "y": 65.0,
+    "index": 110
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 151.0,
+    "y": 31.0,
+    "index": 111
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 151.0,
+    "y": -3.0,
+    "index": 112
+   }
+  ],
+  "techs": {
+   "10": [
+    10710
+   ],
+   "23": [
+    3023
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s26_L30_09",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   825,
+   0
+  ],
+  "alive": [
+   3,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5677,
+    "dmgReal": 5537,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 656496,
+    "dmgReal": 63797,
+    "kills": 61
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2226,
+    "dmgReal": 1968,
+    "kills": 6
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4278,
+    "dmgReal": 3966,
+    "kills": 5
+   },
+   {
+    "team": 0,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 706101,
+    "dmgReal": 72074,
+    "kills": 62
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5411,
+    "dmgReal": 4981,
+    "kills": 6
+   },
+   {
+    "team": 0,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 34324,
+    "dmgReal": 33945,
+    "kills": 104
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4064,
+    "dmgReal": 3715,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1828,
+    "dmgReal": 1828,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2162,
+    "dmgReal": 1889,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1860,
+    "dmgReal": 1493,
+    "kills": 5
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1923,
+    "dmgReal": 1847,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2178,
+    "dmgReal": 1813,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1991,
+    "dmgReal": 1991,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2513,
+    "dmgReal": 1923,
+    "kills": 8
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 896,
+    "dmgReal": 738,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 21396,
+    "dmgReal": 14437,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1378,
+    "dmgReal": 1174,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 21884,
+    "dmgReal": 20730,
+    "kills": 66
+   },
+   {
+    "team": 1,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3888,
+    "dmgReal": 3888,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    62
+   ],
+   "end_t": 45.2
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:23": 63712.6,
+   "0:22": 14247.2,
+   "0:10": 1026.0,
+   "1:23": 228829.4,
+   "1:22": 27240.0,
+   "1:10": 30230.6
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:10": 33,
+   "1:23": 33,
+   "0:23": 136,
+   "0:10": 3,
+   "1:22": 44,
+   "0:22": 44
+  }
+ },
+ "alive_mech": {
+  "factory": {
+   "1:23": 2,
+   "1:22": 2,
+   "1:10": 107
+  }
+ },
+ "ts": "13:07:49"
+}

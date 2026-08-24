@@ -1,0 +1,262 @@
+{
+ "name": "cal_clr_s_15",
+ "group": "CAL",
+ "desc": "cal_clr_s_15 清杂标定(小型): 维修剑齿虎前座+弧光卡x4 vs 尖牙卡x6",
+ "p0": {
+  "units": [
+   {
+    "id": 21,
+    "level": 8,
+    "x": 0.0,
+    "y": -60.0,
+    "index": 0
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": -51.0,
+    "y": -130.0,
+    "index": 1
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": -17.0,
+    "y": -130.0,
+    "index": 2
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": 17.0,
+    "y": -130.0,
+    "index": 3
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": 51.0,
+    "y": -130.0,
+    "index": 4
+   }
+  ],
+  "techs": {
+   "21": [
+    10321
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": -75.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -45.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -15.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 15.0,
+    "y": 150.0,
+    "index": 103
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 45.0,
+    "y": 150.0,
+    "index": 104
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 75.0,
+    "y": 150.0,
+    "index": 105
+   }
+  ],
+  "techs": {
+   "9": [
+    209
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s29_cal_clr_s_15",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   600,
+   0
+  ],
+  "alive": [
+   5,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1052793,
+    "dmgReal": 1989,
+    "kills": 5
+   },
+   {
+    "team": 0,
+    "uid": 15,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 16425,
+    "dmgReal": 5265,
+    "kills": 23
+   },
+   {
+    "team": 0,
+    "uid": 15,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 19710,
+    "dmgReal": 6318,
+    "kills": 29
+   },
+   {
+    "team": 0,
+    "uid": 15,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 19345,
+    "dmgReal": 6201,
+    "kills": 28
+   },
+   {
+    "team": 0,
+    "uid": 15,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 17155,
+    "dmgReal": 5499,
+    "kills": 23
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3654,
+    "dmgReal": 3654,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3465,
+    "dmgReal": 3465,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1638,
+    "dmgReal": 1638,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6174,
+    "dmgReal": 6174,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4662,
+    "dmgReal": 4662,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3339,
+    "dmgReal": 3339,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    5,
+    0
+   ],
+   "end_t": 21.4
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:21": 9828.0,
+   "0:15": 15444.0,
+   "1:9": 13041.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:21": 42,
+   "0:15": 66
+  }
+ },
+ "ts": "12:26:50"
+}

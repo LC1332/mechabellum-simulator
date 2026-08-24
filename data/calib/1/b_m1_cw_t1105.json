@@ -1,0 +1,45 @@
+{
+ "scenario": "b_m1_cw_t1105",
+ "group": "B",
+ "desc": "B +防空弹幕 t1105(在用, 语料32侧)",
+ "mech": 1,
+ "mech_name": "堡垒",
+ "tech": 1105,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   920
+  ],
+  "alive": [
+   0,
+   230
+  ],
+  "rows": [
+   {
+    "mech": 1,
+    "dmg": 40502.0,
+    "kills": 154
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   325
+  ],
+  "rows": [
+   {
+    "mech": 1,
+    "dmg": 15517.0,
+    "kills": 59,
+    "r": 0.383
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

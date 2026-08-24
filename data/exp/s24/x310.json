@@ -1,0 +1,270 @@
+{
+ "name": "x310",
+ "group": "U",
+ "desc": "U 沙虫(23) vs 火神(3) 等经济1000  [p0:沙虫 p1:火神+魔眼]",
+ "pair": [
+  23,
+  3
+ ],
+ "value": [
+  1000,
+  1000
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 23,
+    "level": 0,
+    "x": -165.0,
+    "y": -168.0,
+    "index": 0
+   },
+   {
+    "id": 23,
+    "level": 0,
+    "x": -165.0,
+    "y": -132.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "23": [
+    3623
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 3,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": 193.0,
+    "y": 114.0,
+    "index": 101
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": 193.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": 193.0,
+    "y": 186.0,
+    "index": 103
+   }
+  ],
+  "techs": {
+   "3": [
+    10203
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_x310",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   748,
+   0
+  ],
+  "alive": [
+   6,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 1001,
+    "rectype": 0,
+    "mechid": 1001,
+    "dmgMax": 2054,
+    "dmgReal": 2054,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 58356,
+    "dmgReal": 22357,
+    "kills": 5
+   },
+   {
+    "team": 0,
+    "uid": 1001,
+    "rectype": 0,
+    "mechid": 1001,
+    "dmgMax": 2054,
+    "dmgReal": 2054,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 50574,
+    "dmgReal": 17160,
+    "kills": 5
+   },
+   {
+    "team": 0,
+    "uid": 1001,
+    "rectype": 0,
+    "mechid": 1001,
+    "dmgMax": 4108,
+    "dmgReal": 3576,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 1001,
+    "rectype": 0,
+    "mechid": 1001,
+    "dmgMax": 3081,
+    "dmgReal": 2549,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 1001,
+    "rectype": 0,
+    "mechid": 1001,
+    "dmgMax": 1027,
+    "dmgReal": 1027,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13034,
+    "dmgReal": 11681,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3765,
+    "dmgReal": 3765,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3980,
+    "dmgReal": 3980,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9950,
+    "dmgReal": 9726,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    8,
+    0
+   ],
+   "end_t": 39.4,
+   "towers_down": {
+    "0": 0,
+    "1": 2
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 50.3,
+   "towers_down": {
+    "0": 1,
+    "1": 2
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:23": 46155.5,
+   "1:3": 5100.0,
+   "1:30": 7661.5
+  },
+  "mech": {
+   "0:23": 50777.0,
+   "1:3": 8910.0,
+   "1:30": 20514.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:23": 12
+  },
+  "mech": {
+   "0:23": 12,
+   "1:30": 1
+  }
+ },
+ "ts": "06:44:47",
+ "alive_mech": {
+  "mech": {
+   "0:23": 2
+  },
+  "factory": {
+   "0:23": 2,
+   "0:1001": 6
+  }
+ }
+}

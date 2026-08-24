@@ -1,0 +1,128 @@
+{
+ "name": "st026",
+ "group": "ST",
+ "desc": "ST 先知·光子投射 vs 沙虫·机械分裂 等经济700 #26 (两塔正中)",
+ "value": [
+  700,
+  700
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 26,
+    "level": 0,
+    "x": 6.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "26": [
+    180326
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 23,
+    "level": 0,
+    "x": 6.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 6.0,
+    "y": 178.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "23": [
+    13023
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st026",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   416
+  ],
+  "alive": [
+   0,
+   12
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14828,
+    "dmgReal": 6211,
+    "kills": 7
+   },
+   {
+    "team": 1,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 19452,
+    "dmgReal": 11991,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    19
+   ],
+   "end_t": 11.9
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:26": 4044.0,
+   "1:23": 11991.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:23": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:10:55"
+}

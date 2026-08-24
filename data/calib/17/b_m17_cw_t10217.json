@@ -1,0 +1,45 @@
+{
+ "scenario": "b_m17_cw_t10217",
+ "group": "B",
+ "desc": "B +射程强化 t10217(在用, 语料18侧)",
+ "mech": 17,
+ "mech_name": "战争工厂",
+ "tech": 10217,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   2000,
+   0
+  ],
+  "alive": [
+   4,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 17,
+    "dmg": 100992.0,
+    "kills": 384
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   313
+  ],
+  "rows": [
+   {
+    "mech": 17,
+    "dmg": 18673.0,
+    "kills": 71,
+    "r": 0.185
+   }
+  ]
+ },
+ "mech_note": "4 独立炮座(weapons×4 distinct): wraith_guns 多目标炮 + kite 走打 → A/C 组 1.00",
+ "ts": "2026-08-23 03:10:16"
+}

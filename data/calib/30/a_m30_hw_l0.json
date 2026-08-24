@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m30_hw_l0",
+ "group": "A",
+ "desc": "A 魔眼(high) L0 vs hammer墙 (r=1.31 N=298)",
+ "mech": 30,
+ "mech_name": "魔眼",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1440
+  ],
+  "alive": [
+   0,
+   36
+  ],
+  "rows": [
+   {
+    "mech": 30,
+    "dmg": 20877.0,
+    "kills": 4
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   40
+  ],
+  "rows": [
+   {
+    "mech": 30,
+    "dmg": 17910.0,
+    "kills": 0,
+    "r": 0.858
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

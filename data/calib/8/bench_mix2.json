@@ -1,0 +1,56 @@
+{
+ "scenario": "bench_mix2",
+ "group": "BENCH",
+ "desc": "bench 钢球+野马(800) vs 凤凰+铁锤(800)",
+ "mech": 8,
+ "mech_name": "钢球",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   558,
+   0
+  ],
+  "alive": [
+   27,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 7,
+    "dmg": 20939.0,
+    "kills": 5
+   },
+   {
+    "mech": 8,
+    "dmg": 19805.0,
+    "kills": 9
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   20,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 7,
+    "dmg": 10788.0,
+    "kills": 4,
+    "r": 0.515
+   },
+   {
+    "mech": 8,
+    "dmg": 29956.0,
+    "kills": 10,
+    "r": 1.513
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

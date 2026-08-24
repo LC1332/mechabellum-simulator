@@ -1,0 +1,176 @@
+{
+ "name": "st734",
+ "group": "ST",
+ "desc": "ST 尖牙·射程强化 vs 铁锤·电磁弹 等经济1200 #734 (两塔正中)",
+ "value": [
+  600,
+  850
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": -34.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 34.0,
+    "y": -150.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "9": [
+    10209
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 13,
+    "level": 0,
+    "x": 17.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 13,
+    "level": 0,
+    "x": -17.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -0.0,
+    "y": 178.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "13": [
+    1813
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st734",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   404
+  ],
+  "alive": [
+   0,
+   22
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4032,
+    "dmgReal": 4032,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3780,
+    "dmgReal": 3780,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8316,
+    "dmgReal": 8180,
+    "kills": 6
+   },
+   {
+    "team": 1,
+    "uid": 13,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13376,
+    "dmgReal": 2574,
+    "kills": 22
+   },
+   {
+    "team": 1,
+    "uid": 13,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 19456,
+    "dmgReal": 3744,
+    "kills": 32
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    28
+   ],
+   "end_t": 20.2
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:9": 9009.0,
+   "1:13": 6318.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:13": 54
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:21:45"
+}

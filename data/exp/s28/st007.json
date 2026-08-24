@@ -1,0 +1,155 @@
+{
+ "name": "st007",
+ "group": "ST",
+ "desc": "ST 骇客·多重控制 vs 战争工厂·高爆弹药 等经济2300 #7 (两塔正中,换位)",
+ "value": [
+  1250,
+  1950
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 14,
+    "level": 0,
+    "x": -56.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": -22.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": 12.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": 46.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": 80.0,
+    "y": -150.0,
+    "index": 4
+   }
+  ],
+  "techs": {
+   "14": [
+    11014
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 17,
+    "level": 0,
+    "x": 29.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 17,
+    "level": 0,
+    "x": -5.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "17": [
+    417
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st007",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   1000
+  ],
+  "alive": [
+   0,
+   2
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 1,
+    "uid": 17,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9024,
+    "dmgReal": 6498,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 17,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13536,
+    "dmgReal": 9747,
+    "kills": 3
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    2
+   ],
+   "end_t": 12.5
+  }
+ },
+ "dmg": {
+  "factory": {
+   "1:17": 16245.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:17": 5
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:10:10"
+}

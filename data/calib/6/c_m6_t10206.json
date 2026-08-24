@@ -1,0 +1,45 @@
+{
+ "scenario": "c_m6_t10206",
+ "group": "C",
+ "desc": "C 3卡兵蜂+射程强化 (总值900) vs 等经济对手",
+ "mech": 6,
+ "mech_name": "兵蜂",
+ "tech": 10206,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   612,
+   0
+  ],
+  "alive": [
+   36,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 6,
+    "dmg": 67431.0,
+    "kills": 9
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   36,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 6,
+    "dmg": 66825.0,
+    "kills": 9,
+    "r": 0.991
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

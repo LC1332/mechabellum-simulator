@@ -1,0 +1,152 @@
+{
+ "name": "st341",
+ "group": "ST",
+ "desc": "ST 丧钟·能量散射 vs 堡垒·精英射手 等经济1300 #341 (两塔正中,换位)",
+ "value": [
+  1300,
+  1150
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 2001,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "2001": [
+    1102001
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 1,
+    "level": 0,
+    "x": 17.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 1,
+    "level": 0,
+    "x": -17.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -0.0,
+    "y": 178.0,
+    "index": 102
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -0.0,
+    "y": 206.0,
+    "index": 103
+   }
+  ],
+  "techs": {
+   "1": [
+    10801
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st341",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   500,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2001,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 97516,
+    "dmgReal": 96294,
+    "kills": 44
+   },
+   {
+    "team": 1,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 39144,
+    "dmgReal": 39144,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 52192,
+    "dmgReal": 52192,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    42
+   ],
+   "end_t": 19.4
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:2001": 804.6,
+   "1:1": 125512.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:2001": 2,
+   "1:1": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:04:55"
+}

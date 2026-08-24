@@ -1,0 +1,264 @@
+{
+ "name": "t4607_2",
+ "group": "TECH",
+ "desc": "U 野马(7) vs 狼蛛(24) 等经济1050  [p0:野马 p1:狼蛛+磁暴]",
+ "pair": [
+  7,
+  24
+ ],
+ "value": [
+  1050,
+  1050
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 7,
+    "level": 0,
+    "x": -165.0,
+    "y": -204.0,
+    "index": 0
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": -165.0,
+    "y": -168.0,
+    "index": 1
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": -165.0,
+    "y": -132.0,
+    "index": 2
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": -165.0,
+    "y": -96.0,
+    "index": 3
+   }
+  ],
+  "techs": {
+   "7": [
+    4607
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 24,
+    "level": 0,
+    "x": 165.0,
+    "y": 132.0,
+    "index": 100
+   },
+   {
+    "id": 24,
+    "level": 0,
+    "x": 165.0,
+    "y": 168.0,
+    "index": 101
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": 193.0,
+    "y": 132.0,
+    "index": 102
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": 193.0,
+    "y": 168.0,
+    "index": 103
+   }
+  ],
+  "techs": {
+   "24": [
+    10224
+   ],
+   "31": [
+    503101
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_t4607_2",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   400
+  ],
+  "alive": [
+   0,
+   3
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8512,
+    "dmgReal": 8512,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6299,
+    "dmgReal": 6291,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7883,
+    "dmgReal": 7883,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5904,
+    "dmgReal": 5904,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 24,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3264,
+    "dmgReal": 2499,
+    "kills": 6
+   },
+   {
+    "team": 1,
+    "uid": 24,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 21962,
+    "dmgReal": 11319,
+    "kills": 33
+   },
+   {
+    "team": 1,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14002,
+    "dmgReal": 2646,
+    "kills": 9
+   },
+   {
+    "team": 1,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3927,
+    "dmgReal": 3400,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    3
+   ],
+   "end_t": 45.3,
+   "towers_down": {
+    "0": 0,
+    "1": 2
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 1,
+   "alive": [
+    0,
+    3
+   ],
+   "end_t": 47.7,
+   "towers_down": {
+    "0": 0,
+    "1": 2
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:7": 32970.6,
+   "1:24": 14063.0,
+   "1:31": 2401.0
+  },
+  "mech": {
+   "0:7": 24417.9,
+   "1:24": 14961.1,
+   "1:31": 1502.9
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:7": 3,
+   "1:24": 41,
+   "1:31": 7
+  },
+  "mech": {
+   "0:7": 3,
+   "1:24": 44,
+   "1:31": 4
+  }
+ },
+ "ts": "06:25:03",
+ "alive_mech": {
+  "mech": {
+   "1:24": 1,
+   "1:31": 2
+  },
+  "factory": {
+   "1:24": 1,
+   "1:31": 2
+  }
+ }
+}

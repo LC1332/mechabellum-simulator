@@ -1,0 +1,11 @@
+{
+ "mechs": {
+  "-13": {
+   "splash": 0
+  },
+  "-12": {
+   "splash": 0
+  }
+ },
+ "_note": "step28 v3 炮溅射清零: 速射炮/反装甲炮为单体弹道 (step27 用户口径 + step28 BP 探针: bld_term=2 + splash=0 使 bp_crawl_rf 修复 oracle 爬虫 85 存活; bp 组 6/8)。v2 半径减半折中作废。语料验证见 data/report_step28_corpus.json。opts.calib=0 关闭。"
+}

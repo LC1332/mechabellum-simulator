@@ -1,0 +1,196 @@
+{
+ "name": "u084",
+ "group": "U",
+ "desc": "U 暴雨(12) vs 凤凰(16) 等经济600  [p0:暴雨+魔眼 p1:凤凰]",
+ "pair": [
+  12,
+  16
+ ],
+ "value": [
+  600,
+  600
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 12,
+    "level": 0,
+    "x": -165.0,
+    "y": -168.0,
+    "index": 0
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": -165.0,
+    "y": -132.0,
+    "index": 1
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": -193.0,
+    "y": -168.0,
+    "index": 2
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": -193.0,
+    "y": -132.0,
+    "index": 3
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 16,
+    "level": 0,
+    "x": 165.0,
+    "y": 114.0,
+    "index": 100
+   },
+   {
+    "id": 16,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 16,
+    "level": 0,
+    "x": 165.0,
+    "y": 186.0,
+    "index": 102
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u084",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   600
+  ],
+  "alive": [
+   0,
+   6
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 1,
+    "uid": 16,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 22512,
+    "dmgReal": 10620,
+    "kills": 5
+   },
+   {
+    "team": 1,
+    "uid": 16,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12663,
+    "dmgReal": 4969,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 16,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 26733,
+    "dmgReal": 9535,
+    "kills": 7
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    6
+   ],
+   "end_t": 48.0,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 1,
+   "alive": [
+    0,
+    6
+   ],
+   "end_t": 68.3,
+   "towers_down": {
+    "0": 2,
+    "1": 1
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:12": 3400.0,
+   "1:16": 24538.0
+  },
+  "mech": {
+   "0:12": 1158.0,
+   "0:30": 2242.0,
+   "1:16": 25124.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:16": 15,
+   "0:12": 1
+  },
+  "mech": {
+   "1:16": 16,
+   "0:30": 1
+  }
+ },
+ "ts": "06:28:36",
+ "alive_mech": {
+  "mech": {
+   "1:16": 6
+  },
+  "factory": {
+   "1:16": 6
+  }
+ }
+}

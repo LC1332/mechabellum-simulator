@@ -1,0 +1,974 @@
+[
+ {
+  "label": "默认(锁定)",
+  "crit_frames": 14,
+  "keep_rate": 0.143,
+  "first_switch_to_crawler": 3.8,
+  "end_t": 8.8,
+  "log": [
+   {
+    "t": 0.2,
+    "tgt": "尖牙",
+    "d_fang": 11.6,
+    "d_crawler": 72.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 0.5,
+    "tgt": "尖牙",
+    "d_fang": 11.6,
+    "d_crawler": 68.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 0.8,
+    "tgt": "尖牙",
+    "d_fang": 11.6,
+    "d_crawler": 64.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 1.0,
+    "tgt": "尖牙",
+    "d_fang": 22.7,
+    "d_crawler": 60.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 1.2,
+    "tgt": "尖牙",
+    "d_fang": 22.7,
+    "d_crawler": 56.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 1.5,
+    "tgt": "尖牙",
+    "d_fang": 22.7,
+    "d_crawler": 52.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 1.8,
+    "tgt": "尖牙",
+    "d_fang": 22.7,
+    "d_crawler": 48.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 2.0,
+    "tgt": "尖牙",
+    "d_fang": 22.7,
+    "d_crawler": 44.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 2.2,
+    "tgt": "尖牙",
+    "d_fang": 33.0,
+    "d_crawler": 40.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 2.5,
+    "tgt": "尖牙",
+    "d_fang": 33.0,
+    "d_crawler": 36.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 2.8,
+    "tgt": "尖牙",
+    "d_fang": 33.0,
+    "d_crawler": 32.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 3.0,
+    "tgt": "尖牙",
+    "d_fang": 33.0,
+    "d_crawler": 28.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 3.2,
+    "tgt": "尖牙",
+    "d_fang": 33.0,
+    "d_crawler": 36.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 3.5,
+    "tgt": "-",
+    "d_fang": 36.9,
+    "d_crawler": 32.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 3.8,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 28.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 4.0,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 24.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 4.2,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 20.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 4.5,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 30.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 4.8,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 26.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 5.0,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 22.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 5.2,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 18.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 5.5,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 27.9,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 5.8,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 23.9,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 6.0,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 19.9,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 6.2,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 15.9,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 6.5,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 6.8,
+    "tgt": "尖牙",
+    "d_fang": 36.9,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 7.0,
+    "tgt": "尖牙",
+    "d_fang": 36.9,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 7.2,
+    "tgt": "尖牙",
+    "d_fang": 36.9,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 7.5,
+    "tgt": "尖牙",
+    "d_fang": 36.9,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 7.8,
+    "tgt": "-",
+    "d_fang": 47.3,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 8.0,
+    "tgt": "尖牙",
+    "d_fang": 47.3,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 8.2,
+    "tgt": "尖牙",
+    "d_fang": 47.3,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 8.5,
+    "tgt": "尖牙",
+    "d_fang": 47.3,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 8.8,
+    "tgt": "尖牙",
+    "d_fang": 47.3,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   }
+  ]
+ },
+ {
+  "label": "对照(retarget=nearest)",
+  "crit_frames": 16,
+  "keep_rate": 0.0,
+  "first_switch_to_crawler": 2.8,
+  "end_t": 8.8,
+  "log": [
+   {
+    "t": 0.2,
+    "tgt": "尖牙",
+    "d_fang": 11.6,
+    "d_crawler": 72.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 0.5,
+    "tgt": "尖牙",
+    "d_fang": 11.6,
+    "d_crawler": 68.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 0.8,
+    "tgt": "尖牙",
+    "d_fang": 11.6,
+    "d_crawler": 64.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 1.0,
+    "tgt": "尖牙",
+    "d_fang": 22.7,
+    "d_crawler": 60.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 1.2,
+    "tgt": "尖牙",
+    "d_fang": 22.7,
+    "d_crawler": 56.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 1.5,
+    "tgt": "尖牙",
+    "d_fang": 22.7,
+    "d_crawler": 52.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 1.8,
+    "tgt": "尖牙",
+    "d_fang": 22.7,
+    "d_crawler": 48.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 2.0,
+    "tgt": "尖牙",
+    "d_fang": 22.7,
+    "d_crawler": 44.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 2.2,
+    "tgt": "尖牙",
+    "d_fang": 33.0,
+    "d_crawler": 40.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 2.5,
+    "tgt": "尖牙",
+    "d_fang": 33.0,
+    "d_crawler": 36.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 2.8,
+    "tgt": "爬虫",
+    "d_fang": 33.0,
+    "d_crawler": 32.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 3.0,
+    "tgt": "爬虫",
+    "d_fang": 33.0,
+    "d_crawler": 28.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 3.2,
+    "tgt": "爬虫",
+    "d_fang": 33.0,
+    "d_crawler": 24.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 3.5,
+    "tgt": "爬虫",
+    "d_fang": 33.0,
+    "d_crawler": 20.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 3.8,
+    "tgt": "爬虫",
+    "d_fang": 33.0,
+    "d_crawler": 30.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 4.0,
+    "tgt": "爬虫",
+    "d_fang": 33.0,
+    "d_crawler": 26.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 4.2,
+    "tgt": "爬虫",
+    "d_fang": 33.0,
+    "d_crawler": 22.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 4.5,
+    "tgt": "爬虫",
+    "d_fang": 33.0,
+    "d_crawler": 18.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 4.8,
+    "tgt": "爬虫",
+    "d_fang": 33.0,
+    "d_crawler": 28.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 5.0,
+    "tgt": "爬虫",
+    "d_fang": 33.0,
+    "d_crawler": 24.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 5.2,
+    "tgt": "爬虫",
+    "d_fang": 33.0,
+    "d_crawler": 20.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 5.5,
+    "tgt": "爬虫",
+    "d_fang": 33.0,
+    "d_crawler": 16.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 5.8,
+    "tgt": "爬虫",
+    "d_fang": 33.0,
+    "d_crawler": 26.5,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 6.0,
+    "tgt": "爬虫",
+    "d_fang": 33.0,
+    "d_crawler": 22.4,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 6.2,
+    "tgt": "爬虫",
+    "d_fang": 33.0,
+    "d_crawler": 18.3,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 6.5,
+    "tgt": "爬虫",
+    "d_fang": 33.0,
+    "d_crawler": 14.2,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 6.8,
+    "tgt": "尖牙",
+    "d_fang": 36.9,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 7.0,
+    "tgt": "尖牙",
+    "d_fang": 36.9,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 7.2,
+    "tgt": "尖牙",
+    "d_fang": 36.9,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 7.5,
+    "tgt": "尖牙",
+    "d_fang": 36.9,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 7.8,
+    "tgt": "尖牙",
+    "d_fang": 36.9,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 8.0,
+    "tgt": "-",
+    "d_fang": 47.3,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 8.2,
+    "tgt": "尖牙",
+    "d_fang": 47.3,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 8.5,
+    "tgt": "尖牙",
+    "d_fang": 47.3,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 8.8,
+    "tgt": "尖牙",
+    "d_fang": 47.3,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   }
+  ]
+ },
+ {
+  "label": "aggro=0.5(角度仇恨)",
+  "crit_frames": 14,
+  "keep_rate": 0.143,
+  "first_switch_to_crawler": 3.8,
+  "end_t": 8.8,
+  "log": [
+   {
+    "t": 0.2,
+    "tgt": "尖牙",
+    "d_fang": 11.6,
+    "d_crawler": 72.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 0.5,
+    "tgt": "尖牙",
+    "d_fang": 11.6,
+    "d_crawler": 68.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 0.8,
+    "tgt": "尖牙",
+    "d_fang": 11.6,
+    "d_crawler": 64.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 1.0,
+    "tgt": "尖牙",
+    "d_fang": 22.7,
+    "d_crawler": 60.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 1.2,
+    "tgt": "尖牙",
+    "d_fang": 22.7,
+    "d_crawler": 56.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 1.5,
+    "tgt": "尖牙",
+    "d_fang": 22.7,
+    "d_crawler": 52.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 1.8,
+    "tgt": "尖牙",
+    "d_fang": 22.7,
+    "d_crawler": 48.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 2.0,
+    "tgt": "尖牙",
+    "d_fang": 22.7,
+    "d_crawler": 44.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 2.2,
+    "tgt": "尖牙",
+    "d_fang": 33.0,
+    "d_crawler": 40.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 2.5,
+    "tgt": "尖牙",
+    "d_fang": 33.0,
+    "d_crawler": 36.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 2.8,
+    "tgt": "尖牙",
+    "d_fang": 33.0,
+    "d_crawler": 32.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 3.0,
+    "tgt": "尖牙",
+    "d_fang": 33.0,
+    "d_crawler": 28.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 3.2,
+    "tgt": "尖牙",
+    "d_fang": 33.0,
+    "d_crawler": 36.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 3.5,
+    "tgt": "-",
+    "d_fang": 36.9,
+    "d_crawler": 32.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 3.8,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 28.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 4.0,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 24.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 4.2,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 20.1,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 4.5,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 30.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 4.8,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 26.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 5.0,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 22.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 5.2,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 18.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 5.5,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 27.9,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 5.8,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 23.9,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 6.0,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 19.9,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 6.2,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": 15.9,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": false
+   },
+   {
+    "t": 6.5,
+    "tgt": "爬虫",
+    "d_fang": 36.9,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 6.8,
+    "tgt": "尖牙",
+    "d_fang": 36.9,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 7.0,
+    "tgt": "尖牙",
+    "d_fang": 36.9,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 7.2,
+    "tgt": "尖牙",
+    "d_fang": 36.9,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 7.5,
+    "tgt": "尖牙",
+    "d_fang": 36.9,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 7.8,
+    "tgt": "-",
+    "d_fang": 47.3,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 8.0,
+    "tgt": "尖牙",
+    "d_fang": 47.3,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 8.2,
+    "tgt": "尖牙",
+    "d_fang": 47.3,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 8.5,
+    "tgt": "尖牙",
+    "d_fang": 47.3,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   },
+   {
+    "t": 8.8,
+    "tgt": "尖牙",
+    "d_fang": 47.3,
+    "d_crawler": -1.0,
+    "a_dead": false,
+    "t1_dead": false,
+    "t2_dead": true
+   }
+  ]
+ }
+]

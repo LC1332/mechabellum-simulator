@@ -1,0 +1,87 @@
+{
+ "meta": {
+  "step": 26,
+  "date": "2026-08-23",
+  "task": "对路线C的探索-step26-开发任务",
+  "method": "官方阵容镜像库 oracle 一批落盘 (s26 450 场) + tools/step26_ab.py 多库静态变体重算 (s24 320 + s25 186 + s26 450), 0 重跑旧局",
+  "oracle_batches": [
+    "s26 L 批 (塔外侧) 300 场 (12:02-13:07, 0 失败, 64.5min)",
+    "s26 C 批 (两塔正中, 用户追加) 149 场 (14:0x-14:2x, 0 失败, 18.8min)",
+    "smoke 2 场"
+  ]
+ },
+ "P0_unlock_and_layout": {
+  "unlock_rule": "Q-A 每兵种分开算: 第 N 个科技解锁费 = 200x(N-1), N = 链折叠后新开槽数; 科技 supply 照算 (链折叠); 实现 tools/step26_loadout.price_with_unlock",
+  "layout_semantics": "Q-G 爬虫贴在比他慢的单位后面 (同列后 1 排 28m), 队里有野马/沙虫时爬虫放前 (+14m); 尖牙与主列同深度或更前; 杂兵>=4 队; 塔外侧布局沿用 s24 锚 (-165,-150)/(165,150)",
+  "center_layout_added": "用户中途指令: 塔外侧锚点形成大风车抢塔局 (高速兵种过优) —— 追加 C 批 150 场两塔正中布局 (x~0 沿 y 相向, 宽列 >8 卡换行后撤, |x|<=119 不越塔线)",
+  "value_band": "Q-C 预算从宽: 1100-4200, 均值 2424 (5-6 回合经济档)",
+  "tech_sampling": "推荐科技权重 x2 + 10 局轮转保证全覆盖 (用户: 推荐确保采到, 其余也采); 实测推荐/非推荐出场比 1.5-3.8x",
+  "equilibrium": "镜像两侧价差 <=100, 尖牙/爬虫 (100 金) 平衡; 自检 450/450 场 0 违约"
+ },
+ "s26_baseline": {
+  "total": "262/450 = 58.2%",
+  "by_layout": {"L_tower_side": "156/300 = 52.0%", "C_center": "106/150 = 70.7%"},
+  "note": "塔外侧大风车局显著更难预测 (-18.7pp), 印证用户判断; 布局成为难度分层维度"
+ },
+ "P1_clue_package": {
+  "sandworm": {
+   "user_hint": "钻出地面和攻击前摇动画都比较久; 攻击范围内没有对方兵种时默认潜地, 潜地时不推动我方兵种; Q-D 无科技沙虫也延迟",
+   "implementation": "sw_emerge (索敌瞬间进入 T 秒攻击锁定窗口, 失去目标重新潜地) + sw_burrow (潜地沙虫对友军不施推力)",
+   "arms": "见 arms 段 (真实数字跑完后填)"
+  },
+  "vulcan": {
+   "user_hint": "看看是 2 把武器还是 1 把",
+   "implementation": "vulcan_guns (w_count 单武器化; 集合形式支持 '3,21' —— 剑齿虎 r3.36 同款假说)"
+  },
+  "arc_beam_cd": {
+   "user_hint": "蓄能会影响 CD",
+   "finding": "弧光 (15) 主技能是 projectileSkillDatas 无 ramp 表 —— 蓄能攻击 10915 的攻击间隔 +35% 已由 interval_rate 通道实装; beam_cd 只作用于真 ramp 单位 (熔点 4001/钢球 8001)"
+  },
+  "prophet": {
+   "user_hint": "Q-E 一次 2 枚飞弹同一个目标, 不会散布 (有先知喜欢打尸体的说法)",
+   "implementation": "barrage_same (齐射 pc 发全打当前目标, 默认集合 {26})"
+  },
+  "mustang": {
+   "user_hint": "会不会由于没做碰撞导致野马都堆在一起所以死得快",
+   "implementation": "sep_fac/sep_sweeps (分离推力系数/扫描轮数, stiff_sep 语义泛化)"
+  },
+  "wraith_occlusion": {
+   "hypothesis": "后排单位被前排挡射界 (简化线段模型: 到目标的线段被友军身体挡住则停火, 每 0.5s 重算)",
+   "implementation": "occl + occl_gap/occl_w/occl_min_rng"
+  }
+ },
+ "arms": {
+  "_note": "每臂 = 对照 exp 记录 factory 臂 (cmp_rec); s26_ 前缀 = s26 库, 其余 = s24+s25; 部分早期臂跑在 309 场子集 (300 L + 9 C), 全量复核另注",
+  "sw2": {"opts": "sw_emerge=2,sw_burrow=1", "s24": "260 (=0)", "s25": "135 (-2)",
+          "s26_sub309": "164 (修6坏4 净+2, 翻转全在沙虫阵容 L03/24/30; 沙虫 r 1.64→1.49)",
+          "verdict": "机制方向实锤, 幅度未定版, 默认关"},
+  "sw1": {"opts": "sw_emerge=1,sw_burrow=1", "s24": "259 (-1)", "s25": "138 (+1)",
+          "verdict": "洗牌, 默认关"},
+  "vulc1": {"opts": "vulcan_guns=1", "s24": "260 (=0)", "s25": "137 (=0)",
+            "verdict": "无位移, 默认关 (火神主偏差在旧库 s25 r2.63)"},
+  "s26_guns21": {"opts": "vulcan_guns=3,21", "s26_450": "262 (修2坏2 净0)",
+                 "units": "剑齿虎 r 3.36→3.01 (武器数非主因), 火神 1.10→0.99",
+                 "verdict": "默认关"},
+  "beamcd": {"opts": "beam_cd=1", "s24": "260 (=0)", "s25": "137 (=0)",
+             "note": "弧光无 ramp 表, 只作用熔点/钢球", "verdict": "默认关"},
+  "brsame": {"opts": "barrage_same=1", "s24": "260 (=0)", "s25": "137 (=0)",
+             "verdict": "无位移, 默认关"},
+  "sep10": {"opts": "sep_fac=1,sep_sweeps=3", "s24": "261 (+1)", "s25": "137 (=0)",
+            "s26_sub309": "169 (修30坏23 净+7)",
+            "s26_450_full": "263 (修35坏34 净+1, C 批回吐)",
+            "verdict": "方向成立但净收益边际, 不改默认"},
+  "sep08": {"opts": "sep_fac=0.8", "s24": "260 (净0)", "s25": "138 (+1)",
+            "verdict": "同上"},
+  "occl1": {"opts": "occl=1", "s24": "255 (-5)", "s25": "134 (-3)",
+            "verdict": "该形态否决 (后排遮挡若存在需更精细模型)"},
+  "s26_bb1": {"opts": "barrage_ballistic=1", "s26_450": "265 (修3坏0 净+3)",
+              "s24": "257 (-3) [s25 137]", "units": "暴雨 1.30→1.15, 鬼鳐 0.80→0.78; 霸主 r 不动 (走 dual_target 路径)",
+              "verdict": "s24 门禁失败, 默认关; 霸主真因 = 双弹锁双目标 (review 实锤) 属 step27"}
+ },
+ "final_defaults": "step26 全部新 opts 维持默认关; 引擎默认与 step25 定版一致; s24=260/320, s25=137/186, s26=262/450 三条 ratchet 建立",
+ "P2_new_targets_from_s26": {
+  "overlord": "L17 霸主 pc=4 齐射瞬爆 (散落弹 _deal_damage 即时结算) → 26s 团灭, 台风 0 输出机会; 霸主 k比 885/2213=2.5x; 候选修复 barrage_ballistic=1 (齐射弹道化, step23 T3 已实现未默认)",
+  "saber": "剑齿虎 r 3.36 (L19 pysim 伤害 2.8-5.5x oracle, 无科技局 10.7x); weaponCountPerSkill=2 同火神假说",
+  "typhoon": "台风 r 0.54 flip54 —— 部分由霸主局团灭连带 (L17), L13 (台风+鬼鳐) 本体也 2-4x 低估; s24 锚局 r 0.90-1.05 校准过 → 对空目标集火行为差异待查"
+ }
+}

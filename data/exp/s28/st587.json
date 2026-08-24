@@ -1,0 +1,297 @@
+{
+ "name": "st587",
+ "group": "ST",
+ "desc": "ST 尖牙·榴弹发射器 vs 暴雨·高爆弹药 等经济2500 #587 (两塔正中,换位)",
+ "value": [
+  1150,
+  1550
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": -159.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -125.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -91.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -57.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -23.0,
+    "y": -150.0,
+    "index": 4
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 11.0,
+    "y": -150.0,
+    "index": 5
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 45.0,
+    "y": -150.0,
+    "index": 6
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 79.0,
+    "y": -150.0,
+    "index": 7
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 113.0,
+    "y": -150.0,
+    "index": 8
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 147.0,
+    "y": -150.0,
+    "index": 9
+   }
+  ],
+  "techs": {
+   "9": [
+    3109
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 12,
+    "level": 0,
+    "x": 96.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": 62.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": 28.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": -6.0,
+    "y": 150.0,
+    "index": 103
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": -40.0,
+    "y": 150.0,
+    "index": 104
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": -74.0,
+    "y": 150.0,
+    "index": 105
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": -108.0,
+    "y": 150.0,
+    "index": 106
+   }
+  ],
+  "techs": {
+   "12": [
+    412
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st587",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   1400
+  ],
+  "alive": [
+   0,
+   28
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 378,
+    "dmgReal": 378,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 567,
+    "dmgReal": 567,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 315,
+    "dmgReal": 315,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 30108,
+    "dmgReal": 4563,
+    "kills": 39
+   },
+   {
+    "team": 1,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 32424,
+    "dmgReal": 4914,
+    "kills": 42
+   },
+   {
+    "team": 1,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11580,
+    "dmgReal": 1755,
+    "kills": 15
+   },
+   {
+    "team": 1,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 21616,
+    "dmgReal": 3276,
+    "kills": 28
+   },
+   {
+    "team": 1,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10036,
+    "dmgReal": 1521,
+    "kills": 13
+   },
+   {
+    "team": 1,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 19300,
+    "dmgReal": 2925,
+    "kills": 25
+   },
+   {
+    "team": 1,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13896,
+    "dmgReal": 2106,
+    "kills": 18
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    28
+   ],
+   "end_t": 16.4
+  }
+ },
+ "dmg": {
+  "factory": {
+   "1:12": 21060.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:12": 180
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:15:14"
+}

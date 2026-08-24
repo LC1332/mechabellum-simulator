@@ -1,0 +1,159 @@
+{
+ "name": "st986",
+ "group": "ST",
+ "desc": "ST 先知·防空专精+猎犬·机械狂暴 vs 魔眼·压制射击+暴雨·高爆弹药 等经济900 #986 (两塔正中)",
+ "value": [
+  900,
+  750
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 26,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": 0.0,
+    "y": -178.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "26": [
+    3226
+   ],
+   "28": [
+    10528
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 30,
+    "level": 0,
+    "x": -0.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": 17.0,
+    "y": 178.0,
+    "index": 101
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": -17.0,
+    "y": 178.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "30": [
+    180430
+   ],
+   "12": [
+    412
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st986",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   400
+  ],
+  "alive": [
+   0,
+   8
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8088,
+    "dmgReal": 4566,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10036,
+    "dmgReal": 7376,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10036,
+    "dmgReal": 9010,
+    "kills": 2
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    5
+   ],
+   "end_t": 21.4
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:26": 10035.0,
+   "1:30": 3980.0,
+   "1:12": 12406.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:12": 6,
+   "0:26": 6
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:32:42"
+}

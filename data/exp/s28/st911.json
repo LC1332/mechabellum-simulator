@@ -1,0 +1,137 @@
+{
+ "name": "st911",
+ "group": "ST",
+ "desc": "ST 深渊·裂解 vs 恶灵·射程强化 等经济1200 #911 (两塔正中,换位)",
+ "value": [
+  1150,
+  900
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 29,
+    "level": 0,
+    "x": 6.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "29": [
+    11029
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 18,
+    "level": 0,
+    "x": 23.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 18,
+    "level": 0,
+    "x": -11.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "18": [
+    10218
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st911",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   500,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 29,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 30872,
+    "dmgReal": 28230,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 18,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1524,
+    "dmgReal": 1524,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 18,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1524,
+    "dmgReal": 1524,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 16.1
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:29": 28230.0,
+   "1:18": 2286.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:29": 2
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:29:00"
+}

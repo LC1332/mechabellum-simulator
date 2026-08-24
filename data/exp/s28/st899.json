@@ -1,0 +1,292 @@
+{
+ "name": "st899",
+ "group": "ST",
+ "desc": "ST 火獾 vs 铁锤·装甲强化 等经济1800 #899 (两塔正中,换位)",
+ "value": [
+  1800,
+  1050
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 20,
+    "level": 0,
+    "x": -148.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -114.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -80.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -46.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -12.0,
+    "y": -150.0,
+    "index": 4
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": 22.0,
+    "y": -150.0,
+    "index": 5
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": 56.0,
+    "y": -150.0,
+    "index": 6
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": 90.0,
+    "y": -150.0,
+    "index": 7
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": 124.0,
+    "y": -150.0,
+    "index": 8
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 13,
+    "level": 0,
+    "x": 39.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 13,
+    "level": 0,
+    "x": 5.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 13,
+    "level": 0,
+    "x": -29.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 13,
+    "level": 0,
+    "x": -63.0,
+    "y": 150.0,
+    "index": 103
+   }
+  ],
+  "techs": {
+   "13": [
+    3013
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st899",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   800
+  ],
+  "alive": [
+   0,
+   20
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 238,
+    "dmgReal": 238,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 386,
+    "dmgReal": 386,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 580,
+    "dmgReal": 580,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 496,
+    "dmgReal": 496,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 681,
+    "dmgReal": 681,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 532,
+    "dmgReal": 532,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 965,
+    "dmgReal": 965,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1019,
+    "dmgReal": 1019,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 679,
+    "dmgReal": 679,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 13,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 30400,
+    "dmgReal": 30162,
+    "kills": 7
+   },
+   {
+    "team": 1,
+    "uid": 13,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 31616,
+    "dmgReal": 31344,
+    "kills": 8
+   },
+   {
+    "team": 1,
+    "uid": 13,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 26752,
+    "dmgReal": 26582,
+    "kills": 5
+   },
+   {
+    "team": 1,
+    "uid": 13,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 26144,
+    "dmgReal": 25906,
+    "kills": 7
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    20
+   ],
+   "end_t": 41.7
+  }
+ },
+ "dmg": {
+  "factory": {
+   "1:13": 113994.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:13": 27
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:28:40"
+}

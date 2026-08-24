@@ -1,0 +1,440 @@
+{
+ "name": "C29_03",
+ "group": "MC",
+ "lineup": 29,
+ "desc": "C29 恶灵+长弓 镜像#3(两塔正中) p0[恶灵:装甲强化/浮游炮阵/退化光束] p1[长弓:防空专精/突击模式 恶灵:退化光束] 3100/3050 [p0主卡L3] 补爬虫+爬虫+爬虫+爬虫+爬虫+爬虫+爬虫+爬虫+爬虫+爬虫+爬虫",
+ "pair": [
+  18,
+  2
+ ],
+ "value": [
+  3100,
+  3050
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 18,
+    "level": 2,
+    "x": -17.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 18,
+    "level": 0,
+    "x": 17.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": 0.0,
+    "y": -178.0,
+    "index": 2
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -51.0,
+    "y": -206.0,
+    "index": 3
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -17.0,
+    "y": -206.0,
+    "index": 4
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 17.0,
+    "y": -206.0,
+    "index": 5
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 51.0,
+    "y": -206.0,
+    "index": 6
+   }
+  ],
+  "techs": {
+   "18": [
+    3018,
+    110181,
+    180418
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 18,
+    "level": 0,
+    "x": 17.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 18,
+    "level": 0,
+    "x": -17.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": -0.0,
+    "y": 178.0,
+    "index": 102
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 119.0,
+    "y": 206.0,
+    "index": 103
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 85.0,
+    "y": 206.0,
+    "index": 104
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 51.0,
+    "y": 206.0,
+    "index": 105
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 17.0,
+    "y": 206.0,
+    "index": 106
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -17.0,
+    "y": 206.0,
+    "index": 107
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -51.0,
+    "y": 206.0,
+    "index": 108
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -85.0,
+    "y": 206.0,
+    "index": 109
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -119.0,
+    "y": 206.0,
+    "index": 110
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 102.0,
+    "y": 234.0,
+    "index": 111
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 68.0,
+    "y": 234.0,
+    "index": 112
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 34.0,
+    "y": 234.0,
+    "index": 113
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -0.0,
+    "y": 234.0,
+    "index": 114
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -34.0,
+    "y": 234.0,
+    "index": 115
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -68.0,
+    "y": 234.0,
+    "index": 116
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -102.0,
+    "y": 234.0,
+    "index": 117
+   }
+  ],
+  "techs": {
+   "18": [
+    180418
+   ],
+   "2": [
+    3202,
+    10102
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s26_C29_03",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   740
+  ],
+  "alive": [
+   0,
+   38
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 18162,
+    "dmgReal": 1578,
+    "kills": 6
+   },
+   {
+    "team": 0,
+    "uid": 18,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 321948,
+    "dmgReal": 70382,
+    "kills": 271
+   },
+   {
+    "team": 0,
+    "uid": 18,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13825,
+    "dmgReal": 9388,
+    "kills": 33
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3807,
+    "dmgReal": 3319,
+    "kills": 8
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1782,
+    "dmgReal": 1538,
+    "kills": 4
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 729,
+    "dmgReal": 607,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 243,
+    "dmgReal": 182,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 40264,
+    "dmgReal": 37123,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 18,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 23305,
+    "dmgReal": 18493,
+    "kills": 34
+   },
+   {
+    "team": 1,
+    "uid": 18,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 22120,
+    "dmgReal": 17392,
+    "kills": 33
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4699,
+    "dmgReal": 4150,
+    "kills": 9
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2592,
+    "dmgReal": 2165,
+    "kills": 7
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 567,
+    "dmgReal": 445,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1521,
+    "dmgReal": 1338,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2937,
+    "dmgReal": 2494,
+    "kills": 8
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 324,
+    "dmgReal": 202,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 81,
+    "dmgReal": 81,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    3,
+    0
+   ],
+   "end_t": 33.6
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:18": 111788.0,
+   "0:2": 18011.0,
+   "0:10": 2843.0,
+   "1:18": 24182.0,
+   "1:2": 34605.8,
+   "1:10": 6181.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:18": 73,
+   "0:18": 359,
+   "1:10": 22,
+   "1:2": 1,
+   "0:10": 3,
+   "0:2": 1
+  }
+ },
+ "alive_mech": {
+  "factory": {
+   "0:18": 2
+  }
+ },
+ "ts": "13:26:13"
+}

@@ -1,0 +1,126 @@
+{
+ "name": "st494",
+ "group": "ST",
+ "desc": "ST 暴雨·重型导弹 vs 泰山·增程炮弹 等经济1200 #494 (两塔正中)",
+ "value": [
+  800,
+  1200
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 12,
+    "level": 0,
+    "x": -22.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": 12.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": 46.0,
+    "y": -150.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "12": [
+    10912
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 2002,
+    "level": 0,
+    "x": 12.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "2002": [
+    1032002
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st494",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   500
+  ],
+  "alive": [
+   0,
+   1
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 1,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 17688,
+    "dmgReal": 13788,
+    "kills": 12
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 18.4
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:12": 8337.6,
+   "1:2002": 13788.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:2002": 12
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:11:23"
+}

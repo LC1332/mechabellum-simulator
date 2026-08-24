@@ -1,0 +1,197 @@
+{
+ "name": "st873",
+ "group": "ST",
+ "desc": "ST 犀牛 vs 狼蛛·射程强化 等经济1000 #873 (两塔正中,换位)",
+ "value": [
+  1000,
+  700
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 5,
+    "level": 0,
+    "x": -56.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -22.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 12.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 46.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 80.0,
+    "y": -150.0,
+    "index": 4
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 24,
+    "level": 0,
+    "x": 29.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 24,
+    "level": 0,
+    "x": -5.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "24": [
+    10224
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st873",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   1000,
+   0
+  ],
+  "alive": [
+   5,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10680,
+    "dmgReal": 10680,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10680,
+    "dmgReal": 7653,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7120,
+    "dmgReal": 7120,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3560,
+    "dmgReal": 3560,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3560,
+    "dmgReal": 533,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 24,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8432,
+    "dmgReal": 8432,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 24,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8432,
+    "dmgReal": 8432,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    5,
+    0
+   ],
+   "end_t": 15.2
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:5": 29546.0,
+   "1:24": 12896.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:5": 2
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:27:38"
+}

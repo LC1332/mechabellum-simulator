@@ -1,0 +1,145 @@
+{
+ "name": "st814",
+ "group": "ST",
+ "desc": "ST 鬼鳐·高爆弹药 vs 霸主·光子投射 等经济800 #814 (两塔正中)",
+ "value": [
+  650,
+  800
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 25,
+    "level": 0,
+    "x": -29.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 25,
+    "level": 0,
+    "x": 5.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -12.0,
+    "y": -178.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "25": [
+    425
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 11,
+    "level": 0,
+    "x": -12.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "11": [
+    180311
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st814",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   400
+  ],
+  "alive": [
+   0,
+   1
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2174,
+    "dmgReal": 2174,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 630,
+    "dmgReal": 630,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 113808,
+    "dmgReal": 22578,
+    "kills": 24
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 41.9
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:25": 8478.6,
+   "0:9": 2016.0,
+   "1:11": 22578.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:11": 24
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:25:29"
+}

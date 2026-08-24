@@ -1,0 +1,183 @@
+{
+ "name": "st616",
+ "group": "ST",
+ "desc": "ST 霸主·战地维修+骇客·射程强化 vs 雷霆·射程强化+暴雨·重型导弹 等经济1800 #616 (两塔正中)",
+ "value": [
+  1650,
+  1500
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 11,
+    "level": 0,
+    "x": -17.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 11,
+    "level": 0,
+    "x": 17.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": 0.0,
+    "y": -178.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "11": [
+    911
+   ],
+   "14": [
+    10214
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 27,
+    "level": 0,
+    "x": 17.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 27,
+    "level": 0,
+    "x": -17.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": -0.0,
+    "y": 178.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "27": [
+    10227
+   ],
+   "12": [
+    10912
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st616",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   800,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 23710,
+    "dmgReal": 17214,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 33194,
+    "dmgReal": 19512,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 27,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10054,
+    "dmgReal": 10054,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 27,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10054,
+    "dmgReal": 10054,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4167,
+    "dmgReal": 3249,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 20.2
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:11": 36726.0,
+   "1:27": 63573.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:27": 1,
+   "0:11": 6
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:16:21"
+}

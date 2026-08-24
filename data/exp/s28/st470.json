@@ -1,0 +1,121 @@
+{
+ "name": "st470",
+ "group": "ST",
+ "desc": "ST 堡垒·发射器过载 vs 狂蝎·射程强化 等经济600 #470 (两塔正中)",
+ "value": [
+  550,
+  600
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 1,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "1": [
+    10301
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 19,
+    "level": 0,
+    "x": -0.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "19": [
+    10219
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st470",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   350,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 19572,
+    "dmgReal": 18632,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 31950,
+    "dmgReal": 31950,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 21.4
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:1": 18632.0,
+   "1:19": 31950.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:1": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:10:18"
+}

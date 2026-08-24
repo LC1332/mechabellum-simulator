@@ -1,0 +1,161 @@
+{
+ "name": "st482",
+ "group": "ST",
+ "desc": "ST 丧钟·电磁轰炸 vs 火獾·焦土冲击 等经济1300 #482 (两塔正中)",
+ "value": [
+  1300,
+  900
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 2001,
+    "level": 0,
+    "x": -12.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "2001": [
+    11020012
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 20,
+    "level": 0,
+    "x": 22.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -12.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -46.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -12.0,
+    "y": 178.0,
+    "index": 103
+   }
+  ],
+  "techs": {
+   "20": [
+    11020
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st482",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   500,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2001,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 49522,
+    "dmgReal": 41601,
+    "kills": 26
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 999,
+    "dmgReal": 999,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 216,
+    "dmgReal": 216,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1764,
+    "dmgReal": 1764,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 20.8
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:2001": 50387.9,
+   "1:20": 108.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "-1:0": 9,
+   "0:2001": 18
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:10:59"
+}

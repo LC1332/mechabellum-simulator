@@ -1,0 +1,151 @@
+{
+ "name": "u239",
+ "group": "U",
+ "desc": "U 堡垒(1) vs 雷霆(27) 等经济600",
+ "pair": [
+  1,
+  27
+ ],
+ "value": [
+  600,
+  600
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 1,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "1": [
+    1105
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 27,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "27": [
+    4127
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u239",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   350,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 22724,
+    "dmgReal": 19465,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 27,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12818,
+    "dmgReal": 11694,
+    "kills": 2
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 10.0,
+   "towers_down": {
+    "0": 0,
+    "1": 0
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 10.0,
+   "towers_down": {
+    "0": 0,
+    "1": 0
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {},
+  "mech": {}
+ },
+ "kills": {
+  "factory": {
+   "-1:0": 1
+  },
+  "mech": {
+   "-1:0": 1
+  }
+ },
+ "ts": "06:40:48",
+ "alive_mech": {
+  "mech": {
+   "0:1": 1
+  },
+  "factory": {
+   "0:1": 1
+  }
+ }
+}

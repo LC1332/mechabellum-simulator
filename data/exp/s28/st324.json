@@ -1,0 +1,161 @@
+{
+ "name": "st324",
+ "group": "ST",
+ "desc": "ST 堡垒·火箭拳 vs 泰山·巨山装甲 等经济1400 #324 (两塔正中)",
+ "value": [
+  1100,
+  1400
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 1,
+    "level": 0,
+    "x": -5.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 1,
+    "level": 0,
+    "x": 29.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "1": [
+    110201
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 2002,
+    "level": 0,
+    "x": 12.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 12.0,
+    "y": 178.0,
+    "index": 101
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 12.0,
+    "y": 206.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "2002": [
+    302002
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st324",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   628
+  ],
+  "alive": [
+   0,
+   24
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 71764,
+    "dmgReal": 2893,
+    "kills": 11
+   },
+   {
+    "team": 0,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 52192,
+    "dmgReal": 2104,
+    "kills": 8
+   },
+   {
+    "team": 1,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 94384,
+    "dmgReal": 87481,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 395,
+    "dmgReal": 395,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 40.5
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:1": 145075.0,
+   "1:2002": 29495.0,
+   "1:9": 441.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:1": 43
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:04:12"
+}

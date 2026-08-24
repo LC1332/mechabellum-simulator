@@ -1,0 +1,167 @@
+{
+ "name": "a2002_9",
+ "group": "A",
+ "desc": "A 泰山+狂蝎 vs 锚[台风+熔点] 等经济1100",
+ "pair": [
+  2002,
+  -100
+ ],
+ "value": [
+  1100,
+  1100
+ ],
+ "anchor_team": 1,
+ "p0": {
+  "units": [
+   {
+    "id": 22,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 0
+   },
+   {
+    "id": 4,
+    "level": 0,
+    "x": 193.0,
+    "y": 132.0,
+    "index": 1
+   },
+   {
+    "id": 4,
+    "level": 0,
+    "x": 193.0,
+    "y": 168.0,
+    "index": 2
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 2002,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 100
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": -193.0,
+    "y": -150.0,
+    "index": 101
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s25_a2002_9",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   950,
+   0
+  ],
+  "alive": [
+   4,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6864,
+    "dmgReal": 6799,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2037,
+    "dmgReal": 2037,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 159863,
+    "dmgReal": 153253,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2356,
+    "dmgReal": 2356,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 27690,
+    "dmgReal": 20419,
+    "kills": 2
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 60.1
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:22": 8222.4,
+   "0:4": 153866.6,
+   "1:2002": 37656.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:2002": 4,
+   "0:4": 3,
+   "0:22": 1
+  }
+ },
+ "ts": "09:38:45"
+}

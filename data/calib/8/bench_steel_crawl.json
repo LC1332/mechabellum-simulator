@@ -1,0 +1,45 @@
+{
+ "scenario": "bench_steel_crawl",
+ "group": "BENCH",
+ "desc": "bench 钢球(600) vs 爬虫(600)",
+ "mech": 8,
+ "mech_name": "钢球",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   424
+  ],
+  "alive": [
+   0,
+   106
+  ],
+  "rows": [
+   {
+    "mech": 8,
+    "dmg": 10531.0,
+    "kills": 38
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   121
+  ],
+  "rows": [
+   {
+    "mech": 8,
+    "dmg": 6290.0,
+    "kills": 23,
+    "r": 0.597
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

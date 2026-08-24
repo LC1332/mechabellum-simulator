@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m1_hw_l0",
+ "group": "A",
+ "desc": "A 堡垒(low) L0 vs hammer墙 (r=0.51 N=81)",
+ "mech": 1,
+ "mech_name": "堡垒",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   840
+  ],
+  "alive": [
+   0,
+   21
+  ],
+  "rows": [
+   {
+    "mech": 1,
+    "dmg": 217818.0,
+    "kills": 19
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   4,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 1,
+    "dmg": 417360.0,
+    "kills": 40,
+    "r": 1.916
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

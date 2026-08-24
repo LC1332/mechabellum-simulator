@@ -1,0 +1,181 @@
+{
+ "name": "cal_dps_r_25",
+ "group": "CAL",
+ "desc": "cal_dps_r_25 DPS标定: 鬼鳐 卡x2 侧翼 vs 9级维修剑齿虎x1+尖牙纵队",
+ "p0": {
+  "units": [
+   {
+    "id": 21,
+    "level": 8,
+    "x": 0.0,
+    "y": -30.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "21": [
+    10321
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": 0.0,
+    "y": 40.0,
+    "index": 100
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 0.0,
+    "y": 65.0,
+    "index": 101
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 0.0,
+    "y": 90.0,
+    "index": 102
+   },
+   {
+    "id": 25,
+    "level": 0,
+    "x": 71.0,
+    "y": 150.0,
+    "index": 103
+   },
+   {
+    "id": 25,
+    "level": 0,
+    "x": 105.0,
+    "y": 150.0,
+    "index": 104
+   }
+  ],
+  "techs": {
+   "9": [
+    209
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s29_cal_dps_r_25",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   200,
+   414
+  ],
+  "alive": [
+   1,
+   8
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6440616,
+    "dmgReal": 12168,
+    "kills": 52
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 23751,
+    "dmgReal": 23751,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 48447,
+    "dmgReal": 48447,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 55503,
+    "dmgReal": 55503,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 239140,
+    "dmgReal": 239140,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 239140,
+    "dmgReal": 239140,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    2
+   ],
+   "end_t": 120.0
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:21": 33084.0,
+   "1:9": 24066.0,
+   "1:25": 78481.4
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:21": 60
+  }
+ },
+ "ts": "12:25:39"
+}

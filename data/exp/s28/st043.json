@@ -1,0 +1,258 @@
+{
+ "name": "st043",
+ "group": "ST",
+ "desc": "ST 磁暴·应急装甲+长弓·快速弹夹 vs 兵蜂·高速引擎+火獾·液态火 等经济1500 #43 (两塔正中,换位)",
+ "value": [
+  900,
+  1150
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 31,
+    "level": 0,
+    "x": 12.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": -56.0,
+    "y": -178.0,
+    "index": 1
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": -22.0,
+    "y": -178.0,
+    "index": 2
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": 12.0,
+    "y": -178.0,
+    "index": 3
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": 46.0,
+    "y": -178.0,
+    "index": 4
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": 80.0,
+    "y": -178.0,
+    "index": 5
+   }
+  ],
+  "techs": {
+   "31": [
+    503101
+   ],
+   "2": [
+    10402
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 6,
+    "level": 0,
+    "x": 29.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": -5.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": 29.0,
+    "y": 178.0,
+    "index": 102
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -5.0,
+    "y": 178.0,
+    "index": 103
+   }
+  ],
+  "techs": {
+   "6": [
+    1606
+   ],
+   "20": [
+    820
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st043",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   453
+  ],
+  "alive": [
+   0,
+   9
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6987,
+    "dmgReal": 933,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9316,
+    "dmgReal": 1244,
+    "kills": 4
+   },
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9316,
+    "dmgReal": 1244,
+    "kills": 4
+   },
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11645,
+    "dmgReal": 1555,
+    "kills": 5
+   },
+   {
+    "team": 0,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3927,
+    "dmgReal": 3927,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11645,
+    "dmgReal": 1555,
+    "kills": 5
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7272,
+    "dmgReal": 6805,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6060,
+    "dmgReal": 5864,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1647,
+    "dmgReal": 1625,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1242,
+    "dmgReal": 1241,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    5,
+    0
+   ],
+   "end_t": 26.9
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:31": 2618.0,
+   "0:2": 22578.4,
+   "1:6": 6291.0,
+   "1:20": 1323.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:2": 30,
+   "1:6": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:11:37"
+}

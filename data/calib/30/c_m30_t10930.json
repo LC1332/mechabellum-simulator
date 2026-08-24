@@ -1,0 +1,45 @@
+{
+ "scenario": "c_m30_t10930",
+ "group": "C",
+ "desc": "C 3卡魔眼+蓄能攻击 (总值400) vs 等经济对手",
+ "mech": 30,
+ "mech_name": "魔眼",
+ "tech": 10930,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   408
+  ],
+  "alive": [
+   0,
+   24
+  ],
+  "rows": [
+   {
+    "mech": 30,
+    "dmg": 0.0,
+    "kills": 0
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   24
+  ],
+  "rows": [
+   {
+    "mech": 30,
+    "dmg": 0.0,
+    "kills": 0,
+    "r": null
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

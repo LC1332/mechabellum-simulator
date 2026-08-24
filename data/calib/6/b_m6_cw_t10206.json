@@ -1,0 +1,45 @@
+{
+ "scenario": "b_m6_cw_t10206",
+ "group": "B",
+ "desc": "B +射程强化 t10206(在用, 语料16侧)",
+ "mech": 6,
+ "mech_name": "兵蜂",
+ "tech": 10206,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   816,
+   0
+  ],
+  "alive": [
+   48,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 6,
+    "dmg": 100992.0,
+    "kills": 384
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   48,
+   20
+  ],
+  "rows": [
+   {
+    "mech": 6,
+    "dmg": 95934.0,
+    "kills": 364,
+    "r": 0.95
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

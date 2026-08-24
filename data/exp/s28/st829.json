@@ -1,0 +1,197 @@
+{
+ "name": "st829",
+ "group": "ST",
+ "desc": "ST 魔眼 vs 熔点·能量汲取 等经济600 #829 (两塔正中,换位)",
+ "value": [
+  600,
+  600
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 30,
+    "level": 0,
+    "x": -91.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": -57.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": -23.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": 11.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": 45.0,
+    "y": -150.0,
+    "index": 4
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": 79.0,
+    "y": -150.0,
+    "index": 5
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 4,
+    "level": 0,
+    "x": -6.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "4": [
+    304
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st829",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   363,
+   0
+  ],
+  "alive": [
+   11,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4975,
+    "dmgReal": 4975,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7960,
+    "dmgReal": 7960,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12935,
+    "dmgReal": 11960,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11940,
+    "dmgReal": 11940,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8955,
+    "dmgReal": 8955,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10945,
+    "dmgReal": 10945,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13403,
+    "dmgReal": 10680,
+    "kills": 7
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 35.7
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:30": 61690.0,
+   "1:4": 27396.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:4": 18
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:26:14"
+}

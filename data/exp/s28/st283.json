@@ -1,0 +1,137 @@
+{
+ "name": "st283",
+ "group": "ST",
+ "desc": "ST 兵蜂·电磁弹 vs 鬼鳐·能量护盾 等经济600 #283 (两塔正中,换位)",
+ "value": [
+  500,
+  600
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 6,
+    "level": 0,
+    "x": -5.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": 29.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "6": [
+    1806
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 25,
+    "level": 0,
+    "x": 12.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "25": [
+    225
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st283",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   255,
+   0
+  ],
+  "alive": [
+   15,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5656,
+    "dmgReal": 5612,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5252,
+    "dmgReal": 5230,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9783,
+    "dmgReal": 2799,
+    "kills": 9
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    3
+   ],
+   "end_t": 12.2
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:6": 4646.0,
+   "1:25": 7464.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:25": 24
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:02:25"
+}

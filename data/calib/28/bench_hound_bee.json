@@ -1,0 +1,45 @@
+{
+ "scenario": "bench_hound_bee",
+ "group": "BENCH",
+ "desc": "bench 猎犬(600) vs 兵蜂(600)",
+ "mech": 28,
+ "mech_name": "猎犬",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   612
+  ],
+  "alive": [
+   0,
+   36
+  ],
+  "rows": [
+   {
+    "mech": 28,
+    "dmg": 3400.0,
+    "kills": 1
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   36
+  ],
+  "rows": [
+   {
+    "mech": 28,
+    "dmg": 0.0,
+    "kills": 0,
+    "r": null
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

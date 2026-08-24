@@ -1,0 +1,45 @@
+{
+ "scenario": "bench_saber_steel",
+ "group": "BENCH",
+ "desc": "bench 剑齿虎(600) vs 钢球(600)",
+ "mech": 21,
+ "mech_name": "剑齿虎",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   400,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 21,
+    "dmg": 54852.0,
+    "kills": 12
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   3,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 21,
+    "dmg": 54852.0,
+    "kills": 12,
+    "r": 1.0
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

@@ -1,0 +1,305 @@
+{
+ "name": "st544",
+ "group": "ST",
+ "desc": "ST 野马·高爆弹药+丧钟·钢球制造 vs 鬼鳐·高爆弹药+熔点·爬虫制造 等经济2500 #544 (两塔正中)",
+ "value": [
+  2300,
+  1850
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 7,
+    "level": 0,
+    "x": -62.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": -28.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": 6.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": 40.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": 74.0,
+    "y": -150.0,
+    "index": 4
+   },
+   {
+    "id": 2001,
+    "level": 0,
+    "x": 6.0,
+    "y": -178.0,
+    "index": 5
+   }
+  ],
+  "techs": {
+   "7": [
+    407
+   ],
+   "2001": [
+    1202001
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 25,
+    "level": 0,
+    "x": 6.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 4,
+    "level": 0,
+    "x": 40.0,
+    "y": 178.0,
+    "index": 101
+   },
+   {
+    "id": 4,
+    "level": 0,
+    "x": 6.0,
+    "y": 178.0,
+    "index": 102
+   },
+   {
+    "id": 4,
+    "level": 0,
+    "x": -28.0,
+    "y": 178.0,
+    "index": 103
+   }
+  ],
+  "techs": {
+   "25": [
+    425
+   ],
+   "4": [
+    1204
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st544",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   1022,
+   0
+  ],
+  "alive": [
+   32,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5589,
+    "dmgReal": 5589,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4715,
+    "dmgReal": 4715,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14559,
+    "dmgReal": 14544,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12512,
+    "dmgReal": 12497,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13685,
+    "dmgReal": 13670,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 8,
+    "dmgMax": 884,
+    "dmgReal": 884,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 8,
+    "dmgMax": 189,
+    "dmgReal": 189,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 8,
+    "dmgMax": 30,
+    "dmgReal": 30,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 2001,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 54185,
+    "dmgReal": 50832,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 8,
+    "dmgMax": 5,
+    "dmgReal": 5,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 8,
+    "dmgMax": 2,
+    "dmgReal": 2,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9128,
+    "dmgReal": 4802,
+    "kills": 14
+   },
+   {
+    "team": 1,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11366,
+    "dmgReal": 10405,
+    "kills": 5
+   },
+   {
+    "team": 1,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9014,
+    "dmgReal": 7744,
+    "kills": 8
+   },
+   {
+    "team": 1,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14468,
+    "dmgReal": 13375,
+    "kills": 8
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    3
+   ],
+   "end_t": 43.8
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:7": 58668.0,
+   "0:2001": 6877.1,
+   "1:25": 7186.1,
+   "1:4": 180044.9
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:7": 27,
+   "1:25": 20,
+   "1:4": 44,
+   "0:2001": 24
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:13:27"
+}

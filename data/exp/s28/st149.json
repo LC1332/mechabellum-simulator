@@ -1,0 +1,188 @@
+{
+ "name": "st149",
+ "group": "ST",
+ "desc": "ST 恶灵·退化光束 vs 弧光·防空弹药 等经济2000 #149 (两塔正中,换位)",
+ "value": [
+  1400,
+  800
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 18,
+    "level": 0,
+    "x": -45.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 18,
+    "level": 0,
+    "x": -11.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 18,
+    "level": 0,
+    "x": 23.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 18,
+    "level": 0,
+    "x": 57.0,
+    "y": -150.0,
+    "index": 3
+   }
+  ],
+  "techs": {
+   "18": [
+    180418
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 15,
+    "level": 0,
+    "x": 74.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": 40.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": 6.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": -28.0,
+    "y": 150.0,
+    "index": 103
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": -62.0,
+    "y": 150.0,
+    "index": 104
+   }
+  ],
+  "techs": {
+   "15": [
+    3115
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st149",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   1000,
+   0
+  ],
+  "alive": [
+   4,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 18,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7425,
+    "dmgReal": 7151,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 18,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5445,
+    "dmgReal": 5171,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 18,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7425,
+    "dmgReal": 7288,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 18,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4455,
+    "dmgReal": 4455,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    4,
+    0
+   ],
+   "end_t": 31.1
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:18": 24065.0,
+   "1:15": 31755.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:18": 5
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:16:06"
+}

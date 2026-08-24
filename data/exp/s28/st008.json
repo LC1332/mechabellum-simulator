@@ -1,0 +1,170 @@
+{
+ "name": "st008",
+ "group": "ST",
+ "desc": "ST 兵蜂·高速引擎 vs 野马·穿甲弹 等经济900 #8 (两塔正中)",
+ "value": [
+  700,
+  650
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 6,
+    "level": 0,
+    "x": -34.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": 34.0,
+    "y": -150.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "6": [
+    1606
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 7,
+    "level": 0,
+    "x": 17.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 7,
+    "level": 0,
+    "x": -17.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "7": [
+    10607
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st008",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   34
+  ],
+  "alive": [
+   0,
+   2
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3030,
+    "dmgReal": 2603,
+    "kills": 7
+   },
+   {
+    "team": 0,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1818,
+    "dmgReal": 1574,
+    "kills": 4
+   },
+   {
+    "team": 0,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4242,
+    "dmgReal": 3571,
+    "kills": 11
+   },
+   {
+    "team": 1,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7776,
+    "dmgReal": 7477,
+    "kills": 23
+   },
+   {
+    "team": 1,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3888,
+    "dmgReal": 3719,
+    "kills": 13
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    12,
+    0
+   ],
+   "end_t": 14.4
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:6": 8232.0,
+   "1:7": 8058.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:7": 24,
+   "0:6": 24
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:10:13"
+}

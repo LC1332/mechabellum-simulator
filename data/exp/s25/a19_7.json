@@ -1,0 +1,157 @@
+{
+ "name": "a19_7",
+ "group": "A",
+ "desc": "A 狂蝎+泰山 vs 锚[战争工厂+熔点] 等经济1200 t10419",
+ "pair": [
+  19,
+  -100
+ ],
+ "value": [
+  1200,
+  1200
+ ],
+ "anchor_team": 0,
+ "p0": {
+  "units": [
+   {
+    "id": 19,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 0
+   },
+   {
+    "id": 2002,
+    "level": 0,
+    "x": 193.0,
+    "y": 150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "19": [
+    10419
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 17,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 100
+   },
+   {
+    "id": 4,
+    "level": 0,
+    "x": -193.0,
+    "y": -150.0,
+    "index": 101
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s25_a19_7",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   750,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 21300,
+    "dmgReal": 6800,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 153372,
+    "dmgReal": 144500,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 17,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 94000,
+    "dmgReal": 93640,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 466,
+    "dmgReal": 466,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    2
+   ],
+   "end_t": 66.4
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:19": 16180.0,
+   "0:2002": 33484.9,
+   "1:17": 70524.9,
+   "1:4": 91564.1
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:17": 3,
+   "0:2002": 1,
+   "0:19": 1,
+   "1:4": 1
+  }
+ },
+ "ts": "09:39:13"
+}

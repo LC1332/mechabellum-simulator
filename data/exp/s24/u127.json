@@ -1,0 +1,175 @@
+{
+ "name": "u127",
+ "group": "U",
+ "desc": "U 铁锤(13) vs 火獾(20) 等经济500",
+ "pair": [
+  13,
+  20
+ ],
+ "value": [
+  500,
+  500
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 13,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "13": [
+    10213
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 20,
+    "level": 0,
+    "x": 165.0,
+    "y": 132.0,
+    "index": 100
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": 165.0,
+    "y": 168.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "20": [
+    180220
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u127",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   40,
+   67
+  ],
+  "alive": [
+   1,
+   1
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 13,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 29600,
+    "dmgReal": 29126,
+    "kills": 7
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 16956,
+    "dmgReal": 16932,
+    "kills": 6
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3780,
+    "dmgReal": 3780,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    4
+   ],
+   "end_t": 67.5,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 1,
+   "alive": [
+    0,
+    4
+   ],
+   "end_t": 60.9,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:13": 15492.0,
+   "1:20": 20790.0
+  },
+  "mech": {
+   "0:13": 16708.0,
+   "1:20": 20790.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:20": 6,
+   "0:13": 3
+  },
+  "mech": {
+   "1:20": 6,
+   "0:13": 3
+  }
+ },
+ "ts": "06:31:54",
+ "alive_mech": {
+  "mech": {
+   "1:20": 4
+  },
+  "factory": {
+   "1:20": 4
+  }
+ }
+}

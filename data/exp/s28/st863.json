@@ -1,0 +1,165 @@
+{
+ "name": "st863",
+ "group": "ST",
+ "desc": "ST 恶灵·射程强化 vs 霸主·射程强化 等经济2400 #863 (两塔正中,换位)",
+ "value": [
+  1500,
+  1800
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 18,
+    "level": 0,
+    "x": -51.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 18,
+    "level": 0,
+    "x": -17.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 18,
+    "level": 0,
+    "x": 17.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 18,
+    "level": 0,
+    "x": 51.0,
+    "y": -150.0,
+    "index": 3
+   }
+  ],
+  "techs": {
+   "18": [
+    10218
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 11,
+    "level": 0,
+    "x": 34.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 11,
+    "level": 0,
+    "x": -0.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 11,
+    "level": 0,
+    "x": -34.0,
+    "y": 150.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "11": [
+    10211
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st863",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   1200
+  ],
+  "alive": [
+   0,
+   3
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 1,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 18968,
+    "dmgReal": 18857,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 23710,
+    "dmgReal": 23488,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14226,
+    "dmgReal": 14115,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    3
+   ],
+   "end_t": 16.4
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:18": 3429.0,
+   "1:11": 56460.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:11": 4
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:27:17"
+}

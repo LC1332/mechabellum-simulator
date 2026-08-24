@@ -1,0 +1,326 @@
+{
+ "name": "st259",
+ "group": "ST",
+ "desc": "ST 钢球 vs 暴雨·燃烧弹 等经济2200 #259 (两塔正中,换位)",
+ "value": [
+  2200,
+  1150
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 8,
+    "level": 0,
+    "x": -164.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": -130.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": -96.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": -62.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": -28.0,
+    "y": -150.0,
+    "index": 4
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": 6.0,
+    "y": -150.0,
+    "index": 5
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": 40.0,
+    "y": -150.0,
+    "index": 6
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": 74.0,
+    "y": -150.0,
+    "index": 7
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": 108.0,
+    "y": -150.0,
+    "index": 8
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": 142.0,
+    "y": -150.0,
+    "index": 9
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": 176.0,
+    "y": -150.0,
+    "index": 10
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 12,
+    "level": 0,
+    "x": 57.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": 23.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": -11.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": -45.0,
+    "y": 150.0,
+    "index": 103
+   }
+  ],
+  "techs": {
+   "12": [
+    812
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st259",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   1750,
+   0
+  ],
+  "alive": [
+   35,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3507,
+    "dmgReal": 3374,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2521,
+    "dmgReal": 2450,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2650,
+    "dmgReal": 2534,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2669,
+    "dmgReal": 2431,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3846,
+    "dmgReal": 3806,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7,
+    "dmgReal": 7,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1458,
+    "dmgReal": 1316,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5593,
+    "dmgReal": 4865,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 194,
+    "dmgReal": 194,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 809,
+    "dmgReal": 770,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3459,
+    "dmgReal": 3437,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13124,
+    "dmgReal": 13063,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 16212,
+    "dmgReal": 16090,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 23160,
+    "dmgReal": 22977,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14050,
+    "dmgReal": 13867,
+    "kills": 3
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    34,
+    0
+   ],
+   "end_t": 18.9
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:8": 18384.0,
+   "1:12": 116734.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:12": 10,
+   "0:8": 16
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:01:29"
+}

@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m8_cw_l2",
+ "group": "A",
+ "desc": "A 钢球(low) L2 vs crawler墙 (r=0.38 N=205)",
+ "mech": 8,
+ "mech_name": "钢球",
+ "tech": null,
+ "level": 2,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1124
+  ],
+  "alive": [
+   0,
+   281
+  ],
+  "rows": [
+   {
+    "mech": 8,
+    "dmg": 27942.0,
+    "kills": 103
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   366
+  ],
+  "rows": [
+   {
+    "mech": 8,
+    "dmg": 5276.0,
+    "kills": 18,
+    "r": 0.189
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

@@ -1,0 +1,185 @@
+{
+ "name": "st622",
+ "group": "ST",
+ "desc": "ST 泰山·防空弹药 vs 兵蜂·高速引擎 等经济1200 #622 (两塔正中)",
+ "value": [
+  1200,
+  900
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 2002,
+    "level": 0,
+    "x": -12.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -12.0,
+    "y": -178.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "2002": [
+    312002
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 6,
+    "level": 0,
+    "x": 39.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": 5.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": -29.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": -63.0,
+    "y": 150.0,
+    "index": 103
+   }
+  ],
+  "techs": {
+   "6": [
+    1606
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st622",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   608,
+   0
+  ],
+  "alive": [
+   19,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 134482,
+    "dmgReal": 10936,
+    "kills": 38
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4032,
+    "dmgReal": 3992,
+    "kills": 10
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 808,
+    "dmgReal": 808,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10100,
+    "dmgReal": 10100,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12524,
+    "dmgReal": 12524,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10302,
+    "dmgReal": 10302,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    19,
+    0
+   ],
+   "end_t": 18.9
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:2002": 14928.0,
+   "1:6": 35956.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:2002": 48
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:16:40"
+}

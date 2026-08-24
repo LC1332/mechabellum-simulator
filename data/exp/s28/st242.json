@@ -1,0 +1,237 @@
+{
+ "name": "st242",
+ "group": "ST",
+ "desc": "ST 霸主·高速引擎+磁暴·战地维修 vs 先知·搜索雷达+战争工厂·钢球制造 等经济1800 #242 (两塔正中)",
+ "value": [
+  1350,
+  1750
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 11,
+    "level": 0,
+    "x": -6.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": -57.0,
+    "y": -178.0,
+    "index": 1
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": -23.0,
+    "y": -178.0,
+    "index": 2
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": 11.0,
+    "y": -178.0,
+    "index": 3
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": 45.0,
+    "y": -178.0,
+    "index": 4
+   }
+  ],
+  "techs": {
+   "11": [
+    1611
+   ],
+   "31": [
+    931
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 26,
+    "level": 0,
+    "x": -6.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 17,
+    "level": 0,
+    "x": -6.0,
+    "y": 178.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "26": [
+    180526
+   ],
+   "17": [
+    12117
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st242",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   400,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 159328,
+    "dmgReal": 149083,
+    "kills": 8
+   },
+   {
+    "team": 0,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2618,
+    "dmgReal": 2618,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3927,
+    "dmgReal": 3927,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1309,
+    "dmgReal": 1309,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1309,
+    "dmgReal": 644,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2696,
+    "dmgReal": 2696,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 17,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 30080,
+    "dmgReal": 29700,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 8,
+    "dmgMax": 5440,
+    "dmgReal": 4961,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 8,
+    "dmgMax": 1189,
+    "dmgReal": 955,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 8,
+    "dmgMax": 884,
+    "dmgReal": 884,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    3
+   ],
+   "end_t": 15.7
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:11": 21475.0,
+   "0:31": 5236.0,
+   "1:26": 4044.0,
+   "1:17": 59023.7
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:11": 1,
+   "1:17": 5
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:20:08"
+}

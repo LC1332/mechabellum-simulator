@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m31_cw_l2",
+ "group": "A",
+ "desc": "A 磁暴(low) L2 vs crawler墙 (r=0.76 N=232)",
+ "mech": 31,
+ "mech_name": "磁暴",
+ "tech": null,
+ "level": 2,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1408
+  ],
+  "alive": [
+   0,
+   352
+  ],
+  "rows": [
+   {
+    "mech": 31,
+    "dmg": 8416.0,
+    "kills": 32
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   376
+  ],
+  "rows": [
+   {
+    "mech": 31,
+    "dmg": 2104.0,
+    "kills": 8,
+    "r": 0.25
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

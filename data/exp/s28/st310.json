@@ -1,0 +1,410 @@
+{
+ "name": "st310",
+ "group": "ST",
+ "desc": "ST 魔眼·能量汲取 vs 钢球·滚动充能 等经济2100 #310 (两塔正中)",
+ "value": [
+  1450,
+  1350
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 30,
+    "level": 0,
+    "x": -221.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": -187.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": -153.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": -119.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": -85.0,
+    "y": -150.0,
+    "index": 4
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": -51.0,
+    "y": -150.0,
+    "index": 5
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": -17.0,
+    "y": -150.0,
+    "index": 6
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": 17.0,
+    "y": -150.0,
+    "index": 7
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": 51.0,
+    "y": -150.0,
+    "index": 8
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": 85.0,
+    "y": -150.0,
+    "index": 9
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": 119.0,
+    "y": -150.0,
+    "index": 10
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": 153.0,
+    "y": -150.0,
+    "index": 11
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": 187.0,
+    "y": -150.0,
+    "index": 12
+   },
+   {
+    "id": 30,
+    "level": 0,
+    "x": 221.0,
+    "y": -150.0,
+    "index": 13
+   }
+  ],
+  "techs": {
+   "30": [
+    330
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 8,
+    "level": 0,
+    "x": 85.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": 51.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": 17.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": -17.0,
+    "y": 150.0,
+    "index": 103
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": -51.0,
+    "y": 150.0,
+    "index": 104
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": -85.0,
+    "y": 150.0,
+    "index": 105
+   }
+  ],
+  "techs": {
+   "8": [
+    180808
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st310",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   825,
+   0
+  ],
+  "alive": [
+   25,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6965,
+    "dmgReal": 6561,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5970,
+    "dmgReal": 5566,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9950,
+    "dmgReal": 9142,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5970,
+    "dmgReal": 5970,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4975,
+    "dmgReal": 4975,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12935,
+    "dmgReal": 12531,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7960,
+    "dmgReal": 6344,
+    "kills": 4
+   },
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13930,
+    "dmgReal": 13122,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8955,
+    "dmgReal": 8147,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11940,
+    "dmgReal": 10728,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11940,
+    "dmgReal": 10728,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6965,
+    "dmgReal": 6157,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4975,
+    "dmgReal": 4571,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5970,
+    "dmgReal": 5162,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 744,
+    "dmgReal": 744,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5684,
+    "dmgReal": 5018,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2463,
+    "dmgReal": 2350,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7366,
+    "dmgReal": 6476,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8437,
+    "dmgReal": 7917,
+    "kills": 5
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5775,
+    "dmgReal": 5575,
+    "kills": 3
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    30,
+    0
+   ],
+   "end_t": 17.7
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:30": 109704.0,
+   "1:8": 36279.4
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:30": 24,
+   "1:8": 12
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:03:39"
+}

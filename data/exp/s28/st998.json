@@ -1,0 +1,172 @@
+{
+ "name": "st998",
+ "group": "ST",
+ "desc": "ST 爬虫·复制 vs 台风·防空标记 等经济1800 #998 (两塔正中)",
+ "value": [
+  750,
+  1200
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 10,
+    "level": 0,
+    "x": -80.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -46.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -12.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 22.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 56.0,
+    "y": -150.0,
+    "index": 4
+   }
+  ],
+  "techs": {
+   "10": [
+    180110
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 22,
+    "level": 0,
+    "x": 22.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 22,
+    "level": 0,
+    "x": -12.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 22,
+    "level": 0,
+    "x": -46.0,
+    "y": 150.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "22": [
+    1102022
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st998",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   750
+  ],
+  "alive": [
+   0,
+   6
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 1,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9504,
+    "dmgReal": 9468,
+    "kills": 36
+   },
+   {
+    "team": 1,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12144,
+    "dmgReal": 12098,
+    "kills": 46
+   },
+   {
+    "team": 1,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10032,
+    "dmgReal": 9994,
+    "kills": 38
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    6
+   ],
+   "end_t": 14.9
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:10": 158.0,
+   "1:22": 31560.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:22": 120
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:33:16"
+}

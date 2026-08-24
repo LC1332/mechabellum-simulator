@@ -1,0 +1,45 @@
+{
+ "scenario": "c_m1_t1105",
+ "group": "C",
+ "desc": "C 3卡堡垒+防空弹幕 (总值1400) vs 等经济对手",
+ "mech": 1,
+ "mech_name": "堡垒",
+ "tech": 1105,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   250
+  ],
+  "alive": [
+   0,
+   5
+  ],
+  "rows": [
+   {
+    "mech": 1,
+    "dmg": 105133.0,
+    "kills": 23
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   1,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 1,
+    "dmg": 127988.0,
+    "kills": 28,
+    "r": 1.217
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

@@ -1,0 +1,45 @@
+{
+ "scenario": "c_m31_t10231",
+ "group": "C",
+ "desc": "C 3卡磁暴+射程强化 (总值600) vs 等经济对手",
+ "mech": 31,
+ "mech_name": "磁暴",
+ "tech": 10231,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   612
+  ],
+  "alive": [
+   0,
+   36
+  ],
+  "rows": [
+   {
+    "mech": 31,
+    "dmg": 0.0,
+    "kills": 0
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   36
+  ],
+  "rows": [
+   {
+    "mech": 31,
+    "dmg": 0.0,
+    "kills": 0,
+    "r": null
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

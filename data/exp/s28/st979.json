@@ -1,0 +1,144 @@
+{
+ "name": "st979",
+ "group": "ST",
+ "desc": "ST 熔点·电磁弹幕 vs 剑齿虎·副炮 等经济800 #979 (两塔正中,换位)",
+ "value": [
+  800,
+  600
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 4,
+    "level": 0,
+    "x": 6.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 6.0,
+    "y": -178.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "4": [
+    1106
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 21,
+    "level": 0,
+    "x": 23.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 21,
+    "level": 0,
+    "x": -11.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "21": [
+    110211
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st979",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   446,
+   0
+  ],
+  "alive": [
+   17,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 34380,
+    "dmgReal": 29772,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 19762,
+    "dmgReal": 15996,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6881,
+    "dmgReal": 6881,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    19,
+    0
+   ],
+   "end_t": 18.2
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:4": 29772.0,
+   "1:21": 13762.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:4": 2
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:32:26"
+}

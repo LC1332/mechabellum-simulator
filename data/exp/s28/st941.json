@@ -1,0 +1,177 @@
+{
+ "name": "st941",
+ "group": "ST",
+ "desc": "ST 先知·全弹发射+泰山·炮射火箭 vs 霸主·战地维修+长弓·双发 等经济1700 #941 (两塔正中,换位)",
+ "value": [
+  1650,
+  1200
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 26,
+    "level": 0,
+    "x": -12.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 2002,
+    "level": 0,
+    "x": -12.0,
+    "y": -178.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "26": [
+    726
+   ],
+   "2002": [
+    11020021
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 11,
+    "level": 0,
+    "x": -12.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": 22.0,
+    "y": 178.0,
+    "index": 101
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": -12.0,
+    "y": 178.0,
+    "index": 102
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": -46.0,
+    "y": 178.0,
+    "index": 103
+   }
+  ],
+  "techs": {
+   "11": [
+    911
+   ],
+   "2": [
+    702
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st941",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   400
+  ],
+  "alive": [
+   0,
+   1
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2696,
+    "dmgReal": 2696,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 95899,
+    "dmgReal": 11666,
+    "kills": 5
+   },
+   {
+    "team": 1,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 144628,
+    "dmgReal": 139332,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9316,
+    "dmgReal": 9316,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 82.5
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:26": 14828.0,
+   "0:2002": 17565.0,
+   "1:11": 113535.0,
+   "1:2": 35113.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:2": 1,
+   "0:2002": 5,
+   "1:11": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:30:40"
+}

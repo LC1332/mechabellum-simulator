@@ -1,0 +1,45 @@
+{
+ "scenario": "b_m18_cw_t10218",
+ "group": "B",
+ "desc": "B +射程强化 t10218(在用, 语料20侧)",
+ "mech": 18,
+ "mech_name": "恶灵",
+ "tech": 10218,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   1000,
+   0
+  ],
+  "alive": [
+   4,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 18,
+    "dmg": 100992.0,
+    "kills": 384
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   4,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 18,
+    "dmg": 100992.0,
+    "kills": 384,
+    "r": 1.0
+   }
+  ]
+ },
+ "mech_note": "weaponCount/多炮建模(wraith_guns)候选; r=1.00 已达标",
+ "ts": "2026-08-23 03:10:16"
+}

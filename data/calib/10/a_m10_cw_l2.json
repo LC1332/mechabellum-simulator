@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m10_cw_l2",
+ "group": "A",
+ "desc": "A 爬虫(low) L2 vs crawler墙 (r=0.64 N=1010)",
+ "mech": 10,
+ "mech_name": "爬虫",
+ "tech": null,
+ "level": 2,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   652
+  ],
+  "alive": [
+   0,
+   163
+  ],
+  "rows": [
+   {
+    "mech": 10,
+    "dmg": 62389.0,
+    "kills": 221
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   328
+  ],
+  "rows": [
+   {
+    "mech": 10,
+    "dmg": 16387.0,
+    "kills": 56,
+    "r": 0.263
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

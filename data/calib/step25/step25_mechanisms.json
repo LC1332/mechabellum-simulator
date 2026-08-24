@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "step": 25,
+    "date": "2026-08-23",
+    "task": "对路线C的探索-step25-开发任务",
+    "method": "静态调试闭环: s24 320场oracle真值(data/exp/s24) + s25 186场锚队真值(data/exp/s25), tools/step25_ab.py 变体重算, 0重跑旧局",
+    "oracle_batches": [
+      "s25 锚队扩容 149场 (2026-08-23 09:36-09:45, 0失败, 8.9min)",
+      "s25 补采 a7/a20/at4607/at1107 34场 (10:20-10:23, 0失败)",
+      "s25 P3 技能冒烟 3+3场 (sk_* / sk_base_*)"
+    ]
+  },
+  "P1_kill_inflation": {
+    "hypotheses": {
+      "upgrade_heal": "REJECTED — 120/246 歼灭局 oracle 胜方伤害 = 败方血池+2塔(3400x2) 精确整数, kills = 模块数+2 精确; 无任何战斗内回血/升级痕迹 (step22 用户口径'战斗内不升级'获数据确证)",
+      "damage_spread": "REJECTED as global mechanism — 大量对局 oracle dmgReal 与 pysim 逐位相等 (u061/u065/u066/u095: 伤害击杀双精确), 摊薄不是系统性的",
+      "true_cause_1": "energyShieldTechnologies 科技家族未建模 — u129/u235/u118 实锤: oracle 胜方对盾侧承伤 = 2x 血池精确 (盾值=自身maxHP, 表 description 定版 '护盾值等于自身的生命值'); s24 有 11 场盾局 (206x5/209x4/227x2)",
+      "true_cause_2": "弹着追踪 (homing) 高估慢速齐射兵 — pysim 全弹追踪必中, 真实弹着定死发射时刻落点; 修复后尖牙k比2.82->1.06 爬虫2.16->1.12 剑齿虎1.49->1.09 兵蜂1.56->1.12 (v2full, U组)"
+    },
+    "implementation": "engine: tech_eshield=1 (盾先甲吸收, stake计入credit对齐oracle含盾口径) + tech_antishield=1 (护盾穿透x1.3+同打本体, 1901-1913 damageMultiplier表)",
+    "evidence": "tools/step25_p1*.py 输出; data/step25_p1_casedump.json"
+  },
+  "C1_stop_and_arc": {
+    "user_comment": "只有暴雨会有回退现象 + 野马停射弧形",
+    "implementation": "rain_kite=1 (kite白名单退役, 仅暴雨id12近距40m回退) + arc_sep=1.5 (停位远程兵分离半径x1.5, 弧形展开)",
+    "ab_sweep_U_group": {"1.0": 162, "1.2": 165, "1.3": 165, "1.5": 166, "1.8": 162},
+    "final": "arc_sep=1.5 + wraith_guns=1 → U组 168/208=80.8% (基线158); 野马跌出翻转榜, 弧光r 1.71->1.32"
+  },
+  "C2_abyss_sweep": {
+    "user_comment": "大型单位被扫到成倍伤害; 剑齿虎和狼蛛也会吃亏 (Q-C 三档定版)",
+    "implementation": "sweep_tier=1: 受害者半径 <8m x1 / 8-16m x2 / >=16m x3 (上限damageTimes=20), sweep_t1/t2/m1/m2/m3 可调",
+    "evidence": "s25 锚批 24 场深渊局: r=1.00, k比 98/102, flip 1/24 (step24 时代 kr=0.88)"
+  },
+  "C3_hacker": {
+    "user_comments": "①骇客控制的血量条>目标剩余血量则转化(非maxHP) ②被骇单位可动可攻(u150火獾反杀) ③骇客本体攻击时不能移动(Q-D) ④带1814电磁干扰被光束单位科技失效",
+    "implementation": "hack_cur=1 (阈值=当前HP) / hack_par=0 (撤瘫痪) / hack_pin=1 (beaming骇客定身) / hack_emp=1 (1814→emp_until持续disable)",
+    "ab_U_group": "hacker单独 +1 (159 vs 158); s25锚批骇客 r=1.00 k比34/35",
+    "hack_rate": "维持2000/s (阈值改剩余血量后未复扫 —— s25锚批骇客侧已对齐, 留待26步若ab_mh组局仍偏再扫500-3000)"
+  },
+  "C4_hammer_bullet": {
+    "user_comment": "铁锤子弹应有飞行时间(较快); 各兵种除光束类都应有弹速",
+    "audit": "全表审计 (tools/step25_c4audit.py): 32兵种 projectile 类 bs 全部在表 (60-600), 铁锤bs=300 ✓; 引擎单发路径 pc=1 走 _spawn_projectile ✓ 追踪弹; 无需改动"
+  },
+  "C5_swing_pin": {
+    "user_comment": "狂蝎的前后摇都挺大的",
+    "implementation": "swing_pin=1 + swing_min=2.0: atk_dur>=2s 的慢重挥击单位 弹着定死发射时刻落点(不追踪) + 挥击锁靶(前摇不弃锁) + 目标脱离射程=落空; pc>1齐射保弹量(dmg/pc散射)",
+    "ab_U_group": "单独+1; 但与arc叠加后总体为正; v2full U=162 (vs 158)",
+    "note": "击杀膨胀系统性修复的主载体 (见 P1 true_cause_2)"
+  },
+  "P3_commander_skills": {
+    "smoke": "3局镜像对称释放(200001/300001/800001) + 3局无技能基线, oracle通道0失败",
+    "finding": "带技能局 oracle 结果三者逐位相同且BSM遥测关闭, 无技能基线 w=0 score[250,0]; 结论 = craft 清officers后无军官的技能释放被游戏忽略, action仅扰动动作流; 后续验证技能效果需场景保留军官 —— 移交step26"
+  },
+  "final_s24_benchmark": {
+    "factory_arm_step24": "244/320 = 76.2%",
+    "step25_final": "256/320 = 80.0% (U 168/208, B 47/60, TECH 33/44, SPC 4/4, CAL 4/4)",
+    "reproduction_check": "step25_ab s24arm (全新opts关) = 244/320 精确复现 —— A/B闭环可信"
+  }
+}

@@ -1,0 +1,45 @@
+{
+ "scenario": "c_m10_t2610",
+ "group": "C",
+ "desc": "C 3卡爬虫+潜地行动 (总值650) vs 等经济对手",
+ "mech": 10,
+ "mech_name": "爬虫",
+ "tech": 2610,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   600
+  ],
+  "alive": [
+   0,
+   15
+  ],
+  "rows": [
+   {
+    "mech": 10,
+    "dmg": 2844.0,
+    "kills": 0
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   15
+  ],
+  "rows": [
+   {
+    "mech": 10,
+    "dmg": 5451.0,
+    "kills": 0,
+    "r": 1.917
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

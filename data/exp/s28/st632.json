@@ -1,0 +1,159 @@
+{
+ "name": "st632",
+ "group": "ST",
+ "desc": "ST 兵蜂·引燃+弧光·电磁弹 vs 先知·电磁爆炸+猎犬·燃烧弹 等经济800 #632 (两塔正中)",
+ "value": [
+  800,
+  800
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 6,
+    "level": 0,
+    "x": -6.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": -6.0,
+    "y": -178.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "6": [
+    180206
+   ],
+   "15": [
+    1815
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 26,
+    "level": 0,
+    "x": -6.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": -6.0,
+    "y": 178.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "26": [
+    1826
+   ],
+   "28": [
+    11028
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st632",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   330
+  ],
+  "alive": [
+   0,
+   5
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2020,
+    "dmgReal": 2020,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 15,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1095,
+    "dmgReal": 879,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 18872,
+    "dmgReal": 6428,
+    "kills": 12
+   },
+   {
+    "team": 1,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 738,
+    "dmgReal": 738,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    6
+   ],
+   "end_t": 12.2
+  }
+ },
+ "dmg": {
+  "factory": {
+   "1:26": 1801.5
+  }
+ },
+ "kills": {
+  "factory": {
+   "-1:0": 5,
+   "1:26": 8
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:17:11"
+}

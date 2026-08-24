@@ -1,0 +1,132 @@
+{
+ "name": "st947",
+ "group": "ST",
+ "desc": "ST 丧钟·射程强化 vs 犀牛·战地维修 等经济1300 #947 (两塔正中,换位)",
+ "value": [
+  1300,
+  900
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 2001,
+    "level": 0,
+    "x": 6.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "2001": [
+    1022001
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 5,
+    "level": 0,
+    "x": 40.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 6.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -28.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 6.0,
+    "y": 178.0,
+    "index": 103
+   }
+  ],
+  "techs": {
+   "5": [
+    905
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st947",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   500,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2001,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 67221,
+    "dmgReal": 59997,
+    "kills": 21
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 17.8
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:2001": 67911.2
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:2001": 21
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:30:53"
+}

@@ -1,0 +1,45 @@
+{
+ "scenario": "b_m12_cw_t412",
+ "group": "B",
+ "desc": "B +高爆弹药 t412(在用, 语料16侧)",
+ "mech": 12,
+ "mech_name": "暴雨",
+ "tech": 412,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   512
+  ],
+  "alive": [
+   0,
+   128
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 67328.0,
+    "kills": 256
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   132
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 81137.0,
+    "kills": 252,
+    "r": 1.205
+   }
+  ]
+ },
+ "mech_note": "齐射=本体攻击(projectileCount4+randomTargetRange30+bulletSpeed60): 弹道化/目标分散建模, 换靶不清武器循环(旧机器枪 8s 扫墙 vs oracle 30s); 慢弹飞行时间已建模",
+ "ts": "2026-08-23 03:10:16"
+}

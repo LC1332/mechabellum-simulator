@@ -1,0 +1,160 @@
+{
+ "name": "st707",
+ "group": "ST",
+ "desc": "ST 台风·残骸引爆 vs 暴雨·燃烧弹 等经济1100 #707 (两塔正中,换位)",
+ "value": [
+  900,
+  750
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 22,
+    "level": 0,
+    "x": -29.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 22,
+    "level": 0,
+    "x": 5.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -12.0,
+    "y": -178.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "22": [
+    5322
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 12,
+    "level": 0,
+    "x": 5.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": -29.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "12": [
+    812
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st707",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   358,
+   0
+  ],
+  "alive": [
+   20,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4332,
+    "dmgReal": 4205,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5273,
+    "dmgReal": 4987,
+    "kills": 5
+   },
+   {
+    "team": 1,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 19300,
+    "dmgReal": 18793,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14668,
+    "dmgReal": 14161,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    22,
+    0
+   ],
+   "end_t": 19.0
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:22": 8272.0,
+   "1:12": 12738.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:22": 8
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:20:31"
+}

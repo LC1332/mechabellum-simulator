@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m16_cw_l0",
+ "group": "A",
+ "desc": "A 凤凰(low) L0 vs crawler墙 (r=0.55 N=457)",
+ "mech": 16,
+ "mech_name": "凤凰",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   800,
+   448
+  ],
+  "alive": [
+   8,
+   112
+  ],
+  "rows": [
+   {
+    "mech": 16,
+    "dmg": 71536.0,
+    "kills": 272
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   8,
+   233
+  ],
+  "rows": [
+   {
+    "mech": 16,
+    "dmg": 39713.0,
+    "kills": 151,
+    "r": 0.555
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

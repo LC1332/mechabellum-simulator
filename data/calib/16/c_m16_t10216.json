@@ -1,0 +1,45 @@
+{
+ "scenario": "c_m16_t10216",
+ "group": "C",
+ "desc": "C 3卡凤凰+射程强化 (总值900) vs 等经济对手",
+ "mech": 16,
+ "mech_name": "凤凰",
+ "tech": 10216,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   833
+  ],
+  "alive": [
+   0,
+   49
+  ],
+  "rows": [
+   {
+    "mech": 16,
+    "dmg": 3773.0,
+    "kills": 11
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   54
+  ],
+  "rows": [
+   {
+    "mech": 16,
+    "dmg": 2058.0,
+    "kills": 6,
+    "r": 0.545
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

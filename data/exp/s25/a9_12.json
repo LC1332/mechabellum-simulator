@@ -1,0 +1,157 @@
+{
+ "name": "a9_12",
+ "group": "A",
+ "desc": "A 尖牙+恶灵 vs 锚[台风+沙虫] 等经济700 t10209",
+ "pair": [
+  9,
+  -100
+ ],
+ "value": [
+  700,
+  700
+ ],
+ "anchor_team": 0,
+ "p0": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 0
+   },
+   {
+    "id": 18,
+    "level": 0,
+    "x": 193.0,
+    "y": 150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "9": [
+    10209
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 22,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 100
+   },
+   {
+    "id": 23,
+    "level": 0,
+    "x": -193.0,
+    "y": -150.0,
+    "index": 101
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s25_a9_12",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   600
+  ],
+  "alive": [
+   0,
+   3
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4167,
+    "dmgReal": 4167,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 18,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 19848,
+    "dmgReal": 19760,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 20480,
+    "dmgReal": 19621,
+    "kills": 20
+   },
+   {
+    "team": 1,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9726,
+    "dmgReal": 3400,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    3
+   ],
+   "end_t": 70.3
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:9": 4995.4,
+   "0:18": 8962.6,
+   "1:22": 15523.0,
+   "1:23": 7498.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:23": 20,
+   "0:9": 1,
+   "0:18": 1,
+   "1:22": 1
+  }
+ },
+ "ts": "09:41:27"
+}

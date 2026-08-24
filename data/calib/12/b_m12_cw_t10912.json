@@ -1,0 +1,45 @@
+{
+ "scenario": "b_m12_cw_t10912",
+ "group": "B",
+ "desc": "B +重型导弹 t10912(在用, 语料3侧)",
+ "mech": 12,
+ "mech_name": "暴雨",
+ "tech": 10912,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   580
+  ],
+  "alive": [
+   0,
+   145
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 62857.0,
+    "kills": 239
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   204
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 47340.0,
+    "kills": 180,
+    "r": 0.753
+   }
+  ]
+ },
+ "mech_note": "齐射=本体攻击(projectileCount4+randomTargetRange30+bulletSpeed60): 弹道化/目标分散建模, 换靶不清武器循环(旧机器枪 8s 扫墙 vs oracle 30s); 慢弹飞行时间已建模",
+ "ts": "2026-08-23 03:10:16"
+}

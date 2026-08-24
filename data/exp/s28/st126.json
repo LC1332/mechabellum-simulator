@@ -1,0 +1,152 @@
+{
+ "name": "st126",
+ "group": "ST",
+ "desc": "ST 兵蜂·对地专精 vs 深渊·裂解 等经济1200 #126 (两塔正中)",
+ "value": [
+  800,
+  1150
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 6,
+    "level": 0,
+    "x": -22.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": 12.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": 46.0,
+    "y": -150.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "6": [
+    506
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 29,
+    "level": 0,
+    "x": 12.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "29": [
+    11029
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st126",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   500
+  ],
+  "alive": [
+   0,
+   1
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4848,
+    "dmgReal": 4848,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2626,
+    "dmgReal": 2626,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5656,
+    "dmgReal": 5656,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 29,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 138924,
+    "dmgReal": 11196,
+    "kills": 36
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 6.7
+  }
+ },
+ "dmg": {
+  "factory": {
+   "1:29": 11196.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:29": 36
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:15:11"
+}

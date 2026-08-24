@@ -1,0 +1,45 @@
+{
+ "scenario": "b_m30_cw_t10230",
+ "group": "B",
+ "desc": "B +射程强化 t10230(在用, 语料31侧)",
+ "mech": 30,
+ "mech_name": "魔眼",
+ "tech": 10230,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1364
+  ],
+  "alive": [
+   0,
+   341
+  ],
+  "rows": [
+   {
+    "mech": 30,
+    "dmg": 11309.0,
+    "kills": 43
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   358
+  ],
+  "rows": [
+   {
+    "mech": 30,
+    "dmg": 6838.0,
+    "kills": 26,
+    "r": 0.605
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

@@ -1,0 +1,45 @@
+{
+ "scenario": "b_m2_cw_t702",
+ "group": "B",
+ "desc": "B +双发 t702(在用, 语料30侧)",
+ "mech": 2,
+ "mech_name": "长弓",
+ "tech": 702,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1488
+  ],
+  "alive": [
+   0,
+   372
+  ],
+  "rows": [
+   {
+    "mech": 2,
+    "dmg": 3156.0,
+    "kills": 12
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   368
+  ],
+  "rows": [
+   {
+    "mech": 2,
+    "dmg": 4208.0,
+    "kills": 16,
+    "r": 1.333
+   }
+  ]
+ },
+ "mech_note": "对射站桩语义: 长弓140 vs 铁锤95 停在95对射全灭(oracle), 不维持最大射程",
+ "ts": "2026-08-23 03:10:16"
+}

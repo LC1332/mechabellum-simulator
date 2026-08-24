@@ -1,0 +1,184 @@
+{
+ "name": "u183",
+ "group": "U",
+ "desc": "U 霸主(11) vs 泰山(2002) 等经济1000  [p0:霸主 p1:泰山+狼蛛]",
+ "pair": [
+  11,
+  2002
+ ],
+ "value": [
+  1000,
+  1000
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 11,
+    "level": 0,
+    "x": -165.0,
+    "y": -168.0,
+    "index": 0
+   },
+   {
+    "id": 11,
+    "level": 0,
+    "x": -165.0,
+    "y": -132.0,
+    "index": 1
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 2002,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 24,
+    "level": 0,
+    "x": 193.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u183",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   800,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 60696,
+    "dmgReal": 58012,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 108116,
+    "dmgReal": 100218,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 24,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 392,
+    "dmgReal": 392,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3534,
+    "dmgReal": 3008,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 84.7,
+   "towers_down": {
+    "0": 2,
+    "1": 1
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 84.6,
+   "towers_down": {
+    "0": 2,
+    "1": 1
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:11": 154830.0,
+   "1:2002": 6800.0
+  },
+  "mech": {
+   "0:11": 154830.0,
+   "1:2002": 6304.0,
+   "1:24": 496.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:11": 3,
+   "1:2002": 2
+  },
+  "mech": {
+   "0:11": 3,
+   "1:2002": 2
+  }
+ },
+ "ts": "06:36:21",
+ "alive_mech": {
+  "mech": {
+   "0:11": 2
+  },
+  "factory": {
+   "0:11": 2
+  }
+ }
+}

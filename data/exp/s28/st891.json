@@ -1,0 +1,138 @@
+{
+ "name": "st891",
+ "group": "ST",
+ "desc": "ST 火獾·引燃 vs 先知·射程强化 等经济600 #891 (两塔正中,换位)",
+ "value": [
+  500,
+  600
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 20,
+    "level": 0,
+    "x": -5.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": 29.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "20": [
+    180220
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 26,
+    "level": 0,
+    "x": 12.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "26": [
+    10226
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st891",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   250
+  ],
+  "alive": [
+   0,
+   1
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6858,
+    "dmgReal": 6858,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 243,
+    "dmgReal": 243,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 32352,
+    "dmgReal": 25332,
+    "kills": 6
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    3,
+    0
+   ],
+   "end_t": 26.2
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:20": 11991.0,
+   "1:26": 16710.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:26": 3,
+   "0:20": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:28:21"
+}

@@ -1,0 +1,45 @@
+{
+ "scenario": "c_m17_t10217",
+ "group": "C",
+ "desc": "C 3卡战争工厂+射程强化 (总值2900) vs 等经济对手",
+ "mech": 17,
+ "mech_name": "战争工厂",
+ "tech": 10217,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   1500,
+   0
+  ],
+  "alive": [
+   3,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 17,
+    "dmg": 268002.0,
+    "kills": 67
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   5
+  ],
+  "rows": [
+   {
+    "mech": 17,
+    "dmg": 250612.0,
+    "kills": 62,
+    "r": 0.935
+   }
+  ]
+ },
+ "mech_note": "4 独立炮座(weapons×4 distinct): wraith_guns 多目标炮 + kite 走打 → A/C 组 1.00",
+ "ts": "2026-08-23 03:10:16"
+}

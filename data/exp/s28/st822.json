@@ -1,0 +1,179 @@
+{
+ "name": "st822",
+ "group": "ST",
+ "desc": "ST 钢球·能量汲取+长弓·射程强化 vs 先知·光子投射+火獾·射程强化 等经济1200 #822 (两塔正中)",
+ "value": [
+  900,
+  1200
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 8,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": -17.0,
+    "y": -178.0,
+    "index": 1
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": 17.0,
+    "y": -178.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "8": [
+    308
+   ],
+   "2": [
+    10202
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 26,
+    "level": 0,
+    "x": -0.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 20,
+    "level": 0,
+    "x": -0.0,
+    "y": 178.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "26": [
+    180326
+   ],
+   "20": [
+    10220
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st822",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   200,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13974,
+    "dmgReal": 13538,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13974,
+    "dmgReal": 10930,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 189,
+    "dmgReal": 189,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 17524,
+    "dmgReal": 15882,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 20,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2457,
+    "dmgReal": 2429,
+    "kills": 2
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 21.0
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:8": 624.6,
+   "0:2": 24032.4,
+   "1:26": 17900.9,
+   "1:20": 8196.4
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:20": 1,
+   "1:26": 3,
+   "0:2": 4
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:25:54"
+}

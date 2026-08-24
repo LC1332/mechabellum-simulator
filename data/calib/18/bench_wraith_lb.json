@@ -1,0 +1,45 @@
+{
+ "scenario": "bench_wraith_lb",
+ "group": "BENCH",
+ "desc": "bench 恶灵(900) vs 长弓(900)",
+ "mech": 18,
+ "mech_name": "恶灵",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   900
+  ],
+  "alive": [
+   0,
+   9
+  ],
+  "rows": [
+   {
+    "mech": 18,
+    "dmg": 1524.0,
+    "kills": 0
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   9
+  ],
+  "rows": [
+   {
+    "mech": 18,
+    "dmg": 2286.0,
+    "kills": 0,
+    "r": 1.5
+   }
+  ]
+ },
+ "mech_note": "weaponCount/多炮建模(wraith_guns)候选; r=1.00 已达标",
+ "ts": "2026-08-23 03:10:16"
+}

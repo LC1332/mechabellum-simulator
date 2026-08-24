@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m10_hw_l0",
+ "group": "A",
+ "desc": "A 爬虫(low) L0 vs hammer墙 (r=0.64 N=1010)",
+ "mech": 10,
+ "mech_name": "爬虫",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1600
+  ],
+  "alive": [
+   0,
+   40
+  ],
+  "rows": [
+   {
+    "mech": 10,
+    "dmg": 0.0,
+    "kills": 0
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   40
+  ],
+  "rows": [
+   {
+    "mech": 10,
+    "dmg": 3871.0,
+    "kills": 0,
+    "r": null
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

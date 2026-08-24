@@ -1,0 +1,97 @@
+{
+ "step": 27,
+ "date": "2026-08-23",
+ "inputs": [
+  "对路线C的探索-step27-开发任务.txt",
+  "step27-对回放的review.txt.txt (用户回放 review)",
+  "step26 总结 + 三库影响榜",
+  "s27 oracle 批 (data/exp/s27, 140 场无科技两塔正中对照/标定/建筑探针)"
+ ],
+ "review_QA": {
+  "Q-A_目标锁定": "用户中途补充定版: 射程内目标锁定 (锁到死); 射程外目标不锁定, 仇恨随时刷新到'从角度和距离判断上更近'的单位。引擎 keep 条件 (存活+在射程) 已满足锁定语义 —— tools/step27_locktest.py 合成验证: 默认臂锁定目标死亡前不转移 (首切 t=3.8=锁定模块死亡), retarget=nearest 一有更近就切 (t=2.8, 保持率 0%)。角度+距离仇恨实装为 opts.aggro_ang (默认关, 与 step7 opts.aggro 停走半径不同名)。",
+  "Q-B_熔点ramp": "beam_pair=1 (换目标重升温, 武器热量保留)。A/B 两口径: 失锁也重置 s24 -4/s25 -3 (拒); 仅换目标重置 m_beampair2 弱负 → 均未采纳默认 (oracle r 已 1.0, 无科技局不缺), 机制保留 opts 待科技局复核。",
+  "Q-C_雷霆4.6s": "表值 atk_dur=4.6s 与用户口径一致, 无需改。s27 无科技对拍 r=1.00 ✓ (u054 翻转根源是表外科技 4127 电离未建模, 见下)。",
+  "Q-D_沙虫幼虫": "实锤 3623='复制'科技 (每次钻出召唤1条幼虫1001) + 3673 超级复制; 默认沙虫无幼虫 ✓。合并进 gamedata (tools/step27_mkgd.py) + tech_swsummon opts (默认关, 中性)。",
+  "Q-E_解锁费1/3": "全部生成器切换 (step27_loadout price_with_unlock fee_div=3); s25 重算 0 失配 (data/step25_val13.json)。"
+ ],
+ "mechanisms": [
+  {
+   "name": "近战贴脸修复 (melee_blind)",
+   "root_cause": "_validate_targets 的盲区检查 dist >= min_rng 在表面距离为负 (体积重叠) 时把一切贴脸目标判'太近', 每 tick 清锁 → 近战单位永远 IDLE 不反击。索敌 pass 有 min_rng>0 门控所以能锁上, 形成'锁上-被清'死循环。",
+   "evidence": "s27 nt_05v10 犀牛对爬虫 0 伤害 (oracle 96 杀 pysim 0); 沙虫/爬虫对建筑同源; DBGV 调试实锤 ok=False@dist=-2.5",
+   "fix": "盲区按圆心距离判定且仅 min_rng>0 生效; opts.melee_blind=1 恢复旧行为",
+   "ab": {"s24": "259/320 (-1)", "s25": "138/186 (+1)", "s26": "271/450 (+9)", "s27": "犀牛96杀=oracle精确"},
+   "verdict": "采纳 (游戏真值, s26 大幅+9)"
+  },
+  {
+   "name": "超时判定 score 口径 (timeout_judge=score)",
+   "root_cause": "oracle FightResult 先比 score (存活价值) 再比模块数; pysim 旧口径先人数后血量比。超时局一致率 s25 45%/s26 35% 显著低于均值 (tools/step27_scan2: s25 20 超时 11 分歧, s26 26 超时 17 分歧)",
+   "fix": "score = Σ 模块价×血量比 (塔/建筑不计), 先 score 再人数, 双平=-1",
+   "ab": {"s24": "262 (+2)", "s25": "139 (+2)", "s26": "265 (+3)"},
+   "verdict": "采纳默认"
+  },
+  {
+   "name": "霸主双弹同靶 (dual_set=22)",
+   "root_cause": "review t3307_4: 霸主两枚导弹不能同时锁两个目标; 引擎 dual_target 让双弹各打各的 → 清杂过快 (s27 nt_07v11: pysim 0.6s 团灭 60 野马, oracle 野马胜)",
+   "fix": "dual_set 默认 22,11 → 22 (霸主移出双弹分靶集合)",
+   "ab": {"s24": "261 (+1)", "s26": "霸主 flip 20→12 (in fix_td)"},
+   "verdict": "采纳默认"
+  },
+  {
+   "name": "建筑溅射校准 (calib -12/-13 splash=0)",
+   "root_cause": "速射炮/反装甲炮是单体弹道; step6b 全员溅射开启使对密集小兵等效 DPS 虚高数倍 (bp_crawl_rf: oracle 爬虫 85 存活 vs pysim 团灭)。弹匣-装填机制 (6发/10s, 10发/2.5s) 引擎已有且正常 (tools/step27_dbg_bld 验证)",
+   "ab": {"s24": "261 (B组+2)", "s27_BP": "3/8→5/8"},
+   "verdict": "采纳 (calib.json)"
+  },
+  {
+   "name": "骇客转化速率 (hack_rate 2000→500)",
+   "root_cause": "review u216/用户: 骇客前摇后摇很长; pysim 转化过快 → s27 野马vs骇客/骇客vs尖牙 10 局全翻",
+   "ab": {"s24": "259 (-2)", "s25": "138 (0)", "s26": "272 (+1)", "s27": "102 (+5, 野马 r 0.22→0.97)"},
+   "verdict": "采纳默认 (hack_rate=500)"
+  },
+  {
+   "name": "暴雨/先知齐射同靶 (barrage_same 12,26)",
+   "root_cause": "s27 无科技: 先知 r=0.445 k 15/0 (弹散射+分伤 → 几乎打不死人); 暴雨 k 77/37",
+   "ab": {"s24": "260 (-1)", "s26": "272 (+1)", "s27": "105 (+3, 先知 r→1.00 k 15/15 精确)"},
+   "verdict": "采纳默认 (barrage_same=12,26)"
+  },
+  {
+   "name": "逐兵种攻击间隔校准 (atk_mul 21:1.25, 3:1.5, 7:0.55)",
+   "root_cause": "s27 无科技对拍: 剑齿虎 r 1.414 (s26 3.24), 火神 r 1.611 (13/13 全翻), 野马 r 0.217-0.54 三库偏弱",
+   "ab": {"s24": "260 (-1)", "s25": "138 (0)", "s26": "279 (+8)", "s27": "100 (+3)"},
+   "verdict": "采纳默认 (atk_mul 见 engine opts)"
+  },
+  {
+   "name": "表外科技合并 4127 电离 / 3623 复制",
+   "root_cause": "gamedata.json techs 缺 additionalDamageTechDatas / moveAbilitySummonTechDatas 家族 —— u054 (雷霆电离 -70%+50%当前HP) / u055 (沙虫幼虫) 翻转根源",
+   "ab": {"s24": "260 (中性)", "s25": "137 (中性)", "s26": "待定 (s26 全科技采样局含 4127)"},
+   "verdict": "合并入库 (tools/step27_mkgd.py); opts.tech_addhp/tech_swsummon 中性, 保持默认关待科技局证据"
+  },
+  {
+   "name": "否决/保留项",
+   "items": [
+    "aggro=0.5 角度仇恨: 键名撞 step7 停走半径 → 臂数据作废; 改名 aggro_ang 后未及重扫 (保留 opts, 默认关)",
+    "beam_pair 熔点 ramp: 两种口径均负分, 不改默认 (oracle r 已 1.0)",
+    "tower_bias=-40: s24/s25 中性, 未采纳 (t702_2 的暴雨先爆塔已被 barrage_same 覆盖)",
+    "沙虫攻击距离/弧光 DPS (x314): s27 无科技对拍 r=1.00/k 精确, 无需修改"
+   ]
+  }
+ ],
+ "scenarios": {
+  "s27_lib": "data/step27_scenarios.json 140 场: NT 122 (22 对 1v1×5 + 4 对 2v2×3, 两塔正中, 无科技, 镜像换位) + CB 10 (标定局, 弧光DPS/剑齿虎/熔点ramp/骇客/沙虫/雷霆/霸主双弹/霸主杀泰山/台风对空) + BP 8 (建筑终局探针, b241/b251/b253+后场尖牙+弱兵方向)",
+  "oracle": "140 场 0 失败 (~7 min); 布局 bug 教训: CENTER1 布局再镜像 = 双队重叠, 已修 (同锚点+镜像, step26 语义)",
+  "economy": "全卡价按 cards 表 (火獾200/3模块, 磁暴100 验证); 解锁费 1/3 口径; s25 复查 0 失配"
+ },
+ "baseline_ratchet": {
+  "before": {"s24": "260/320", "s25": "137/186", "s26": "262/450 (L156/C106)", "corpus_r1-4": "319/511"},
+  "after": {"s24": "261/320 = 81.6%", "s25": "140/186 = 75.3%",
+            "s26": "283/450 = 62.9% (M178/MC105)", "s27_new": "112/140 = 80.0%",
+            "corpus_r1-4": "314/511 (v2 calib; greedy 扫描进行中 → data/report_step27_corpus_greedy.json)"},
+  "calib_versions": {
+   "v0_splash_full": "语料 ~318-319 / s24 ~260 / s27 BP ~3/8",
+   "v1_splash_zero": "语料 308 / s24 262 / s27 113",
+   "v2_half_radius_adopted": "语料 314 / s24 261 / s27 112 —— 构造局证据 (单体弹道) 与真实语料 (溅射有利) 冲突的折中; step28 建筑溅射伤害衰减建模裁决"
+  },
+  "exp_refresh": "四库 factory 臂已按定版默认原地刷新 (oracle 真值全保留, tools/step27_refresh_all.py + step27_refresh2.py + step27_refresh_s24.py)"
+ }
+}

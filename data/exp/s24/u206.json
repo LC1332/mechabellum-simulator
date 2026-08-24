@@ -1,0 +1,193 @@
+{
+ "name": "u206",
+ "group": "U",
+ "desc": "U 凤凰(16) vs 深渊(29) 等经济900  [p0:凤凰+堡垒 p1:深渊+猎犬]",
+ "pair": [
+  16,
+  29
+ ],
+ "value": [
+  900,
+  900
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 16,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 1,
+    "level": 0,
+    "x": -193.0,
+    "y": -150.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "16": [
+    10216
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 29,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": 193.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u206",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   500
+  ],
+  "alive": [
+   0,
+   1
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 16,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 18289,
+    "dmgReal": 16061,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 32620,
+    "dmgReal": 4395,
+    "kills": 5
+   },
+   {
+    "team": 1,
+    "uid": 29,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 59814,
+    "dmgReal": 49828,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 492,
+    "dmgReal": 492,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 54.9,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 88.8,
+   "towers_down": {
+    "0": 1,
+    "1": 2
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:16": 10435.0,
+   "0:1": 30491.0,
+   "1:29": 49828.0,
+   "1:28": 492.0
+  },
+  "mech": {
+   "0:16": 9028.0,
+   "0:1": 7795.0,
+   "1:29": 49336.0,
+   "1:28": 984.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:16": 1,
+   "1:29": 4,
+   "0:1": 5
+  },
+  "mech": {
+   "0:16": 1,
+   "1:29": 4,
+   "0:1": 6
+  }
+ },
+ "ts": "06:38:14",
+ "alive_mech": {
+  "mech": {
+   "1:29": 1
+  },
+  "factory": {
+   "1:29": 1
+  }
+ }
+}

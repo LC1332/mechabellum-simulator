@@ -1,0 +1,45 @@
+{
+ "scenario": "c_m8_t180808",
+ "group": "C",
+ "desc": "C 3卡钢球+滚动充能 (总值750) vs 等经济对手",
+ "mech": 8,
+ "mech_name": "钢球",
+ "tech": 180808,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   450,
+   0
+  ],
+  "alive": [
+   9,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 8,
+    "dmg": 69560.0,
+    "kills": 20
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   5,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 8,
+    "dmg": 69560.0,
+    "kills": 20,
+    "r": 1.0
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

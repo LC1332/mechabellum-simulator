@@ -1,0 +1,136 @@
+{
+ "name": "st021",
+ "group": "ST",
+ "desc": "ST 深渊·裂解 vs 尖牙·随身护盾 等经济1200 #21 (两塔正中,换位)",
+ "value": [
+  1150,
+  700
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 29,
+    "level": 0,
+    "x": -12.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "29": [
+    11029
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": 5.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -29.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "9": [
+    209
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st021",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   500,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 29,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 277848,
+    "dmgReal": 7560,
+    "kills": 36
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 567,
+    "dmgReal": 567,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1260,
+    "dmgReal": 1260,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 10.6
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:29": 8424.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:29": 36
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:10:45"
+}

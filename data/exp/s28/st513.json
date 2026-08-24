@@ -1,0 +1,191 @@
+{
+ "name": "st513",
+ "group": "ST",
+ "desc": "ST 鬼鳐·射程强化 vs 深渊·光子涂层 等经济2100 #513 (两塔正中,换位)",
+ "value": [
+  1200,
+  1850
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 25,
+    "level": 0,
+    "x": -63.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 25,
+    "level": 0,
+    "x": -29.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 25,
+    "level": 0,
+    "x": 5.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 25,
+    "level": 0,
+    "x": 39.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -12.0,
+    "y": -178.0,
+    "index": 4
+   }
+  ],
+  "techs": {
+   "25": [
+    10225
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 29,
+    "level": 0,
+    "x": 5.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 29,
+    "level": 0,
+    "x": -29.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "29": [
+    180329
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st513",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   1000
+  ],
+  "alive": [
+   0,
+   2
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5435,
+    "dmgReal": 5435,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7609,
+    "dmgReal": 7609,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2174,
+    "dmgReal": 2174,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1087,
+    "dmgReal": 1087,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 29,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 69462,
+    "dmgReal": 28466,
+    "kills": 18
+   },
+   {
+    "team": 1,
+    "uid": 29,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 46308,
+    "dmgReal": 14584,
+    "kills": 12
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    2
+   ],
+   "end_t": 12.4
+  }
+ },
+ "dmg": {
+  "factory": {
+   "1:29": 43050.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:29": 30
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:12:12"
+}

@@ -1,0 +1,45 @@
+{
+ "scenario": "b_m4_cw_t10204",
+ "group": "B",
+ "desc": "B +射程强化 t10204(在用, 语料51侧)",
+ "mech": 4,
+ "mech_name": "熔点",
+ "tech": 10204,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1256
+  ],
+  "alive": [
+   0,
+   314
+  ],
+  "rows": [
+   {
+    "mech": 4,
+    "dmg": 20840.0,
+    "kills": 70
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   319
+  ],
+  "rows": [
+   {
+    "mech": 4,
+    "dmg": 17498.4,
+    "kills": 65,
+    "r": 0.84
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

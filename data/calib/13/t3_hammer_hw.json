@@ -1,0 +1,45 @@
+{
+ "scenario": "t3_hammer_hw",
+ "group": "T3",
+ "desc": "铁锤 vs 铁锤墙: 同质对射 (攻击间隔直读)",
+ "mech": 13,
+ "mech_name": "铁锤",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1400
+  ],
+  "alive": [
+   0,
+   35
+  ],
+  "rows": [
+   {
+    "mech": 13,
+    "dmg": 22254.0,
+    "kills": 5
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   40
+  ],
+  "rows": [
+   {
+    "mech": 13,
+    "dmg": 34048.0,
+    "kills": 0,
+    "r": 1.53
+   }
+  ]
+ },
+ "mech_note": "同暴雨族的武器循环语义修复; attackDuration=4.5 单发追踪弹(bs300)",
+ "ts": "2026-08-23 03:10:16"
+}

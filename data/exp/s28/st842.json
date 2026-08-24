@@ -1,0 +1,120 @@
+{
+ "name": "st842",
+ "group": "ST",
+ "desc": "ST 狼蛛·机械狂暴 vs 堡垒·精英射手 等经济600 #842 (两塔正中)",
+ "value": [
+  600,
+  550
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 24,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "24": [
+    10524
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 1,
+    "level": 0,
+    "x": -0.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "1": [
+    10801
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st842",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   350
+  ],
+  "alive": [
+   0,
+   1
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 24,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3968,
+    "dmgReal": 3968,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 19572,
+    "dmgReal": 14773,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 10.8
+  }
+ },
+ "dmg": {
+  "factory": {
+   "1:1": 14773.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:1": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:26:43"
+}

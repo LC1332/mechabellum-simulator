@@ -1,0 +1,258 @@
+{
+ "name": "st303",
+ "group": "ST",
+ "desc": "ST 钢球·滚动充能+暴雨·射程强化 vs 先知·电磁爆炸+丧钟·钢球制造 等经济1700 #303 (两塔正中,换位)",
+ "value": [
+  1250,
+  1700
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 8,
+    "level": 0,
+    "x": -23.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 8,
+    "level": 0,
+    "x": 11.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": -23.0,
+    "y": -178.0,
+    "index": 2
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": 11.0,
+    "y": -178.0,
+    "index": 3
+   }
+  ],
+  "techs": {
+   "8": [
+    180808
+   ],
+   "12": [
+    10212
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 26,
+    "level": 0,
+    "x": -6.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 2001,
+    "level": 0,
+    "x": -6.0,
+    "y": 178.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "26": [
+    1826
+   ],
+   "2001": [
+    1202001
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st303",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   548
+  ],
+  "alive": [
+   0,
+   5
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2801,
+    "dmgReal": 2801,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 47864,
+    "dmgReal": 47503,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10480,
+    "dmgReal": 10079,
+    "kills": 4
+   },
+   {
+    "team": 0,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 44776,
+    "dmgReal": 44776,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14828,
+    "dmgReal": 14007,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 8,
+    "dmgMax": 639,
+    "dmgReal": 639,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 2001,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 28739,
+    "dmgReal": 23547,
+    "kills": 8
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 8,
+    "dmgMax": 298,
+    "dmgReal": 298,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 8,
+    "dmgMax": 5,
+    "dmgReal": 5,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 8,
+    "dmgMax": 886,
+    "dmgReal": 886,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 8,
+    "dmgMax": 4945,
+    "dmgReal": 4662,
+    "kills": 5
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 8,
+    "dmgMax": 1551,
+    "dmgReal": 1418,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 8,
+    "dmgMax": 313,
+    "dmgReal": 298,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    4
+   ],
+   "end_t": 23.2
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:8": 38922.6,
+   "0:12": 36670.0,
+   "1:26": 11384.2,
+   "1:2001": 34375.8
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:26": 1,
+   "1:2001": 15,
+   "0:8": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:03:23"
+}

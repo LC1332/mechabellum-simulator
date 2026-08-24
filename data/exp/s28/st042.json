@@ -1,0 +1,210 @@
+{
+ "name": "st042",
+ "group": "ST",
+ "desc": "ST 长弓·防空专精+暴雨·重型导弹 vs 兵蜂·高爆弹药+台风·防空标记 等经济1500 #42 (两塔正中)",
+ "value": [
+  1050,
+  1200
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 2,
+    "level": 0,
+    "x": -23.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 2,
+    "level": 0,
+    "x": 11.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": -23.0,
+    "y": -178.0,
+    "index": 2
+   },
+   {
+    "id": 12,
+    "level": 0,
+    "x": 11.0,
+    "y": -178.0,
+    "index": 3
+   }
+  ],
+  "techs": {
+   "2": [
+    3202
+   ],
+   "12": [
+    10912
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 6,
+    "level": 0,
+    "x": -6.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 22,
+    "level": 0,
+    "x": 11.0,
+    "y": 178.0,
+    "index": 101
+   },
+   {
+    "id": 22,
+    "level": 0,
+    "x": -23.0,
+    "y": 178.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "6": [
+    406
+   ],
+   "22": [
+    1102022
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st042",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   51
+  ],
+  "alive": [
+   0,
+   3
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 22125,
+    "dmgReal": 1555,
+    "kills": 5
+   },
+   {
+    "team": 0,
+    "uid": 2,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 17700,
+    "dmgReal": 1244,
+    "kills": 4
+   },
+   {
+    "team": 0,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 25002,
+    "dmgReal": 24614,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13890,
+    "dmgReal": 13502,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10706,
+    "dmgReal": 9899,
+    "kills": 8
+   },
+   {
+    "team": 1,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1584,
+    "dmgReal": 1481,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1056,
+    "dmgReal": 1056,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    4
+   ],
+   "end_t": 24.6
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:2": 3732.0,
+   "0:12": 16675.2,
+   "1:6": 2262.4,
+   "1:22": 10173.6
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:2": 12,
+   "1:22": 10
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:11:34"
+}

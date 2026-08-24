@@ -1,0 +1,56 @@
+{
+ "scenario": "c_m23_t3623",
+ "group": "C",
+ "desc": "C 3卡沙虫+t3623(表缺失) (总值1400) vs 等经济对手",
+ "mech": 23,
+ "mech_name": "沙虫",
+ "tech": 3623,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   712,
+   0
+  ],
+  "alive": [
+   3,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 23,
+    "dmg": 131998.0,
+    "kills": 7
+   },
+   {
+    "mech": 1001,
+    "dmg": 3081.0,
+    "kills": 0
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   3,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 23,
+    "dmg": 135079.0,
+    "kills": 7,
+    "r": 1.023
+   },
+   {
+    "mech": 1001,
+    "dmg": 0.0,
+    "kills": 0,
+    "r": null
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

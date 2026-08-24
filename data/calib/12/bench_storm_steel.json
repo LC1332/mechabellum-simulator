@@ -1,0 +1,45 @@
+{
+ "scenario": "bench_storm_steel",
+ "group": "BENCH",
+ "desc": "bench 暴雨(600) vs 钢球(600)",
+ "mech": 12,
+ "mech_name": "暴雨",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   600
+  ],
+  "alive": [
+   0,
+   12
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 6176.0,
+    "kills": 0
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   11
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 35451.0,
+    "kills": 1,
+    "r": 5.74
+   }
+  ]
+ },
+ "mech_note": "齐射=本体攻击(projectileCount4+randomTargetRange30+bulletSpeed60): 弹道化/目标分散建模, 换靶不清武器循环(旧机器枪 8s 扫墙 vs oracle 30s); 慢弹飞行时间已建模",
+ "ts": "2026-08-23 03:10:16"
+}

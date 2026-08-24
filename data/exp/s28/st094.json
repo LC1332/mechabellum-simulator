@@ -1,0 +1,294 @@
+{
+ "name": "st094",
+ "group": "ST",
+ "desc": "ST 沙虫·装甲强化 vs 剑齿虎 等经济2000 #94 (两塔正中)",
+ "value": [
+  1450,
+  2000
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 23,
+    "level": 0,
+    "x": -34.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 23,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 23,
+    "level": 0,
+    "x": 34.0,
+    "y": -150.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "23": [
+    3023
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 21,
+    "level": 0,
+    "x": 153.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 21,
+    "level": 0,
+    "x": 119.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 21,
+    "level": 0,
+    "x": 85.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 21,
+    "level": 0,
+    "x": 51.0,
+    "y": 150.0,
+    "index": 103
+   },
+   {
+    "id": 21,
+    "level": 0,
+    "x": 17.0,
+    "y": 150.0,
+    "index": 104
+   },
+   {
+    "id": 21,
+    "level": 0,
+    "x": -17.0,
+    "y": 150.0,
+    "index": 105
+   },
+   {
+    "id": 21,
+    "level": 0,
+    "x": -51.0,
+    "y": 150.0,
+    "index": 106
+   },
+   {
+    "id": 21,
+    "level": 0,
+    "x": -85.0,
+    "y": 150.0,
+    "index": 107
+   },
+   {
+    "id": 21,
+    "level": 0,
+    "x": -119.0,
+    "y": 150.0,
+    "index": 108
+   },
+   {
+    "id": 21,
+    "level": 0,
+    "x": -153.0,
+    "y": 150.0,
+    "index": 109
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st094",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   1400
+  ],
+  "alive": [
+   0,
+   7
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 19452,
+    "dmgReal": 19452,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 19452,
+    "dmgReal": 14886,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 38904,
+    "dmgReal": 29772,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13762,
+    "dmgReal": 7359,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 20643,
+    "dmgReal": 14240,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13762,
+    "dmgReal": 13762,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13762,
+    "dmgReal": 13762,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13762,
+    "dmgReal": 13762,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 20643,
+    "dmgReal": 20643,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 20643,
+    "dmgReal": 20643,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13762,
+    "dmgReal": 13762,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 20643,
+    "dmgReal": 20643,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13762,
+    "dmgReal": 7359,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    8
+   ],
+   "end_t": 14.3
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:23": 39498.0,
+   "1:21": 218902.5
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:21": 3,
+   "0:23": 2
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:13:45"
+}

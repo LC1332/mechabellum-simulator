@@ -1,0 +1,151 @@
+{
+ "name": "st179",
+ "group": "ST",
+ "desc": "ST 猎犬·枪膛增压+弧光·防空弹药 vs 犀牛·机械狂暴+磁暴·电磁云 等经济800 #179 (两塔正中,换位)",
+ "value": [
+  800,
+  800
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 28,
+    "level": 0,
+    "x": -6.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 15,
+    "level": 0,
+    "x": -6.0,
+    "y": -178.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "28": [
+    180828
+   ],
+   "15": [
+    3115
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 5,
+    "level": 0,
+    "x": -6.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 31,
+    "level": 0,
+    "x": -6.0,
+    "y": 178.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "5": [
+    10505
+   ],
+   "31": [
+    4531
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st179",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   300
+  ],
+  "alive": [
+   0,
+   2
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3198,
+    "dmgReal": 3198,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 15,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4015,
+    "dmgReal": 4015,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 24920,
+    "dmgReal": 9208,
+    "kills": 6
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    2
+   ],
+   "end_t": 14.9
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:28": 1476.0,
+   "0:15": 2555.0,
+   "1:5": 9208.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:5": 6
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:17:23"
+}

@@ -1,0 +1,172 @@
+{
+ "name": "pr_melt_2g",
+ "group": "PR",
+ "desc": "熔点x2 vs 猎犬两组分开 (换目标重升温: 伤害从小数目递增)",
+ "p0": {
+  "units": [
+   {
+    "id": 4,
+    "level": 0,
+    "x": -12,
+    "y": -150,
+    "index": 0
+   },
+   {
+    "id": 4,
+    "level": 0,
+    "x": 22,
+    "y": -150,
+    "index": 1
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 28,
+    "level": 0,
+    "x": -90,
+    "y": 150,
+    "index": 100
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": -56,
+    "y": 150,
+    "index": 101
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": 40,
+    "y": 150,
+    "index": 102
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": 74,
+    "y": 150,
+    "index": 103
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s29_pr_melt_2g",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   700,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13250,
+    "dmgReal": 8790,
+    "kills": 10
+   },
+   {
+    "team": 0,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13250,
+    "dmgReal": 8790,
+    "kills": 10
+   },
+   {
+    "team": 1,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2214,
+    "dmgReal": 2214,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5412,
+    "dmgReal": 5412,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2460,
+    "dmgReal": 2460,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4428,
+    "dmgReal": 4428,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    2,
+    0
+   ],
+   "end_t": 24.3
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:4": 17580.0,
+   "1:28": 7626.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:4": 20
+  }
+ },
+ "ts": "12:18:55"
+}

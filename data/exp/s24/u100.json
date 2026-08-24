@@ -1,0 +1,167 @@
+{
+ "name": "u100",
+ "group": "U",
+ "desc": "U 熔点(4) vs 火獾(20) 等经济700  [p0:熔点 p1:火獾+沙虫]",
+ "pair": [
+  4,
+  20
+ ],
+ "value": [
+  700,
+  700
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 4,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "4": [
+    10204
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 20,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 23,
+    "level": 0,
+    "x": 193.0,
+    "y": 150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "20": [
+    180220
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u100",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   350,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 68212,
+    "dmgReal": 64711,
+    "kills": 5
+   },
+   {
+    "team": 1,
+    "uid": 23,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 38904,
+    "dmgReal": 26252,
+    "kills": 2
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 42.5,
+   "towers_down": {
+    "0": 2,
+    "1": 0
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 40.4,
+   "towers_down": {
+    "0": 1,
+    "1": 0
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:4": 61311.0,
+   "1:20": 648.0,
+   "1:23": 35978.0
+  },
+  "mech": {
+   "0:4": 61311.0,
+   "1:23": 3400.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:23": 2,
+   "0:4": 4
+  },
+  "mech": {
+   "1:23": 1,
+   "0:4": 4
+  }
+ },
+ "ts": "06:29:52",
+ "alive_mech": {
+  "mech": {
+   "0:4": 1
+  },
+  "factory": {
+   "0:4": 1
+  }
+ }
+}

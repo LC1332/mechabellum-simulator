@@ -1,0 +1,32 @@
+{
+  "mech": 14,
+  "name": "骇客控制光束+转化 (step24 机制级定版, 非参数校准)",
+  "date": "2026-08-23",
+  "evidence": [
+    {
+      "fight": "u053",
+      "desc": "oracle 骇客 dmgReal=3400 恰=一座L0塔血, kills=1=塔; 对兵零直伤",
+      "conclusion": "controllBeamSkillDatas 对兵不是伤害技能"
+    },
+    {
+      "fight": "u066",
+      "desc": "3剑齿虎 vs 2骇客: oracle 剑齿虎 dmg 9898=2骇客(6498)+1塔(3400) 精确; 被锁剑齿虎瘫痪不输出; 1只失踪=转化后阵亡",
+      "conclusion": "光束锁定=瘫痪 (不能移动/攻击)"
+    },
+    {
+      "fight": "u150",
+      "desc": "p0 只部署 2 骇客, oracle team0 出现 8 个火獾 (uid20/mechid20, dmg 8893 记 p0 名下), oracle w=0 alive=[7,0]",
+      "conclusion": "满进度转化: 受害者换阵营继续作战, 伤害按新阵营记账"
+    }
+  ],
+  "model": {
+    "hacker_beam": "光束目标(兵)=瘫痪; 塔/建筑=普通直伤(表 damage)",
+    "hack_rate": 2000.0,
+    "hack_rate_calibration": "20 场骇客局扫描 600/900/1300/2000/3000 → 2000 最优 15/20 胜负一致 (600:13, 900:14, 1300:14, 3000:14)",
+    "convert": "进度>=maxHP → 换阵营+满血+重置; 敌我矩阵按层能力重建"
+  },
+  "regression": {
+    "benchmark320": "出厂臂 243→244 (+1), 骇客 r 3.31→1.00, kills 97→58",
+    "corpus_r14": "323/511 = 63.2% (= step23 基线, 零回退)"
+  }
+}

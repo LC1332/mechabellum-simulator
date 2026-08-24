@@ -1,0 +1,45 @@
+{
+ "scenario": "bench_phoenix_must",
+ "group": "BENCH",
+ "desc": "bench 凤凰(600) vs 野马(600)",
+ "mech": 16,
+ "mech_name": "凤凰",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   459
+  ],
+  "alive": [
+   0,
+   27
+  ],
+  "rows": [
+   {
+    "mech": 16,
+    "dmg": 3087.0,
+    "kills": 9
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   30
+  ],
+  "rows": [
+   {
+    "mech": 16,
+    "dmg": 2058.0,
+    "kills": 6,
+    "r": 0.667
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

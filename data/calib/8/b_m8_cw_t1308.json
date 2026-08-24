@@ -1,0 +1,56 @@
+{
+ "scenario": "b_m8_cw_t1308",
+ "group": "B",
+ "desc": "B +机械分裂 t1308(在用, 语料10侧)",
+ "mech": 8,
+ "mech_name": "钢球",
+ "tech": 1308,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1312
+  ],
+  "alive": [
+   0,
+   328
+  ],
+  "rows": [
+   {
+    "mech": 8,
+    "dmg": 11906.0,
+    "kills": 46
+   },
+   {
+    "mech": 10,
+    "dmg": 8872.0,
+    "kills": 10
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   367
+  ],
+  "rows": [
+   {
+    "mech": 8,
+    "dmg": 4518.7,
+    "kills": 17,
+    "r": 0.38
+   },
+   {
+    "mech": 10,
+    "dmg": 0.0,
+    "kills": 0,
+    "r": null
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

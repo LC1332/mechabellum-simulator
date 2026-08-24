@@ -1,0 +1,184 @@
+{
+ "name": "st897",
+ "group": "ST",
+ "desc": "ST 深渊·射程强化 vs 兵蜂·能量护盾 等经济1500 #897 (两塔正中,换位)",
+ "value": [
+  1500,
+  900
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 29,
+    "level": 0,
+    "x": -12.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -12.0,
+    "y": -178.0,
+    "index": 1
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -12.0,
+    "y": -206.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "29": [
+    10229
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 6,
+    "level": 0,
+    "x": 22.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": -12.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 6,
+    "level": 0,
+    "x": -46.0,
+    "y": 150.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "6": [
+    206
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st897",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   624,
+   0
+  ],
+  "alive": [
+   23,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 29,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 277841,
+    "dmgReal": 19711,
+    "kills": 29
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2709,
+    "dmgReal": 2681,
+    "kills": 7
+   },
+   {
+    "team": 0,
+    "uid": 10,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6952,
+    "dmgReal": 6800,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 4666,
+    "dmgReal": 4243,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5166,
+    "dmgReal": 3522,
+    "kills": 14
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6200,
+    "dmgReal": 5777,
+    "kills": 3
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    43,
+    0
+   ],
+   "end_t": 9.0
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:29": 22392.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:29": 36
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:28:35"
+}

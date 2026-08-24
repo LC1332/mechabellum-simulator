@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m31_hw_l0",
+ "group": "A",
+ "desc": "A 磁暴(low) L0 vs hammer墙 (r=0.76 N=232)",
+ "mech": 31,
+ "mech_name": "磁暴",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1360
+  ],
+  "alive": [
+   0,
+   34
+  ],
+  "rows": [
+   {
+    "mech": 31,
+    "dmg": 24795.0,
+    "kills": 6
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   35
+  ],
+  "rows": [
+   {
+    "mech": 31,
+    "dmg": 17390.0,
+    "kills": 5,
+    "r": 0.701
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

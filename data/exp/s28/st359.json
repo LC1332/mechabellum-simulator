@@ -1,0 +1,139 @@
+{
+ "name": "st359",
+ "group": "ST",
+ "desc": "ST 骇客·射程强化 vs 丧钟·射程强化 等经济1500 #359 (两塔正中,换位)",
+ "value": [
+  900,
+  1500
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 14,
+    "level": 0,
+    "x": -40.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": -6.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": 28.0,
+    "y": -150.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "14": [
+    10214
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 2001,
+    "level": 0,
+    "x": -6.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -6.0,
+    "y": 178.0,
+    "index": 101
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": -6.0,
+    "y": 206.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "2001": [
+    1022001
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st359",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   704
+  ],
+  "alive": [
+   0,
+   43
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 1,
+    "uid": 2001,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9825,
+    "dmgReal": 9747,
+    "kills": 3
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    43
+   ],
+   "end_t": 3.5
+  }
+ },
+ "dmg": {
+  "factory": {
+   "1:2001": 9747.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:2001": 3
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:05:38"
+}

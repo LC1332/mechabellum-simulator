@@ -1,0 +1,128 @@
+{
+ "name": "st138",
+ "group": "ST",
+ "desc": "ST 先知·射程强化 vs 兵蜂·射程强化 等经济600 #138 (两塔正中)",
+ "value": [
+  600,
+  600
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 26,
+    "level": 0,
+    "x": -12.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "26": [
+    10226
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 6,
+    "level": 0,
+    "x": -12.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -12.0,
+    "y": 178.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "6": [
+    10206
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st138",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   250,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 40440,
+    "dmgReal": 5838,
+    "kills": 30
+   },
+   {
+    "team": 1,
+    "uid": 6,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2424,
+    "dmgReal": 2424,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 19.1
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:26": 5838.0,
+   "1:6": 2626.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:26": 30
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:15:43"
+}

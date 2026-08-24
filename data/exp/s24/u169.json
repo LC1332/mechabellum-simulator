@@ -1,0 +1,165 @@
+{
+ "name": "u169",
+ "group": "U",
+ "desc": "U 战争工厂(17) vs 狼蛛(24) 等经济800  [p0:战争工厂 p1:狼蛛+雷霆]",
+ "pair": [
+  17,
+  24
+ ],
+ "value": [
+  800,
+  800
+ ],
+ "bld_team": null,
+ "p0": {
+  "units": [
+   {
+    "id": 17,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 0
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 24,
+    "level": 0,
+    "x": 165.0,
+    "y": 132.0,
+    "index": 100
+   },
+   {
+    "id": 24,
+    "level": 0,
+    "x": 165.0,
+    "y": 168.0,
+    "index": 101
+   },
+   {
+    "id": 27,
+    "level": 0,
+    "x": 193.0,
+    "y": 150.0,
+    "index": 102
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s24_u169",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   500,
+   350
+  ],
+  "alive": [
+   1,
+   1
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 17,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 52640,
+    "dmgReal": 36346,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 27,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 74397,
+    "dmgReal": 70641,
+    "kills": 2
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 46.2,
+   "towers_down": {
+    "0": 1,
+    "1": 1
+   },
+   "bld_groups": {}
+  },
+  "mech": {
+   "winner": 1,
+   "alive": [
+    0,
+    1
+   ],
+   "end_t": 92.2,
+   "towers_down": {
+    "0": 1,
+    "1": 2
+   },
+   "bld_groups": {}
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:17": 49011.0,
+   "1:27": 4405.4
+  },
+  "mech": {
+   "0:17": 47626.0,
+   "1:27": 116993.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:27": 1,
+   "0:17": 4
+  },
+  "mech": {
+   "1:27": 2,
+   "0:17": 4
+  }
+ },
+ "ts": "06:35:17",
+ "alive_mech": {
+  "mech": {
+   "1:27": 1
+  },
+  "factory": {
+   "0:17": 1
+  }
+ }
+}

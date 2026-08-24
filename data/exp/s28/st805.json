@@ -1,0 +1,186 @@
+{
+ "name": "st805",
+ "group": "ST",
+ "desc": "ST 台风·残骸引爆 vs 战争工厂·凤凰制造 等经济1500 #805 (两塔正中,换位)",
+ "value": [
+  1100,
+  1500
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 22,
+    "level": 0,
+    "x": -28.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 22,
+    "level": 0,
+    "x": 6.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 22,
+    "level": 0,
+    "x": 40.0,
+    "y": -150.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "22": [
+    5322
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 17,
+    "level": 0,
+    "x": 6.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 6.0,
+    "y": 178.0,
+    "index": 101
+   },
+   {
+    "id": 10,
+    "level": 0,
+    "x": 6.0,
+    "y": 206.0,
+    "index": 102
+   }
+  ],
+  "techs": {
+   "17": [
+    12017
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st805",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   637
+  ],
+  "alive": [
+   0,
+   21
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5733,
+    "dmgReal": 5558,
+    "kills": 9
+   },
+   {
+    "team": 0,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2856,
+    "dmgReal": 2636,
+    "kills": 4
+   },
+   {
+    "team": 0,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6876,
+    "dmgReal": 6352,
+    "kills": 11
+   },
+   {
+    "team": 1,
+    "uid": 16,
+    "rectype": 0,
+    "mechid": 16,
+    "dmgMax": 2814,
+    "dmgReal": 2814,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 17,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 82720,
+    "dmgReal": 51546,
+    "kills": 6
+   },
+   {
+    "team": 1,
+    "uid": 16,
+    "rectype": 0,
+    "mechid": 16,
+    "dmgMax": 2814,
+    "dmgReal": 2814,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    44
+   ],
+   "end_t": 12.8
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:22": 21120.0,
+   "1:17": 49138.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:16": 4,
+   "1:17": 2
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:25:07"
+}

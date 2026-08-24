@@ -1,0 +1,180 @@
+{
+ "name": "at3925_4",
+ "group": "A",
+ "desc": "A 尖牙+骇客 vs 锚[台风+熔点] 等经济700 t3925",
+ "pair": [
+  9,
+  -100
+ ],
+ "value": [
+  700,
+  700
+ ],
+ "anchor_team": 1,
+ "p0": {
+  "units": [
+   {
+    "id": 22,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 0
+   },
+   {
+    "id": 4,
+    "level": 0,
+    "x": 193.0,
+    "y": 150.0,
+    "index": 1
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 9,
+    "level": 0,
+    "x": -165.0,
+    "y": -168.0,
+    "index": 100
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": -165.0,
+    "y": -132.0,
+    "index": 101
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": -193.0,
+    "y": -168.0,
+    "index": 102
+   },
+   {
+    "id": 14,
+    "level": 0,
+    "x": -193.0,
+    "y": -132.0,
+    "index": 103
+   }
+  ],
+  "techs": {
+   "9": [
+    3925
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s25_at3925_4",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   600,
+   0
+  ],
+  "alive": [
+   3,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12760,
+    "dmgReal": 11291,
+    "kills": 27
+   },
+   {
+    "team": 0,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3407,
+    "dmgReal": 2819,
+    "kills": 12
+   },
+   {
+    "team": 1,
+    "uid": 14,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 2479,
+    "dmgReal": 2479,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 14,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 979,
+    "dmgReal": 921,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 819,
+    "dmgReal": 819,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    3,
+    0
+   ],
+   "end_t": 68.0
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:22": 14757.2,
+   "0:4": 3595.2,
+   "1:9": 2570.4,
+   "1:14": 4229.6
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:9": 1,
+   "0:4": 8,
+   "0:22": 32,
+   "1:14": 1
+  }
+ },
+ "ts": "09:44:17"
+}

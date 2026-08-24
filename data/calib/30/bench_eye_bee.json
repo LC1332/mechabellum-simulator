@@ -1,0 +1,45 @@
+{
+ "scenario": "bench_eye_bee",
+ "group": "BENCH",
+ "desc": "bench 魔眼(600) vs 兵蜂(600)",
+ "mech": 30,
+ "mech_name": "魔眼",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   612
+  ],
+  "alive": [
+   0,
+   36
+  ],
+  "rows": [
+   {
+    "mech": 30,
+    "dmg": 1990.0,
+    "kills": 0
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   36
+  ],
+  "rows": [
+   {
+    "mech": 30,
+    "dmg": 0.0,
+    "kills": 0,
+    "r": null
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

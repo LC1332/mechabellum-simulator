@@ -1,0 +1,45 @@
+{
+ "scenario": "bench_melt_crawl",
+ "group": "BENCH",
+ "desc": "bench 熔点(400) vs 爬虫(400)",
+ "mech": 4,
+ "mech_name": "熔点",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   304
+  ],
+  "alive": [
+   0,
+   76
+  ],
+  "rows": [
+   {
+    "mech": 4,
+    "dmg": 6275.0,
+    "kills": 20
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   89
+  ],
+  "rows": [
+   {
+    "mech": 4,
+    "dmg": 1841.0,
+    "kills": 7,
+    "r": 0.293
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

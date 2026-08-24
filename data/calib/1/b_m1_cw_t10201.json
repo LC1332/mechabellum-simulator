@@ -1,0 +1,45 @@
+{
+ "scenario": "b_m1_cw_t10201",
+ "group": "B",
+ "desc": "B +射程强化 t10201(在用, 语料30侧)",
+ "mech": 1,
+ "mech_name": "堡垒",
+ "tech": 10201,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   884
+  ],
+  "alive": [
+   0,
+   221
+  ],
+  "rows": [
+   {
+    "mech": 1,
+    "dmg": 42869.0,
+    "kills": 163
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   304
+  ],
+  "rows": [
+   {
+    "mech": 1,
+    "dmg": 21040.0,
+    "kills": 80,
+    "r": 0.491
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

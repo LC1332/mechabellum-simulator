@@ -1,0 +1,45 @@
+{
+ "scenario": "b_m30_cw_t10930",
+ "group": "B",
+ "desc": "B +蓄能攻击 t10930(在用, 语料37侧)",
+ "mech": 30,
+ "mech_name": "魔眼",
+ "tech": 10930,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1444
+  ],
+  "alive": [
+   0,
+   361
+  ],
+  "rows": [
+   {
+    "mech": 30,
+    "dmg": 6049.0,
+    "kills": 23
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   365
+  ],
+  "rows": [
+   {
+    "mech": 30,
+    "dmg": 4997.0,
+    "kills": 19,
+    "r": 0.826
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

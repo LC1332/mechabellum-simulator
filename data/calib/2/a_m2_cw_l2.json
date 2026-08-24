@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m2_cw_l2",
+ "group": "A",
+ "desc": "A 长弓(low) L2 vs crawler墙 (r=0.57 N=631)",
+ "mech": 2,
+ "mech_name": "长弓",
+ "tech": null,
+ "level": 2,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1476
+  ],
+  "alive": [
+   0,
+   369
+  ],
+  "rows": [
+   {
+    "mech": 2,
+    "dmg": 3945.0,
+    "kills": 15
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   376
+  ],
+  "rows": [
+   {
+    "mech": 2,
+    "dmg": 2104.0,
+    "kills": 8,
+    "r": 0.533
+   }
+  ]
+ },
+ "mech_note": "对射站桩语义: 长弓140 vs 铁锤95 停在95对射全灭(oracle), 不维持最大射程",
+ "ts": "2026-08-23 03:10:16"
+}

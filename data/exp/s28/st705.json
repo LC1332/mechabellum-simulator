@@ -1,0 +1,294 @@
+{
+ "name": "st705",
+ "group": "ST",
+ "desc": "ST 猎犬 vs 泰山·光子循环 等经济1200 #705 (两塔正中,换位)",
+ "value": [
+  1200,
+  1200
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 28,
+    "level": 0,
+    "x": -193.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": -159.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": -125.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": -91.0,
+    "y": -150.0,
+    "index": 3
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": -57.0,
+    "y": -150.0,
+    "index": 4
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": -23.0,
+    "y": -150.0,
+    "index": 5
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": 11.0,
+    "y": -150.0,
+    "index": 6
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": 45.0,
+    "y": -150.0,
+    "index": 7
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": 79.0,
+    "y": -150.0,
+    "index": 8
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": 113.0,
+    "y": -150.0,
+    "index": 9
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": 147.0,
+    "y": -150.0,
+    "index": 10
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": 181.0,
+    "y": -150.0,
+    "index": 11
+   }
+  ],
+  "techs": {}
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 2002,
+    "level": 0,
+    "x": -6.0,
+    "y": 150.0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "2002": [
+    18032002
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st705",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   500
+  ],
+  "alive": [
+   0,
+   1
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6027,
+    "dmgReal": 6027,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8241,
+    "dmgReal": 8241,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 984,
+    "dmgReal": 984,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6765,
+    "dmgReal": 6765,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5535,
+    "dmgReal": 5535,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7011,
+    "dmgReal": 7011,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9594,
+    "dmgReal": 9594,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9840,
+    "dmgReal": 9840,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 10209,
+    "dmgReal": 10209,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12669,
+    "dmgReal": 12669,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 20541,
+    "dmgReal": 20497,
+    "kills": 1
+   },
+   {
+    "team": 0,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13653,
+    "dmgReal": 13609,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 2002,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 283714,
+    "dmgReal": 52740,
+    "kills": 60
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    15,
+    0
+   ],
+   "end_t": 59.3
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:28": 136657.0,
+   "1:2002": 39555.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:2002": 45,
+   "0:28": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:20:27"
+}

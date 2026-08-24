@@ -1,0 +1,154 @@
+{
+ "name": "st037",
+ "group": "ST",
+ "desc": "ST 钢球·射程强化+鬼鳐·对地锁定 vs 野马·导弹拦截+先知·导弹拦截 等经济900 #37 (两塔正中,换位)",
+ "value": [
+  900,
+  900
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 8,
+    "level": 0,
+    "x": 0.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 25,
+    "level": 0,
+    "x": 0.0,
+    "y": -178.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "8": [
+    10208
+   ],
+   "25": [
+    3225
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 7,
+    "level": 0,
+    "x": -0.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 26,
+    "level": 0,
+    "x": -0.0,
+    "y": 178.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "7": [
+    3307
+   ],
+   "26": [
+    3326
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st037",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": -1,
+  "reportCount": 2,
+  "score": [
+   0,
+   0
+  ],
+  "alive": [
+   0,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 8,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 17567,
+    "dmgReal": 16107,
+    "kills": 13
+   },
+   {
+    "team": 1,
+    "uid": 7,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5256,
+    "dmgReal": 5244,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 26,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 25612,
+    "dmgReal": 23276,
+    "kills": 4
+   }
+  ]
+ },
+ "winner_oracle": -1,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    4,
+    0
+   ],
+   "end_t": 17.3
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:8": 15020.0,
+   "0:25": 1087.0,
+   "1:7": 6315.0,
+   "1:26": 10986.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:8": 13,
+   "1:7": 2,
+   "1:26": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:11:20"
+}

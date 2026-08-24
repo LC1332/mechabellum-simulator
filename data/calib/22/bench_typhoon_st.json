@@ -1,0 +1,45 @@
+{
+ "scenario": "bench_typhoon_st",
+ "group": "BENCH",
+ "desc": "bench 台风(600) vs 鬼鳐(600)",
+ "mech": 22,
+ "mech_name": "台风",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   402
+  ],
+  "alive": [
+   0,
+   6
+  ],
+  "rows": [
+   {
+    "mech": 22,
+    "dmg": 14372.0,
+    "kills": 3
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   4,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 22,
+    "dmg": 30708.0,
+    "kills": 9,
+    "r": 2.137
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

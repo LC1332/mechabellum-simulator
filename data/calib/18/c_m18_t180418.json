@@ -1,0 +1,45 @@
+{
+ "scenario": "c_m18_t180418",
+ "group": "C",
+ "desc": "C 3卡恶灵+退化光束 (总值1100) vs 等经济对手",
+ "mech": 18,
+ "mech_name": "恶灵",
+ "tech": 180418,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1100
+  ],
+  "alive": [
+   0,
+   11
+  ],
+  "rows": [
+   {
+    "mech": 18,
+    "dmg": 495.0,
+    "kills": 0
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   11
+  ],
+  "rows": [
+   {
+    "mech": 18,
+    "dmg": 1524.0,
+    "kills": 0,
+    "r": null
+   }
+  ]
+ },
+ "mech_note": "weaponCount/多炮建模(wraith_guns)候选; r=1.00 已达标",
+ "ts": "2026-08-23 03:10:16"
+}

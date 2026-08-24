@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m29_cw_l2",
+ "group": "A",
+ "desc": "A 深渊(low) L2 vs crawler墙 (r=0.61 N=17)",
+ "mech": 29,
+ "mech_name": "深渊",
+ "tech": null,
+ "level": 2,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   2000,
+   0
+  ],
+  "alive": [
+   4,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 29,
+    "dmg": 100992.0,
+    "kills": 384
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   4,
+   270
+  ],
+  "rows": [
+   {
+    "mech": 29,
+    "dmg": 29982.0,
+    "kills": 114,
+    "r": 0.297
+   }
+  ]
+ },
+ "mech_note": "sweepSkillDatas 扫掠攻击(160×10, damageTimes20): 域内每敌一发全额, A 组 0.30→1.00",
+ "ts": "2026-08-23 03:10:16"
+}

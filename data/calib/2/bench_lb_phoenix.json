@@ -1,0 +1,45 @@
+{
+ "scenario": "bench_lb_phoenix",
+ "group": "BENCH",
+ "desc": "bench 长弓(800) vs 凤凰(800)",
+ "mech": 2,
+ "mech_name": "长弓",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   600,
+   0
+  ],
+  "alive": [
+   6,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 2,
+    "dmg": 11928.0,
+    "kills": 8
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   3,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 2,
+    "dmg": 11928.0,
+    "kills": 8,
+    "r": 1.0
+   }
+  ]
+ },
+ "mech_note": "对射站桩语义: 长弓140 vs 铁锤95 停在95对射全灭(oracle), 不维持最大射程",
+ "ts": "2026-08-23 03:10:16"
+}

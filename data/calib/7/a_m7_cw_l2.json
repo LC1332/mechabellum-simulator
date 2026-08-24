@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m7_cw_l2",
+ "group": "A",
+ "desc": "A 野马(low) L2 vs crawler墙 (r=0.36 N=419)",
+ "mech": 7,
+ "mech_name": "野马",
+ "tech": null,
+ "level": 2,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   153,
+   0
+  ],
+  "alive": [
+   9,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 7,
+    "dmg": 100992.0,
+    "kills": 384
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   330
+  ],
+  "rows": [
+   {
+    "mech": 7,
+    "dmg": 15066.0,
+    "kills": 54,
+    "r": 0.149
+   }
+  ]
+ },
+ "mech_note": "走打 AI: 与爬虫同速(16)边退边打全清墙(oracle L2 全清存活9); 慢速单位只延长窗口",
+ "ts": "2026-08-23 03:10:16"
+}

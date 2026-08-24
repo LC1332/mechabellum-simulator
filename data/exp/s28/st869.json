@@ -1,0 +1,160 @@
+{
+ "name": "st869",
+ "group": "ST",
+ "desc": "ST 凤凰·量子重组+熔点·射程强化 vs 霸主·光子投射+狂蝎·酸性攻击 等经济1400 #869 (两塔正中,换位)",
+ "value": [
+  1250,
+  1350
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 16,
+    "level": 0,
+    "x": -11.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 16,
+    "level": 0,
+    "x": 23.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 4,
+    "level": 0,
+    "x": 6.0,
+    "y": -178.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "16": [
+    2916
+   ],
+   "4": [
+    10204
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 11,
+    "level": 0,
+    "x": 6.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 19,
+    "level": 0,
+    "x": 6.0,
+    "y": 178.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "11": [
+    180311
+   ],
+   "19": [
+    180519
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st869",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   350,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 16,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8442,
+    "dmgReal": 8442,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 34761,
+    "dmgReal": 31529,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 11,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 28452,
+    "dmgReal": 15448,
+    "kills": 4
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    3,
+    0
+   ],
+   "end_t": 18.2
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:16": 26891.5,
+   "0:4": 13079.5,
+   "1:11": 2982.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:11": 2,
+   "0:16": 1,
+   "0:4": 1
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:27:25"
+}

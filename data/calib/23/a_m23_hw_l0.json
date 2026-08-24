@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m23_hw_l0",
+ "group": "A",
+ "desc": "A 沙虫(high) L0 vs hammer墙 (r=1.47 N=41)",
+ "mech": 23,
+ "mech_name": "沙虫",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1240
+  ],
+  "alive": [
+   0,
+   31
+  ],
+  "rows": [
+   {
+    "mech": 23,
+    "dmg": 195414.0,
+    "kills": 9
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   20
+  ],
+  "rows": [
+   {
+    "mech": 23,
+    "dmg": 386704.0,
+    "kills": 20,
+    "r": 1.979
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

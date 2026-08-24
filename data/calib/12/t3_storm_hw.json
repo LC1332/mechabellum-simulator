@@ -1,0 +1,45 @@
+{
+ "scenario": "t3_storm_hw",
+ "group": "T3",
+ "desc": "暴雨 vs 铁锤墙: 大目标过杀可见",
+ "mech": 12,
+ "mech_name": "暴雨",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   1160
+  ],
+  "alive": [
+   0,
+   29
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 62962.0,
+    "kills": 11
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   29
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 72226.0,
+    "kills": 11,
+    "r": 1.147
+   }
+  ]
+ },
+ "mech_note": "齐射=本体攻击(projectileCount4+randomTargetRange30+bulletSpeed60): 弹道化/目标分散建模, 换靶不清武器循环(旧机器枪 8s 扫墙 vs oracle 30s); 慢弹飞行时间已建模",
+ "ts": "2026-08-23 03:10:16"
+}

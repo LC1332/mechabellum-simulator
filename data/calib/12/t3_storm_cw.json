@@ -1,0 +1,45 @@
+{
+ "scenario": "t3_storm_cw",
+ "group": "T3",
+ "desc": "暴雨 vs 爬虫墙: 稳态 DPS+溅射分散 (密小目标)",
+ "mech": 12,
+ "mech_name": "暴雨",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   720
+  ],
+  "alive": [
+   0,
+   180
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 53652.0,
+    "kills": 204
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   225
+  ],
+  "rows": [
+   {
+    "mech": 12,
+    "dmg": 41817.0,
+    "kills": 159,
+    "r": 0.779
+   }
+  ]
+ },
+ "mech_note": "齐射=本体攻击(projectileCount4+randomTargetRange30+bulletSpeed60): 弹道化/目标分散建模, 换靶不清武器循环(旧机器枪 8s 扫墙 vs oracle 30s); 慢弹飞行时间已建模",
+ "ts": "2026-08-23 03:10:16"
+}

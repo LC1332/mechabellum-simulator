@@ -1,0 +1,176 @@
+{
+ "name": "at4607_5",
+ "group": "A",
+ "desc": "A 火神+尖牙(t4607) vs 锚[台风+熔点](t3001) 等经济850",
+ "pair": [
+  3,
+  -100
+ ],
+ "value": [
+  850,
+  850
+ ],
+ "anchor_team": 0,
+ "p0": {
+  "units": [
+   {
+    "id": 3,
+    "level": 0,
+    "x": 165.0,
+    "y": 150.0,
+    "index": 0
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 193.0,
+    "y": 132.0,
+    "index": 1
+   },
+   {
+    "id": 9,
+    "level": 0,
+    "x": 193.0,
+    "y": 168.0,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "3": [
+    4607
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 22,
+    "level": 0,
+    "x": -165.0,
+    "y": -150.0,
+    "index": 100
+   },
+   {
+    "id": 4,
+    "level": 0,
+    "x": -193.0,
+    "y": -150.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "22": [
+    3001
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s25_at4607_5",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   600
+  ],
+  "alive": [
+   0,
+   3
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 3,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 9701,
+    "dmgReal": 9701,
+    "kills": 0
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 3528,
+    "dmgReal": 3466,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 9,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 63,
+    "dmgReal": 63,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 12248,
+    "dmgReal": 10884,
+    "kills": 29
+   },
+   {
+    "team": 1,
+    "uid": 4,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 30975,
+    "dmgReal": 30407,
+    "kills": 10
+   }
+  ]
+ },
+ "winner_oracle": 1,
+ "arms": {
+  "factory": {
+   "winner": 1,
+   "alive": [
+    0,
+    3
+   ],
+   "end_t": 67.6
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:3": 4155.0,
+   "0:9": 2268.0,
+   "1:22": 10322.4,
+   "1:4": 30968.6
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:3": 2,
+   "1:4": 2,
+   "1:22": 37
+  }
+ },
+ "ts": "10:22:12"
+}

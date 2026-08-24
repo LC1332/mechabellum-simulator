@@ -1,0 +1,45 @@
+{
+ "scenario": "a_m18_cw_l0",
+ "group": "A",
+ "desc": "A 恶灵(low) L0 vs crawler墙 (r=0.33 N=64)",
+ "mech": 18,
+ "mech_name": "恶灵",
+ "tech": null,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 0,
+  "score": [
+   1000,
+   0
+  ],
+  "alive": [
+   4,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 18,
+    "dmg": 100992.0,
+    "kills": 384
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   4,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 18,
+    "dmg": 100992.0,
+    "kills": 384,
+    "r": 1.0
+   }
+  ]
+ },
+ "mech_note": "weaponCount/多炮建模(wraith_guns)候选; r=1.00 已达标",
+ "ts": "2026-08-23 03:10:16"
+}

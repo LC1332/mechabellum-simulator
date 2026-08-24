@@ -1,0 +1,45 @@
+{
+ "scenario": "c_m25_t3925",
+ "group": "C",
+ "desc": "C 3卡鬼鳐+隐形 (总值700) vs 等经济对手",
+ "mech": 25,
+ "mech_name": "鬼鳐",
+ "tech": 3925,
+ "level": 0,
+ "seed": 20220822,
+ "oracle": {
+  "winner": 1,
+  "score": [
+   0,
+   500
+  ],
+  "alive": [
+   0,
+   5
+  ],
+  "rows": [
+   {
+    "mech": 25,
+    "dmg": 3244.0,
+    "kills": 2
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   6,
+   0
+  ],
+  "rows": [
+   {
+    "mech": 25,
+    "dmg": 11354.0,
+    "kills": 7,
+    "r": 3.5
+   }
+  ]
+ },
+ "mech_note": "",
+ "ts": "2026-08-23 03:10:16"
+}

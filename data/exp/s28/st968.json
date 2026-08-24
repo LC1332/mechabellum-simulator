@@ -1,0 +1,153 @@
+{
+ "name": "st968",
+ "group": "ST",
+ "desc": "ST 猎犬·装甲强化+堡垒·发射器过载 vs 魔眼·射程强化+剑齿虎·射程强化 等经济900 #968 (两塔正中)",
+ "value": [
+  900,
+  900
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 28,
+    "level": 0,
+    "x": 12.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 1,
+    "level": 0,
+    "x": 12.0,
+    "y": -178.0,
+    "index": 1
+   }
+  ],
+  "techs": {
+   "28": [
+    3028
+   ],
+   "1": [
+    10301
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 30,
+    "level": 0,
+    "x": 12.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 21,
+    "level": 0,
+    "x": 12.0,
+    "y": 178.0,
+    "index": 101
+   }
+  ],
+  "techs": {
+   "30": [
+    10230
+   ],
+   "21": [
+    10221
+   ]
+  }
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st968",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   350,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 39144,
+    "dmgReal": 19452,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 30,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 14925,
+    "dmgReal": 14461,
+    "kills": 4
+   },
+   {
+    "team": 1,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 34405,
+    "dmgReal": 28403,
+    "kills": 1
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    1,
+    0
+   ],
+   "end_t": 28.8
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:1": 19452.0,
+   "1:30": 14049.4,
+   "1:21": 21817.6
+  }
+ },
+ "kills": {
+  "factory": {
+   "1:30": 3,
+   "1:21": 2,
+   "0:1": 4
+  }
+ },
+ "alive_mech": {},
+ "ts": "03:31:58"
+}

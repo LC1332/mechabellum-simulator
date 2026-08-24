@@ -1,0 +1,234 @@
+{
+ "name": "st010",
+ "group": "ST",
+ "desc": "ST 堡垒·发射器过载 vs 犀牛 等经济2200 #10 (两塔正中)",
+ "value": [
+  1750,
+  2200
+ ],
+ "p0": {
+  "units": [
+   {
+    "id": 1,
+    "level": 0,
+    "x": -45.0,
+    "y": -150.0,
+    "index": 0
+   },
+   {
+    "id": 1,
+    "level": 0,
+    "x": -11.0,
+    "y": -150.0,
+    "index": 1
+   },
+   {
+    "id": 1,
+    "level": 0,
+    "x": 23.0,
+    "y": -150.0,
+    "index": 2
+   },
+   {
+    "id": 1,
+    "level": 0,
+    "x": 57.0,
+    "y": -150.0,
+    "index": 3
+   }
+  ],
+  "techs": {
+   "1": [
+    10301
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 5,
+    "level": 0,
+    "x": 176.0,
+    "y": 150.0,
+    "index": 100
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 142.0,
+    "y": 150.0,
+    "index": 101
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 108.0,
+    "y": 150.0,
+    "index": 102
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 74.0,
+    "y": 150.0,
+    "index": 103
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 40.0,
+    "y": 150.0,
+    "index": 104
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": 6.0,
+    "y": 150.0,
+    "index": 105
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -28.0,
+    "y": 150.0,
+    "index": 106
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -62.0,
+    "y": 150.0,
+    "index": 107
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -96.0,
+    "y": 150.0,
+    "index": 108
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -130.0,
+    "y": 150.0,
+    "index": 109
+   },
+   {
+    "id": 5,
+    "level": 0,
+    "x": -164.0,
+    "y": 150.0,
+    "index": 110
+   }
+  ],
+  "techs": {}
+ },
+ "constructions": {
+  "0": [],
+  "1": []
+ },
+ "use_construction": false,
+ "towers": {
+  "0": [
+   0,
+   0
+  ],
+  "1": [
+   0,
+   0
+  ]
+ },
+ "oracle": {
+  "job": "s28_st010",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   1400,
+   0
+  ],
+  "alive": [
+   4,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 52192,
+    "dmgReal": 51367,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 45668,
+    "dmgReal": 45118,
+    "kills": 2
+   },
+   {
+    "team": 0,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 58716,
+    "dmgReal": 57891,
+    "kills": 3
+   },
+   {
+    "team": 0,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 58716,
+    "dmgReal": 57891,
+    "kills": 3
+   },
+   {
+    "team": 1,
+    "uid": 5,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7120,
+    "dmgReal": 7120,
+    "kills": 0
+   }
+  ]
+ },
+ "winner_oracle": 0,
+ "arms": {
+  "factory": {
+   "winner": 0,
+   "alive": [
+    4,
+    0
+   ],
+   "end_t": 16.0
+  }
+ },
+ "dmg": {
+  "factory": {
+   "0:1": 212267.0
+  }
+ },
+ "kills": {
+  "factory": {
+   "0:1": 11
+  }
+ },
+ "alive_mech": {},
+ "ts": "02:10:16"
+}
