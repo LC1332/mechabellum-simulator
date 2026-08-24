@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project: local large data (full replay corpora, bench outputs) - see local_data/README.md
+local_data/*
+!local_data/README.md
