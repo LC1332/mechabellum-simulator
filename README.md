@@ -22,6 +22,8 @@ winner = b.simulate()          # 0 / 1 / -1
 print(b.result(winner))        # 幸存、击杀、统计、终局时间 ...
 ```
 
+** 欢迎反馈 修改 共建**
+
 ## 快速开始
 
 Python ≥ 3.10。
