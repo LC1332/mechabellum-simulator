@@ -61,10 +61,12 @@ def test_replay_import():
     rp = get("/api/replays")
     if not rp:
         pytest.skip("no replay corpus loaded (local_data/ empty and sample missing)")
-    idx = rp[0]["idx"]
-    rnd = rp[0]["pairs"][2]["round"] if len(rp[0]["pairs"]) > 2 \
-        else rp[0]["pairs"][0]["round"]
-    rr = get("/api/replay/%d/%d" % (idx, rnd))
+    # first pair that actually has units (round-0 pairs can be 0v0 empty
+    # boards when one side deployed nothing)
+    rnd = next((p["round"] for p in rp[0]["pairs"] if p["n0"] + p["n1"] > 0), None)
+    if rnd is None:
+        pytest.skip("first replay has no non-empty rounds")
+    rr = get("/api/replay/%d/%d" % (rp[0]["idx"], rnd))
     assert rr["round"] == rnd
     assert rr["p0"]["units"] or rr["p1"]["units"]
     assert "techs" in rr["p0"] and "towerLevels" in rr["p0"]

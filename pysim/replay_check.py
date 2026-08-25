@@ -228,6 +228,7 @@ def main():
     alive_err = []          # |sim winner alive mechs - report aliveMechCount|
     sign_err = []           # per-side signed: sim_alive(side) - report_alive(side)
     bucket = {}             # bucket -> [total, correct]
+    round_exact = {}        # round number -> [total, correct] (per-round acc)
     sneak_bucket = {"clean": [0, 0], "sneak": [0, 0]}   # step7: |x|>250 flank deploys
     skill_bucket = {"skilled": [0, 0], "unskilled": [0, 0]}  # step8-B: pairs
     # where >=1 mapped skill event was injected (the only pairs the feature
@@ -359,6 +360,8 @@ def main():
             bk = round_bucket(pair["round"])
             bucket.setdefault(bk, [0, 0])
             bucket[bk][0] += 1
+            rk = round_exact.setdefault(int(pair["round"]), [0, 0])
+            rk[0] += 1
             sk_key = "skilled" if (len(ev0) + len(ev1)) else "unskilled"
             skill_bucket[sk_key][0] += 1
             # sneak = flank units deployed in the ENEMY half (step9 zone);
@@ -380,6 +383,7 @@ def main():
             elif (winner == 0) == actual_win:
                 correct += 1
                 bucket[bk][1] += 1
+                rk[1] += 1
                 sneak_bucket["sneak" if has_sneak else "clean"][1] += 1
                 skill_bucket[sk_key][1] += 1
                 if n_del:
@@ -490,6 +494,10 @@ def main():
     for bk in sorted(bucket):
         t, c = bucket[bk]
         print("  %s: %d/%d = %.1f%%" % (bk, c, t, 100.0 * c / t if t else 0))
+    if len(round_exact) > 1:
+        print("  per round: " + "  ".join(
+            "r%d %d/%d=%.0f%%" % (r, v[1], v[0], 100.0 * v[1] / v[0])
+            for r, v in sorted(round_exact.items())))
     for sk in ("clean", "sneak"):
         t, c = sneak_bucket[sk]
         if t:
@@ -591,6 +599,9 @@ def main():
                       "delayed_cards": n_delay_cards,
                       "bucket": {k: {"n": v[0], "acc": round(100.0 * v[1] / v[0], 1) if v[0] else 0}
                                  for k, v in bucket.items()},
+                      "round_exact": {str(k): {"n": v[0], "ok": v[1],
+                                               "acc": round(100.0 * v[1] / v[0], 1) if v[0] else 0}
+                                      for k, v in sorted(round_exact.items())},
                       "misses": misses})
         report = []
         if os.path.exists(report_path):

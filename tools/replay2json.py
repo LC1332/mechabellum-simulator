@@ -380,15 +380,27 @@ def convert(path, tech_prev):
         })
     return {"file": os.path.basename(path), "info": info, "players": players, "pairs": pairs}
 
-def main():
-    files = sorted(glob.glob(os.path.join(REPLAY_DIR, "*.grbr")))
-    tech_prev = {}
+def load_tech_prev():
+    """id -> previousTechID for chain folding. tools/tech.json is a decode
+    artifact kept out of the repo; data/gamedata.json carries the same
+    previousTechID column and is the in-repo fallback."""
+    here = os.path.dirname(os.path.abspath(__file__))
     try:
-        tj = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                         "tech.json"), encoding="utf8"))
-        tech_prev = {e["id"]: e.get("previousTechID", 0) for e in tj["technologyDatas"]}
+        tj = json.load(open(os.path.join(here, "tech.json"), encoding="utf8"))
+        return {e["id"]: e.get("previousTechID", 0) for e in tj["technologyDatas"]}
     except OSError:
         pass
+    try:
+        gj = json.load(open(os.path.join(_ROOT, "data", "gamedata.json"),
+                            encoding="utf8"))
+        return {int(e["id"]): e.get("previousTechID", 0)
+                for e in gj["techs"].values()}
+    except (OSError, KeyError, ValueError):
+        return {}
+
+def main():
+    files = sorted(glob.glob(os.path.join(REPLAY_DIR, "*.grbr")))
+    tech_prev = load_tech_prev()
     print(f"replays: {len(files)}")
     alldat = []
     nfail = 0
