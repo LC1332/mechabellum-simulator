@@ -65,6 +65,8 @@ a_1, a_2, ..., a_T
 
 完整的结构化契约、序列语言草案和分阶段验收 gate 见
 [`transition需要检验的指标.md`](transition需要检验的指标.md)。
+逐步编码任务、玩家反事实回放与随机策略 MVP 见
+[`transition实现任务书.md`](transition实现任务书.md)。
 
 ```
 o' = T( o, {a}_1, {a}_2 )
