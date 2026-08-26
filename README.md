@@ -148,6 +148,49 @@ local_data/     本地大数据（完整回放语料，gitignored；见其 READM
 
 ## 已知边界
 
-- 外围经济模拟（RL 路线中的 transition 函数）尚未实现，是下一步开发重点
+- transition 收入规则仍以回放注入方式运行，精确收入公式（基础收入 +
+  胜负奖励 + 经济专家）待逆向；其余见 Transition v0 一节
 - oracle 注入管线（Windows 绑定）不在本仓库；`data/exp/` 真值为其定版产物
 - s29cal / s26 一致率仍低（47% / 63%），差异可在 `/bench` 页逐场回放定位
+
+## Transition v0（外围规则状态转移）
+
+`pysim/transition/` 实现了任务书（`information/transition实现任务书.md`）的
+v0 闭环：结构化 `EnvironmentState`（1 基等级、稳定 entity_id、冻结 schema）→
+canonical 动作计划（Undo 折叠、买/升/移/解锁/科技/卖/FinishDeploy/增援授予）
+→ pysim 战斗适配器（entity↔card 映射、逐卡经验/伤害、存活价值扣血
+`pysim_survivor_value_v1`）→ 结算（HP/胜负/经验回写、战斗末自动升级）→
+回合推进（收入策略版本化：回放注入 / sandbox 固定）。所有动作返回
+receipt + reason code + 资金账本，非法动作不改状态。
+
+语料实测（1106 局 / 13222 个普通回合，2026-08-26）：
+
+- 回放导入率 100%（零 KeyError / 零崩溃），17 类 raw action 全部进 registry；
+- 部署对拍（单位集合逐字段 exact，容忍战斗末自动升级）：**10279/13222 = 77.7%**，
+  剩余差异主要来自跨回合 unitIndex 烧毁歧义与经济专家折扣（见
+  `tools/transition_replay_check.py --report`）。
+
+```bash
+# T0: action 类型 census（未知类型 --strict 非零退出）
+python tools/transition_action_census.py --rounds local_data/rounds.json \
+    --out /tmp/transition_census.json
+
+# T8: 部署 transition 对拍（oracle 模式，逐回合 vs 下一快照）
+python tools/transition_replay_check.py --rounds local_data/rounds.json \
+    --report /tmp/transition_report.json
+
+# 终点 A: 玩家回放反事实重赛（状态只初始化一次，战斗全部来自 pysim）
+python examples/replay_player_match.py --rounds data/samples/rounds.json \
+    --game 0 --start-round 1 --seed 7 --trajectory /tmp/replay_player_match.json
+
+# 终点 B: 随机合法策略完整 episode（env soak）
+python examples/random_rollout.py --episodes 100 --seed 7 \
+    --report /tmp/random_rollout_report.json
+
+pytest tests/transition -q        # transition 单元测试
+```
+
+v0 明确的未支持机制（receipt 记录 `UNSUPPORTED_ACTION`，不静默）：战场技能/
+装置/装备/塔强化/蓝图（除 快速补给+200、强化训练 充能经验外）、
+`ChooseAdvanceTeam`（round 0 特殊回合）、GiveUp。回放模式收入逐回合注入并在
+trajectory 的 `injected_income` 中显式记录。

@@ -4108,6 +4108,34 @@ class Battle:
                 out[key][0] += 1
         return {k: tuple(v) for k, v in out.items()}
 
+    def outcome_cards(self):
+        """transition v0 public per-card results (no private-array access
+        needed by callers): [{card_idx, team, mech, level, exp, damage,
+        kills, survived, n_modules, modules_alive}] in card order."""
+        out = []
+        for ci, c in enumerate(self.cards):
+            members = np.where(self.card_idx == ci)[0]
+            out.append({
+                "card_idx": ci, "team": int(c["team"]), "mech": int(c["mech"]),
+                "level": int(c["level"]), "exp": float(c["exp"]),
+                "damage": round(float(self.card_damage.get(ci, 0.0)), 3),
+                "kills": int(sum(1 for k in self.kills if k.get("killer") == ci)),
+                "survived": bool(np.any(~self.dead[members])),
+                "n_modules": int(len(members)),
+                "modules_alive": int(np.count_nonzero(~self.dead[members])),
+            })
+        return out
+
+    def team_score(self, team):
+        """Survivor value of one team (pysim_survivor_value_v1): sum over
+        surviving non-tower/building/device modules of
+        (card price / mech_count * level) * hp/max_hp."""
+        m = (~self.dead) & (self.team == team) & (~self.is_tower) \
+            & (~self.is_bld) & (~self.is_device) & (self.card_idx >= 0)
+        if not np.any(m):
+            return 0.0
+        return float(np.sum(self._score_val[m] * self.hp[m] / self.max_hp[m]))
+
     def result(self, winner):
         survivors = {}
         for team in (0, 1):
