@@ -5,6 +5,8 @@
 > 什么、接口长什么样、每一步怎样验收”。长期 RL 方向见
 > [`rl-roadmap.md`](rl-roadmap.md)，整体 milestones 见
 > [`rl-development-plan.md`](rl-development-plan.md)。
+> transition 核心完成后，由人类接管一方、历史动作驱动对手的前后端审计游戏见
+> [`transition前后端审计游戏任务书.md`](transition前后端审计游戏任务书.md)。
 >
 > 本任务书中的复选框是实施状态，不是现状声明。只有对应测试和产物落地后才能勾选。
 
