@@ -1,0 +1,1 @@
+information中只存放.md, .txt之类的文档格式的文件 不存放代码
