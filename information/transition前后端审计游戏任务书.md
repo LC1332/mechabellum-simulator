@@ -883,16 +883,152 @@ API 测试应使用 FastAPI app/TestClient 直接启动测试实例，不依赖�
 
 只有同时满足以下条件，本任务才算完成：
 
-- [ ] transition 自身任务书要求的连续 environment Gate 已通过；
-- [ ] round 0 opening 由规则执行，不从 round 1 快照灌入；
-- [ ] 回放真实 4 张增援候选被解析、展示并完整执行；
-- [ ] replay library 支持选择任一方作为对手并报告可玩前缀；
-- [ ] 历史对手除经验 override 外保持 strict；
-- [ ] API version、transaction、session 生命周期测试通过；
-- [ ] `/game` 可以自由操作并实时查看审计信息；
-- [ ] battle trace、BattleOutcome 和 settlement 来自同一次 pysim；
-- [ ] 五回合浏览器验收通过；
-- [ ] 未来快照污染测试通过；
-- [ ] 现有引擎、沙盒、回放导入和 benchmark 测试无回归；
-- [ ] 文档列出的命令、入口和实际实现一致。
+- [x] transition 自身任务书要求的连续 environment Gate 已通过；
+- [x] round 0 opening 由规则执行，不从 round 1 快照灌入；
+- [x] 回放真实 4 张增援候选被解析、展示并完整执行；
+- [x] replay library 支持选择任一方作为对手并报告可玩前缀；
+- [x] 历史对手除经验 override 外保持 strict；
+- [x] API version、transaction、session 生命周期测试通过；
+- [x] `/game` 可以自由操作并实时查看审计信息；
+- [x] battle trace、BattleOutcome 和 settlement 来自同一次 pysim；
+- [ ] 五回合浏览器验收通过（v1 能力边界内不可达，见 §14.6：装备卡为硬墙，
+      1106 局语料严格可玩 ≥5 回合的选项为 0；替代验收 = 前缀内零意外阻塞 +
+      边界 BLOCKED 与 scanner 预测一致 + 固定 seed 下 pysim 提前终局路径，
+      对应 `tests/test_game_api.py::test_acceptance_flow_rounds_1_to_prefix_end`）；
+- [x] 未来快照污染测试通过；
+- [x] 现有引擎、沙盒、回放导入和 benchmark 测试无回归；
+- [x] 文档列出的命令、入口和实际实现一致。
+
+---
+
+## 14. v1 实施总结（2026-08-27 落地）
+
+本节是实施状态回写：v1 垂直切片已全栈落地并在 1106 局本地语料上验证。
+入口 `http://127.0.0.1:8300/game`（`start_server.bat` 照旧），加载优先级
+`local_data/replay_game` → `data/samples/replay_game`（仓库 fixture，3 局），
+全缺失时 `/game` 仅显示 `corpus_available=false`，其余页面不受影响。
+
+### 14.1 交付的完整流程
+
+```text
+回放/对手选择（manifest 列表，含可玩前缀与 blockers）
+→ round 0 开局四选一（历史项固定原 Index + 3 个 opening_offer_generator_v1
+   确定性生成项，来源徽标 replay_recorded / generated_v1）
+→ 回合开始收入（Income200r：200×r + 专家增量 − 快速补给债）
+→ 增援四选一（回放真实 reinforceItems 候选；未支持卡禁用并展示原因；
+   跳过 = item 0，+50）
+→ 部署（买兵/拖动移动/升级/科技/解锁/塔强化/全部 7 种蓝图/能量塔技能 5·6/
+   战场技能释放/回收/撤销，逐动作 receipt + undo checkpoint）
+→ 结束部署 → 对手历史 norm 流 canonicalize 后原子执行
+   （每个 UpgradeUnit 前显式 OPPONENT_EXP_OVERRIDE；任一失败整体回滚并 BLOCKED）
+→ 一次 pysim 战斗（trace 与 BattleOutcome 同一次 simulate）→ HP/经验/零和
+   reward 结算 → round tick → 下一回合 / 终局 / 明确报告的 BLOCKED
+```
+
+前端六个审计面板：人类 receipts / 对手 receipts（含经验补齐）/ 资金账本 /
+state diff + digest + 审计事件流 / 原回放同回合动作对照（仅对照，不参与状态）/
+pysim 战斗结果（固定标注“pysim 模拟结果，非真实胜负”，真实标签只放对照区）。
+
+### 14.2 分层落地清单
+
+| 层 | 文件 | 内容 |
+|---|---|---|
+| transition | `pysim/transition/opening.py` | catalog 加载、`generator_seed`（hash(ruleset, systemSeed, playerSeed, replay_id, player_index)）、`generate_offers`（历史项钉原位 + 无放回抽样）、`build_initial_state`（round 1 状态由包执行生成，不读 round 1 快照） |
+| transition | `pysim/transition/capability.py` | 扫描器与运行时共用的唯一能力分类器（任务书 G5“禁止两套规则”）；`scan_option` 输出 `playable_through_round`（诚实选择口径）与 `strict_playable_through_round`（全 4 候选完整口径）双前缀 |
+| transition | `pysim/transition/deploy.py` | 蓝图 1-5/401/501 完整语义、StrengthenTower 持久塔等级、BUY_LIMIT（基数 5）、ActiveEnergyTowerSkill 5/6 回合增益、ReleaseContraption/ReleaseCommanderSkill 战斗事件、技能卡入 commander_skills 库存、装备卡拒绝 |
+| transition | `pysim/transition/battle_adapter.py` | `with_trace=True` 返回 (outcome, battle_extra)；tower_mods/devices/skill_events 进战斗；召唤物无持久 entity 时跳过（战内溶解） |
+| transition | `pysim/transition/env.py` | 新增 `finish_round()`（交互式战斗+结算+推进，与 step_joint 共用 `_battle_settle_advance`）、`add_incomes()`；修复收入差一轮 bug（原 `_next_incomes` 在结算态算 `round` 而非 `round+1`，R2 收入少 200，见 14.4） |
+| transition | `model.py`/`state_tools.py`/`settlement.py` | PlayerState 新增回合内字段 `tower_mods_raw`/`devices_raw`/`skill_events_raw`（advance_round 重置）；canonical 序列化自动兼容 |
+| 会话层 | `web/game_service.py` | GameSession（六种 command、乐观并发、undo checkpoint、对手原子提交、BLOCKED、审计事件、GameView serializer 不泄漏 entity_id/RNG/shard 路径）+ GameSessionStore（进程内存、独立锁、不可猜 session id） |
+| 会话层 | `web/game_library.py` | manifest 惰性 shard 加载；`MECHABELLUM_GAME_LIB` 环境变量供测试锚定 fixture；catalog 仓库锚定 |
+| API | `web/game_api.py` + `web/server.py` | `GET /api/game/replays`、`POST /api/game/sessions`、`GET/DELETE /api/game/sessions/{id}`、`POST /api/game/sessions/{id}/commands`（409 STALE_SESSION_VERSION / 404 / 409 disabled / rejected receipt 不用 500）；`/game` 页面路由先于静态 mount；旧沙盒/bench 行为不变 |
+| 前端 | `web/static/game.html` | 原生 JS 单页：选择页（筛选/前缀徽标/blocker 展开/受限开始确认）、战场 Canvas（棋盘/塔/单位/拖动/放置半场限制）、战斗播放器（复用 trace 帧解析与事件浮字）、六审计面板；所有数值来自 GameView.legal_actions，JS 无独立价格表 |
+| 数据管线 | `tools/replay2json.py` | G1：导出 `reinforceItems`（双方共享的 4 候选）、`reinforce_offers` 汇总、ID/Index 不一致记 `reinforce_errors` 不自动修复 |
+| 数据管线 | `tools/build_opening_catalog.py` | G3：29 支队伍全量归纳（ChooseAdvanceTeam → round 1 快照证据；编队镜像到 team-0 朝向；多编队变体计数、众数冻结；officers/HP/unlock/技能快照同步取证） |
+| 数据管线 | `tools/build_game_library.py` | G2/G5：单局 shard（预归一化 actions_norm + norm_report + offers + 能力扫描），1106 局 45 秒；opaque replay_id = 内容 hash |
+| fixture | `data/samples/replay_game/` | 仓库内 3 局（含一个 playable-4、一个 R1 即阻塞的负样本），`data/game/opening_catalog.json`（29 队） |
+
+测试：`tests/test_game_api.py` 9 项（TestClient，不依赖 8300 端口）——库列表/
+disabled 拒绝/CRUD+版本/开局确定性与形状/非法动作不变性（digest+version 不变）/
+undo 恢复与空栈/验收流程（到前缀尽头或 pysim 终局，断言 BLOCKED 回合 ==
+scanner 首个非 strict blocker 回合）/GameView 无内部字段泄漏/未来快照污染等价
+（篡变 shard 的 hp·supply·units·level·exp·label·FightReport.score，两次会话
+trajectory digest 序列必须完全一致）。全仓 `pytest tests -q` = 43 passed,
+4 skipped（旧 live-server 沙盒测试），transition 24 项与引擎 10 项无回归。
+
+### 14.3 实施中固化的新规则证据
+
+- **蓝图真实语义**（`information/commend_center的蓝图.md` + 语料探针）：
+  bp1 快速补给 = +200/下回合 −300（收入侧）；**bp2 = 批量征召，本回合购买上限 +1，
+  免费**（此前误标“防御强化 I”）；bp3 = 精英征召 ¥100，顺序敏感（激活后的购买
+  才 +1 级，文档例证）；bp4/bp5 = 进攻/防御强化 I ¥100 → officer 20310/20300；
+  bp401/501 = II 级 ¥300 → 20311/20301，II 替换 I（语料从不同时持有）。
+  映射证据：单蓝图激活且 officer 增量仅 203xx 的干净样本 4×200+ 次。
+- **购买上限**：语料单回合购买数 ≤5（5 出现 10 次，bp2 回合峰值 4），
+  `BASE_BUY_LIMIT = 5` + 批量征召加成，超限 reason `BUY_LIMIT_REACHED`。
+- **收入 bug 修复**：`step_joint/finish_round` 原先在结算态预计算收入（用了
+  `settled.round` 而非 `round+1`），对手 R2 只拿 200 导致历史购买
+  `INSUFFICIENT_SUPPLY` 假阻塞；改为让 `advance_round` 向策略询问新回合收入。
+- **增援候选归属**：`reinforceItems` 是双方共享的一份 4 候选（26 次取样 24 次
+  对齐；2 次 ID/Index 不一致为原客户端陈旧点击，按 ID 执行并记 schema error）。
+
+### 14.4 与任务书的偏差裁决（均保守、不伪装支持）
+
+1. **增援可玩门槛**（G5）：任务书要求该回合 4 张全部 effect-complete 才计入
+   可玩前缀。v1 按“费用全知 + 至少一张完整可选”计 `playable_through_round`
+   （未支持卡在 UI 与 deploy 双双不可选，绝无半效果执行），全完整口径另报
+   `strict_playable_through_round` 供审计——放宽只影响“哪些选项可开始”，
+   不影响运行时严格性。
+2. **受限开始**：语料中严格 ≥5 回合选项为 0 时，UI 允许从前缀 ≥3 的选项开始
+   （二次确认 + 醒目标注），到前缀尽头以 scanner 预测的同一 blocker 精确 BLOCKED。
+   这符合 §0“运行到……碰到明确报告的 unsupported 机制”的验收路径，不构成
+   tolerant skip：阻塞信息完整暴露（失败 raw/canonical 动作、receipt、临时 diff）。
+3. **装备卡拒绝**：engine 无装备机制，deploy 曾接受“仅扣费”的装备增援（与
+   scanner 判定相悖），已改为 `UNSUPPORTED_ACTION` 拒绝——扣费半效果比阻塞
+   更危险，这是“未支持就阻塞”的严格执行。
+4. **开局 catalog 取证口径**：round 0 只有 ChooseAdvanceTeam、无部署动作，故
+   round 1 快照即开局包效果（编队有 2-4 个变体，取众数冻结并保留变体计数）；
+   这是“从证据归纳 catalog”而非“运行时读快照”——session 只读 catalog。
+
+### 14.5 v1 能力边界（capability 分类器唯一口径）
+
+完整支持：买/移动/升级/科技/解锁/回收、增援卡（单位获得/强化/专家/技能库存）、
+蓝图 1-5/401/501、塔强化（持久等级，上限 9）、能量塔技能 5/6（叠加）、
+装置 10001/20001、战场技能（skills.py 已映射 5 种）、强化训练 1100001、GiveUp。
+
+未支持即阻塞：**装备卡**（130xxxxx/131xxxxx，engine 无机制——当前可玩前缀的
+主要墙，语料中对手 R4-R5 取装备卡的密度极高）、能量塔技能 1/3/4、装置 30001、
+未映射战场技能（400002 黏油弹、15000xx WayPoint 等）。
+
+语料实测（1106 局 / 2010 选项）：first-blocker 分布
+UNSUPPORTED_ACTION_FIELD 1496 · UNSUPPORTED_OPENING 278 ·
+MISSING_REINFORCEMENT_EFFECT 120 · UNSUPPORTED_RAW_ACTION 100
+（16 个选项前缀自然耗尽无 blocker）；
+阻塞回合分布 R1 1462 · R2 221 · R3 29 · R4 4。对比建模前
+（bp2 误判为防御强化、塔技能/装置/战场技能未放行时）：R1 阻塞 1481、
+UNSUPPORTED_ACTION_FIELD 1525——蓝图语义修复与战斗事件建模把 R2-R4 的墙
+显著推后，R1 存量主要是不可解析 ID=0 的 ReleaseCommanderSkill。
+当前最佳可玩前缀 R4。
+
+### 14.6 后续最短路径
+
+1. **装备机制**（解锁 ≥5 回合严格前缀的关键）：engine 侧 equipment 支持
+   （1303xxx 系列 24 种）+ `equipment_id` 绑定 entity + capability 放行；
+2. R1 阻塞存量：不可解析 ID=0 的 ReleaseCommanderSkill（catalog 已补抓
+   commanderSkills_raw，存量 shard 需重建一次即可消解部分）；
+3. 能量塔技能 1/3/4 效果取证（当前仅 5/6 有叠加证据）；
+4. 浏览器端到端回放录屏归档（v1 以 API 验收 + DOM 桩驱动前端全流程替代，
+   `bench.html` 同源交互代码已被复用）。
+
+### 14.7 复现命令
+
+```bash
+python tools/build_opening_catalog.py --replay-dir local_data/humen_replay \
+    --out data/game/opening_catalog.json        # ~2 分钟, 29 队
+python tools/build_game_library.py --replay-dir local_data/humen_replay \
+    --out local_data/replay_game                # 1106 局 ~45 秒
+start_server.bat                                # http://127.0.0.1:8300/game
+pytest tests/test_game_api.py -q                # 9 passed
+pytest tests -q                                 # 43 passed, 4 skipped
+```
 

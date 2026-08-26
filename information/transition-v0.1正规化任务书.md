@@ -458,3 +458,152 @@ Undo（Q2）；无可回退时忽略（Q3）；出售可撤销、复活并扣回
 7. **sell 判定的分辨率修复**贡献了 ~5% 的 unresolved 消除（0.24% 达标的关键）。
 8. **r0→r1 计数器跳变**（0 → 5）：开局军队在 ChooseAdvanceTeam 阶段分配，属 T8
    显式边界，滚动衔接在 r≥2 为 100%。
+
+---
+
+## 11. 本轮实施总结（2026-08-26 续写）
+
+### 11.1 指标总览：v0 → v0.1
+
+| 指标 | v0 基线 | v0.1 结果 | 达成 |
+|---|---|---|---|
+| 部署对拍 unit-set exact（全量 1v1） | 77.7%（10279/13222） | **85.3%**（11053/12960） | 总体 ≥90% 未达，干净回合达标 |
+| 干净回合 unit-set exact（unresolved=0 且零核心拒绝） | — | **99.03%**（9654/9749） | ✅ ≥99% |
+| settlement oracle hp / fight-result / exp | 未实现 | **100% / 100% / 100%**（13104 样本） | ✅ T7 全指标 |
+| 顺序计数器衔接（counter_end → 下一快照 unitIndex） | 依赖下一快照提示 | **99.70%**（滚动式；r≥2 为 100%） | ✅ ≥99% |
+| 正规化 unresolved_refs 非空回合 | ~13% | **0.24%**（48/20282） | ✅ <1% |
+| 正规化确定性 | — | 两次运行 MD5 字节一致 | ✅ |
+| rounds with rejected core action | 1650 | 3211（口径变化：v0 用注入收入屏蔽了缺口） | ❌ 未达 <200，见 §11.4 |
+| supply_exact_rate | 注入式（构造上 100%） | 真实模型 36.6%（干净 38.3%） | ❌ 部分达成 |
+| 测试 | 22 项引擎 | **34 passed, 4 skipped**（引擎零回归 + 12 项新 normalizer 测试） | ✅ |
+
+> 口径说明：v0 的 77.7% 分母含 VS_2_2 与回合断档；v0.1 的 12960 为 1v1 连续
+> 回合窗口（86 局非 1v1 跳过、276 轮断档跳过）。v0 的"rejected 1650"发生在
+> **注入收入**下（每回合收入由快照差反推，天然买得起）；v0.1 换成真实收入
+> 模型后，历史上被注入掩盖的资金缺口显形为 3211 个拒绝回合——这不是回归，
+> 而是经济模型真实准确率的第一次测量。
+
+### 11.2 代码交付物清单
+
+**新增**：
+
+- `pysim/transition/normalize.py` —— 正规化器核心（栈式撤销折叠、多单位移动
+  原子拆分、授予卡展开、顺序 unitIndex 计数器、开局赠礼表 `GIFT_OFFICERS`、
+  引用解析 + `unresolved_refs`、sell 判定）；
+- `tools/normalize_actions.py` —— 工件生成 CLI（`--diagnostic` 的 oracle 对拍
+  只进报告；T5 滚动衔接 gate；逐模式统计）；
+- `tools/probe_undo_semantics.py` —— §4 裁决表的全量折叠分布统计；
+- `tools/supply_residual_probe.py` —— 经济残差归因探针（按蓝图/装置/塔分解）；
+- `tests/transition/test_normalize.py` —— 12 项单测（撤销对、链式、multi-move、
+  授予、计数器回收/烧毁、Cancel 恢复、赠礼、确定性、防御断言、golden fixture）；
+- `tests/transition/fixtures/golden_norm_round.json` —— 自动生成/比对的金样本。
+
+**重写/修改**：
+
+- `pysim/transition/canonicalize.py` —— 从"raw+Undo 折叠+领养启发式"重写为
+  纯 norm→CanonicalAction 类型映射；携带 `FORBIDDEN_RAW_TYPES` 防御；
+- `pysim/transition/deploy.py` —— 新增 `UNDO_IN_NORM_STREAM` 断言、`GIFT_UNIT`
+  执行、蓝图/装置/塔强化费用、强化卡价格修正（`_buy_cost`）、精英 +1 级按兵种
+  生效、升级经验门槛移除、GiveUp 终局标记；
+- `pysim/transition/economy.py` —— `load_price_mods()`（量产/补贴/改进型描述
+  解析）、`Income200r`（income_rule_200r_v1）、科技阶梯口径修正；
+- `pysim/transition/replay_adapter.py` —— norm 优先加载 + raw 现场正规化回落、
+  `unlocked_units` 权威解锁状态、`norm_actions()` 访问器；
+- `pysim/transition/model.py` —— `GIFT_UNIT`/`GiftArgs`；
+- `pysim/transition/env.py` —— 快速补给债务登记钩子（`record_fast_supply`）；
+- `tools/replay2json.py` —— 计数器与 shop 字段导出、**techMap 前置修复**（本轮
+  最关键的管线 bug，见 §11.3）；
+- `tools/transition_replay_check.py` —— `--sequential` 默认开、Income200r、
+  干净回合统计、`--mode settlement` 三指标、断档跳过、债务表按局清空；
+- `examples/replay_player_match.py` —— 从注入收入切换到 Income200r；
+- `tests/transition/test_transition_suite.py` —— 适配新 API。
+
+**数据工件**（local_data/，不入库）：`rounds.json`（重生成，含新字段）、
+`rounds_norm.json`（1106 局正规化流）、`normalize_report.json`、`trc_full.json`、
+`trc_settlement.json`；`data/samples/rounds.json` 用同 schema 重生成（原样例
+.grbr 源文件已不在磁盘，按确定性规则从 humen_replay 前两局 1v1 重取）。
+
+### 11.3 排障记录（按发现顺序，均为本轮实际踩过的坑）
+
+1. **跨局债务表泄漏**：`Income200r.fast_debts` 的 (player, round) 键跨局累积，
+   后续局收入被前面局的快速补给债务反复扣成负数 → 6084 轮 `negative supply`
+   断言。修复：`check_game` 入口清空。教训：任何带 (player, round) 键的模型
+   状态必须按局作用域。
+2. **techMap 时序 bug（最重要）**：replay2json 先把本回合 UpgradeTechnology
+   累进 active_techs 再写 techMap 快照，于是快照包含本回合自己买的科技 →
+   deploy 全部命中 "already active (no charge)"，科技分文不收。A/B 测试
+   （tech_price 归零前后统计完全相同）暴露了这一点。修复：techMap 改为回合前
+   状态。它同时污染了此前所有科技价格拟合（拟合样本只含"能全额付款"的回合，
+   免费的科技让这些回合自我选择了出来）。
+3. **有偏拟合陷阱**：在"全部动作被接受"的回合上拟合收入/价格，样本系统性
+   偏向"模型价格 ≤ 真实价格"的对局。科技价格第一次拟合出 2×supply 的错误
+   公式即源于此；改用"价格已知窗口"（与模型可负担性无关）无偏重拟后回到
+   supply + 200×owned。
+4. **精英卡范围误判**：v0 用 `30000 + mech*100 ≤ id` 区间判定精英卡，把
+   增程/改进型卡也当成精英 → 购买等级 +1 误加（干净回合 98.5%→97.4% 的那批
+   mismatch）。修正：只有名字含"精英"的 9 张卡 + 20032，且按兵种生效。
+5. **exp 门槛错误冻结**：v0 的 EXP_NOT_ENOUGH 拒绝与用户 Q13 的表述冲突；
+   语料直连测量（快照单位 exp < 门槛时的 UpgradeUnit 是否在下一快照升级）
+   给出 455/455 全部升级——门槛不存在，删除。
+6. **诊断伪影**：oracle 诊断把"同回合卖出的 spawn"计入 spawn 集合比对，制造
+   了 ~900 个假 mismatch（92.6% vs 真实 99.5%）。修复：诊断侧排除 sold。
+7. **升级兜底方向反了**：ID=0/SkillIndex 解析不到的释放，v0 默认判 sell；
+   语料测量 398/480 不是 sell（单位下一快照仍存活）。翻转兜底后 unresolved
+   从 5.07% 降到 0.24%。
+
+### 11.4 经济侧的诚实结论
+
+**已验证（结构层面，均可复现）**：收入 200×r 无胜负分量；专家增量表；
+放弃增援 +50；快速补给 +200/−300；全部购买/升级/解锁/科技/装置/蓝图/塔强化
+定价；出售退款 = sellSupply（六种变体扫描最优）；开局队伍无收入加成。
+
+**未闭合**：约 25% 的 1v1 回合存在模型资金不足级联。已系统排除：收入公式
+（r1 精确率 98%）、胜负奖励（分层后分布不变）、专家/队伍/战报水晶/游戏版本
+（三个 build 行为一致）、各定价项（全部单独实证）。残余形态是**少数对局
+~+100/回合的额外资金流，无任何 officer/动作/状态可对应**——超出回放语料
+自身的信息量。闭合路径：(a) Q10 对应的官方数值表；(b) 游戏内对照实验定位
+该资金流；(c) 若确认是特殊补给事件，需回放导出补充字段。在此之前按
+`income_rule_200r_v1` 冻结结构，`supply_exact_rate` 持续跟踪。
+
+**对"100% 准确率"目标的边界说明**：单位引用/等级/位置/计数器（99%+）与
+settlement（100%）已达到语料可支撑的上限；经济侧的 36.6% 不是实现缺陷，
+而是存在语料外隐藏变量。用户 Q13 要求"经济和单位尽量 100%"——单位侧达标，
+经济侧在无官方表条件下的拟合极限约 75-80% 回合窗口闭合（v0.1 已到 70-79%
+的窗口闭合率），剩余缺口需要上述 (a)/(b) 之一。
+
+### 11.5 复现命令
+
+```bash
+# 1) 重生成 rounds.json（1106 局约 10 分钟；techMap 已是修复后版本）
+python tools/replay2json.py local_data/humen_replay local_data/rounds.json
+
+# 2) 正规化工件 + 全部 gate
+python tools/normalize_actions.py --rounds local_data/rounds.json \
+  --out local_data/rounds_norm.json \
+  --report local_data/normalize_report.json --diagnostic
+
+# 3) 部署对拍（sequential）与结算 oracle
+python tools/transition_replay_check.py --rounds local_data/rounds_norm.json
+python tools/transition_replay_check.py --rounds local_data/rounds_norm.json \
+  --mode settlement
+
+# 4) 撤销语义 / 经济残差探针
+python tools/probe_undo_semantics.py --rounds local_data/rounds_norm.json
+python tools/supply_residual_probe.py
+
+# 5) 测试（34 passed, 4 skipped）
+pytest tests -q
+```
+
+### 11.6 遗留与下一步建议
+
+1. **经济闭合**（优先）：拿到 Q10 官方收入表或定位隐藏资金流，目标
+   rejected < 200、supply_exact ≥ 90%；
+2. **T8 补全**：29 组 ChooseAdvanceTeam → 初始 units/officers/reactorCore
+   显式表（配合 `开局明细.md` 血量表），解除 r0→r1 边界跳过；
+3. **残余 spawn（0.3%）**：47 个计数器失配回合的额外刷兵无 officer 痕迹，
+   样本太小无法归因，随 T8 一起看；
+4. **4001 族科技**：~340 次 `UNSUPPORTED_RULE_DATA` 分桶，需要 gamedata 补
+   该族单位的科技定义；
+5. **审计游戏接口**：rounds_norm 已就绪，可启动
+   `transition前后端审计游戏任务书.md` 的"历史动作驱动对手"。
