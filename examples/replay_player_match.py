@@ -23,9 +23,8 @@ except Exception:
 
 from pysim.gamedata import GameData
 from pysim.transition import (ReplayAdapter, Economy, TransitionEnv,
-                              canonicalize_plan, state_digest,
+                              Income200r, canonicalize_plan, state_digest,
                               EnvironmentState, PlayerState, Phase)
-from pysim.transition.replay_adapter import ReplayAdapter as RA
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -50,9 +49,7 @@ def main():
     eco = Economy(gd)
     adapter = ReplayAdapter(args.rounds)
     g = adapter.game(args.game)
-    incomes, approx = adapter.derive_incomes(g, eco)
-    for key in approx:
-        incomes[key] = 2000      # safety pad on underived rounds
+    income_policy = Income200r()
 
     state = adapter.environment_state(args.game, args.start_round, economy=eco)
     env = TransitionEnv(gd, eco)
@@ -82,14 +79,16 @@ def main():
         reports = []
         any_rejected = False
         for side in (0, 1):
-            raw = RA.round_actions(g, side, round_no)
-            # sequential counter tracking: index hint from our own state
-            live_max = max((u.replay_index for u in s.players[side].units
-                            if u.replay_index is not None), default=-1)
+            acts, nrep = adapter.norm_actions(g, side, round_no)
+            for e in acts:
+                if e.get("t") == "passthrough" and \
+                        e.get("raw_type") == "ActiveBlueprint" and \
+                        str((e.get("raw_rec") or {}).get("ID")) == "1":
+                    income_policy.record_fast_supply(side, round_no + 1)
             try:
                 plan, rep = canonicalize_plan(
-                    side, raw, s.players[side], economy=eco,
-                    first_new_index=live_max + 1)
+                    side, acts, s.players[side], economy=eco,
+                    norm_report=nrep)
                 reports.append(rep)
             except Exception as ex:                    # noqa: BLE001
                 print("round %d side %d canonicalize failed: %r" % (
@@ -101,7 +100,9 @@ def main():
                 plans.append(plan)
         if stop_reason == "canonicalize_error":
             break
-        inc = (incomes.get((0, round_no), 0), incomes.get((1, round_no), 0))
+        inc = tuple(income_policy.income(
+            side, s.players[side], round_no,
+            s.players[side].pre_round_fight_result) for side in (0, 1))
         step = env.step_joint(*plans, battle_seed=rng.randrange(1 << 30),
                               incomes=inc)
         rej = [[(r.kind, r.reason_code) for r in rs

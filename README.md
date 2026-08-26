@@ -33,9 +33,10 @@ pip install -r requirements.txt
 start_server.bat            # Windows；Linux/macOS: ./start_server.sh
 # 打开 http://127.0.0.1:8300/        布阵沙盘（拖卡布阵 + 回放导入 + 模拟）
 # 打开 http://127.0.0.1:8300/bench   benchmark 播放器（逐场对拍回放）
+# 打开 http://127.0.0.1:8300/game    审计游戏（transition 多回合适玩, 见下文）
 
 python benchmarks/run.py --lib all    # 全库对拍一致率（当前 ≈76.3%）
-pytest tests -q                       # 引擎单元测试
+pytest tests -q                       # 引擎 + transition + /game 测试
 ```
 
 ## Benchmark 现状
@@ -132,14 +133,17 @@ r10+ 样本很小仅作参考。复现：转换后跑
 
 ```
 pysim/          战斗引擎（engine.py ~4000 行 numpy SoA 模拟器；纯 Python，Linux 通用）
-web/            FastAPI 服务 + 前端（static/index.html 沙盘、static/bench.html 播放器）
-data/           gamedata 数值表、calib 校准溯源、8 库场景与 oracle 真值、samples/ 小样例语料
+pysim/transition/  外围规则状态转移（部署/战斗适配/结算/开局/能力分类器）
+web/            FastAPI 服务 + 前端（index.html 沙盘、bench.html 播放器、
+                game.html 审计游戏 + game_service/game_library/game_api）
+data/           gamedata 数值表、calib 校准溯源、8 库场景与 oracle 真值、
+                game/opening_catalog.json 开局包、samples/ 小样例语料（含 replay_game）
 benchmarks/     批量对拍脚本（run.py）与用法
 examples/       接入示例（replay_round.py：加载 rounds 语料重放单局/单回合）
-tests/          pytest 单元测试
-tools/          数据生成器留档（gamedata/回放解析管线，仅标准库）
-information/    文档（RL 路线、benchmark、engine opts）
-local_data/     本地大数据（完整回放语料，gitignored；见其 README）
+tests/          pytest 单元测试（transition/ 引擎 / /game API）
+tools/          数据生成器留档（gamedata/回放解析/正规化/开局 catalog/游戏库管线）
+information/    文档（RL 路线、benchmark、engine opts、transition 任务书）
+local_data/     本地大数据（完整回放语料与 replay_game 游戏库，gitignored）
 ```
 
 回放语料回落加载：`local_data/rounds_new11.json` → `local_data/rounds.json`
@@ -148,36 +152,62 @@ local_data/     本地大数据（完整回放语料，gitignored；见其 READM
 
 ## 已知边界
 
-- transition 收入规则仍以回放注入方式运行，精确收入公式（基础收入 +
-  胜负奖励 + 经济专家）待逆向；其余见 Transition v0 一节
+- transition 经济模型主结构已验证（收入 200×r + 专家增量，购买/科技/解锁/装置/
+  蓝图定价实证），少数对局存在不可观测的额外资金流，`supply_exact_rate` 36.6%
+  跟踪中（`information/transition-v0.1正规化任务书.md` §6.5）
 - oracle 注入管线（Windows 绑定）不在本仓库；`data/exp/` 真值为其定版产物
 - s29cal / s26 一致率仍低（47% / 63%），差异可在 `/bench` 页逐场回放定位
 
-## Transition v0（外围规则状态转移）
+## Transition v0.1（外围规则状态转移 + 去撤销正规化）
 
-`pysim/transition/` 实现了任务书（`information/transition实现任务书.md`）的
-v0 闭环：结构化 `EnvironmentState`（1 基等级、稳定 entity_id、冻结 schema）→
-canonical 动作计划（Undo 折叠、买/升/移/解锁/科技/卖/FinishDeploy/增援授予）
-→ pysim 战斗适配器（entity↔card 映射、逐卡经验/伤害、存活价值扣血
-`pysim_survivor_value_v1`）→ 结算（HP/胜负/经验回写、战斗末自动升级）→
-回合推进（收入策略版本化：回放注入 / sandbox 固定）。所有动作返回
-receipt + reason code + 资金账本，非法动作不改状态。
+`pysim/transition/` 在 v0 闭环（结构化 state → canonical 动作 → pysim 战斗适配 →
+结算 → 回合推进，动作 receipt + reason code + 资金账本，非法动作不改状态）之上，
+v0.1 把 **Undo/CancelRelease 的折叠前置**为独立正规化工件并精确化单位引用：
 
-语料实测（1106 局 / 13222 个普通回合，2026-08-26）：
+- `pysim/transition/normalize.py`：栈式撤销折叠（全部动作类型可撤销，用户裁决
+  Q1-Q9）、多单位移动原子拆分、授予卡展开、顺序 unitIndex 计数器
+  （买/授予分配、撤销回收、出售烧毁）、开局队伍延迟赠礼表、引用解析
+  （失败进 `unresolved_refs`，无任何 uid 领养/下一快照启发式）；
+- `tools/normalize_actions.py`：生成可审计的 `rounds_norm.json` 工件
+  （无撤销原子动作流 + 计数器 + 报告，字节确定）；
+- `ReplayAdapter` 优先加载正规化流（回落 raw 时现场正规化并警告）；
+  `canonicalize_plan` 只做类型映射；deploy 对 Undo 输入抛
+  `UNDO_IN_NORM_STREAM`（防御）；
+- 经济模型 `Income200r`：收入 200×r + 专家增量 + 快速补给债 −300 + 放弃增援
+  +50；价格侧含强化卡修正表、精英 +1 级收费、高效制造折扣、科技阶梯、
+  蓝图/装置/塔强化费用。
 
-- 回放导入率 100%（零 KeyError / 零崩溃），17 类 raw action 全部进 registry；
-- 部署对拍（单位集合逐字段 exact，容忍战斗末自动升级）：**10279/13222 = 77.7%**，
-  剩余差异主要来自跨回合 unitIndex 烧毁歧义与经济专家折扣（见
-  `tools/transition_replay_check.py --report`）。
+全量语料实测（1106 局，2026-08-26）：
+
+| 指标 | 数值 |
+|---|---|
+| 正规化：undo/cancel 折叠 | 16680 / 1848 全部折叠，零 crash，两次运行 MD5 一致 |
+| 正规化：`unresolved_refs` 非空回合 | 48/20282 = **0.24%** |
+| 顺序计数器（counter_end vs 下一快照 unitIndex） | **99.70%**（滚动衔接 r≥2 为 100%） |
+| spawn 集合对拍 | 99.54% |
+| 部署对拍 unit-set exact | **11053/12960 = 85.3%**（干净回合 **99.03%**） |
+| settlement oracle：hp / 胜负 / 经验 | **100% / 100% / 100%**（13104 样本） |
+| supply_exact_rate | 36.6%（经济残余见任务书 §6.5） |
 
 ```bash
-# T0: action 类型 census（未知类型 --strict 非零退出）
-python tools/transition_action_census.py --rounds local_data/rounds.json \
-    --out /tmp/transition_census.json
+# 1) 正规化：rounds.json (raw) -> rounds_norm.json（去撤销工件 + 报告）
+python tools/normalize_actions.py --rounds local_data/rounds.json \
+    --out local_data/rounds_norm.json --report local_data/normalize_report.json \
+    --diagnostic
 
-# T8: 部署 transition 对拍（oracle 模式，逐回合 vs 下一快照）
-python tools/transition_replay_check.py --rounds local_data/rounds.json \
+# 2) 部署对拍（--sequential 默认开：计数器/收入不读下一快照）
+python tools/transition_replay_check.py --rounds local_data/rounds_norm.json \
     --report /tmp/transition_report.json
+
+# 3) settlement oracle：FightReport 对拍 hp/胜负/经验
+python tools/transition_replay_check.py --rounds local_data/rounds_norm.json \
+    --mode settlement
+
+# 4) 撤销语义探针（§4 裁决表数据）
+python tools/probe_undo_semantics.py --rounds local_data/rounds_norm.json
+
+# 5) 经济残差归因探针
+python tools/supply_residual_probe.py
 
 # 终点 A: 玩家回放反事实重赛（状态只初始化一次，战斗全部来自 pysim）
 python examples/replay_player_match.py --rounds data/samples/rounds.json \
@@ -187,10 +217,63 @@ python examples/replay_player_match.py --rounds data/samples/rounds.json \
 python examples/random_rollout.py --episodes 100 --seed 7 \
     --report /tmp/random_rollout_report.json
 
-pytest tests/transition -q        # transition 单元测试
+pytest tests -q                   # 34 passed（transition 24 + 引擎 10）
 ```
 
-v0 明确的未支持机制（receipt 记录 `UNSUPPORTED_ACTION`，不静默）：战场技能/
-装置/装备/塔强化/蓝图（除 快速补给+200、强化训练 充能经验外）、
-`ChooseAdvanceTeam`（round 0 特殊回合）、GiveUp。回放模式收入逐回合注入并在
-trajectory 的 `injected_income` 中显式记录。
+v0.1 明确的未支持机制（receipt 记录 `UNSUPPORTED_ACTION`，不静默）：战场技能/
+装置/装备/塔强化/蓝图的效果建模（费用已计）、`ChooseAdvanceTeam`（round 0 特殊
+回合，含 r0→r1 计数器边界）、GiveUp（终局标记）。
+
+## 审计游戏 /game（transition 多回合适玩）
+
+[`information/transition前后端审计游戏任务书.md`](information/transition前后端审计游戏任务书.md)
+的 v1 实现：`http://127.0.0.1:8300/game` 上由 transition 掌管唯一真状态的本地前后端游戏——
+你接管一局真实回放的一方自由操作，另一方严格执行其历史策略，逐动作、逐回合审查：
+
+```text
+round 0 开局(4 选 1: 历史项固定原位 + 3 个确定性生成项)
+  → 回合开始收入(200×r + 专家) → 增援四选一(回放真实 4 候选)
+  → 部署(买兵/移动/升级/科技/解锁/塔强化/蓝图/能量塔技能/战场技能/回收)
+  → 对手历史动作原子执行(升级前经验补齐 override, 失败即 BLOCKED)
+  → 一次 pysim 战斗(trace + BattleOutcome 同源) → HP/经验/reward 结算
+  → 下一回合 / 终局 / 明确报告的 unsupported BLOCKED
+```
+
+三层架构（任务书 §2）：transition 层（`pysim/transition/`，唯一状态写入者，含
+`opening.py` 开局包执行与 `capability.py` 能力分类器）→ 会话层（`web/game_service.py`
+版本化 command 事务、`web/game_library.py` manifest+惰性 shard）→ 前端
+（`web/static/game.html`，服务器返回的权威 GameView 重绘，六个审计面板：
+双方 receipts / 资金账本 / state diff+digest / 历史动作对照 / pysim 战斗结果与播放）。
+
+```bash
+# 1) 构建开局 catalog（29 支队伍, ChooseAdvanceTeam -> round1 证据归纳; ~2 分钟）
+python tools/build_opening_catalog.py --replay-dir local_data/humen_replay \
+    --out data/game/opening_catalog.json
+
+# 2) 构建游戏库（manifest + 单局 shard + 逐选项能力扫描; 1106 局约 45 秒）
+python tools/build_game_library.py --replay-dir local_data/humen_replay \
+    --out local_data/replay_game
+#    仓库内小样例: data/samples/replay_game/（3 局 fixture, 测试用）
+#    加载优先级 local_data/replay_game → data/samples/replay_game; 全缺失时
+#    /game 显示 corpus_available=false, 其余页面不受影响
+
+# 3) 打开 http://127.0.0.1:8300/game
+pytest tests/test_game_api.py -q     # API/会话/验收/快照污染测试
+```
+
+API：`GET /api/game/replays?min_rounds=5`（含每选项可玩前缀 + blockers）、
+`POST /api/game/sessions`、`GET/DELETE /api/game/sessions/{id}`、
+`POST /api/game/sessions/{id}/commands`（`expected_version` 乐观并发，策略非法动作
+返回 rejected receipt 不 bump 版本，409 STALE_SESSION_VERSION / 404 / BLOCKED 稳定码）。
+
+v1 能力边界（capability scanner 与运行时同一分类器，严格镜像）：已完整建模——
+买/移动/升级/科技/解锁/回收、增援卡（单位获得/强化/专家/技能库存）、蓝图全部 7 种
+（快速补给/批量征召/精英征召/攻防强化 I·II）、塔强化（持久等级）、能量塔技能 5/6、
+装置 10001/20001、战场技能（skills.py 已映射表）、强化训练；未支持即阻塞——
+**装备卡（engine 无装备机制，仅扣费的接受会构成半效果，已改为拒绝）**、
+未映射战场技能与能量塔技能 1/3/4、装置 30001。1106 局语料中可连续 ≥5 回合的严格
+选项当前为 0（装备卡在 R4-R5 的候选/选取密度是主要墙），最佳可玩前缀 R4；"受限开始"
+允许从前缀 ≥3 的选项开始，运行到前缀尽头以 scanner 预测的同一 blocker 精确 BLOCKED
+（`tests/test_game_api.py::test_acceptance_flow_rounds_1_to_prefix_end` 断言该一致性，
+本 fixture 在固定 seed 下由 pysim 提前终局时亦满足任务书 0.1.6 验收路径）。
+

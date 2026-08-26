@@ -135,7 +135,8 @@ def state_from_dict(d: dict) -> EnvironmentState:
         p["unlocked_mechs"] = frozenset(p["unlocked_mechs"])
         p["tech_map"] = tuple((int(m), tuple(t)) for m, t in p["tech_map"])
         for k in ("officers", "blueprints", "commander_skills_raw",
-                  "constructions_raw"):
+                  "constructions_raw", "tower_mods_raw", "devices_raw",
+                  "skill_events_raw"):
             p[k] = tuple(p.get(k) or ())
         p["tower_strengthen"] = tuple(p.get("tower_strengthen") or (0, 0))
         p["pre_round_fight_result"] = p.get("pre_round_fight_result")

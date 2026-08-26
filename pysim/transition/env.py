@@ -109,6 +109,9 @@ class TransitionEnv:
             s = self._inject_income(s, incomes)
         dep = deploy_transition(s, (plan0, plan1), self.eco)
         self._state = dep.state
+        # fast-supply debts: blueprint 1 activations survive the round ->
+        # next round's income owes -300 each (Income200r.fast_debts)
+        self._record_fast_supply(dep.ledgers, s.round)
         if dep.state.phase is not Phase.PRE_BATTLE:
             return StepResult(state=dep.state, reward=(0.0, 0.0), done=False,
                               deploy_receipts=dep.receipts, ledgers=dep.ledgers,
@@ -116,28 +119,83 @@ class TransitionEnv:
                               state_digest=state_digest(dep.state),
                               info={"phase": dep.state.phase.value,
                                     "unsupported": dep.unsupported_types})
+        return self._battle_settle_advance(dep, battle_seed)
+
+    def finish_round(self, battle_seed: int | None = None,
+                     with_trace: bool = False) -> StepResult:
+        """Interactive path: battle+settle+advance once both players finished
+        deploying (state already PRE_BATTLE after the last END_DEPLOY).
+        Same single simulate as step_joint; with_trace additionally returns
+        the engine trace in info (settlement never parses it)."""
+        s = self.state
+        if s.phase is not Phase.PRE_BATTLE:
+            raise errors.TransitionError(errors.WRONG_PHASE,
+                                         "finish_round needs PRE_BATTLE state")
+        from .deploy import DeployResult
+        dep = DeployResult(
+            state=s, receipts=((), ()), ledgers=self._round_ledgers(),
+            unsupported_types=())
+        return self._battle_settle_advance(dep, battle_seed,
+                                           with_trace=with_trace)
+
+    def add_incomes(self, incomes: tuple[int, int]):
+        """Public income injection at deploy start (round 1 after the
+        opening; mirrors step_joint's income timing)."""
+        s = self.state
+        if s.phase is not Phase.DEPLOYMENT:
+            raise errors.TransitionError(errors.WRONG_PHASE,
+                                         "add_incomes needs DEPLOYMENT")
+        self._state = self._inject_income(s, incomes)
+
+    def _round_ledgers(self):
+        """Zero-entry ledgers for the finish_round path (per-action deploy
+        calls already recorded their entries; the caller aggregates them)."""
+        from .economy import SupplyLedger
+        return tuple(SupplyLedger(supply_before=p.supply)
+                     for p in self.state.players)
+
+    def _record_fast_supply(self, ledgers, round_no: int):
+        if hasattr(self.income_policy, "record_fast_supply"):
+            for side, led in enumerate(ledgers):
+                n_fast = sum(1 for e in led.entries
+                             if e.reason == "blueprint_loan:+200")
+                if n_fast:
+                    self.income_policy.record_fast_supply(
+                        side, round_no + 1, n_fast)
+
+    def _battle_settle_advance(self, dep, battle_seed, with_trace: bool = False,
+                               incomes=None) -> StepResult:
         if battle_seed is None:
             import random
             battle_seed = random.randrange(1 << 30)
         outcome = run_battle(dep.state, self.gd, battle_seed,
-                             opts=self.battle_opts)
+                             opts=self.battle_opts, with_trace=with_trace)
+        trace_extra = None
+        if with_trace:
+            outcome, trace_extra = outcome
         st = settle_transition(dep.state, outcome, max_round=self.max_round,
                                eco=self.eco)
         if st.done:
             self._state = st.state
         else:
-            inc = incomes if incomes is not None else self._next_incomes(st.state)
-            self._state = advance_round(st.state, self.income_policy, inc,
+            # incomes==None lets advance_round ask the policy for the NEW
+            # round (settled.round + 1); precomputing here would be off by
+            # one (income lands at the deploy start of the incoming round)
+            self._state = advance_round(st.state, self.income_policy, incomes,
                                         max_round=self.max_round)
+        info = {"settled_digest": st.state_digest,
+                "winner": outcome.winner,
+                "damage": tuple(outcome.damage_to_player),
+                "incomes": self._incomes_used,
+                "unsupported": dep.unsupported_types}
+        if trace_extra is not None:
+            info["trace"] = trace_extra["trace"]
+            info["battle_extra"] = trace_extra
         return StepResult(
             state=self._state, reward=st.reward, done=st.done,
             deploy_receipts=dep.receipts, ledgers=dep.ledgers,
             battle_outcome=outcome, state_digest=state_digest(self._state),
-            info={"settled_digest": st.state_digest,
-                  "winner": outcome.winner,
-                  "damage": tuple(outcome.damage_to_player),
-                  "incomes": self._incomes_used,
-                  "unsupported": dep.unsupported_types})
+            info=info)
 
     def _next_incomes(self, state: EnvironmentState):
         if self.income_policy is None:

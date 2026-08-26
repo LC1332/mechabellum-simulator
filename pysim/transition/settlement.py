@@ -120,7 +120,10 @@ def advance_round(settled: EnvironmentState,
             inc = 0
         players.append(PlayerState(**{**p.__dict__,
                                       "supply": p.supply + inc,
-                                      "bought_this_round": 0}))
+                                      "bought_this_round": 0,
+                                      "tower_mods_raw": (),
+                                      "devices_raw": (),
+                                      "skill_events_raw": ()}))
     return EnvironmentState(
         schema_version=settled.schema_version,
         ruleset_version=settled.ruleset_version,

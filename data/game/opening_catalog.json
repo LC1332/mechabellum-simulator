@@ -1,0 +1,1573 @@
+{
+ "schema_version": "opening_catalog_v1",
+ "generator": "tools/build_opening_catalog.py",
+ "package_count": 29,
+ "packages": {
+  "9894": {
+   "team_id": 9894,
+   "name": "开局#9894 [成本控制专家] 3×弧光+2×剑齿虎",
+   "evidence_games": 81,
+   "formation_variants": 2,
+   "officers": [
+    20034
+   ],
+   "hp": 4400,
+   "supply": 0,
+   "unlocked": [
+    15,
+    21
+   ],
+   "units": [
+    {
+     "mech": 15,
+     "level": 1,
+     "formation": [
+      [
+       0.0,
+       160.0
+      ],
+      [
+       -20.0,
+       160.0
+      ],
+      [
+       0.0,
+       180.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 21,
+     "level": 1,
+     "formation": [
+      [
+       -25.0,
+       185.0
+      ],
+      [
+       -5.0,
+       135.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9901": {
+   "team_id": 9901,
+   "name": "开局#9901 [犀牛专家] 3×魔眼+2×狼蛛",
+   "evidence_games": 84,
+   "formation_variants": 3,
+   "officers": [
+    20033
+   ],
+   "hp": 5000,
+   "supply": 0,
+   "unlocked": [
+    24,
+    30
+   ],
+   "units": [
+    {
+     "mech": 30,
+     "level": 1,
+     "formation": [
+      [
+       0.0,
+       160.0
+      ],
+      [
+       0.0,
+       180.0
+      ],
+      [
+       0.0,
+       140.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 24,
+     "level": 1,
+     "formation": [
+      [
+       -35.0,
+       165.0
+      ],
+      [
+       -5.0,
+       205.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9877": {
+   "team_id": 9877,
+   "name": "开局#9877 [长弓专家] 3×尖牙+2×铁锤",
+   "evidence_games": 48,
+   "formation_variants": 4,
+   "officers": [
+    20029
+   ],
+   "hp": 4700,
+   "supply": 0,
+   "unlocked": [
+    9,
+    13
+   ],
+   "units": [
+    {
+     "mech": 9,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       160.0
+      ],
+      [
+       5.0,
+       180.0
+      ],
+      [
+       5.0,
+       140.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 13,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       200.0
+      ],
+      [
+       -45.0,
+       160.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9871": {
+   "team_id": 9871,
+   "name": "开局#9871 [快速补给专家] 3×长弓+2×铁锤",
+   "evidence_games": 83,
+   "formation_variants": 2,
+   "officers": [
+    10010
+   ],
+   "hp": 4400,
+   "supply": 0,
+   "unlocked": [
+    2,
+    13
+   ],
+   "units": [
+    {
+     "mech": 2,
+     "level": 1,
+     "formation": [
+      [
+       0.0,
+       160.0
+      ],
+      [
+       -20.0,
+       160.0
+      ],
+      [
+       0.0,
+       180.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 13,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       140.0
+      ],
+      [
+       35.0,
+       160.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9910": {
+   "team_id": 9910,
+   "name": "开局#9910 [补给专家] 3×磁暴+2×火獾",
+   "evidence_games": 64,
+   "formation_variants": 2,
+   "officers": [
+    10002
+   ],
+   "hp": 4600,
+   "supply": 0,
+   "unlocked": [
+    20,
+    31
+   ],
+   "units": [
+    {
+     "mech": 31,
+     "level": 1,
+     "formation": [
+      [
+       0.0,
+       160.0
+      ],
+      [
+       -20.0,
+       160.0
+      ],
+      [
+       0.0,
+       180.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 20,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       140.0
+      ],
+      [
+       35.0,
+       160.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9909": {
+   "team_id": 9909,
+   "name": "开局#9909 [快速补给专家] 3×磁暴+2×狼蛛",
+   "evidence_games": 59,
+   "formation_variants": 2,
+   "officers": [
+    10010
+   ],
+   "hp": 5100,
+   "supply": 0,
+   "unlocked": [
+    24,
+    31
+   ],
+   "units": [
+    {
+     "mech": 31,
+     "level": 1,
+     "formation": [
+      [
+       0.0,
+       160.0
+      ],
+      [
+       -20.0,
+       160.0
+      ],
+      [
+       0.0,
+       180.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 24,
+     "level": 1,
+     "formation": [
+      [
+       -25.0,
+       185.0
+      ],
+      [
+       -5.0,
+       135.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9906": {
+   "team_id": 9906,
+   "name": "开局#9906 [增幅专家] 3×魔眼+2×火獾",
+   "evidence_games": 65,
+   "formation_variants": 4,
+   "officers": [
+    10013
+   ],
+   "hp": 5000,
+   "supply": 0,
+   "unlocked": [
+    20,
+    30
+   ],
+   "units": [
+    {
+     "mech": 30,
+     "level": 1,
+     "formation": [
+      [
+       0.0,
+       160.0
+      ],
+      [
+       0.0,
+       180.0
+      ],
+      [
+       0.0,
+       140.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 20,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       200.0
+      ],
+      [
+       5.0,
+       120.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9895": {
+   "team_id": 9895,
+   "name": "开局#9895 [巨型专家] 3×猎犬+2×铁锤",
+   "evidence_games": 46,
+   "formation_variants": 4,
+   "officers": [
+    20005
+   ],
+   "hp": 4700,
+   "supply": 0,
+   "unlocked": [
+    13,
+    28
+   ],
+   "units": [
+    {
+     "mech": 28,
+     "level": 1,
+     "formation": [
+      [
+       0.0,
+       160.0
+      ],
+      [
+       0.0,
+       180.0
+      ],
+      [
+       0.0,
+       140.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 13,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       200.0
+      ],
+      [
+       45.0,
+       160.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9903": {
+   "team_id": 9903,
+   "name": "开局#9903 [巨型专家] 3×尖牙+2×火獾",
+   "evidence_games": 46,
+   "formation_variants": 4,
+   "officers": [
+    20005
+   ],
+   "hp": 4700,
+   "supply": 0,
+   "unlocked": [
+    9,
+    20
+   ],
+   "units": [
+    {
+     "mech": 9,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       160.0
+      ],
+      [
+       5.0,
+       140.0
+      ],
+      [
+       5.0,
+       180.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 20,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       200.0
+      ],
+      [
+       -45.0,
+       160.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9885": {
+   "team_id": 9885,
+   "name": "开局#9885 [导弹专家] 3×弧光+2×铁锤",
+   "evidence_games": 69,
+   "formation_variants": 2,
+   "officers": [
+    10011
+   ],
+   "hp": 4400,
+   "supply": 0,
+   "unlocked": [
+    13,
+    15
+   ],
+   "units": [
+    {
+     "mech": 15,
+     "level": 1,
+     "formation": [
+      [
+       0.0,
+       160.0
+      ],
+      [
+       -20.0,
+       160.0
+      ],
+      [
+       0.0,
+       180.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 13,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       140.0
+      ],
+      [
+       35.0,
+       160.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9896": {
+   "team_id": 9896,
+   "name": "开局#9896 [成本控制专家] 3×猎犬+2×野马",
+   "evidence_games": 57,
+   "formation_variants": 4,
+   "officers": [
+    20034
+   ],
+   "hp": 5000,
+   "supply": 0,
+   "unlocked": [
+    7,
+    28
+   ],
+   "units": [
+    {
+     "mech": 28,
+     "level": 1,
+     "formation": [
+      [
+       0.0,
+       160.0
+      ],
+      [
+       0.0,
+       180.0
+      ],
+      [
+       0.0,
+       140.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 7,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       200.0
+      ],
+      [
+       5.0,
+       120.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9890": {
+   "team_id": 9890,
+   "name": "开局#9890 [补给专家] 3×尖牙+2×狼蛛",
+   "evidence_games": 77,
+   "formation_variants": 3,
+   "officers": [
+    10002
+   ],
+   "hp": 4300,
+   "supply": 0,
+   "unlocked": [
+    9,
+    24
+   ],
+   "units": [
+    {
+     "mech": 9,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       160.0
+      ],
+      [
+       5.0,
+       180.0
+      ],
+      [
+       5.0,
+       140.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 24,
+     "level": 1,
+     "formation": [
+      [
+       -35.0,
+       165.0
+      ],
+      [
+       -5.0,
+       205.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9907": {
+   "team_id": 9907,
+   "name": "开局#9907 [成本控制专家] 3×磁暴+2×铁锤",
+   "evidence_games": 37,
+   "formation_variants": 2,
+   "officers": [
+    20034
+   ],
+   "hp": 4600,
+   "supply": 0,
+   "unlocked": [
+    13,
+    31
+   ],
+   "units": [
+    {
+     "mech": 31,
+     "level": 1,
+     "formation": [
+      [
+       0.0,
+       160.0
+      ],
+      [
+       -20.0,
+       160.0
+      ],
+      [
+       0.0,
+       140.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 13,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       180.0
+      ],
+      [
+       35.0,
+       160.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9892": {
+   "team_id": 9892,
+   "name": "开局#9892 [快速补给专家] 3×爬虫+2×剑齿虎",
+   "evidence_games": 76,
+   "formation_variants": 3,
+   "officers": [
+    10010
+   ],
+   "hp": 4400,
+   "supply": 0,
+   "unlocked": [
+    10,
+    21
+   ],
+   "units": [
+    {
+     "mech": 10,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       160.0
+      ],
+      [
+       5.0,
+       180.0
+      ],
+      [
+       5.0,
+       140.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 21,
+     "level": 1,
+     "formation": [
+      [
+       -35.0,
+       165.0
+      ],
+      [
+       -5.0,
+       205.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9873": {
+   "team_id": 9873,
+   "name": "开局#9873 [巨型专家] 3×爬虫+2×野马",
+   "evidence_games": 58,
+   "formation_variants": 4,
+   "officers": [
+    20005
+   ],
+   "hp": 5100,
+   "supply": 0,
+   "unlocked": [
+    7,
+    10
+   ],
+   "units": [
+    {
+     "mech": 10,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       160.0
+      ],
+      [
+       5.0,
+       180.0
+      ],
+      [
+       5.0,
+       140.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 7,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       200.0
+      ],
+      [
+       -45.0,
+       160.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9902": {
+   "team_id": 9902,
+   "name": "开局#9902 [台风专家] 3×猎犬+2×剑齿虎",
+   "evidence_games": 69,
+   "formation_variants": 3,
+   "officers": [
+    20039
+   ],
+   "hp": 3900,
+   "supply": 0,
+   "unlocked": [
+    21,
+    28
+   ],
+   "units": [
+    {
+     "mech": 28,
+     "level": 1,
+     "formation": [
+      [
+       0.0,
+       160.0
+      ],
+      [
+       0.0,
+       180.0
+      ],
+      [
+       0.0,
+       140.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 21,
+     "level": 1,
+     "formation": [
+      [
+       -35.0,
+       165.0
+      ],
+      [
+       -5.0,
+       205.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9891": {
+   "team_id": 9891,
+   "name": "开局#9891 [训练专家] 3×爬虫+2×狼蛛",
+   "evidence_games": 63,
+   "formation_variants": 3,
+   "officers": [
+    10014
+   ],
+   "hp": 4500,
+   "supply": 0,
+   "unlocked": [
+    10,
+    24
+   ],
+   "units": [
+    {
+     "mech": 10,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       160.0
+      ],
+      [
+       5.0,
+       180.0
+      ],
+      [
+       5.0,
+       140.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 24,
+     "level": 1,
+     "formation": [
+      [
+       -35.0,
+       165.0
+      ],
+      [
+       -5.0,
+       205.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9893": {
+   "team_id": 9893,
+   "name": "开局#9893 [增幅专家] 3×尖牙+2×剑齿虎",
+   "evidence_games": 53,
+   "formation_variants": 3,
+   "officers": [
+    10013
+   ],
+   "hp": 5200,
+   "supply": 0,
+   "unlocked": [
+    9,
+    21
+   ],
+   "units": [
+    {
+     "mech": 9,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       160.0
+      ],
+      [
+       5.0,
+       180.0
+      ],
+      [
+       5.0,
+       140.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 21,
+     "level": 1,
+     "formation": [
+      [
+       -35.0,
+       165.0
+      ],
+      [
+       -5.0,
+       205.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9905": {
+   "team_id": 9905,
+   "name": "开局#9905 [导弹专家] 3×长弓+2×火獾",
+   "evidence_games": 76,
+   "formation_variants": 2,
+   "officers": [
+    10011
+   ],
+   "hp": 4700,
+   "supply": 0,
+   "unlocked": [
+    2,
+    20
+   ],
+   "units": [
+    {
+     "mech": 2,
+     "level": 1,
+     "formation": [
+      [
+       0.0,
+       160.0
+      ],
+      [
+       -20.0,
+       160.0
+      ],
+      [
+       0.0,
+       180.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 20,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       140.0
+      ],
+      [
+       35.0,
+       160.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9904": {
+   "team_id": 9904,
+   "name": "开局#9904 [快速补给专家] 3×爬虫+2×火獾",
+   "evidence_games": 87,
+   "formation_variants": 4,
+   "officers": [
+    10010
+   ],
+   "hp": 4800,
+   "supply": 0,
+   "unlocked": [
+    10,
+    20
+   ],
+   "units": [
+    {
+     "mech": 10,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       160.0
+      ],
+      [
+       5.0,
+       140.0
+      ],
+      [
+       5.0,
+       180.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 20,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       200.0
+      ],
+      [
+       -45.0,
+       160.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9883": {
+   "team_id": 9883,
+   "name": "开局#9883 [补给专家] 3×弧光+2×钢球",
+   "evidence_games": 50,
+   "formation_variants": 2,
+   "officers": [
+    10002
+   ],
+   "hp": 4500,
+   "supply": 0,
+   "unlocked": [
+    8,
+    15
+   ],
+   "units": [
+    {
+     "mech": 15,
+     "level": 1,
+     "formation": [
+      [
+       0.0,
+       160.0
+      ],
+      [
+       -20.0,
+       160.0
+      ],
+      [
+       0.0,
+       140.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 8,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       180.0
+      ],
+      [
+       35.0,
+       160.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9875": {
+   "team_id": 9875,
+   "name": "开局#9875 [犀牛专家] 3×爬虫+2×钢球",
+   "evidence_games": 66,
+   "formation_variants": 4,
+   "officers": [
+    20033
+   ],
+   "hp": 4400,
+   "supply": 0,
+   "unlocked": [
+    8,
+    10
+   ],
+   "units": [
+    {
+     "mech": 10,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       160.0
+      ],
+      [
+       5.0,
+       180.0
+      ],
+      [
+       5.0,
+       140.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 8,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       200.0
+      ],
+      [
+       5.0,
+       120.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9874": {
+   "team_id": 9874,
+   "name": "开局#9874 [补给专家] 3×尖牙+2×钢球",
+   "evidence_games": 39,
+   "formation_variants": 4,
+   "officers": [
+    10002
+   ],
+   "hp": 5300,
+   "supply": 0,
+   "unlocked": [
+    8,
+    9
+   ],
+   "units": [
+    {
+     "mech": 9,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       160.0
+      ],
+      [
+       5.0,
+       140.0
+      ],
+      [
+       5.0,
+       180.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 8,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       200.0
+      ],
+      [
+       -45.0,
+       160.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9897": {
+   "team_id": 9897,
+   "name": "开局#9897 [快速补给专家] 3×猎犬+2×钢球",
+   "evidence_games": 44,
+   "formation_variants": 4,
+   "officers": [
+    10010
+   ],
+   "hp": 5200,
+   "supply": 0,
+   "unlocked": [
+    8,
+    28
+   ],
+   "units": [
+    {
+     "mech": 28,
+     "level": 1,
+     "formation": [
+      [
+       0.0,
+       160.0
+      ],
+      [
+       0.0,
+       180.0
+      ],
+      [
+       0.0,
+       140.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 8,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       200.0
+      ],
+      [
+       45.0,
+       160.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9900": {
+   "team_id": 9900,
+   "name": "开局#9900 [巨型专家] 3×魔眼+2×野马",
+   "evidence_games": 33,
+   "formation_variants": 4,
+   "officers": [
+    20005
+   ],
+   "hp": 5200,
+   "supply": 0,
+   "unlocked": [
+    7,
+    30
+   ],
+   "units": [
+    {
+     "mech": 30,
+     "level": 1,
+     "formation": [
+      [
+       0.0,
+       160.0
+      ],
+      [
+       0.0,
+       140.0
+      ],
+      [
+       0.0,
+       180.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 7,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       200.0
+      ],
+      [
+       45.0,
+       160.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9889": {
+   "team_id": 9889,
+   "name": "开局#9889 [训练专家] 3×长弓+2×狼蛛",
+   "evidence_games": 84,
+   "formation_variants": 2,
+   "officers": [
+    10014
+   ],
+   "hp": 5200,
+   "supply": 0,
+   "unlocked": [
+    2,
+    24
+   ],
+   "units": [
+    {
+     "mech": 2,
+     "level": 1,
+     "formation": [
+      [
+       0.0,
+       160.0
+      ],
+      [
+       -20.0,
+       160.0
+      ],
+      [
+       0.0,
+       180.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 24,
+     "level": 1,
+     "formation": [
+      [
+       -25.0,
+       185.0
+      ],
+      [
+       -5.0,
+       135.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9879": {
+   "team_id": 9879,
+   "name": "开局#9879 [犀牛专家] 3×爬虫+2×铁锤",
+   "evidence_games": 53,
+   "formation_variants": 4,
+   "officers": [
+    20033
+   ],
+   "hp": 4300,
+   "supply": 0,
+   "unlocked": [
+    10,
+    13
+   ],
+   "units": [
+    {
+     "mech": 10,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       160.0
+      ],
+      [
+       5.0,
+       180.0
+      ],
+      [
+       5.0,
+       140.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 13,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       200.0
+      ],
+      [
+       -45.0,
+       160.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9908": {
+   "team_id": 9908,
+   "name": "开局#9908 [重装专家] 3×磁暴+2×野马",
+   "evidence_games": 37,
+   "formation_variants": 2,
+   "officers": [
+    20035
+   ],
+   "hp": 5000,
+   "supply": 0,
+   "unlocked": [
+    7,
+    31
+   ],
+   "units": [
+    {
+     "mech": 31,
+     "level": 1,
+     "formation": [
+      [
+       0.0,
+       160.0
+      ],
+      [
+       -20.0,
+       160.0
+      ],
+      [
+       0.0,
+       140.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 7,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       180.0
+      ],
+      [
+       35.0,
+       160.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  },
+  "9899": {
+   "team_id": 9899,
+   "name": "开局#9899 [补给专家] 3×魔眼+2×铁锤",
+   "evidence_games": 28,
+   "formation_variants": 4,
+   "officers": [
+    10002
+   ],
+   "hp": 5000,
+   "supply": 0,
+   "unlocked": [
+    13,
+    30
+   ],
+   "units": [
+    {
+     "mech": 30,
+     "level": 1,
+     "formation": [
+      [
+       0.0,
+       160.0
+      ],
+      [
+       0.0,
+       180.0
+      ],
+      [
+       0.0,
+       140.0
+      ]
+     ],
+     "is_rotate": false
+    },
+    {
+     "mech": 13,
+     "level": 1,
+     "formation": [
+      [
+       5.0,
+       200.0
+      ],
+      [
+       45.0,
+       160.0
+      ]
+     ],
+     "is_rotate": false
+    }
+   ],
+   "tech_map": {},
+   "constructions": [],
+   "commander_skills": []
+  }
+ }
+}

@@ -190,6 +190,11 @@ def parse_units(parent, tag):
         out.append(parse_unit_el(u))
     return out
 
+def _opt_int(el, default=None):
+    # optional counter export: missing tag -> default (not 0, 0 is meaningful)
+    return to_int(el, default) if el is not None else default
+
+
 def parse_player_round(prr):
     pd = prr.find("playerData")
     rs = pd.find("randomStateData")
@@ -203,6 +208,8 @@ def parse_player_round(prr):
     ets = pd.find("energyTowerSkills")
     tsl = pd.find("towerStrengthenLevels")
     csd = pd.find("constructionSnapshotDatas")
+    shop = pd.find("shop")
+    unlocked = shop.find("unlockedUnits") if shop is not None else None
     return {
         "round": int(txt(prr.find("round"), "0")),
         "reactorCore": int(txt(pd.find("reactorCore"), "0")),
@@ -211,6 +218,17 @@ def parse_player_round(prr):
         "rng": [to_int(e) for e in rs.find("randomStates")] if rs is not None else [],
         "units": parse_units(pd, "units"),
         "techs": [to_int(e) for e in techs] if techs is not None else [],
+        # v0.1 counters (transition-v0.1正规化任务书 T1): unitIndex is the
+        # game's NEXT allocatable unit Index (== maxlive+1 verified on 662
+        # snapshots; burned indexes from sells create holes below it).
+        # contraption/construction counters exported for later use only.
+        "unit_index": _opt_int(pd.find("unitIndex")),
+        "contraption_index": _opt_int(pd.find("contraptionIndex")),
+        "construction_index": _opt_int(pd.find("constructionIndex")),
+        # shop/unlockedUnits is the AUTHORITATIVE unlock set (v0 derived it
+        # from whole-game buy scans; this replaces that approximation)
+        "unlocked_units": [to_int(e) for e in unlocked] if unlocked is not None else None,
+        "shop_buy_count": _opt_int(shop.find("BuyCount")) if shop is not None else None,
         # step9: officers (specialists; 10009 = Quick Teleport -> flank
         # teleport 10s -> 5s) and research-center blueprints (1-9/401/501/1001+)
         "officers": [to_int(e) for e in off] if off is not None else [],
@@ -310,6 +328,11 @@ def convert(path, tech_prev):
         active_techs = {}   # mech id -> ordered bought tech ids (cumulative)
         for rr in pr.find("playerRoundRecords").findall("PlayerRoundRecord"):
             rec = parse_player_round(rr)
+            # techMap is the PRE-deploy state: it must NOT contain techs
+            # bought during this round's own deploy (v0.1 fix: charging the
+            # tech staircase needs the before-round active count)
+            rec["techMap"] = fold_tech_chains(
+                {m: list(t) for m, t in active_techs.items()}, tech_prev)
             rec["actions"] = parse_action_records(rr)
             for a in rec["actions"]:
                 if a["type"] == "UpgradeTechnology":
@@ -318,7 +341,6 @@ def convert(path, tech_prev):
                     lst = active_techs.setdefault(uid, [])
                     if tid not in lst:
                         lst.append(tid)
-            rec["techMap"] = fold_tech_chains(active_techs, tech_prev)
             rec["techActions"] = [(a.get("UID", 0), a.get("TechID", 0))
                                   for a in rec["actions"] if a["type"] == "UpgradeTechnology"]
             rec["units_fight"] = build_units_fight(rec["units"], rec["actions"])
@@ -334,6 +356,7 @@ def convert(path, tech_prev):
         })
     bi = root.find("BattleInfo")
     match = []
+    reinforce_offer_errors = []   # G1: ChooseReinforceItem ID/Index mismatches
     for m in root.find("matchDatas").findall("MatchSnapshotData"):
         lfr = m.find("lastFightResult")
         reports = []
@@ -341,11 +364,17 @@ def convert(path, tech_prev):
             rc = lfr.find("Reports")
             if rc is not None:
                 reports = [parse_fight_report(r) for r in rc.findall("FightReport")]
+        # G1 (transition前后端审计游戏任务书): keep the reinforcement
+        # candidates. The 4 ids are SHARED by both players (corpus: 24/26
+        # sample picks align; 2 stale client clicks recorded as errors).
+        ri = m.find("reinforceItems")
+        offers = [int(e.text) for e in ri.iter("int")] if ri is not None else []
         match.append({
             "round": int(txt(m.find("round"), "0")),
             "rng": [to_int(e) for e in m.find("randomStateData").find("randomStates")] if m.find("randomStateData") is not None else [],
             "deadCount": int(txt(m.find("deadCount"), "0")),
             "reports": reports,
+            "reinforceItems": offers,
         })
     info = {
         "systemSeed": int(txt(bi.find("SystemSeed"), "0") or 0),
@@ -359,6 +388,23 @@ def convert(path, tech_prev):
     }
     # build training pairs: input = state at round i (both players), label = fight result of round i
     by_round = {m["round"]: m for m in match}
+    # G1: per-round shared reinforcement offers + ID/Index alignment check.
+    # A mismatch is recorded, never auto-repaired (the raw click is the truth).
+    offers_by_round = {r: list(m.get("reinforceItems") or []) for r, m in by_round.items()}
+    reinforce_errors = []
+    for pi, pr in enumerate(players):
+        for rr in pr["rounds"]:
+            for ai, a in enumerate(rr.get("actions") or []):
+                if a.get("type") != "ChooseReinforceItem":
+                    continue
+                idx, cid = a.get("Index"), a.get("ID")
+                off = offers_by_round.get(int(rr["round"]), [])
+                if isinstance(idx, int) and 0 <= idx < len(off) and int(cid or 0) != 0 \
+                        and int(cid) != off[idx]:
+                    reinforce_errors.append({
+                        "player": pi, "round": int(rr["round"]), "raw_index": ai,
+                        "id": cid, "index": idx, "offers": off,
+                        "reason": "ID_INDEX_MISMATCH"})
     pairs = []
     n = min(len(players[0]["rounds"]), len(players[1]["rounds"]))
     for i in range(n):
@@ -378,7 +424,11 @@ def convert(path, tech_prev):
             "match": nxt_match,
             "label": label,   # from player0's perspective
         })
-    return {"file": os.path.basename(path), "info": info, "players": players, "pairs": pairs}
+    return {"file": os.path.basename(path), "info": info, "players": players,
+            "pairs": pairs,
+            "reinforce_offers": {str(k): v for k, v in sorted(offers_by_round.items())},
+            "reinforce_errors": reinforce_errors,
+            "schema_version": "replay_rounds_v0.2"}
 
 def load_tech_prev():
     """id -> previousTechID for chain folding. tools/tech.json is a decode

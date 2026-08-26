@@ -102,12 +102,15 @@ def test_every_sample_round_builds():
 
 
 # ---------------------------------------------------------------- T3/T4 deploy
-def _deploy_round(gi, rnd, side, income_inject=True):
+def _deploy_round(gi, rnd, side, income_policy=None):
     g = ADAPTER.games()[gi]
-    incomes, _ = ADAPTER.derive_incomes(g, ECO)
     base = ADAPTER.environment_state(gi, rnd, economy=ECO)
+    if income_policy is None:
+        from pysim.transition import Income200r
+        income_policy = Income200r()
     from pysim.transition.model import PlayerState as PS
-    inc = incomes.get((side, rnd), 0) if income_inject else 0
+    inc = income_policy.income(side, base.players[side], rnd,
+                               base.players[side].pre_round_fight_result)
     p = base.players[side]
     state = EnvironmentState(**{**base.__dict__,
                                 "players": (
@@ -117,16 +120,9 @@ def _deploy_round(gi, rnd, side, income_inject=True):
                                     PS(**{**base.players[1].__dict__,
                                           "supply": base.players[1].supply
                                           + (inc if side == 1 else 0)}))})
-    live_max = max((u.replay_index for u in state.players[side].units
-                    if u.replay_index is not None), default=-1)
-    nxt_rec = next(r for r in g["players"][side]["rounds"]
-                   if r["round"] == rnd + 1)
-    nxt_new = [int(u["index"]) for u in nxt_rec["units"]
-               if int(u["index"]) > live_max]
-    hint = min(nxt_new) if nxt_new else None
-    plan, rep = canonicalize_plan(side, ReplayAdapter.round_actions(g, side, rnd),
-                                  state.players[side], economy=ECO,
-                                  first_new_index=hint)
+    acts, nrep = ADAPTER.norm_actions(g, side, rnd)
+    plan, rep = canonicalize_plan(side, acts, state.players[side],
+                                  economy=ECO, norm_report=nrep)
     dep = deploy_transition(state, (plan,), ECO)
     return dep, plan, rep
 
@@ -200,18 +196,22 @@ def test_battle_and_settlement_run():
     dep1, _, _ = _deploy_round(0, 3, 1)
     # joint: apply both plans on the same state
     g = ADAPTER.games()[0]
-    incomes, _ = ADAPTER.derive_incomes(g, ECO)
+    from pysim.transition import Income200r
+    policy = Income200r()
     base = ADAPTER.environment_state(0, 3, economy=ECO)
     from pysim.transition.model import PlayerState as PS
     players = tuple(PS(**{**base.players[i].__dict__,
                           "supply": base.players[i].supply
-                          + incomes.get((i, 3), 0)}) for i in (0, 1))
+                          + policy.income(i, base.players[i], 3,
+                                          base.players[i]
+                                          .pre_round_fight_result)})
+                    for i in (0, 1))
     state = EnvironmentState(**{**base.__dict__, "players": players})
     plans = []
     for side in (0, 1):
-        plan, _ = canonicalize_plan(
-            side, ReplayAdapter.round_actions(g, side, 3),
-            state.players[side], economy=ECO)
+        acts, nrep = ADAPTER.norm_actions(g, side, 3)
+        plan, _ = canonicalize_plan(side, acts, state.players[side],
+                                    economy=ECO, norm_report=nrep)
         plans.append(plan)
     plans[0] = CanonicalActionPlan(player=0, actions=plans[0].actions +
                                    (CanonicalAction(ActionKind.END_DEPLOY, None),))

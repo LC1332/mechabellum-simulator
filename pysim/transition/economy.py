@@ -12,6 +12,7 @@
 # are not yet fully reverse-engineered.
 import json
 import os
+import re
 from dataclasses import dataclass, field
 
 from ..gamedata import GameData
@@ -21,6 +22,41 @@ _ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__
 _REINFORCE_JSON = os.path.join(_ROOT, "information", "增援卡牌-回放全量信息.json")
 
 _LEVEL_PRICES = {1: 0, 2: 50, 3: 100, 4: 200}
+
+
+def load_price_mods(path=_REINFORCE_JSON):
+    """officer_id -> {'mech', 'buy', 'upgrade'} from 单位强化卡 descriptions.
+
+    Corpus-verified description grammar (2026-08-26):
+      招募价格减少/增加N -> buy price -/+N; 升级价格减少N -> upgrade -N.
+    The mech resolves by longest gamedata card-name substring of the item
+    name (量产堡垒 -> 堡垒, 长弓补贴 -> 长弓, 改进型钢球 -> 钢球)."""
+    raw = json.load(open(path, encoding="utf8"))
+    _gd = json.load(open(os.path.join(_ROOT, "data", "gamedata.json"),
+                         encoding="utf8"))
+    gd_names = {c.get("name"): int(c.get("mechID", 0))
+                for c in _gd["cards"].values()}
+    mods = {}
+    for c in raw.get("cards", []):
+        if c.get("类别") != "单位强化卡":
+            continue
+        name = str(c.get("名称") or "")
+        desc = str(c.get("描述") or "")
+        mech = None
+        for cname, mid in sorted(gd_names.items(),
+                                 key=lambda kv: -len(kv[0])):
+            if cname and cname in name:
+                mech = mid
+                break
+        if mech is None:
+            continue
+        entry = {"mech": mech, "buy": 0, "upgrade": 0}
+        for m in re.finditer(r"(招募|升级)价格(减少|增加)(\d+)", desc):
+            amount = int(m.group(3)) * (-1 if m.group(2) == "减少" else 1)
+            entry["buy" if m.group(1) == "招募" else "upgrade"] += amount
+        if entry["buy"] or entry["upgrade"]:
+            mods[int(c["id"])] = entry
+    return mods
 
 
 def load_reinforce_items(path=_REINFORCE_JSON):
@@ -67,6 +103,7 @@ class Economy:
     def __init__(self, gd: GameData, items=None):
         self.gd = gd
         self.items = items if items is not None else load_reinforce_items()
+        self.price_mods = load_price_mods()
 
     def buy_price(self, mech_id: int) -> int | None:
         c = self.gd.cards.get(int(mech_id))
@@ -76,11 +113,27 @@ class Economy:
         p = self.buy_price(mech_id)
         return None if p is None else p // 2
 
+    def buy_price_mod(self, mech_id: int, officers) -> int:
+        """Sum of active 单位强化卡 buy-price modifiers for this mech."""
+        offs = set(officers or ())
+        return sum(mod["buy"] for oid, mod in self.price_mods.items()
+                   if mod["mech"] == int(mech_id) and oid in offs)
+
+    def upgrade_price_mod(self, mech_id: int, officers) -> int:
+        offs = set(officers or ())
+        return sum(mod["upgrade"] for oid, mod in self.price_mods.items()
+                   if mod["mech"] == int(mech_id) and oid in offs)
+
     def unlock_price(self, mech_id: int) -> int | None:
         c = self.gd.cards.get(int(mech_id))
         return int(c.unlock_price) if c else None
 
     def tech_price(self, mech_id: int, tech_id: int, owned_count: int) -> int | None:
+        """Tech price rule `prices_v1_tech` (unbiased corpus refit
+        2026-08-26 on price-known windows): supply + 200 * owned_active,
+        where owned counts the mech's ACTIVE techs at purchase time (the
+        snapshot techMap incl. card defaults — NOT this round's own buys,
+        see the replay2json pre-round techMap fix)."""
         t = self.gd.techs.get(int(tech_id))
         if t is None:
             return None
@@ -172,3 +225,48 @@ class FixedIncome(IncomePolicy):
     def income(self, player_index: int, player_state, round_no: int,
                prev_result) -> int:
         return self.amount if round_no >= 1 else 0
+
+
+# ---------------------------------------------------------------- income v1
+# income_rule_200r_v1 (frozen 2026-08-26 from the 1106-game corpus +
+# user rulings Q8/Q10): income(r) = 200*r + expert bonuses - fast-supply
+# debt; NO win/lose/draw difference (Win/Lose/Deuce income distributions
+# are indistinguishable in the corpus).
+EXPERT_INCOME_PER_ROUND = {
+    10002: 50,     # 补给专家 (user Q10)
+    10003: 150,    # 超级补给 (user Q10)
+    20034: 100,    # 成本控制 (user Q10)
+    20007: 50,     # 补给强化: +50 from the round AFTER acquisition; the
+                   # officers snapshot already reflects that timing
+}
+FAST_SUPPLY_FIRST_ROUND_BONUS = 200   # 10010 快速补给专家, round 1 only
+FAST_SUPPLY_DEBT = 300                # blueprint 1: -300 next round (Q8)
+REINFORCE_SKIP_BONUS = 50             # skipping all 4 offers (Q4): +50
+
+
+class Income200r(IncomePolicy):
+    """Real-rule income: 200*r + experts - fast debts. The fast-supply
+    debt for (player, round) is registered by the runner/env when the
+    blueprint survives the round's undo folding (record_fast_supply)."""
+
+    name = "income_200r_v1"
+
+    def __init__(self):
+        self.fast_debts = {}          # (player, round) -> activations
+
+    def record_fast_supply(self, player: int, next_round: int, count: int = 1):
+        key = (int(player), int(next_round))
+        self.fast_debts[key] = self.fast_debts.get(key, 0) + int(count)
+
+    def income(self, player_index: int, player_state, round_no: int,
+               prev_result) -> int:
+        inc = 200 * int(round_no)
+        officers = set(player_state.officers or ())
+        for oid, bonus in EXPERT_INCOME_PER_ROUND.items():
+            if oid in officers:
+                inc += bonus
+        if 10010 in officers and int(round_no) == 1:
+            inc += FAST_SUPPLY_FIRST_ROUND_BONUS
+        inc -= FAST_SUPPLY_DEBT * self.fast_debts.get(
+            (int(player_index), int(round_no)), 0)
+        return inc

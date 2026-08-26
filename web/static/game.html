@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>Mechabellum 审计游戏 · transition 多回合适玩</title>
+<style>
+:root{--bg:#14171c;--panel:#1b1f26;--panel2:#20252e;--line:#2c333f;--fg:#cfd8e3;
+--blue:#6cf;--red:#f86;--gold:#ffd54a;--dim:#7a8699;--ok:#7ec97e;--bad:#f77;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--fg);font:13px/1.45 "Segoe UI",system-ui,sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+button{background:var(--panel2);color:var(--fg);border:1px solid var(--line);border-radius:4px;padding:3px 10px;cursor:pointer;font-size:12px}
+button:hover{border-color:#48556a}
+button:disabled{opacity:.38;cursor:not-allowed}
+button.primary{background:#2b4a6f;border-color:#3d6ea8}
+button.warn{background:#6f3a2b;border-color:#a8543d}
+input,select{background:var(--panel2);color:var(--fg);border:1px solid var(--line);border-radius:4px;padding:3px 8px}
+#topbar{display:flex;gap:14px;align-items:center;padding:6px 12px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
+#topbar b{color:var(--gold)}
+#topbar .sep{width:1px;height:18px;background:var(--line)}
+.tag{padding:1px 7px;border-radius:9px;font-size:11px;border:1px solid var(--line);color:var(--dim)}
+.tag.blue{color:var(--blue);border-color:var(--blue)}
+.tag.red{color:var(--red);border-color:var(--red)}
+.tag.ok{color:var(--ok);border-color:var(--ok)}
+.tag.bad{color:var(--bad);border-color:var(--bad)}
+#main{flex:1;display:flex;min-height:0}
+#left{width:250px;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+#ltabs{display:flex;border-bottom:1px solid var(--line)}
+#ltabs button{flex:1;border:none;border-radius:0;border-right:1px solid var(--line);background:var(--panel)}
+#ltabs button.on{background:var(--panel2);color:var(--gold)}
+#lbody{flex:1;overflow-y:auto;padding:8px}
+.shopitem{display:flex;align-items:center;gap:6px;padding:5px 6px;border:1px solid var(--line);border-radius:5px;margin-bottom:5px;background:var(--panel2)}
+.shopitem .nm{flex:1}
+.shopitem .pr{color:var(--gold)}
+.shopitem.locked{opacity:.75}
+.shopitem.picked{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.shopitem small{color:var(--dim)}
+#center{flex:1;display:flex;flex-direction:column;min-width:0}
+#status{padding:4px 10px;background:var(--panel);border-bottom:1px solid var(--line);color:var(--dim);min-height:24px;font-size:12px}
+#stage{flex:1;display:flex;align-items:center;justify-content:center;min-height:0;background:#0d0f13;position:relative}
+canvas{max-width:100%;max-height:100%}
+#right{width:280px;background:var(--panel);border-left:1px solid var(--line);overflow-y:auto;padding:8px}
+#bottom{height:240px;background:var(--panel);border-top:1px solid var(--line);display:flex;flex-direction:column}
+#btabs{display:flex;border-bottom:1px solid var(--line)}
+#btabs button{border:none;border-radius:0;border-right:1px solid var(--line);background:var(--panel)}
+#btabs button.on{background:var(--panel2);color:var(--gold)}
+#bbody{flex:1;overflow:auto;padding:8px;font-size:12px}
+table.t{border-collapse:collapse;width:100%}
+table.t td,table.t th{border:1px solid var(--line);padding:2px 6px;text-align:left;vertical-align:top}
+table.t th{color:var(--dim);font-weight:normal;background:var(--panel2)}
+.mono{font-family:Consolas,monospace;font-size:11px}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.dim{color:var(--dim)}.gold{color:var(--gold)}
+.offer{border:1px solid var(--line);border-radius:6px;padding:7px;margin-bottom:7px;background:var(--panel2)}
+.offer.picked{border-color:var(--gold)}
+.offer h4{font-size:12px;margin-bottom:3px}
+.badge{font-size:10px;padding:0 6px;border-radius:8px;margin-left:6px}
+.badge.rec{background:#2b4a2b;color:#9e9}
+.badge.gen{background:#33254a;color:#c9b}
+#selectView{position:absolute;inset:0;background:var(--bg);z-index:30;overflow:auto;padding:20px}
+#selectView h1{font-size:18px;margin-bottom:4px}
+#selectView .sub{color:var(--dim);margin-bottom:14px}
+.optrow{border:1px solid var(--line);border-radius:6px;padding:8px 12px;margin-bottom:8px;display:flex;gap:12px;align-items:center;background:var(--panel)}
+.optrow.dis{opacity:.6}
+.optrow .grow{flex:1}
+.blockers{color:var(--bad);font-size:11px;margin-top:2px}
+#overlay{position:absolute;inset:0;background:rgba(10,12,16,.82);z-index:40;display:none;align-items:center;justify-content:center}
+#overlay .box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:22px 28px;max-width:520px}
+.float{position:absolute;pointer-events:none;background:rgba(20,24,30,.92);border:1px solid var(--line);border-radius:5px;padding:6px 9px;font-size:11px;z-index:20}
+#playctl{display:none;gap:8px;align-items:center;padding:4px 10px;background:var(--panel);border-bottom:1px solid var(--line)}
+.kv{display:flex;gap:8px}
+.kv .k{color:var(--dim);width:78px;flex:none}
+.audit-ev{border-bottom:1px solid #232a34;padding:3px 2px;font-size:11px}
+.diffs .p{color:var(--gold);font-family:Consolas,monospace;font-size:11px}
+</style>
+</head>
+<body>
+<div id="topbar">
+  <b>审计游戏</b><span class="tag" id="tPhase">—</span>
+  <span>回合 <b id="tRound">—</b></span>
+  <span>版本 <b id="tVer">—</b></span>
+  <span class="sep"></span>
+  <span id="tPlayers"></span>
+  <span class="sep"></span>
+  <span class="dim mono" id="tDigest" title="state digest"></span>
+  <span style="flex:1"></span>
+  <button id="btnBack">← 回放选择</button>
+  <button id="btnRefresh">刷新</button>
+  <button id="btnAbandon" class="warn">删除会话</button>
+</div>
+<div id="main">
+  <div id="left">
+    <div id="ltabs">
+      <button data-t="shop" class="on">商店</button>
+      <button data-t="tech">科技</button>
+      <button data-t="tower">塔/蓝图</button>
+    </div>
+    <div id="lbody"></div>
+  </div>
+  <div id="center">
+    <div id="status">正在加载…</div>
+    <div id="playctl">
+      <button id="ppBack">⏮</button><button id="ppPlay">▶</button>
+      <input type="range" id="ppSeek" style="flex:1" min="0" value="0">
+      <span id="ppTime" class="mono dim"></span>
+      <button id="ppExit">退出播放</button>
+    </div>
+    <div id="stage"><canvas id="cv" width="760" height="660"></canvas></div>
+  </div>
+  <div id="right"></div>
+</div>
+<div id="bottom">
+  <div id="btabs">
+    <button data-t="hrec" class="on">人类 Receipts</button>
+    <button data-t="orec">对手 Receipts</button>
+    <button data-t="ledger">资金账本</button>
+    <button data-t="diff">State Diff / 审计</button>
+    <button data-t="hist">历史动作对照</button>
+    <button data-t="battle">战斗结果 (pysim)</button>
+  </div>
+  <div id="bbody"></div>
+</div>
+<div id="overlay"><div class="box" id="overlayBox"></div></div>
+<div id="selectView">
+  <h1>Transition 审计游戏 · 回放与对手选择</h1>
+  <div class="sub">选择一条 Normal 1v1 回放的一名玩家作为“历史策略对手”，你接管另一方，从 round 0 开局开始逐动作审查 transition。
+  <span class="tag">回放候选/开局与对手动作来自真实回放</span><span class="tag">战斗由 pysim 模拟</span></div>
+  <div style="margin-bottom:10px;display:flex;gap:10px;align-items:center">
+    <input id="fFilter" placeholder="按玩家名/文件名筛选" style="width:260px">
+    <label><input type="checkbox" id="fEnabled" checked> 只显示可连续 ≥5 回合</label>
+    <span id="libMeta" class="dim"></span>
+  </div>
+  <div id="optList"></div>
+</div>
+
+<script>
+"use strict";
+/* ------------------------------------------------------------------ api */
+const $=id=>document.getElementById(id);
+const W=760,H=660,X0=350,Y0=300;
+const px=x=>(x+X0)/(2*X0)*W, py=y=>(Y0-y)/(2*Y0)*H;
+const wx=x=>x/W*2*X0-X0, wy=y=>Y0-y/H*2*Y0;
+let V=null;            // authoritative GameView
+let busy=false;        // a command is in flight
+let pickBuy=null;      // {mech_id, price} armed buy
+let pickRelease=null;  // {sid, name} armed battlefield skill release
+let selUnit=null;      // selected own unit handle
+let drag=null;         // dragging unit
+let mode="edit";       // edit | play
+let frames=[],events=[],playT=0,playing=false,timer=null,spawnDone={};
+let ltab="shop",btab="hrec";
+
+async function api(path,opts){
+  const r=await fetch(path,opts);
+  if(r.status===404&&path.includes("/sessions/")){backToSelect("会话不存在(服务可能已重启)");throw new Error("404");}
+  const body=await r.json().catch(()=>({}));
+  if(!r.ok){if(body&&body.error==="STALE_SESSION_VERSION"){await refresh();}throw Object.assign(new Error(body.error||r.status),{body,status:r.status});}
+  return body;
+}
+async function cmd(kind,payload){
+  if(!V||busy)return;
+  busy=true;$("status").textContent="提交中: "+kind+" …";
+  try{
+    const out=await api(`/api/game/sessions/${V.session_id}/commands`,{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({expected_version:V.version,kind,payload})});
+    render(out);
+    if(out.rejected_receipt)flash(`❌ 被拒: ${out.rejected_receipt.kind} · ${out.rejected_receipt.reason_code}${out.rejected_receipt.detail?" · "+out.rejected_receipt.detail:""}`);
+  }catch(e){ if(!e.body)flash("请求失败: "+e.message); else flash(`❌ ${e.body.error||""} ${e.body.detail||""}`);}
+  busy=false;
+}
+async function refresh(){
+  if(!V)return;
+  try{render(await api(`/api/game/sessions/${V.session_id}`));}catch(e){}
+}
+function flash(msg){$("status").textContent=msg;}
+function digest8(d){return (d||"").slice(0,8);}
+
+/* ------------------------------------------------------------ rendering */
+function render(view){
+  const first=V===null;
+  V=view;$("tPhase").textContent=V.phase;$("tRound").textContent=V.round;
+  $("tVer").textContent=V.version;
+  $("tDigest").textContent="digest "+(V.state_digest||"").slice(0,12)+"…";
+  const hp=o=>`<span class="tag ${o.role==="human"?"blue":"red"}">${o.name} ${o.hp!==undefined?`HP ${o.hp}/${o.max_hp} · ¥${o.supply}`:""}</span>`;
+  $("tPlayers").innerHTML=hp(V.players[0])+" "+hp(V.players[1])+(V.stop_reason?` <span class="tag bad">${V.stop_reason}</span>`:"");
+  if(location.hash!=="#s="+V.session_id)location.hash="#s="+V.session_id;
+  if(mode!=="play"){
+    if(V.phase==="round_result"&&V.battle){startPlay();}
+    else drawEdit();
+  }
+  renderLeft();renderRight();renderBottom();
+  if(V.phase==="opening"&&!first)flash("请选择开局(右侧)");
+  if(V.phase==="blocked")showBlocker();
+  if(V.phase==="terminal")flash("对局结束: "+(V.stop_reason||"terminal"));
+}
+function humanP(){return V.players.find(p=>p.role==="human");}
+function oppP(){return V.players.find(p=>p.role==="opponent");}
+
+/* ---------------- left panel */
+function renderLeft(){
+  const b=$("lbody");
+  if(ltab==="shop")b.innerHTML=shopHtml();
+  else if(ltab==="tech")b.innerHTML=techHtml();
+  else b.innerHTML=towerHtml();
+  // wire buttons
+  b.querySelectorAll("[data-buy]").forEach(el=>el.onclick=()=>{
+    const id=+el.dataset.buy;
+    const it=(V.legal_actions.buy||[]).find(x=>x.mech_id===id);
+    if(!it||!it.affordable){flash("资金不足");return;}
+    pickBuy=(pickBuy&&pickBuy.mech_id===id)?null:{mech_id:id,price:it.price,name:it.name};
+    selUnit=null;renderLeft();drawEdit();
+    flash(pickBuy?`已选中 ${it.name}(¥${it.price}) — 点击己方半场放置`:"取消购买");
+  });
+  b.querySelectorAll("[data-unlock]").forEach(el=>el.onclick=()=>cmd("APPLY_ACTION",
+    {action:{kind:"unlock_unit",args:{mech_id:+el.dataset.unlock}}}));
+  b.querySelectorAll("[data-tech]").forEach(el=>el.onclick=()=>cmd("APPLY_ACTION",
+    {action:{kind:"buy_tech",args:{mech_id:+el.dataset.mech,tech_id:+el.dataset.tech}}}));
+  b.querySelectorAll("[data-tower]").forEach(el=>el.onclick=()=>cmd("APPLY_ACTION",
+    {action:{kind:"raw_unsupported",args:{raw_type:"StrengthenTower",raw:[["Index",+el.dataset.tower]]}}}));
+  b.querySelectorAll("[data-tskill]").forEach(el=>el.onclick=()=>cmd("APPLY_ACTION",
+    {action:{kind:"raw_unsupported",args:{raw_type:"ActiveEnergyTowerSkill",raw:[["SkillID",+el.dataset.tskill]]}}}));
+  b.querySelectorAll("[data-release]").forEach(el=>el.onclick=()=>{
+    pickRelease={sid:+el.dataset.release,name:el.dataset.name};
+    pickBuy=null;flash(`已选中战场技能 ${pickRelease.name} — 点击战场选择落点`);
+    renderLeft();});
+  b.querySelectorAll("[data-bp]").forEach(el=>el.onclick=()=>{
+    cmd("APPLY_ACTION",{action:{kind:"raw_unsupported",args:{raw_type:"ActiveBlueprint",raw:[["ID",+el.dataset.bp]]}}});
+  });
+}
+function shopHtml(){
+  if(!V.legal_actions.buy)return phaseWait();
+  let h="<div class='dim' style='margin-bottom:6px'>已解锁 — 点击后到战场放置</div>";
+  for(const it of V.legal_actions.buy||[]){
+    h+=`<div class="shopitem ${pickBuy&&pickBuy.mech_id===it.mech_id?"picked":""}" data-buy="${it.mech_id}">
+      <div class="nm">${it.name} <small>×${it.mech_count}</small></div>
+      <div class="pr">¥${it.price}</div>
+      ${it.affordable?"":`<div class="bad">缺¥</div>`}</div>`;
+  }
+  h+="<div class='dim' style='margin:8px 0 6px'>未解锁</div>";
+  for(const it of V.legal_actions.unlock||[]){
+    h+=`<div class="shopitem locked"><div class="nm">${it.name}</div><div class="pr">¥${it.price}</div>
+      <button data-unlock="${it.mech_id}" ${it.affordable?"":"disabled"}>解锁</button></div>`;
+  }
+  return h;
+}
+function techHtml(){
+  if(!V.legal_actions.tech)return phaseWait();
+  const byMech={};
+  for(const t of V.legal_actions.tech)(byMech[t.mech_id]=byMech[t.mech_id]||[]).push(t);
+  let h="";
+  for(const m of Object.keys(byMech).sort((a,b)=>a-b)){
+    h+=`<div class="dim" style="margin:6px 0 3px">${mechName(+m)}</div>`;
+    for(const t of byMech[m]){
+      h+=`<div class="shopitem"><div class="nm">${t.name}<br><small>#${t.tech_id}${t.prerequisite_ok?"":" · 需前置"}</small></div>
+        <div class="pr">¥${t.price}</div>
+        <button data-tech="${t.tech_id}" data-mech="${m}" ${t.affordable&&t.prerequisite_ok?"":"disabled"}>购买</button></div>`;
+    }
+  }
+  const owned=techOwned();
+  if(owned)h+="<div class='dim' style='margin:8px 0 4px'>已激活</div>"+owned;
+  return h||"<div class='dim'>无可购买科技</div>";
+}
+function techOwned(){
+  const p=humanP();if(!p.tech_map)return"";
+  return p.tech_map.map(([m,ts])=>`<div class="shopitem locked"><div class="nm">${mechName(m)}</div><div class="dim">${ts.join(", ")||"—"}</div></div>`).join("");
+}
+function towerHtml(){
+  if(!V.legal_actions.towers)return phaseWait();
+  let h="<div class='dim' style='margin-bottom:6px'>核心塔强化 (¥100 / 级)</div>";
+  for(const t of V.legal_actions.towers)
+    h+=`<div class="shopitem"><div class="nm">塔 #${t.index}</div><div>Lv ${t.level}/${t.max}</div>
+      <button data-tower="${t.index}" ${t.affordable&&t.level<t.max?"":"disabled"}>强化</button></div>`;
+  h+="<div class='dim' style='margin:8px 0 6px'>能量塔技能 (免费, 本回合生效)</div>";
+  for(const sk of V.legal_actions.tower_skills||[])
+    h+=`<div class="shopitem"><div class="nm">${sk.name}<br><small>${sk.detail}</small></div>
+      <div class="dim">×${sk.active_count}</div>
+      <button data-tskill="${sk.skill_id}">释放</button></div>`;
+  const rels=V.legal_actions.skill_releases||[];
+  if(rels.length){
+    h+="<div class='dim' style='margin:8px 0 6px'>战场技能 (点选后点击地图落点)</div>";
+    for(const r of rels)
+      h+=`<div class="shopitem ${pickRelease&&pickRelease.sid===r.skill_id?"picked":""}">
+        <div class="nm">${r.name}<br><small>${r.kind} · 已释放×${r.released_this_round}</small></div>
+        <button data-release="${r.skill_id}" data-name="${r.name}">释放</button></div>`;
+  }
+  h+="<div class='dim' style='margin:8px 0 6px'>蓝图 (研究中心)</div>";
+  for(const b of V.legal_actions.blueprints||[])
+    h+=`<div class="shopitem ${b.supported?"":"locked"}"><div class="nm">${b.name}<br><small>${b.supported?"":"效果未建模 · 仅快速补给可用"}</small></div>
+      <div class="pr">${b.cost?"¥"+b.cost:"免费"}</div>
+      ${b.owned?"<span class='tag ok'>已研究</span>":`<button data-bp="${b.id}" ${b.supported&&b.affordable?"":"disabled"}>激活</button>`}</div>`;
+  const ts=humanP().tower_strengthen;
+  h+=`<div class='dim' style='margin-top:8px'>当前塔等级: [${ts?ts.join(", "):"0, 0"}]</div>`;
+  return h;
+}
+function phaseWait(){return `<div class='dim'>当前阶段 (${V.phase}) 无部署操作</div>`;}
+function mechName(id){const p=humanP();const u=(p.units||[]).find(u=>u.mech_id===id);if(u)return u.name;
+  const it=(V.legal_actions.buy||[]).find(x=>x.mech_id===id);if(it)return it.name;
+  const ul=(V.legal_actions.unlock||[]).find(x=>x.mech_id===id);return ul?ul.name:("#"+id);}
+
+/* ---------------- right panel */
+function renderRight(){
+  const b=$("right");
+  if(V.phase==="opening"){b.innerHTML=openingHtml();wireOffers("data-open",i=>cmd("CHOOSE_OPENING",{index:i}));return;}
+  if(V.phase==="reinforcement"){b.innerHTML=reinforceHtml();
+    b.querySelectorAll("[data-reinf]").forEach(el=>el.onclick=()=>cmd("CHOOSE_REINFORCEMENT",{index:+el.dataset.reinf}));
+    const sk=$("btnSkipReinf");if(sk)sk.onclick=()=>cmd("CHOOSE_REINFORCEMENT",{index:-1});
+    return;}
+  if(selUnit!==null&&V.phase==="deployment"){b.innerHTML=unitHtml();
+    const g=id=>b.querySelector("#"+id);
+    if(g("btnUpg"))g("btnUpg").onclick=()=>cmd("APPLY_ACTION",{action:{kind:"upgrade_unit",args:{ref:{handle:selUnit}}}});
+    if(g("btnRot"))g("btnRot").onclick=()=>{const u=curUnit();if(u)cmd("APPLY_ACTION",{action:{kind:"move_unit",args:{ref:{handle:selUnit},x:u.x,y:u.y,is_rotate:!u.is_rotate}}});};
+    if(g("btnSell"))g("btnSell").onclick=()=>cmd("APPLY_ACTION",{action:{kind:"sell_unit",args:{ref:{handle:selUnit}}}});
+    return;}
+  b.innerHTML=summaryHtml();
+}
+function openingHtml(){
+  let h=`<div class="gold" style="margin-bottom:6px">Round 0 · 选择开局</div>`;
+  for(const o of V.opening_offers){
+    h+=`<div class="offer"><h4>${o.name}<span class="badge ${o.source==="replay_recorded"?"rec":"gen"}">${o.source==="replay_recorded"?"回放记录":"模拟生成"}</span></h4>
+      <div class="dim">专家: ${o.specialists.join(", ")||"—"} · HP ${o.hp} · 初始资金 ${o.supply}</div>
+      <div>${o.units.map(u=>`${u.count}×${u.name}`).join(" + ")}</div>
+      <button data-open="${o.index}" style="margin-top:5px" class="primary">选择该开局</button>
+      ${o.source!=="replay_recorded"?"<div class='dim' style='font-size:10px'>不代表原对局当时未记录的真实候选</div>":""}</div>`;
+  }
+  return h;
+}
+function wireOffers(attr,fn){$("right").querySelectorAll("["+attr+"]").forEach(el=>el.onclick=()=>fn(+el.dataset[attr.replace("data-","")]));
+}
+function reinforceHtml(){
+  let h=`<div class="gold" style="margin-bottom:6px">Round ${V.round} · 增援四选一 (回放真实候选)</div>`;
+  V.reinforcement_offers.forEach(o=>{
+    h+=`<div class="offer"><h4>#${o.card_id} ${o.name}<span class="badge ${o.supported?"rec":"gen"}">${o.supported?"可选":"未支持"}</span></h4>
+      <div class="dim">${o.category} · 费用 ¥${o.cost}</div>
+      <div style="font-size:11px">${o.description||""}</div>
+      ${o.supported?`<button data-reinf="${o.index}" class="primary" style="margin-top:5px">选择</button>`:`<div class='bad' style='font-size:11px'>${o.unsupported_reason}</div>`}</div>`;
+  });
+  h+=`<button id="btnSkipReinf" style="width:100%;margin-top:4px">跳过全部增援 (+50)</button>`;
+  return h;
+}
+function curUnit(){const p=humanP();return (p.units||[]).find(u=>u.handle===selUnit);}
+function unitHtml(){
+  const u=curUnit();if(!u)return summaryHtml();
+  const p=humanP();
+  const canUp=u.level<9&&p.supply>=(u.upgrade_price||0);
+  return `<div class="gold" style="margin-bottom:6px">${u.name} <small>#${u.handle}</small></div>
+  <div class="kv"><span class="k">等级</span><b>${u.level}</b>${u.level>=9?" (满)":""}</div>
+  <div class="kv"><span class="k">经验</span>${u.exp} / ${u.exp_need||"—"}</div>
+  <div class="kv"><span class="k">位置</span>(${Math.round(u.x)}, ${Math.round(u.y)}) ${u.is_rotate?"⟳":""}</div>
+  <div class="kv"><span class="k">科技</span>${(p.tech_map.find(x=>x[0]===u.mech_id)||[])[1]?.join(", ")||"—"}</div>
+  <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+    <button id="btnUpg" class="primary" ${canUp?"":"disabled"}>升级 ¥${u.upgrade_price??"—"}</button>
+    <button id="btnRot">旋转</button>
+    <button id="btnSell">回收 +¥${u.sell_supply}</button>
+  </div>
+  <div class="dim" style="margin-top:8px">拖动单位到目标位置后松开即提交移动。</div>`;
+}
+function summaryHtml(){
+  const p=humanP(),o=oppP();
+  return `<div class="gold" style="margin-bottom:6px">状态摘要</div>
+  <div class="kv"><span class="k">上回合</span>${p.pre_round_fight_result||"—"} vs 对手 ${o.pre_round_fight_result||"—"}</div>
+  <div class="kv"><span class="k">收入(上)</span>¥${p.income_last}</div>
+  <div class="kv"><span class="k">专家</span>${p.officers.join(", ")||"—"}</div>
+  <div class="kv"><span class="k">蓝图</span>${p.blueprints.join(", ")||"—"}</div>
+  <div class="kv"><span class="k">单位</span>${(p.units||[]).length} 个 / 对手 ${(o.units||[]).length} 个</div>
+  ${V.phase==="deployment"&&!p.finished_deploy?`<div style="margin-top:10px;display:flex;gap:6px">
+    <button onclick="cmd('UNDO_LAST_HUMAN_ACTION',{})">↩ 撤销</button>
+    <button onclick="confirmFinish()" class="primary">结束部署 ▶</button></div>`:""}
+  ${V.phase==="round_result"?`<button onclick="cmd('ACK_ROUND_RESULT',{})" class="primary" style="margin-top:10px">进入下一回合 ▶</button>`:""}
+  ${V.phase==="terminal"?`<div class="dim" style="margin-top:8px">对局结束: ${V.stop_reason||""}</div>`:""}`;
+}
+function confirmFinish(){
+  const mine=(humanP().units||[]).length;
+  if(confirm(`结束部署并执行对手历史动作 + pysim 战斗?\n己方场上单位: ${mine}`))cmd("FINISH_DEPLOYMENT",{});
+}
+function showBlocker(){
+  const bl=V.blocker||{};
+  const r=bl.receipt;
+  showOverlay(`<h3 style="color:var(--bad)">SESSION BLOCKED</h3>
+   <p style="margin:8px 0">${bl.detail||""}</p>
+   ${r?`<table class="t"><tr><th>action</th><td>${r.kind}</td></tr><tr><th>reason</th><td class="bad">${r.reason_code}</td></tr><tr><th>detail</th><td>${r.detail}</td></tr></table>`:""}
+   <pre class="mono" style="margin-top:8px;max-height:180px;overflow:auto">${JSON.stringify(bl.entry,null,1)}</pre>
+   <p class="dim" style="margin-top:8px">按任务书约定: 对手历史动作失败时严格阻塞, 不自动跳过。部署棋盘保留在页面上。</p>
+   <button onclick="hideOverlay()">关闭</button>`);
+}
+function showOverlay(html){$("overlayBox").innerHTML=html;$("overlay").style.display="flex";}
+function hideOverlay(){$("overlay").style.display="none";}
+
+/* ---------------- bottom panel */
+function renderBottom(){
+  const b=$("bbody");
+  if(btab==="hrec")b.innerHTML=recHtml(V.players.findIndex(p=>p.role==="human"));
+  else if(btab==="orec")b.innerHTML=recHtml(V.players.findIndex(p=>p.role==="opponent"));
+  else if(btab==="ledger")b.innerHTML=ledgerHtml();
+  else if(btab==="diff")b.innerHTML=diffHtml();
+  else if(btab==="hist")b.innerHTML=histHtml();
+  else b.innerHTML=battleHtml();
+  b.scrollTop=b.scrollHeight;
+}
+function recHtml(side){
+  const rs=V.receipts.filter(r=>r.player===side);
+  if(!rs.length)return dim("暂无");
+  return `<table class="t"><tr><th>#</th><th>R</th><th>动作</th><th>结果</th><th>Δ资金</th><th>detail</th></tr>`+
+    rs.slice(-60).map(r=>`<tr><td>${r.seq}</td><td>${r.round}</td><td class="mono">${r.kind}</td>
+    <td class="${r.accepted?"ok":"bad"}">${r.accepted?"✓":"✗ "+r.reason_code}</td>
+    <td>${r.resource_delta?(r.resource_delta>0?"+":"")+r.resource_delta:""}</td>
+    <td class="dim mono">${r.detail||""}</td></tr>`).join("")+"</table>";
+}
+function ledgerHtml(){
+  if(!V.ledger.length)return dim("本回合暂无账目");
+  let s0=0,s1=0;
+  const rows=V.ledger.map(e=>{
+    if(e.player===0)s0+=e.amount;else s1+=e.amount;
+    return `<tr><td>${e.player===0?"蓝":"红"}</td><td class="mono">${e.reason}</td>
+    <td class="${e.amount>=0?"ok":"bad"}">${e.amount>=0?"+":""}${e.amount}</td><td>R${e.round}</td></tr>`;}).join("");
+  return `<table class="t"><tr><th>玩家</th><th>条目</th><th>金额</th><th>回合</th></tr>${rows}</table>
+  <div style="margin-top:6px">合计: 蓝 ${s0} · 红 ${s1}</div>`;
+}
+function diffHtml(){
+  let h=`<div class="mono">digest: <span class="gold" title="点击复制" style="cursor:pointer" onclick="navigator.clipboard&&navigator.clipboard.writeText('${V.state_digest}')">${V.state_digest}</span> · invariants ${V.invariants}</div>`;
+  h+=`<div class="diffs" style="margin-top:6px">`;
+  if(V.state_diff&&V.state_diff.length){
+    h+="<table class='t'><tr><th>路径</th><th>之前</th><th>之后</th></tr>"+
+      V.state_diff.map(d=>`<tr><td class="p">${d.path}</td><td class="mono dim">${JSON.stringify(d.before).slice(0,80)}</td><td class="mono">${JSON.stringify(d.after).slice(0,80)}</td></tr>`).join("")+"</table>";
+  } else h+="<div class='dim'>本版本无状态差异</div>";
+  h+="</div><div style='margin-top:8px' class='dim'>审计事件 (最新 60)</div>";
+  h+=(V.audit_events||[]).slice(-60).reverse().map(e=>
+    `<div class="audit-ev"><span class="gold mono">${e.kind}</span> <span class="dim">v${e.version} R${e.round} p${e.player?? "-"} seq${e.seq}</span> ${e.detail||""}</div>`).join("");
+  return h;
+}
+function histHtml(){
+  const h=V.historical_actions;
+  if(!h||!h.players)return dim("—");
+  let out=`<div class="dim">原回放第 ${h.round} 回合动作 (仅对照, 不参与状态)</div><table class="t"><tr><th>玩家</th><th>原始动作</th></tr>`;
+  for(const p of h.players){
+    out+=`<tr><td class="${p.role==="human"?"blue":"red"}">${p.role} (原)</td><td class="mono">${
+      (p.raw||[]).map(a=>a.type+"("+(a.arg?JSON.stringify(a.arg):"")+")").join(" → ")||"—"}</td></tr>`;
+  }
+  out+="</table>";
+  if(h.real_fight)out+=`<div style="margin-top:6px">真实战斗: <b>${h.real_fight.label}</b> · 双方得分 ${JSON.stringify(h.real_fight.real_scores)} <span class="dim">(仅对照)</span></div>`;
+  return out;
+}
+function battleHtml(){
+  const b=V.battle;
+  if(!b)return dim("本回合尚未战斗");
+  return `<div style="display:flex;gap:16px;align-items:flex-start">
+   <div style="flex:1">
+    <div>Round ${b.round} · pysim 结果: <b class="gold">${winnerLabel(b)}</b>
+     <span class="tag">seed ${b.battle_seed}</span><span class="tag">pysim 模拟, 非真实胜负</span></div>
+    <table class="t" style="margin-top:6px"><tr><th></th><th>蓝</th><th>红</th></tr>
+     <tr><td class="dim">HP</td><td>${b.hp_before[0]} → <b>${b.hp_after[0]}</b></td><td>${b.hp_before[1]} → <b>${b.hp_after[1]}</b></td></tr>
+     <tr><td class="dim">伤害</td><td>${b.damage_to_player[0]}</td><td>${b.damage_to_player[1]}</td></tr>
+     <tr><td class="dim">幸存价值</td><td>${b.score_by_team[0]}</td><td>${b.score_by_team[1]}</td></tr></table>
+    ${b.replay_oracle?`<div class="dim" style="margin-top:4px">回放真实结果: ${b.replay_oracle.label} (得分 ${JSON.stringify(b.replay_oracle.real_scores)}) — 仅对照</div>`:""}
+    <table class="t" style="margin-top:6px"><tr><th>单位</th><th>方</th><th>exp</th><th>伤害</th><th>击杀</th><th>幸存</th></tr>
+    ${b.cards.filter(c=>c.player!==null).map(c=>`<tr><td>${c.name} L${c.level_after}</td>
+      <td class="${c.role==="human"?"blue":"red"}">${c.role==="human"?"人":"机"}</td>
+      <td>${c.exp_before}→${c.exp_after} (${c.exp_delta>=0?"+":""}${c.exp_delta})</td>
+      <td>${Math.round(c.damage)}</td><td>${c.kills}</td><td>${c.survived?"✓":"✗"}</td></tr>`).join("")}</table>
+   </div></div>`;
+}
+function winnerLabel(b){return b.winner===-1?"平局":(b.winner===V.replay.human_player?"你胜(pysim)":"对手胜(pysim)");}
+function dim(t){return `<div class="dim">${t}</div>`;}
+
+/* ------------------------------------------------------------ canvas */
+const cv=$("cv"),ctx=cv.getContext("2d");
+function towersOf(side){const p=V&&V.players[side];return p&&p.tower_strengthen?p.tower_strengthen:[0,0];}
+function drawBoard(){
+  ctx.fillStyle="#10131a";ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle="#1d2431";ctx.lineWidth=1;
+  for(let g=-350;g<=350;g+=50){line(px(g),py(-300),px(g),py(300));}
+  for(let g=-300;g<=300;g+=50){line(px(-350),py(g),px(350),py(g));}
+  ctx.strokeStyle="#2c3b52";ctx.lineWidth=2;line(px(-350),py(0),px(350),py(0));
+  // towers
+  const TP={0:[[-140,-170],[140,-170]],1:[[-140,170],[140,170]]};
+  for(const side of [0,1])for(let k=0;k<2;k++){
+    const [tx,ty]=TP[side][k],lv=towersOf(side)[k]||0;
+    drawHex(px(tx),py(ty),11,side===0?"#3a5a80":"#80443a");
+    ctx.fillStyle="#cfd8e3";ctx.font="10px Consolas";ctx.textAlign="center";
+    ctx.fillText("T"+k+" L"+lv,px(tx),py(ty)+3);
+  }
+}
+function line(a,b,c,d){ctx.beginPath();ctx.moveTo(a,b);ctx.lineTo(c,d);ctx.stroke();}
+function drawHex(x,y,r,color){
+  ctx.beginPath();
+  for(let i=0;i<6;i++){const a=Math.PI/3*i-Math.PI/6;const X=x+r*Math.cos(a),Y=y+r*Math.sin(a);i?ctx.lineTo(X,Y):ctx.moveTo(X,Y);}
+  ctx.closePath();ctx.fillStyle=color;ctx.fill();ctx.strokeStyle="#566";ctx.stroke();
+}
+function drawUnit(u,side,selected){
+  const x=px(u.x),y=py(u.y);
+  const color=side===0?"#3d5a80":"#80443a";
+  ctx.save();ctx.translate(x,y);
+  ctx.fillStyle=selected?"#8a7a2e":color;
+  ctx.strokeStyle=selected?"#ffd54a":(side===0?"#6cf":"#f86");
+  ctx.lineWidth=selected?2:1;
+  ctx.beginPath();ctx.arc(0,0,10,0,7);ctx.fill();ctx.stroke();
+  ctx.fillStyle="#e8eef5";ctx.font="9px 'Segoe UI'";ctx.textAlign="center";
+  ctx.fillText(u.name.slice(0,4)+"L"+u.level,0,-13);
+  if(u.is_rotate){ctx.strokeStyle="#ffd54a";ctx.strokeRect(-13,-13,26,26);}
+  ctx.restore();
+}
+function drawEdit(){
+  if(!V||!humanP()||humanP().units===undefined){drawBoard();return;}
+  drawBoard();
+  const hp=humanP(),op=oppP();
+  for(const u of op.units||[])drawUnit(u,1,false);
+  for(const u of hp.units||[])drawUnit(u,0,selUnit!==null&&u.handle===selUnit);
+  if(drag){const d=drag;ctx.strokeStyle="#ffd54a";ctx.setLineDash([4,3]);
+    ctx.beginPath();ctx.moveTo(px(d.ux),py(d.uy));ctx.lineTo(px(d.x),py(d.y));ctx.stroke();ctx.setLineDash([]);
+    drawUnit({name:"",level:0,x:d.x,y:d.y},0,true);}
+  if(pickBuy){ctx.fillStyle="rgba(255,213,74,.06)";ctx.fillRect(0,H/2,W,H/2);
+    ctx.fillStyle="#ffd54a";ctx.font="11px 'Segoe UI'";ctx.textAlign="left";
+    ctx.fillText("放置: "+pickBuy.name+" (¥"+pickBuy+")",8,H-8);}
+}
+/* mouse */
+function evtWorld(e){const r=cv.getBoundingClientRect();
+  const cx=(e.clientX-r.left)*(W/r.width),cy=(e.clientY-r.top)*(H/r.height);
+  return [wx(cx),wy(cy)];}
+cv.addEventListener("mousedown",e=>{
+  if(mode!=="play"&&V&&V.phase==="deployment"&&!humanP().finished_deploy){
+    const [x,y]=evtWorld(e);
+    const u=hitUnit(x,y);
+    if(u){selUnit=u.handle;drag={handle:u.handle,ux:u.x,uy:u.y,x,y};renderRight();drawEdit();}
+  }
+});
+cv.addEventListener("mousemove",e=>{
+  if(drag){const[x,y]=evtWorld(e);drag.x=Math.max(-350,Math.min(350,x));drag.y=Math.max(-300,Math.min(300,y));drawEdit();}
+});
+window.addEventListener("mouseup",e=>{
+  if(!drag)return;
+  const d=drag;drag=null;
+  const moved=Math.hypot(d.x-d.ux,d.y-d.uy)>1;
+  if(moved)cmd("APPLY_ACTION",{action:{kind:"move_unit",args:{ref:{handle:d.handle},x:Math.round(d.x*10)/10,y:Math.round(d.y*10)/10}}});
+  else drawEdit();
+});
+cv.addEventListener("click",e=>{
+  if(mode==="play"||!V)return;
+  if(V.phase!=="deployment"||humanP().finished_deploy)return;
+  const [x,y]=evtWorld(e);
+  const u=hitUnit(x,y);
+  if(u){selUnit=u.handle;renderRight();drawEdit();return;}
+  if(pickRelease){
+    cmd("APPLY_ACTION",{action:{kind:"raw_unsupported",args:{
+      raw_type:"ReleaseCommanderSkill",
+      raw:[["ID",pickRelease.sid],["Positions",[{x:Math.round(x*10)/10,y:Math.round(y*10)/10}]]]}}});
+    pickRelease=null;renderLeft();return;
+  }
+  if(pickBuy){
+    if(y>0&&V.replay.human_player===0||y<0&&V.replay.human_player===1){flash("只能放置在己方半场");return;}
+    cmd("APPLY_ACTION",{action:{kind:"buy_unit",args:{mech_id:pickBuy.mech_id,x:Math.round(x*10)/10,y:Math.round(y*10)/10}}});
+    pickBuy=null;renderLeft();
+  }
+});
+function hitUnit(x,y){const hp2=humanP();if(!hp2.units)return null;
+  for(const u of hp2.units){if(Math.hypot(u.x-x,u.y-y)<14)return u;}return null;}
+
+/* ------------------------------------------------------------ playback */
+function startPlay(){
+  const b=V.battle;if(!b||!b.trace||!b.trace.length){flash("战斗无 trace");return;}
+  frames=[];events=[];spawnDone={};playT=0;
+  for(const ln of b.trace){
+    const f=ln.split("|");
+    if(f[0]==="E"){
+      if(f[2]==="kill")events.push({t:+f[1],ku:+f[3],km:+f[4],vu:+f[5],vm:+f[6]});
+      else if(f[2]==="tower_down")events.push({t:+f[1],kind:"tdown",team:+f[3]});
+      else if(f[2]==="paralyse")events.push({t:+f[1],kind:"par",team:+f[3],until:+f[4]});
+      else if(f[2]==="skill")events.push({t:+f[1],kind:"skl",team:+f[3],sub:f[4],x:+f[5],y:+f[6]});
+      else if(f[2]==="device_down")events.push({t:+f[1],kind:"ddown",team:+f[3]});
+      else if(f[2]==="spawn"){spawnDone[+f[3]]=+f[1];}
+      continue;
+    }
+    frames.push({t:+f[0],u:f.slice(1).map(s=>{const a=s.split(",");
+      return{uid:+a[0],team:+a[1],mech:+a[2],alive:+a[3],x:+a[4],y:+a[5],hp:+a[6]};})});
+  }
+  mode="play";$("playctl").style.display="flex";$("ppSeek").max=Math.max(0,frames.length-1);
+  playing=true;$("ppPlay").textContent="⏸";
+  clearInterval(timer);timer=setInterval(stepPlay,100);
+  drawPlay();
+}
+function stepPlay(){
+  if(!playing)return;
+  if(playT>=frames.length-1){playing=false;$("ppPlay").textContent="▶";clearInterval(timer);return;}
+  playT++;drawPlay();
+}
+function drawPlay(){
+  if(!frames.length)return;
+  const fr=frames[playT];
+  $("ppSeek").value=playT;$("ppTime").textContent=fr.t.toFixed(1)+"s / "+(frames[frames.length-1].t).toFixed(1)+"s";
+  drawBoard();
+  const floats=[];
+  for(const ev of events){if(ev.t<=fr.t&&ev.t>fr.t-1.2){
+    if(ev.ku!==undefined)floats.push({x:null,y:null,txt:"✖"});
+    else if(ev.kind==="tdown")floats.push({x:0,y:ev.team?90:-90,txt:"塔被摧毁!"});
+    else if(ev.kind==="par")floats.push({x:0,y:ev.team?60:-60,txt:"瘫痪"});
+    else if(ev.kind==="skl")floats.push({x:ev.x,y:ev.y,txt:"⚡"+ev.sub});
+  }}
+  for(const un of fr.u){
+    const x=px(un.x),y=py(un.y);
+    if(un.mech===-1){drawHex(x,y,11,un.team===0?"#3a5a80":"#80443a");continue;}
+    if(un.mech===-2){ctx.beginPath();ctx.arc(x,y,16,0,7);ctx.strokeStyle="#7fd";ctx.stroke();continue;}
+    if(un.mech===-3){ctx.save();ctx.translate(x,y);ctx.rotate(Math.PI/4);
+      ctx.fillStyle=un.team===0?"#3d5a80":"#80443a";ctx.fillRect(-7,-7,14,14);ctx.restore();continue;}
+    ctx.beginPath();ctx.arc(x,y,un.alive?7:3,0,7);
+    ctx.fillStyle=un.alive?(un.team===0?"#5f9fd6":"#d67f5f"):"rgba(120,120,120,.3)";
+    ctx.fill();
+    if(!un.alive)continue;
+    if(fr.t<(spawnDone[un.uid]||0)){ctx.strokeStyle="#ffd54a";ctx.beginPath();ctx.arc(x,y,10,-Math.PI/2,-Math.PI/2+Math.PI*2*fr.t/(spawnDone[un.uid]||1));ctx.stroke();}
+    ctx.fillStyle="#9ab";ctx.font="8px Consolas";ctx.textAlign="center";ctx.fillText(un.hp,x,y-9);
+  }
+  for(const fl of floats){if(fl.x===null)continue;
+    ctx.fillStyle="#ffd54a";ctx.font="11px 'Segoe UI'";ctx.textAlign="center";ctx.fillText(fl.txt,px(fl.x),py(fl.y));}
+}
+$("ppPlay").onclick=()=>{playing=!playing;$("ppPlay").textContent=playing?"⏸":"▶";
+  if(playing){clearInterval(timer);timer=setInterval(stepPlay,100);}};
+$("ppBack").onclick=()=>{playT=0;drawPlay();};
+$("ppSeek").oninput=e=>{playT=+e.target.value;drawPlay();};
+$("ppExit").onclick=()=>{mode="edit";playing=false;clearInterval(timer);$("playctl").style.display="none";drawEdit();renderBottom();};
+
+/* ------------------------------------------------------------ tabs */
+document.querySelectorAll("#ltabs button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("#ltabs button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on");ltab=b.dataset.t;renderLeft();});
+document.querySelectorAll("#btabs button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("#btabs button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on");btab=b.dataset.t;renderBottom();});
+
+/* ------------------------------------------------------------ select view */
+async function loadLibrary(){
+  const lib=await api("/api/game/replays?min_rounds=5");
+  $("libMeta").textContent=lib.corpus_available?
+    `语料: ${lib.corpus_label} · 选项 ${lib.options.length} · 开局 catalog ${lib.opening_catalog.package_count} 队`:
+    "本地语料不存在 (corpus_available=false) — 运行 tools/build_game_library.py 生成";
+  renderOpts(lib);
+  $("fFilter").oninput=$("fEnabled").onchange=()=>renderOpts(lib);
+}
+let LIB=null;
+function renderOpts(lib){
+  LIB=lib;const q=$("fFilter").value.trim();const onlyEn=$("fEnabled").checked;
+  const list=lib.options.filter(o=>{
+    if(onlyEn&&!o.enabled)return false;
+    if(q&&!(o.file_label.includes(q)||o.opponent_name.includes(q)||o.human_name.includes(q)))return false;
+    return o.round_count>=5;});
+  const nEn=lib.options.filter(o=>o.enabled).length;
+  $("optList").innerHTML=(nEn===0?`<div class="offer" style="border-color:var(--bad)"><b>语料中当前没有可连续 ≥5 回合的选项</b>
+    <div class="dim" style="margin-top:4px">v1 未支持机制(装备卡/部分战场技能)会在中后期截断可玩前缀。可玩前缀 ≥3 的选项可“受限开始”: 运行到前缀尽头时会以明确的 BLOCKED 原因停止(审计目标之一)。</div></div>`:"")+
+    list.map(o=>`<div class="optrow ${o.enabled?"":"dis"}">
+    <div class="grow"><b>${o.human_name}</b> <span class="dim">接管</span> vs <b>${o.opponent_name}</b> <span class="dim">(对手=玩家${o.opponent_player})</span>
+     <span class="tag ${o.enabled?"ok":"bad"}">${o.enabled?`可玩至 R${o.playable_through_round}`:`前缀 R${o.playable_through_round}`}</span>
+     <span class="tag">共 ${o.round_count} 回合</span><span class="tag">严格前缀 R${o.strict_playable_through_round}</span><span class="tag">v${o.game_version}</span>
+     <div class="dim" style="font-size:11px">${o.file_label}</div>
+     ${o.enabled?"":`<div class="blockers">⛔ ${o.blockers[0]?o.blockers[0].code+" @R"+o.blockers[0].round+" "+(o.blockers[0].detail||"").slice(0,60):""}${o.blockers.length>1?` (+${o.blockers.length-1})`:""}</div>`}
+    </div>
+    <button class="primary" data-start="${o.option_id}" data-min="${5}" ${o.enabled?"":"disabled"}>开始</button>
+    ${!o.enabled&&o.playable_through_round>=3?`<button data-start="${o.option_id}" data-min="3">受限开始 (R${o.playable_through_round})</button>`:""}
+  </div>`).join("")||"<div class='dim'>无匹配选项</div>";
+  $("optList").querySelectorAll("[data-start]").forEach(b=>b.onclick=()=>startGame(b.dataset.start,+b.dataset.min));
+}
+async function startGame(optionId,minRounds){
+  const o=LIB.options.find(x=>x.option_id===optionId);if(!o)return;
+  if(minRounds<5&&!confirm(`该选项可玩前缀为 R${o.playable_through_round} (<5)。受限开始将在前缀尽头以明确 BLOCKED 原因停止。继续?`))return;
+  busy=true;$("status").textContent="创建会话…";
+  try{
+    const v=await api("/api/game/sessions",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({replay_id:o.replay_id,opponent_player:o.opponent_player,min_rounds:minRounds})});
+    $("selectView").style.display="none";V=null;render(v);
+    flash("会话已创建 — 请在右侧选择开局");
+  }catch(e){alert("创建失败: "+(e.body?e.body.error+" "+e.body.detail:e.message));}
+  busy=false;
+}
+function backToSelect(msg){
+  V=null;mode="edit";playing=false;clearInterval(timer);$("playctl").style.display="none";
+  $("selectView").style.display="block";location.hash="";
+  if(msg)alert(msg);
+  loadLibrary();
+}
+$("btnBack").onclick=()=>backToSelect();
+$("btnRefresh").onclick=()=>refresh();
+$("btnAbandon").onclick=async()=>{
+  if(!V||!confirm("删除会话并返回选择页?"))return;
+  try{await api("/api/game/sessions/"+V.session_id,{method:"DELETE"});}catch(e){}
+  backToSelect();
+};
+window.cmd=cmd;window.confirmFinish=confirmFinish;window.hideOverlay=hideOverlay;window.refresh=refresh;
+
+/* ------------------------------------------------------------ boot */
+(async function(){
+  loadLibrary();
+  const m=location.hash.match(/#s=([0-9a-f]+)/);
+  if(m){
+    try{
+      const v=await api("/api/game/sessions/"+m[1]);
+      $("selectView").style.display="none";render(v);
+    }catch(e){/* 404 handled */}
+  }
+})();
+</script>
+</body>
+</html>

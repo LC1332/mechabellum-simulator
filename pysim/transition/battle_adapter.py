@@ -19,10 +19,12 @@ def _quant(x: float) -> int:
 
 
 def battle_from_state(state: EnvironmentState, gd, battle_seed: int = 0,
-                      opts=None, engine=None) -> tuple:
+                      opts=None, engine=None, with_trace: bool = False) -> tuple:
     """Build (Battle, entity_map, card_map) from a PRE_BATTLE state.
 
-    entity_map[card_idx] = entity_id; card_map[entity_id] = card_idx."""
+    entity_map[card_idx] = entity_id; card_map[entity_id] = card_idx.
+    with_trace=True enables the engine frame/event trace for the frontend
+    player (settlement never reads it; same simulate call feeds both)."""
     if state.phase is not Phase.PRE_BATTLE:
         from . import errors
         raise errors.TransitionError(errors.WRONG_PHASE,
@@ -31,6 +33,7 @@ def battle_from_state(state: EnvironmentState, gd, battle_seed: int = 0,
     b.opts.update({"exp_seed": 1})
     if opts:
         b.opts.update(opts)
+    b.trace_enabled = bool(with_trace)
     entity_map, card_map = {}, {}
     n_cards = 0                     # cards appended in add order (pre-finalize
     for side in (0, 1):             # count ourselves; b.cards fills at finalize)
@@ -49,6 +52,61 @@ def battle_from_state(state: EnvironmentState, gd, battle_seed: int = 0,
         for k in range(min(2, len(levels))):
             tx, ty = TOWER_POS[side][k]
             b.add_tower(side, tx, ty, int(levels[k] or 0))
+        # round buffs from ActiveEnergyTowerSkill (stacking, free)
+        mods = {"range": 0, "speed": 0}
+        for sid in p.tower_mods_raw or ():
+            if int(sid) == 5:
+                mods["range"] += 15
+            elif int(sid) == 6:
+                mods["speed"] += 3
+        if mods["range"] or mods["speed"]:
+            b.tower_mods[side] = dict(mods)
+        # contraption devices released this round (10001 turret / 20001
+        # barrier; unmapped ids are dropped here and blocked by the scanner)
+        for dev in p.devices_raw or ():
+            try:
+                cid, dx, dy = int(dev[0]), float(dev[1]), float(dev[2])
+            except (TypeError, ValueError, IndexError):
+                continue
+            from ..skills import CONTRAPTIONS
+            d = CONTRAPTIONS.get(cid)
+            if not d:
+                continue
+            ev = {"kind": d["kind"], "x": dx, "y": dy, "name": d["name"],
+                  "id": cid}
+            if d["kind"] == "turret":
+                ev.update(d["def"])
+            else:
+                ev["hp"] = d["hp"]
+                ev["radius"] = d["radius"]
+            b.add_skill_event(side, ev)
+        # commander battlefield skills released this round (strike/burn/
+        # barrier/summon; one event per recorded position)
+        for rel in p.skill_events_raw or ():
+            try:
+                sid, sx, sy = int(rel[0]), float(rel[1]), float(rel[2])
+            except (TypeError, ValueError, IndexError):
+                continue
+            from ..skills import COMMANDER_SKILLS
+            d = COMMANDER_SKILLS.get(sid)
+            if not d:
+                continue
+            ev = {"kind": d["kind"], "x": sx, "y": sy, "name": d["name"],
+                  "id": sid}
+            if d["kind"] == "strike":
+                ev["damage"] = d["damage"]
+                ev["splash"] = d["splash"]
+            elif d["kind"] == "barrier":
+                ev["hp"] = d["hp"]
+                ev["radius"] = d["radius"]
+            elif d["kind"] == "summon":
+                ev["mech"] = d["mech"]
+                ev["count"] = d["count"]
+                ev["level"] = d["level"]
+            elif d["kind"] == "burn":
+                ev["dps"] = d["dps"]
+                ev["radius"] = d["radius"]
+            b.add_skill_event(side, ev)
         techs_of = {m: list(t) for m, t in p.tech_map}
         for u in p.units:
             m = gd.mechs.get(u.mech_id)
@@ -75,13 +133,17 @@ def battle_from_state(state: EnvironmentState, gd, battle_seed: int = 0,
 
 
 def run_battle(state: EnvironmentState, gd, battle_seed: int = 0,
-               opts=None) -> BattleOutcome:
+               opts=None, with_trace: bool = False):
     """Simulate one fight and produce the public outcome.
 
     Damage rule pysim_survivor_value_v1: winner's survivor value becomes the
     loser's hp deduction; draws deduct nothing (real-report probing may
-    revise this; the rule name rides in the ruleset)."""
-    b, entity_map, _ = battle_from_state(state, gd, battle_seed, opts)
+    revise this; the rule name rides in the ruleset).
+    with_trace=True returns (outcome, battle_extra) where battle_extra
+    carries the engine trace + public result fields for the frontend player;
+    the outcome driving settlement is the same object either way."""
+    b, entity_map, _ = battle_from_state(state, gd, battle_seed, opts,
+                                         with_trace=with_trace)
     winner = b.simulate()
     s0, s1 = b.team_score(0), b.team_score(1)
     if winner == 0:
@@ -94,9 +156,9 @@ def run_battle(state: EnvironmentState, gd, battle_seed: int = 0,
     for rec in b.outcome_cards():
         eid = entity_map.get(rec["card_idx"])
         if eid is None:
-            from . import errors
-            raise errors.TransitionError("UNKNOWN_ENTITY_MAPPING",
-                                         "card %d has no entity" % rec["card_idx"])
+            # battle-only cards (skill-event summons) have no persistent
+            # entity; they fight inside this battle and dissolve after it
+            continue
         before = _unit_exp(state, eid)
         delta = _quant(rec["exp"]) - before
         cards.append(CardBattleResult(
@@ -104,11 +166,24 @@ def run_battle(state: EnvironmentState, gd, battle_seed: int = 0,
             exp_after=before + delta, damage=rec["damage"],
             kills=rec["kills"], survived=rec["survived"],
             level_after=rec["level"]))
-    return BattleOutcome(
+    outcome = BattleOutcome(
         battle_seed=battle_seed, winner=int(winner),
         score_by_team=(int(s0), int(s1)), damage_to_player=dmg,
         cards=tuple(cards), end_time=float(b.end_tick) * 0.01,
         engine_version=ENGINE_VERSION)
+    if not with_trace:
+        return outcome
+    res = b.result(winner)
+    extra = {
+        "trace": res["trace"],
+        "survivors": {str(t): res["survivors"][t] for t in (0, 1)},
+        "towers_down": {str(t): res["towers_down"].get(t, 0) for t in (0, 1)},
+        "buildings": res["buildings"],
+        "stats": res["stats"],
+        "card_index": {str(ci): entity_map.get(ci)
+                       for ci in range(len(b.cards))},
+    }
+    return outcome, extra
 
 
 def _unit_exp(state: EnvironmentState, entity_id: int) -> int:

@@ -39,6 +39,9 @@ class ReplayAdapter:
         else:
             self.corpus_hash = "unknown"
         self._games = None
+        self._is_norm = None
+        self._normalizer = None
+        self._warned_raw = False
 
     # ---------------------------------------------------------------- load
     def games(self):
@@ -47,6 +50,38 @@ class ReplayAdapter:
                 json.load(open(self.path, encoding="utf8"))
             self._games = data
         return self._games
+
+    def is_norm(self) -> bool:
+        """True when the corpus carries actions_norm (rounds_norm.json)."""
+        if self._is_norm is None:
+            self._is_norm = False
+            for g in self.games()[:3]:
+                for pr in g.get("players", []):
+                    for r in pr.get("rounds", []):
+                        if "actions_norm" in r:
+                            self._is_norm = True
+                        break
+        return self._is_norm
+
+    def _norm_round(self, round_rec):
+        """actions_norm + report, normalizing raw records on the fly."""
+        if "actions_norm" in round_rec:
+            return round_rec["actions_norm"], round_rec.get("norm_report") or {}
+        if not self._warned_raw:
+            self._warned_raw = True
+            print("WARNING: %s is a RAW corpus (contains Undo); normalizing "
+                  "on the fly - run tools/normalize_actions.py for the "
+                  "auditable artifact" % os.path.basename(self.path))
+        if self._normalizer is None:
+            from .normalize import Normalizer
+            from .economy import Economy
+            from ..gamedata import GameData
+            gd = GameData(os.path.join(
+                os.path.dirname(os.path.dirname(os.path.dirname(
+                    os.path.abspath(__file__)))), "data", "gamedata.json"))
+            self._normalizer = Normalizer(Economy(gd))
+        res = self._normalizer.normalize_round(round_rec)
+        return res.actions_norm, res.report
 
     def game(self, index: int) -> dict:
         return self.games()[index]
@@ -108,21 +143,24 @@ class ReplayAdapter:
                 round_count=int(u.get("roundCount", 0) or 0),
                 replay_index=int(u["index"])))
             eid += 1
-        # unlock provenance: snapshot presence + earlier UnlockUnit actions +
-        # every mech bought/granted anywhere in the game (the ChooseAdvanceTeam
-        # package grants unlocks that carry no UnlockUnit action; whole-game
-        # buy scan is an initialization approximation, noted in provenance)
-        unlocked = {u.mech_id for u in units}
-        for r in player_rec["rounds"]:
-            for a in r.get("actions") or []:
-                if a.get("type") == "UnlockUnit":
-                    unlocked.add(int(a.get("UID", 0)))
-                elif a.get("type") == "BuyUnit":
-                    unlocked.add(int(a.get("UID", 0)))
-                elif a.get("type") == "ChooseReinforceItem" and economy:
-                    g = economy.item_grant(int(a.get("ID", 0) or 0))
-                    if g:
-                        unlocked.add(g[0])
+        # unlock state: v0.1 exports shop/unlockedUnits from the snapshot
+        # (authoritative). Fallback for old corpora: snapshot presence +
+        # UnlockUnit actions + every mech bought/granted anywhere in the
+        # game (ChooseAdvanceTeam grants carry no UnlockUnit action).
+        if round_rec.get("unlocked_units") is not None:
+            unlocked = {int(u) for u in round_rec["unlocked_units"]}
+        else:
+            unlocked = {u.mech_id for u in units}
+            for r in player_rec["rounds"]:
+                for a in r.get("actions") or []:
+                    if a.get("type") == "UnlockUnit":
+                        unlocked.add(int(a.get("UID", 0)))
+                    elif a.get("type") == "BuyUnit":
+                        unlocked.add(int(a.get("UID", 0)))
+                    elif a.get("type") == "ChooseReinforceItem" and economy:
+                        g = economy.item_grant(int(a.get("ID", 0) or 0))
+                        if g:
+                            unlocked.add(g[0])
         tech_map = tuple(sorted(
             (int(m), tuple(int(t) for t in lst))
             for m, lst in (round_rec.get("techMap") or {}).items()))
@@ -162,6 +200,20 @@ class ReplayAdapter:
         return max(best, _as_int(round_rec.get("reactorCore")), 4500)
 
     # ------------------------------------------------------- exogenous data
+    def round_rec(self, game: dict, side: int, round_no: int) -> dict | None:
+        for r in game["players"][side]["rounds"]:
+            if int(r["round"]) == int(round_no):
+                return r
+        return None
+
+    def norm_actions(self, game: dict, side: int, round_no: int):
+        """(actions_norm, norm_report) for one player round; raw corpora are
+        normalized on the fly (with a one-time warning)."""
+        rec = self.round_rec(game, side, round_no)
+        if rec is None:
+            return [], {}
+        return self._norm_round(rec)
+
     @staticmethod
     def round_actions(game: dict, side: int, round_no: int) -> list:
         for r in game["players"][side]["rounds"]:

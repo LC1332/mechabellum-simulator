@@ -8,8 +8,10 @@
 from dataclasses import dataclass, field
 
 from . import errors
+from .canonicalize import FORBIDDEN_RAW_TYPES
 from .model import (ActionKind, CanonicalActionPlan, EnvironmentState,
-                    PlayerState, UnitCard, Phase, ActionReceipt, EntityRef)
+                    PlayerState, UnitCard, Phase, ActionReceipt, EntityRef,
+                    GiftArgs)
 from .state_tools import state_digest, with_player, assert_state_invariants
 from .economy import Economy, LedgerBuilder
 
@@ -18,10 +20,32 @@ MAP_X, MAP_Y = 350.0, 300.0
 # v0 feature flags (unknown rules stay OFF and land in the unsupported bucket
 # instead of being guessed in code):
 FEATURES = {
-    "elite_recruit_bp3": False,     # ActiveBlueprint 3 raises later buys' level
-    "elite_officer_bonus": True,    # 精英专家 20032 / 3xxxx 精英卡 -> +1 buy level
+    "elite_officer_bonus": True,    # 精英专家 20032 / 精英卡 -> +1 buy level
+                                    # (corpus: blueprint 2/3 do NOT boost)
+    "elite_officer_charge": True,   # ...and charges one upgrade price (Q11)
     "upgrade_exp_gate": True,       # veterans need a full exp bar to upgrade
+    "manufacturing_discount": True, # 20022/20023 高效制造 -50 per matching buy
 }
+
+# passive deploy-action supply costs (corpus-attributed 2026-08-26: r1
+# window algebra bp2-only -> 0 (1251 rounds), bp4/bp5 -> +100 each;
+# tower -> +100; con10001 -> +100, con20001 -> +50; prices_v1_passive)
+BLUEPRINT_COSTS = {3: 100, 4: 100, 5: 100, 401: 300, 501: 300}
+CONTRAPTION_COSTS = {"10001": 100, "20001": 50, "30001": 100}
+TOWER_STRENGTHEN_COST = 100
+MANUFACTURING_OFFICERS = {20022: "giant", 20023: "small"}
+# audit-game v1 blueprint semantics (information/commend_center的蓝图.md +
+# corpus probes _probe9/_probe14, 2026-08-27):
+#   1 快速补给  cost 0   -> +200 now / -300 next round (income side)
+#   2 批量征召  cost 0   -> this round's buy limit +1 (base limit 5, the
+#                          corpus never exceeds 5 buys/round; bp2 rounds top
+#                          out at 4 — flag until a limit-binding sample lands)
+#   3 精英征召  cost 100 -> this round's buys spawn at level+1 (order matters:
+#                          only buys AFTER the activation; doc examples)
+#   4/5 进攻/防御强化I  cost 100 -> permanent officer 20310/20300
+#   401/501 II tiers    cost 300 -> officer 20311/20301, replaces the I tier
+BLUEPRINT_OFFICERS = {4: 20310, 5: 20300, 401: 20311, 501: 20301}
+BASE_BUY_LIMIT = 5
 
 
 @dataclass
@@ -46,10 +70,16 @@ class _RoundCtx:
     finished: bool
     buy_count: int
     ledger: LedgerBuilder
-    commander_skills: tuple = ()
+    commander_skills: list = field(default_factory=list)  # (index,id,active,cd) skill inventory
     spawned_ids: set = field(default_factory=set)   # units created this round
     buy_level_bonus: int = 0
+    buy_limit_bonus: int = 0        # 批量征召 (blueprint 2): +1 this round
     digests: list = field(default_factory=list)
+    tower_strengthen: tuple = (0, 0)   # (left, right) core tower levels
+    blueprints: list = field(default_factory=list)   # activated blueprint ids
+    tower_mods: list = field(default_factory=list)   # ActiveEnergyTowerSkill ids this round
+    devices: list = field(default_factory=list)      # (cid,x,y) contraption releases
+    skill_events: list = field(default_factory=list)  # (sid,x,y) commander releases
 
 
 def deploy_transition(state: EnvironmentState,
@@ -60,6 +90,15 @@ def deploy_transition(state: EnvironmentState,
     if state.phase is not Phase.DEPLOYMENT:
         raise errors.TransitionError(errors.WRONG_PHASE,
                                      "deploy needs DEPLOYMENT phase")
+    # v0.1 defense: the norm stream must never carry un-folded undo records
+    for plan in plans:
+        for act in plan.actions:
+            if act.kind is ActionKind.RAW_UNSUPPORTED and \
+                    act.args.raw_type in FORBIDDEN_RAW_TYPES:
+                raise errors.TransitionError(
+                    "UNDO_IN_NORM_STREAM",
+                    "player %d action %d carries raw %s: normalize first"
+                    % (plan.player, act.raw_index, act.args.raw_type))
     all_receipts = []
     ledgers = []
     states = list(state.players)
@@ -83,10 +122,17 @@ def deploy_transition(state: EnvironmentState,
             units=list(p.units), supply=p.supply, unlocked=set(p.unlocked_mechs),
             tech_bought={m: list(t) for m, t in p.tech_map},
             officers=list(p.officers), entity_seq=entity_seq_fn(),
-            commander_skills=p.commander_skills_raw,
+            commander_skills=[tuple(str(x) for x in e)
+                              for e in p.commander_skills_raw],
             new_ref_entity={}, finished=state.finished_deploy[side],
             buy_count=0,
-            ledger=LedgerBuilder(p.supply))
+            ledger=LedgerBuilder(p.supply),
+            tower_strengthen=tuple(int(x) for x in (p.tower_strengthen
+                                                    or (0, 0))[:2]),
+            blueprints=list(p.blueprints),
+            tower_mods=list(p.tower_mods_raw or ()),
+            devices=list(p.devices_raw or ()),
+            skill_events=list(p.skill_events_raw or ()))
         ctxs.append(ctx)
 
     for plan in plans:
@@ -134,11 +180,15 @@ def _freeze(ctx: _RoundCtx, base: PlayerState) -> PlayerState:
         units=tuple(sorted(ctx.units, key=lambda u: u.entity_id)),
         unlocked_mechs=frozenset(ctx.unlocked),
         tech_map=tuple(sorted((m, tuple(t)) for m, t in ctx.tech_bought.items())),
-        officers=tuple(ctx.officers), blueprints=base.blueprints,
-        commander_skills_raw=base.commander_skills_raw,
-        tower_strengthen=base.tower_strengthen,
+        officers=tuple(ctx.officers),
+        blueprints=tuple(ctx.blueprints),
+        commander_skills_raw=tuple(tuple(e) for e in ctx.commander_skills),
+        tower_strengthen=tuple(ctx.tower_strengthen),
         constructions_raw=base.constructions_raw,
-        bought_this_round=ctx.buy_count)
+        bought_this_round=ctx.buy_count,
+        tower_mods_raw=tuple(ctx.tower_mods),
+        devices_raw=tuple(ctx.devices),
+        skill_events_raw=tuple(ctx.skill_events))
 
 
 def _receipt(i, kind, ok, reason, detail="", **kw) -> ActionReceipt:
@@ -170,14 +220,78 @@ def _find_unit(ctx, ref):
 
 
 def _elite_bonus(ctx, mech_id: int) -> int:
+    """+1 buy level: officer 20032 (all mechs) and the unit-specific 精英
+    strengthen cards (e.g. 30804 精英钢球 boosts ONLY mech 8; corpus:
+    its 鬼鳐/爬虫 buys stayed level 1). Range checks on 3xxxx wrongly
+    promoted 增程/改进型 cards in v0."""
     if not FEATURES["elite_officer_bonus"]:
         return 0
-    for o in ctx.officers:
-        if o == 20032:
-            return 1
-        if 30000 + mech_id * 100 <= o < 30000 + (mech_id + 1) * 100:
-            return 1
-    return 0
+    officers = set(ctx.officers)
+    if 20032 in officers:
+        return 1
+    return 1 if mech_id in officers_map_mechs(officers) else 0
+
+
+_ELITE_CACHE = None
+
+
+def _elite_mechs() -> dict:
+    """officer_id -> boosted mech for 精英-named strengthen cards."""
+    global _ELITE_CACHE
+    if _ELITE_CACHE is None:
+        import json as _json
+        import os as _os
+        from .economy import _ROOT
+        raw = _json.load(open(_os.path.join(
+            _ROOT, "information", "增援卡牌-回放全量信息.json"), encoding="utf8"))
+        _gd = _json.load(open(_os.path.join(_ROOT, "data", "gamedata.json"),
+                              encoding="utf8"))
+        gd_names = {c.get("name"): int(c.get("mechID", 0))
+                    for c in _gd["cards"].values()}
+        table = {}
+        for c in raw.get("cards", []):
+            if c.get("类别") != "单位强化卡":
+                continue
+            name = str(c.get("名称") or "")
+            if "精英" not in name:
+                continue
+            for cname, mid in sorted(gd_names.items(),
+                                     key=lambda kv: -len(kv[0])):
+                if cname and cname in name:
+                    table[int(c["id"])] = mid
+                    break
+        _ELITE_CACHE = table
+    return _ELITE_CACHE
+
+
+def officers_map_mechs(officers) -> set:
+    """Mechs boosted by the held unit-specific elite cards."""
+    table = _elite_mechs()
+    return {table[o] for o in officers if o in table}
+
+
+def _is_giant(gd, mech_id: int) -> bool:
+    """Giant units: big single entities (slot_size >= 30); squads and small
+    vehicles sit at slot 6-20."""
+    c = gd.cards.get(int(mech_id))
+    return bool(c and c.slot_size >= 30)
+
+
+def _buy_cost(ctx, eco: Economy, mech_id: int) -> int | None:
+    """base + strengthen-card mods + elite charge (Q11) + manufacturing
+    discounts (Q10); None when the base price is unknown."""
+    base = eco.buy_price(mech_id)
+    if base is None:
+        return None
+    cost = base + eco.buy_price_mod(mech_id, ctx.officers)
+    if FEATURES["elite_officer_charge"] and _elite_bonus(ctx, mech_id):
+        cost += eco.upgrade_price(mech_id) or 0
+    if FEATURES["manufacturing_discount"]:
+        for o, cls in MANUFACTURING_OFFICERS.items():
+            if o in ctx.officers:
+                if (cls == "giant") == _is_giant(eco.gd, mech_id):
+                    cost -= 50
+    return max(0, cost)
 
 
 def _fold_tech(active: list, new_tech: int, prev_of: dict) -> list:
@@ -201,27 +315,159 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
         return _receipt(i, kind.value, True, errors.OK)
 
     if ctx.finished:
+        # GiveUp is a terminal marker recorded after the finish click; it
+        # changes no deploy state and must not read as a core rejection
+        if kind is ActionKind.RAW_UNSUPPORTED and args.raw_type == "GiveUp":
+            return _receipt(i, kind.value, True, errors.OK,
+                            detail="giveup marker (no deploy effect)")
         return _receipt(i, kind.value, False, errors.ACTION_AFTER_END_DEPLOY)
+
+    if kind is ActionKind.GIFT_UNIT:
+        # opening-team delayed gift: free spawn at the default deploy line
+        price = eco.buy_price(args.mech_id)
+        if price is None:
+            return _receipt(i, kind.value, False, errors.UNKNOWN_MECH)
+        eid = ctx.entity_seq()
+        ctx.spawned_ids.add(eid)
+        y = -160.0 if side == 0 else 160.0
+        ctx.units.append(UnitCard(
+            entity_id=eid, mech_id=args.mech_id, level=1, exp=0,
+            x=0.0, y=y, sell_supply=price,
+            replay_index=args.game_index if args.game_index is not None
+            else _next_replay_index(ctx)))
+        return _receipt(i, kind.value, True, errors.OK,
+                        created_entity_id=eid,
+                        changed_paths=("players[%d].units" % side,))
 
     if kind is ActionKind.RAW_UNSUPPORTED:
         unsupported.append(args.raw_type)
+        rt = args.raw_type
+        rid = _raw_get(args, "ID")
+        if rt == "ActiveBlueprint":
+            if rid == 1:
+                # 快速补给: +200 now; the -300 next round lands on the
+                # income side (Income200r.fast_debts, recorded by the env)
+                ctx.supply += 200
+                ctx.ledger.add("blueprint_loan:+200", 200, action_index=i)
+                ctx.blueprints.append(1)
+                return _receipt(i, kind.value, True, errors.OK,
+                                resource_delta=200,
+                                changed_paths=("players[%d].supply" % side,
+                                               "players[%d].blueprints" % side))
+            if rid == 2:
+                # 批量征召: this round's buy limit +1 (free per corpus algebra)
+                ctx.buy_limit_bonus += 1
+                ctx.blueprints.append(2)
+                return _receipt(i, kind.value, True, errors.OK,
+                                detail="批量征召: buy limit %d" % (
+                                    BASE_BUY_LIMIT + ctx.buy_limit_bonus),
+                                changed_paths=("players[%d].blueprints" % side,))
+            if rid == 3:
+                # 精英征召: buys AFTER this point spawn at level+1 (doc order)
+                if ctx.supply < BLUEPRINT_COSTS[3]:
+                    return _receipt(i, kind.value, False,
+                                    errors.INSUFFICIENT_SUPPLY,
+                                    detail="blueprint %s needs %d" % (
+                                        rid, BLUEPRINT_COSTS[3]))
+                ctx.supply -= BLUEPRINT_COSTS[3]
+                ctx.ledger.add("blueprint:%s" % rid, -BLUEPRINT_COSTS[3],
+                               action_index=i)
+                ctx.buy_level_bonus += 1
+                ctx.blueprints.append(3)
+                return _receipt(i, kind.value, True, errors.OK,
+                                resource_delta=-BLUEPRINT_COSTS[3],
+                                changed_paths=("players[%d].supply" % side,
+                                               "players[%d].blueprints" % side))
+            officer = BLUEPRINT_OFFICERS.get(rid)
+            cost = BLUEPRINT_COSTS.get(rid if rid is not None else -1, 0)
+            if officer:
+                if ctx.supply < cost:
+                    return _receipt(i, kind.value, False,
+                                    errors.INSUFFICIENT_SUPPLY,
+                                    detail="blueprint %s needs %d" % (rid, cost))
+                ctx.supply -= cost
+                ctx.ledger.add("blueprint:%s" % rid, -cost, action_index=i)
+                # II replaces I in the equipped list (corpus: never both)
+                replace = {20311: 20310, 20301: 20300}.get(officer)
+                if replace is not None and replace in ctx.officers:
+                    ctx.officers.remove(replace)
+                ctx.officers.append(officer)
+                ctx.blueprints.append(rid)
+                return _receipt(i, kind.value, True, errors.OK,
+                                resource_delta=-cost,
+                                changed_paths=("players[%d].supply" % side,
+                                               "players[%d].officers" % side,
+                                               "players[%d].blueprints" % side))
+            return _receipt(i, kind.value, True, errors.OK,
+                            detail="blueprint %s (no supply effect)" % rid)
+        if rt == "ReleaseContraption":
+            cid = _raw_get_str(args, "ContraptionID")
+            pos = _raw_get(args, "Position")
+            cost = CONTRAPTION_COSTS.get(cid, 0)
+            if cost:
+                if ctx.supply < cost:
+                    return _receipt(i, kind.value, False,
+                                    errors.INSUFFICIENT_SUPPLY,
+                                    detail="contraption %s needs %d" % (cid, cost))
+                ctx.supply -= cost
+                ctx.ledger.add("contraption:%s" % cid, -cost, action_index=i)
+            # record the device for the battle adapter (10001 飞弹 turret /
+            # 20001 护盾装置 barrier; 30001 unmapped - cost only, the
+            # capability scanner blocks it from strict play)
+            try:
+                cx = float(pos.get("x", 0.0)) if isinstance(pos, dict) else 0.0
+                cy = float(pos.get("y", 0.0)) if isinstance(pos, dict) else 0.0
+                ctx.devices.append((int(cid), cx, cy))
+            except (TypeError, ValueError):
+                cx = cy = 0.0
+                ctx.devices.append((int(cid) if cid else 0, 0.0, 0.0))
+            return _receipt(i, kind.value, True, errors.OK,
+                            resource_delta=-cost,
+                            changed_paths=(
+                                ("players[%d].supply" % side,) if cost else ())
+                            + ("players[%d].devices_raw" % side,))
+        if rt == "StrengthenTower":
+            # audit-game v1: full semantics — charge + persistent tower level
+            # (battle adapter reads tower_strengthen[:2]); Index selects the
+            # tower slot (0/1), max level mirrors units (9).
+            tidx = _raw_get(args, "Index") or 0
+            tidx = 0 if tidx not in (0, 1) else int(tidx)
+            levels = list(ctx.tower_strengthen) + [0, 0]
+            levels = levels[:2]
+            if levels[tidx] >= 9:
+                return _receipt(i, kind.value, False, errors.MAX_LEVEL,
+                                detail="tower %d at max" % tidx)
+            if ctx.supply < TOWER_STRENGTHEN_COST:
+                return _receipt(i, kind.value, False, errors.INSUFFICIENT_SUPPLY,
+                                detail="tower needs %d" % TOWER_STRENGTHEN_COST)
+            ctx.supply -= TOWER_STRENGTHEN_COST
+            ctx.ledger.add("tower_strengthen", -TOWER_STRENGTHEN_COST,
+                           action_index=i)
+            levels[tidx] += 1
+            ctx.tower_strengthen = (levels[0], levels[1])
+            return _receipt(i, kind.value, True, errors.OK,
+                            resource_delta=-TOWER_STRENGTHEN_COST,
+                            changed_paths=(
+                                "players[%d].tower_strengthen" % side,
+                                "players[%d].supply" % side))
+        if rt == "ActiveEnergyTowerSkill":
+            # 能量塔技能 (free round buffs, stacking): 5 强化瞄准 = 全体远程
+            # 射程 +15, 6 高速移动 = 全体移速 +3 (battle adapter applies via
+            # b.tower_mods; ids 1/3/4 have no modeled effect and stay in the
+            # unsupported bucket via the capability scanner)
+            sid = _raw_get(args, "SkillID")
+            if sid in (5, 6):
+                ctx.tower_mods.append(int(sid))
+                return _receipt(i, kind.value, True, errors.OK,
+                                detail="tower skill %d (%s)" % (
+                                    sid, "强化瞄准+15射程" if sid == 5
+                                    else "高速移动+3移速"),
+                                changed_paths=(
+                                    "players[%d].tower_mods_raw" % side,))
+            return _receipt(i, kind.value, False, errors.UNSUPPORTED_ACTION,
+                            detail="tower skill %s not executed in v0" % sid)
         # modeled peeks (kept explicit; each changes only the flagged field):
-        if args.raw_type == "ActiveBlueprint" and _raw_get(args, "ID") == 3 \
-                and FEATURES["elite_recruit_bp3"]:
-            ctx.buy_level_bonus += 1
-            return _receipt(i, kind.value, True, errors.OK,
-                            detail="elite_recruit_bp3 flag on",
-                            changed_paths=("players[%d].buy_level_bonus" % side,))
-        if args.raw_type == "ActiveBlueprint" and _raw_get(args, "ID") == 1:
-            # 快速补给: +200 now; the -300 next round is an income-side effect
-            # absorbed by the (injected) income policy in replay mode.
-            ctx.supply += 200
-            ctx.ledger.add("blueprint_loan:+200", 200, action_index=i)
-            return _receipt(i, kind.value, True, errors.OK,
-                            resource_delta=200,
-                            changed_paths=("players[%d].supply" % side,))
-        if args.raw_type == "ReleaseCommanderSkill" \
-                and _resolves_to(args, ctx, 1100001):
+        if rt == "ReleaseCommanderSkill" and _resolves_to(args, ctx, 1100001):
             # 强化训练: target unit's exp jumps to its next upgrade threshold
             uidx = _raw_get(args, "UnitIndex")
             j, u = _find_unit(ctx, EntityRef(handle=uidx))
@@ -236,6 +482,36 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
                                             side, u.entity_id),))
             return _receipt(i, kind.value, True, errors.OK,
                             detail="强化训练 (no-op: exp already full or cap)")
+        if rt == "ReleaseCommanderSkill":
+            # mapped battlefield skills (skills.COMMANDER_SKILLS): release
+            # becomes round battle events at the recorded positions; ids 1/3/4
+            # of the energy tower family and unmapped skills stay unsupported
+            from ..skills import COMMANDER_SKILLS
+            sid = _raw_get(args, "ID")
+            if not sid:
+                sidx = _raw_get(args, "SkillIndex")
+                if sidx is not None:
+                    for entry in ctx_officers(ctx):
+                        if entry and str(entry[0]) == str(sidx):
+                            try:
+                                sid = int(entry[1])
+                            except (TypeError, ValueError):
+                                sid = 0
+                            break
+            if sid in COMMANDER_SKILLS:
+                spots = _raw_positions(args)
+                if not spots:
+                    spots = [(0.0, 0.0)]
+                for (sx2, sy2) in spots:
+                    ctx.skill_events.append((int(sid), float(sx2), float(sy2)))
+                d = COMMANDER_SKILLS[sid]
+                return _receipt(i, kind.value, True, errors.OK,
+                                detail="release %s(%s) x%d" % (
+                                    sid, d.get("name", "?"), len(spots)),
+                                changed_paths=(
+                                    "players[%d].skill_events_raw" % side,))
+            return _receipt(i, kind.value, False, errors.UNSUPPORTED_ACTION,
+                            detail="commander skill %s not executed in v0" % sid)
         return _receipt(i, kind.value, False, errors.UNSUPPORTED_ACTION,
                         detail="raw type %s not executed in v0" % args.raw_type)
 
@@ -245,12 +521,30 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
         if cost is None:
             return _receipt(i, kind.value, False, errors.UNKNOWN_ITEM,
                             detail="item %s" % item_id)
+        # equipment cards have no state effect AND no engine mechanic: charge-
+        # only acceptance would be a silent half-effect, so reject (the
+        # capability scanner blocks the same ids - one rule source)
+        info = eco.items.get(item_id) if item_id else None
+        if info and info.get("kind") == "装备":
+            return _receipt(i, kind.value, False, errors.UNSUPPORTED_ACTION,
+                            detail="equipment card %s not modeled" % item_id)
         if ctx.supply < cost:
             return _receipt(i, kind.value, False, errors.INSUFFICIENT_SUPPLY,
                             detail="need %d have %d" % (cost, ctx.supply))
         ctx.supply -= cost
         if cost:
             ctx.ledger.add("reinforce:%s" % item_id, -cost, action_index=i)
+        if item_id == 0:
+            # skipping all four offers pays a small bonus (Q4, corpus-fit
+            # +50 at rounds 2..5; rule reinforce_skip_bonus_v1)
+            from .economy import REINFORCE_SKIP_BONUS
+            ctx.supply += REINFORCE_SKIP_BONUS
+            ctx.ledger.add("reinforce_skip:+50", REINFORCE_SKIP_BONUS,
+                           action_index=i)
+            return _receipt(i, kind.value, True, errors.OK,
+                            resource_delta=REINFORCE_SKIP_BONUS - cost,
+                            changed_paths=("players[%d].supply" % side,),
+                            detail="skip bonus +%d" % REINFORCE_SKIP_BONUS)
         grant = eco.item_grant(item_id)
         spawned = None
         if grant:
@@ -272,10 +566,25 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
                     exp=0, x=0.0, y=0.0, sell_supply=price,
                     replay_index=game_idx))
             spawned = count
-        # routing: unit-strengthen / expert cards persist into officers
+        # routing: unit-strengthen / expert cards persist into officers;
+        # 舰长技能/战术 cards enter the skill inventory (releasable later)
         info = eco.items.get(item_id) if item_id else None
         if info and info.get("kind") in ("单位强化卡", "专家/补给卡"):
             ctx.officers.append(item_id)
+        if info and info.get("kind") == "舰长技能/战术":
+            next_idx = 0
+            for e in ctx.commander_skills:
+                try:
+                    next_idx = max(next_idx, int(e[0]) + 1)
+                except (TypeError, ValueError):
+                    continue
+            ctx.commander_skills.append(
+                (str(next_idx), str(item_id), "true", "0"))
+            return _receipt(i, kind.value, True, errors.OK, resource_delta=-cost,
+                            changed_paths=("players[%d].supply" % side,
+                                           "players[%d].commander_skills_raw" % side),
+                            detail="skill card %s -> inventory slot %d"
+                                   % (item_id, next_idx))
         return _receipt(i, kind.value, True, errors.OK, resource_delta=-cost,
                         created_entity_id=None,
                         changed_paths=(("players[%d].supply" % side),) if cost else (),
@@ -299,13 +608,18 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
                                        "players[%d].supply" % side))
 
     if kind is ActionKind.BUY_UNIT:
-        price = eco.buy_price(args.mech_id)
+        price = _buy_cost(ctx, eco, args.mech_id)
         if price is None:
             return _receipt(i, kind.value, False, errors.UNKNOWN_MECH)
         if args.mech_id not in ctx.unlocked:
             return _receipt(i, kind.value, False, errors.MECH_NOT_UNLOCKED)
         if not (_in_bounds(args.x, args.y)):
             return _receipt(i, kind.value, False, errors.POSITION_OUT_OF_BOUNDS)
+        limit = BASE_BUY_LIMIT + ctx.buy_limit_bonus
+        if ctx.buy_count >= limit:
+            return _receipt(i, kind.value, False, errors.BUY_LIMIT_REACHED,
+                            detail="buy %d/%d this round"
+                                   % (ctx.buy_count, limit))
         if ctx.supply < price:
             return _receipt(i, kind.value, False, errors.INSUFFICIENT_SUPPLY,
                             detail="need %d have %d" % (price, ctx.supply))
@@ -319,7 +633,7 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
         ctx.units.append(UnitCard(
             entity_id=eid, mech_id=args.mech_id, level=level, exp=0,
             x=args.x, y=args.y, is_rotate=args.is_rotate,
-            sell_supply=price,
+            sell_supply=eco.buy_price(args.mech_id) or 0,
             replay_index=args.game_index if args.game_index is not None
             else _next_replay_index(ctx)))
         ctx.buy_count += 1
@@ -335,20 +649,17 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
         price = eco.upgrade_price(u.mech_id)
         if price is None:
             return _receipt(i, kind.value, False, errors.UNKNOWN_MECH)
+        price = max(0, price + eco.upgrade_price_mod(u.mech_id, ctx.officers))
         if u.level >= 9:
             return _receipt(i, kind.value, False, errors.MAX_LEVEL)
-        # exp gate: veterans (present in the pre-round snapshot) need a full
-        # exp bar and consume it; units bought/granted THIS round upgrade
-        # immediately at money cost only (corpus: fresh buys upgrade with 0 exp)
-        fresh = u.entity_id in ctx.spawned_ids
-        need = eco.upgrade_exp_need(u.mech_id, u.level)
-        if need < 0:
-            return _receipt(i, kind.value, False, errors.MAX_LEVEL)
-        if need and not fresh and FEATURES["upgrade_exp_gate"] \
-                and u.exp < need:
-            return _receipt(i, kind.value, False, errors.EXP_NOT_ENOUGH,
-                            detail="exp %d need %d" % (u.exp, need))
-        consume = need if (u.exp >= need) else 0
+        # corpus truth (2026-08-26): every recorded UpgradeUnit of a live
+        # unit levels it up (455/455 with exp below the v0 threshold) —
+        # there is NO exp gate; exp consumption happens elsewhere
+        consume = 0
+        if FEATURES["upgrade_exp_gate"]:
+            need = eco.upgrade_exp_need(u.mech_id, u.level)
+            if need and need > 0 and u.exp >= need:
+                consume = need
         if ctx.supply < price:
             return _receipt(i, kind.value, False, errors.INSUFFICIENT_SUPPLY,
                             detail="need %d have %d" % (price, ctx.supply))
@@ -435,6 +746,31 @@ def _raw_get(args, key):
             except (TypeError, ValueError):
                 return v
     return None
+
+
+def _raw_get_str(args, key):
+    for k, v in args.raw:
+        if k == key:
+            return str(v)
+    return None
+
+
+def _raw_positions(args):
+    """Positions field of a raw release record -> [(x, y), ...]."""
+    for k, v in args.raw:
+        if k != "Positions":
+            continue
+        out = []
+        if isinstance(v, dict):
+            v = [v]
+        for p in (v or []):
+            try:
+                out.append((float(p.get("x", 0.0) or 0.0),
+                            float(p.get("y", 0.0) or 0.0)))
+            except (AttributeError, TypeError, ValueError):
+                continue
+        return out
+    return []
 
 
 def _resolves_to(args, ctx, skill_id: int) -> bool:

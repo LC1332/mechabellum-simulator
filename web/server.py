@@ -10,7 +10,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 DATA = os.path.join(ROOT, "data")
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -366,6 +366,39 @@ def bench_page():
     from fastapi.responses import FileResponse
     return FileResponse(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                      "static", "bench.html"))
+
+
+# ---------------------------------------------------------------- /game
+# audit-game assembly (transition前后端审计游戏任务书): manifest-only boot,
+# lazy shards, in-memory versioned sessions. A missing corpus is normal.
+try:
+    from .game_library import GameLibrary
+    from .game_service import GameError, GameSessionStore, Economy
+    from . import game_api
+except ImportError:                       # run as `server:app` (app-dir web)
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from game_library import GameLibrary
+    from game_service import GameError, GameSessionStore, Economy
+    import game_api
+
+GAME_LIBRARY = GameLibrary(ROOT)
+GAME_ECO = Economy(GD)
+GAME_STORE = GameSessionStore(GAME_LIBRARY, GD, GAME_ECO)
+app.include_router(game_api.build_router(GAME_STORE))
+
+
+@app.exception_handler(GameError)
+async def _game_error_handler(request: Request, exc: GameError):
+    from fastapi.responses import JSONResponse
+    return JSONResponse(status_code=exc.http_status,
+                        content={"error": exc.code, "detail": exc.detail})
+
+
+@app.get("/game")
+def game_page():
+    from fastapi.responses import FileResponse
+    return FileResponse(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                     "static", "game.html"))
 
 
 app.mount("/", StaticFiles(directory=os.path.join(os.path.dirname(os.path.abspath(__file__)), "static"), html=True), name="static")

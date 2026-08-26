@@ -58,6 +58,10 @@ class PlayerState:
     tower_strengthen: tuple[int, int] = (0, 0)
     constructions_raw: tuple[tuple[str, ...], ...] = ()      # (index,id,x,y) as str
     bought_this_round: int = 0       # buy counter (BuyCount shop field)
+    # audit-game v1 round-scoped fields (reset by advance_round):
+    tower_mods_raw: tuple = ()       # ActiveEnergyTowerSkill ids this round (5/6)
+    devices_raw: tuple = ()          # ReleaseContraption (cid,x,y) this round
+    skill_events_raw: tuple = ()     # ReleaseCommanderSkill (sid,x,y) this round
 
 
 @dataclass(frozen=True)
@@ -80,6 +84,7 @@ class EnvironmentState:
 
 # ---------------------------------------------------------------- actions
 class ActionKind(str, Enum):
+    GIFT_UNIT = "gift_unit"           # opening-team delayed gift (free spawn)
     CHOOSE_REINFORCE = "choose_reinforce"   # item pick at round start (cost + grant)
     UNLOCK_UNIT = "unlock_unit"
     BUY_UNIT = "buy_unit"
@@ -102,6 +107,12 @@ class EntityRef:
     """
     handle: int | None = None
     new_ref: int | None = None
+
+
+@dataclass(frozen=True)
+class GiftArgs:
+    mech_id: int
+    game_index: int | None = None   # game unit Index burned by this gift
 
 
 @dataclass(frozen=True)
@@ -156,7 +167,7 @@ class UnsupportedArgs:
 
 
 ActionArgs = (BuyArgs | MoveArgs | UpgradeArgs | UnlockArgs | TechArgs
-              | ChooseReinforceArgs | SellArgs | UnsupportedArgs)
+              | ChooseReinforceArgs | SellArgs | GiftArgs | UnsupportedArgs)
 
 
 @dataclass(frozen=True)
