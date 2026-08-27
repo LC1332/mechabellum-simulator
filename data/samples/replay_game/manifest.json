@@ -1,63 +1,10 @@
 {
- "schema_version": "replay_game_manifest_v1",
+ "schema_version": "replay_game_manifest_v2",
  "ruleset_version": "normal_1v1_replay_v0",
  "min_rounds_default": 5,
- "corpus_label": "local_data\\humen_replay",
- "built_at": "2026-08-27 04:44:31",
+ "corpus_label": "data/samples/replay_game",
+ "built_at": "2026-08-27 09:01:47",
  "options": [
-  {
-   "replay_id": "b198291ffab1",
-   "option_id": "b198291ffab1-0",
-   "game_version": "2207",
-   "file_label": "2207_20260723--134310704_[Phan晓鸦]VS[AiharaYuzu].grbr",
-   "opponent_player": 0,
-   "opponent_name": "Phan晓鸦",
-   "human_player": 1,
-   "human_name": "AiharaYuzu",
-   "round_count": 10,
-   "playable_through_round": 4,
-   "strict_playable_through_round": 3,
-   "blockers": [
-    {
-     "code": "MISSING_REINFORCEMENT_EFFECT",
-     "round": 4,
-     "side": null,
-     "detail": "strict: not all 4 offers effect-complete [1307001, 30502, 1308001, 13010001]",
-     "strict": true
-    },
-    {
-     "code": "MISSING_REINFORCEMENT_EFFECT",
-     "round": 5,
-     "side": 0,
-     "detail": "reinforce {'id': 13030002}"
-    }
-   ],
-   "enabled": false,
-   "shard": "games\\b198291ffab1.json"
-  },
-  {
-   "replay_id": "b198291ffab1",
-   "option_id": "b198291ffab1-1",
-   "game_version": "2207",
-   "file_label": "2207_20260723--134310704_[Phan晓鸦]VS[AiharaYuzu].grbr",
-   "opponent_player": 1,
-   "opponent_name": "AiharaYuzu",
-   "human_player": 0,
-   "human_name": "Phan晓鸦",
-   "round_count": 10,
-   "playable_through_round": 0,
-   "strict_playable_through_round": 0,
-   "blockers": [
-    {
-     "code": "UNSUPPORTED_ACTION_FIELD",
-     "round": 1,
-     "side": 1,
-     "detail": "passthrough {'raw_type': 'ReleaseCommanderSkill'}"
-    }
-   ],
-   "enabled": false,
-   "shard": "games\\b198291ffab1.json"
-  },
   {
    "replay_id": "6a21468d36c0",
    "option_id": "6a21468d36c0-0",
@@ -68,6 +15,9 @@
    "human_player": 1,
    "human_name": "Thumper",
    "round_count": 5,
+   "round_min": 0,
+   "round_max": 4,
+   "round_record_count": 5,
    "playable_through_round": 0,
    "strict_playable_through_round": 0,
    "blockers": [
@@ -79,7 +29,7 @@
     }
    ],
    "enabled": false,
-   "shard": "games\\6a21468d36c0.json"
+   "shard": "games/6a21468d36c0.json"
   },
   {
    "replay_id": "6a21468d36c0",
@@ -91,6 +41,9 @@
    "human_player": 0,
    "human_name": "笨蔬菜",
    "round_count": 5,
+   "round_min": 0,
+   "round_max": 4,
+   "round_record_count": 5,
    "playable_through_round": 0,
    "strict_playable_through_round": 0,
    "blockers": [
@@ -102,7 +55,7 @@
     }
    ],
    "enabled": false,
-   "shard": "games\\6a21468d36c0.json"
+   "shard": "games/6a21468d36c0.json"
   },
   {
    "replay_id": "94974af9a119",
@@ -114,6 +67,9 @@
    "human_player": 1,
    "human_name": "B站指挥官教官",
    "round_count": 10,
+   "round_min": 0,
+   "round_max": 9,
+   "round_record_count": 10,
    "playable_through_round": 4,
    "strict_playable_through_round": 2,
    "blockers": [
@@ -132,7 +88,7 @@
     }
    ],
    "enabled": false,
-   "shard": "games\\94974af9a119.json"
+   "shard": "games/94974af9a119.json"
   },
   {
    "replay_id": "94974af9a119",
@@ -144,6 +100,9 @@
    "human_player": 0,
    "human_name": "终归还是差点",
    "round_count": 10,
+   "round_min": 0,
+   "round_max": 9,
+   "round_record_count": 10,
    "playable_through_round": 1,
    "strict_playable_through_round": 1,
    "blockers": [
@@ -155,7 +114,66 @@
     }
    ],
    "enabled": false,
-   "shard": "games\\94974af9a119.json"
+   "shard": "games/94974af9a119.json"
+  },
+  {
+   "replay_id": "b198291ffab1",
+   "option_id": "b198291ffab1-0",
+   "game_version": "2207",
+   "file_label": "2207_20260723--134310704_[Phan晓鸦]VS[AiharaYuzu].grbr",
+   "opponent_player": 0,
+   "opponent_name": "Phan晓鸦",
+   "human_player": 1,
+   "human_name": "AiharaYuzu",
+   "round_count": 10,
+   "round_min": 0,
+   "round_max": 9,
+   "round_record_count": 10,
+   "playable_through_round": 4,
+   "strict_playable_through_round": 3,
+   "blockers": [
+    {
+     "code": "MISSING_REINFORCEMENT_EFFECT",
+     "round": 4,
+     "side": null,
+     "detail": "strict: not all 4 offers effect-complete [1307001, 30502, 1308001, 13010001]",
+     "strict": true
+    },
+    {
+     "code": "MISSING_REINFORCEMENT_EFFECT",
+     "round": 5,
+     "side": 0,
+     "detail": "reinforce {'id': 13030002}"
+    }
+   ],
+   "enabled": false,
+   "shard": "games/b198291ffab1.json"
+  },
+  {
+   "replay_id": "b198291ffab1",
+   "option_id": "b198291ffab1-1",
+   "game_version": "2207",
+   "file_label": "2207_20260723--134310704_[Phan晓鸦]VS[AiharaYuzu].grbr",
+   "opponent_player": 1,
+   "opponent_name": "AiharaYuzu",
+   "human_player": 0,
+   "human_name": "Phan晓鸦",
+   "round_count": 10,
+   "round_min": 0,
+   "round_max": 9,
+   "round_record_count": 10,
+   "playable_through_round": 0,
+   "strict_playable_through_round": 0,
+   "blockers": [
+    {
+     "code": "UNSUPPORTED_ACTION_FIELD",
+     "round": 1,
+     "side": 1,
+     "detail": "passthrough {'raw_type': 'ReleaseCommanderSkill'}"
+    }
+   ],
+   "enabled": false,
+   "shard": "games/b198291ffab1.json"
   }
  ],
  "option_count": 6,

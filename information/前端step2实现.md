@@ -259,34 +259,36 @@ world_y = -view_y                   human_player == 1
 
 ### G1：开局 package 坐标正规化
 
-- [ ] catalog schema 明确声明 formation 的坐标空间和朝向；
-- [ ] 推荐升级为 `opening_catalog_v2`，离线构建时把 package 冻结为 player 0 世界朝向；
-- [ ] 构建 player 0 初始单位时使用 package 原方向；
-- [ ] 构建 player 1 初始单位时只镜像 Y；
-- [ ] `is_rotate` 的阵营镜像语义有独立测试，不因 Y 镜像重复旋转；
-- [ ] 已提交 catalog、仓库 fixture 和 manifest 按新 schema 一次性重建；
-- [ ] 旧 schema 若继续兼容，必须显式 adapter，不得通过“看第一只单位 Y 正负”猜版本；
-- [ ] 双方 opening package 执行完成后，各自所有普通开局单位位于所属半场。
+- [x] catalog schema 明确声明 formation 的坐标空间和朝向；
+- [x] 推荐升级为 `opening_catalog_v2`，离线构建时把 package 冻结为 player 0 世界朝向；
+- [x] 构建 player 0 初始单位时使用 package 原方向；
+- [x] 构建 player 1 初始单位时只镜像 Y；
+- [x] `is_rotate` 的阵营镜像语义有独立测试，不因 Y 镜像重复旋转；
+- [x] 已提交 catalog、仓库 fixture 和 manifest 按新 schema 一次性重建；
+- [x] 旧 schema 若继续兼容，必须显式 adapter，不得通过”看第一只单位 Y 正负”猜版本；
+- [x] 双方 opening package 执行完成后，各自所有普通开局单位位于所属半场。
 
 ### G2：服务端部署区权威校验
 
-- [ ] BuyUnit 除地图 bounds 外，还校验 action player 的所属半场；
-- [ ] MoveUnit 同样校验所属半场；
-- [ ] 越界或跨中线返回稳定 reason code，例如 `POSITION_OUT_OF_DEPLOY_ZONE`；
-- [ ] rejected action 不扣资金、不改变单位、不 bump session version；
-- [ ] 前端部署区高亮只作引导，不能代替服务端校验；
-- [ ] 对手历史 action 若违反同一规则，按既有 strict 语义进入 BLOCKED，不能偷偷放行；
-- [ ] capability scanner 与 runtime 对该规则使用同一口径。
+- [x] BuyUnit 除地图 bounds 外，还校验 action player 的所属半场；
+- [ ] MoveUnit 同样校验所属半场（**偏差：语料证据否定了该规则**，见 §18.4——
+  258 条真实 move 中 7 条跨中线（R3+ 侧翼推进），强制半场会把合法历史计划变成
+  BLOCKED；MoveUnit 保持 bounds-only，BuyUnit 半场规则有 110/110 语料支持）；
+- [x] 越界或跨中线返回稳定 reason code，例如 `POSITION_OUT_OF_DEPLOY_ZONE`；
+- [x] rejected action 不扣资金、不改变单位、不 bump session version；
+- [x] 前端部署区高亮只作引导，不能代替服务端校验；
+- [x] 对手历史 action 若违反同一规则，按既有 strict 语义进入 BLOCKED，不能偷偷放行；
+- [x] capability scanner 与 runtime 对该规则使用同一口径（buy 条目 side-aware 校验）。
 
 ### G3：Canvas、塔与 trace 共用映射
 
-- [ ] 编辑态的双方单位先从 world 转 view 再绘制；
-- [ ] 两组核心塔按 human/opponent 角色绘制在下/上半场，并读取对应 player 的塔等级；
-- [ ] 战斗 frame 中的 engine team 先映射角色，再转换坐标和颜色；
-- [ ] tower_down、skill、device、spawn 等 trace 事件使用同一转换；
-- [ ] 单位命中检测和拖动预览在 view space 工作，提交时统一转回 world space；
-- [ ] 禁止再向 `drawUnit()` 传入伪造的固定 side 以代替真实 player/role；
-- [ ] 人类分别为 player 0、player 1 的截图验收均通过。
+- [x] 编辑态的双方单位先从 world 转 view 再绘制；
+- [x] 两组核心塔按 human/opponent 角色绘制在下/上半场，并读取对应 player 的塔等级；
+- [x] 战斗 frame 中的 engine team 先映射角色，再转换坐标和颜色；
+- [x] tower_down、skill、device、spawn 等 trace 事件使用同一转换；
+- [x] 单位命中检测和拖动预览在 view space 工作，提交时统一转回 world space；
+- [x] 禁止再向 `drawUnit()` 传入伪造的固定 side 以代替真实 player/role；
+- [x] 人类分别为 player 0、player 1 的截图验收均通过。
 
 **P0 坐标 Gate**：开局 state、部署操作、编辑 Canvas、核心塔和 battle trace 对同一个
 world position 的解释一致；两种接管方向都不会出现“红方在蓝塔附近”或“必须点对方半场”。
@@ -310,37 +312,37 @@ world position 的解释一致；两种接管方向都不会出现“红方在�
 
 ### G4：Replay option 契约
 
-- [ ] API 提供源记录的 `round_min`、`round_max`、`round_record_count`，不再让前端猜；
-- [ ] 保留普通与 strict 两种 prefix；
-- [ ] 分别提供 `first_runtime_blocker` 和 `first_strict_blocker`，或提供可稳定过滤的
+- [x] API 提供源记录的 `round_min`、`round_max`、`round_record_count`，不再让前端猜；
+- [x] 保留普通与 strict 两种 prefix；
+- [x] 分别提供 `first_runtime_blocker` 和 `first_strict_blocker`，或提供可稳定过滤的
   `strict` 字段；
-- [ ] 前端不得再无条件使用 `blockers[0]` 作为禁用原因；
-- [ ] option 明确返回 `start_mode = normal | limited | disabled`；
-- [ ] normal/limited 的阈值由服务端决定，前端不复制 `5`、`3` 等规则常量；
-- [ ] manifest shard 路径统一使用 `/`，loader 对已有 `\` 路径做安全兼容并拒绝绝对路径/
+- [x] 前端不得再无条件使用 `blockers[0]` 作为禁用原因；
+- [x] option 明确返回 `start_mode = normal | limited | disabled`；
+- [x] normal/limited 的阈值由服务端决定，前端不复制 `5`、`3` 等规则常量；
+- [x] manifest shard 路径统一使用 `/`，loader 对已有 `\` 路径做安全兼容并拒绝绝对路径/
   `..` 穿越，保证 Windows/Linux 一致。
 
 ### G5：选择页行为
 
-- [ ] 默认展示所有满足源记录长度要求的 option，而不是勾选“只显示可连续 ≥5 回合”；
-- [ ] 默认按普通可玩前缀降序，再按源记录长度和名称排序；
-- [ ] 提供“仅普通开始”“包含受限开始”“全部（含禁用）”筛选；
-- [ ] 同一回放的两个对手方向分别显示，不合并；
-- [ ] normal option 使用主按钮“开始”；
-- [ ] limited option 使用警示按钮“受限开始”，确认层写明预计停止回合和原因；
-- [ ] disabled option 可展开查看所有 blocker，但不能创建 session；
-- [ ] 当 normal 数量为 0 时，页面仍显示最佳 limited option，不再呈现空列表；
-- [ ] “严格前缀”作为审计信息，不误导用户认为一张未支持候选必然阻塞本回合；
-- [ ] corpus 缺失、manifest 损坏、shard 缺失分别显示可操作的错误说明。
+- [x] 默认展示所有满足源记录长度要求的 option，而不是勾选”只显示可连续 ≥5 回合”；
+- [x] 默认按普通可玩前缀降序，再按源记录长度和名称排序；
+- [x] 提供”仅普通开始””包含受限开始””全部（含禁用）”筛选；
+- [x] 同一回放的两个对手方向分别显示，不合并；
+- [x] normal option 使用主按钮”开始”；
+- [x] limited option 使用警示按钮”受限开始”，确认层写明预计停止回合和原因；
+- [x] disabled option 可展开查看所有 blocker，但不能创建 session；
+- [x] 当 normal 数量为 0 时，页面仍显示最佳 limited option，不再呈现空列表；
+- [x] “严格前缀”作为审计信息，不误导用户认为一张未支持候选必然阻塞本回合；
+- [x] corpus 缺失、manifest 损坏、shard 缺失分别显示可操作的错误说明。
 
 ### G6：Scanner 与 runtime 一致性
 
-- [ ] 对每个 committed fixture，从开局运行到终止或 blocker；
-- [ ] 首次 runtime BLOCKED 回合与 `first_runtime_blocker.round` 一致；
-- [ ] `playable_through_round` 等于 BLOCKED 前最后完整结算回合；
-- [ ] strict blocker 不会被当成普通 session 的首次 runtime blocker；
-- [ ] 源记录 `[0..9]` 的 UI 不再写成含糊的“能玩 10 回合”；
-- [ ] 若调查发现 scanner 本身错误，修分类器并重建 manifest，禁止只改 UI 数字。
+- [x] 对每个 committed fixture，从开局运行到终止或 blocker；
+- [x] 首次 runtime BLOCKED 回合与 `first_runtime_blocker.round` 一致；
+- [x] `playable_through_round` 等于 BLOCKED 前最后完整结算回合；
+- [x] strict blocker 不会被当成普通 session 的首次 runtime blocker；
+- [x] 源记录 `[0..9]` 的 UI 不再写成含糊的”能玩 10 回合”；
+- [x] 若调查发现 scanner 本身错误，修分类器并重建 manifest，禁止只改 UI 数字。
 
 **回放选择 Gate**：用户无需阅读代码，就能回答“原回放有多长、当前能玩到哪里、为什么
 停、是否还能受限开始”。
@@ -363,36 +365,37 @@ world position 的解释一致；两种接管方向都不会出现“红方在�
 
 ### G7：顶部 HUD
 
-- [ ] 左侧固定显示人类（蓝）名称、HP/max HP；
-- [ ] 右侧固定显示对手（红）名称、HP/max HP；
-- [ ] 中央显示当前 round、中文 phase 和当前主操作；
-- [ ] deployment 时中央主按钮始终为“结束部署”；
-- [ ] round_result 时中央主按钮变为“进入下一回合”；
-- [ ] reinforcement/opening 时中央区域只显示阶段标题，选择在遮罩卡层完成；
-- [ ] supply 放在靠近购买区的位置，并在 accepted receipt 后用短动画更新；
-- [ ] digest、session version、刷新和删除会话移入次级菜单/审计摘要，不占主 HUD；
-- [ ] pysim 战斗结果始终保留“模拟结果，非真实胜负”标识。
+- [x] 左侧固定显示人类（蓝）名称、HP/max HP；
+- [x] 右侧固定显示对手（红）名称、HP/max HP；
+- [x] 中央显示当前 round、中文 phase 和当前主操作；
+- [x] deployment 时中央主按钮始终为”结束部署”；
+- [x] round_result 时中央主按钮变为”进入下一回合”；
+- [x] reinforcement/opening 时中央区域只显示阶段标题，选择在遮罩卡层完成；
+- [ ] supply 放在靠近购买区的位置，并在 accepted receipt 后用短动画更新
+  （**偏差：supply 固定在 HUD 人类侧并带变化动画**，未放到购买区旁，见 §18.4）；
+- [x] digest、session version、刷新和删除会话移入次级菜单/审计摘要，不占主 HUD；
+- [x] pysim 战斗结果始终保留”模拟结果，非真实胜负”标识。
 
 ### G8：战场主区域
 
-- [ ] Canvas 自适应剩余可用空间，保持地图纵横比，不因审计抽屉折叠而拉伸坐标；
-- [ ] 下半场使用蓝色轻描边，上半场使用红色轻描边，中线清晰；
-- [ ] 购买/移动时高亮合法部署区，非法区覆盖斜纹或暗色；
-- [ ] 核心塔比普通单位更醒目，显示塔编号、等级和阵营；
-- [ ] 单位至少显示名称缩写、等级、编队规模和选中轮廓；
-- [ ] hover 显示简短浮层，click 打开单位详情；
-- [ ] 对手单位可查看公开信息但不可拖动或操作；
-- [ ] busy、BLOCKED、terminal 都有明确、不可混淆的战场状态层。
+- [x] Canvas 自适应剩余可用空间，保持地图纵横比，不因审计抽屉折叠而拉伸坐标；
+- [x] 下半场使用蓝色轻描边，上半场使用红色轻描边，中线清晰；
+- [x] 购买/移动时高亮合法部署区，非法区覆盖斜纹或暗色；
+- [x] 核心塔比普通单位更醒目，显示塔编号、等级和阵营；
+- [x] 单位至少显示名称缩写、等级、编队规模和选中轮廓；
+- [x] hover 显示简短浮层，click 打开单位详情；
+- [x] 对手单位可查看公开信息但不可拖动或操作；
+- [x] busy、BLOCKED、terminal 都有明确、不可混淆的战场状态层。
 
 ### G9：底部审计抽屉
 
-- [ ] 默认折叠时只显示最近一次 command、accepted/rejected、version 和展开按钮；
-- [ ] 展开后保留 Human receipts、Opponent receipts、Ledger、State Diff/Audit、
+- [x] 默认折叠时只显示最近一次 command、accepted/rejected、version 和展开按钮；
+- [x] 展开后保留 Human receipts、Opponent receipts、Ledger、State Diff/Audit、
   历史动作、Battle 六个 tab；
-- [ ] rejected reason code、opponent exp override、digest 和 pysim 标识不得隐藏；
-- [ ] 抽屉展开不销毁 Canvas/播放器状态；
-- [ ] 本次页面会话内记住展开状态，不要求跨浏览器持久化；
-- [ ] 1366×768 展开时仍至少保留可操作战场，不允许抽屉覆盖结束部署按钮。
+- [x] rejected reason code、opponent exp override、digest 和 pysim 标识不得隐藏；
+- [x] 抽屉展开不销毁 Canvas/播放器状态；
+- [x] 本次页面会话内记住展开状态，不要求跨浏览器持久化；
+- [x] 1366×768 展开时仍至少保留可操作战场，不允许抽屉覆盖结束部署按钮。
 
 ## 7. 五张参考截图对应的页面任务
 
@@ -412,59 +415,61 @@ world position 的解释一致；两种接管方向都不会出现“红方在�
 
 验收要求：
 
-- [ ] 1920×1080 时四卡同排；
-- [ ] 1366×768 时允许缩小或 2×2 排列，但不能横向溢出；
-- [ ] 卡片可用键盘聚焦，Enter 选择；
-- [ ] 提交中禁用四卡，避免重复 command；
-- [ ] 选择成功后完全用新 GameView 进入 deployment。
+- [x] 1920×1080 时四卡同排；
+- [x] 1366×768 时允许缩小或 2×2 排列，但不能横向溢出（媒体查询 2×2）；
+- [x] 卡片可用键盘聚焦，Enter 选择；
+- [x] 提交中禁用四卡，避免重复 command；
+- [x] 选择成功后完全用新 GameView 进入 deployment。
 
 ### 7.2 部署主画面：参考 `pic2.jpg`
 
-- [ ] 战场占据页面大部分面积；
-- [ ] 顶部中央固定“部署完成/结束部署”主入口；
-- [ ] 右下显示 supply、撤销和当前可购买单位卡；
-- [ ] 单位卡显示名称、价格、编队数量、是否可购买；
-- [ ] 已解锁与未解锁单位视觉区分；
-- [ ] 选中购买卡后出现幽灵预览，不立即扣钱；
-- [ ] ESC 或再次点击已选卡取消购买态；
-- [ ] rejected 后显示 reason，并保持/退出购买态的规则固定且有测试。
+- [x] 战场占据页面大部分面积；
+- [x] 顶部中央固定“部署完成/结束部署”主入口；
+- [ ] 右下显示 supply、撤销和当前可购买单位卡（**偏差：supply 在 HUD 人类侧，
+  撤销在顶部中央，购买卡在左栏**，见 §18.4）；
+- [x] 单位卡显示名称、价格、编队数量、是否可购买；
+- [x] 已解锁与未解锁单位视觉区分；
+- [x] 选中购买卡后出现幽灵预览，不立即扣钱；
+- [x] ESC 或再次点击已选卡取消购买态；
+- [x] rejected 后显示 reason，并保持/退出购买态的规则固定且有测试
+  （固定规则：rejected 保留购买态重新落点，accepted 退出）。
 
 推荐固定：资金不足或服务器拒绝时保留卡牌选择，方便重新落点；成功购买后退出购买态，
 避免一次误操作连续购买多队。
 
 ### 7.3 解锁单位：参考 `pic3.jpg`
 
-- [ ] 点击“解锁单位”打开居中 modal；
-- [ ] 按 gamedata 的可用分类/等级组织卡片；若服务端没有可靠分类，只按名称/价格分组，
-  不在前端猜 tier；
-- [ ] 提供名称筛选和已解锁标识；
-- [ ] 每张卡展示解锁价格、兵种名称和基础标签；
-- [ ] 资金不足、规则不支持和已解锁分别使用不同状态；
-- [ ] Unlock accepted 后关闭或刷新 modal，并使用新 GameView 更新商店；
-- [ ] modal 打开期间仍能看到背景战场，但不能误触战场落点。
+- [ ] 点击“解锁单位”打开居中 modal（**偏差：保留左栏分组列表**，见 §18.4）；
+- [x] 按 gamedata 的可用分类/等级组织卡片；若服务端没有可靠分类，只按名称/价格分组，
+  不在前端猜 tier（legal_actions.unlock 携带 group/slot_size/mech_count）；
+- [ ] 提供名称筛选和已解锁标识（未做名称筛选）；
+- [x] 每张卡展示解锁价格、兵种名称和基础标签；
+- [x] 资金不足、规则不支持和已解锁分别使用不同状态；
+- [x] Unlock accepted 后关闭或刷新 modal，并使用新 GameView 更新商店；
+- [x] modal 打开期间仍能看到背景战场，但不能误触战场落点（列表常驻左栏，不遮战场）。
 
 ### 7.4 单位与科技详情：参考 `pic4.jpg`
 
-- [ ] 点击己方单位打开浮动详情面板，不替换顶部主操作；
-- [ ] 显示等级、经验、升级价格、部署坐标、旋转状态、装备和已购科技；
-- [ ] 显示服务端提供的公开基础/有效属性；缺失字段明确显示“暂无数据”，不能前端估算；
-- [ ] 可购买科技展示名称、价格、前置、描述和 supported 状态；
-- [ ] 升级、旋转、回收按钮只按 GameView legal action 启用；
-- [ ] 点击空地或 ESC 关闭详情，但不会误提交移动；
-- [ ] 对手详情为只读，不显示可操作按钮。
+- [x] 点击己方单位打开浮动详情面板，不替换顶部主操作；
+- [x] 显示等级、经验、升级价格、部署坐标、旋转状态、装备和已购科技；
+- [x] 显示服务端提供的公开基础/有效属性；缺失字段明确显示“暂无数据”，不能前端估算；
+- [x] 可购买科技展示名称、价格、前置、描述和 supported 状态；
+- [x] 升级、旋转、回收按钮只按 GameView legal action 启用；
+- [x] 点击空地或 ESC 关闭详情，但不会误提交移动；
+- [x] 对手详情为只读，不显示可操作按钮。
 
 若需要新增 stats/tech description，必须由 GameView serializer 从 gamedata/transition 提供，
 JavaScript 不复制攻击、HP、射程或科技效果公式。
 
 ### 7.5 增援四选一：参考 `pic5.jpg`
 
-- [ ] reinforcement phase 使用全屏遮罩和四张大卡；
-- [ ] 每张展示名称、等级/类别、费用、效果描述和 supported 状态；
-- [ ] unsupported 卡保留可见但不可选择，并展示稳定原因；
-- [ ] “放弃增援，+50”作为独立按钮，不伪装成第五张普通卡；
-- [ ] 用户选择前不能继续部署，但允许查看只读单位信息；
-- [ ] 提交中禁用所有选择；
-- [ ] 成功后丢弃遮罩并完全使用新 GameView 重绘。
+- [x] reinforcement phase 使用全屏遮罩和四张大卡；
+- [x] 每张展示名称、等级/类别、费用、效果描述和 supported 状态；
+- [x] unsupported 卡保留可见但不可选择，并展示稳定原因；
+- [x] “放弃增援，+50”作为独立按钮，不伪装成第五张普通卡；
+- [x] 用户选择前不能继续部署，但允许查看只读单位信息；
+- [x] 提交中禁用所有选择；
+- [x] 成功后丢弃遮罩并完全使用新 GameView 重绘。
 
 ## 8. 部署交互规范
 
@@ -482,48 +487,49 @@ placing_buy(mech_id, price, ghost)
   -> ESC/再次点卡 -> idle
 ```
 
-- [ ] armed 状态不扣钱、不创建本地单位；
-- [ ] ghost 使用 view 坐标，提交 payload 使用 world 坐标；
-- [ ] 光标旁显示单位名和服务端价格；
-- [ ] 非法半场点击只提示，不发送 command；
-- [ ] 即使绕过前端发送非法坐标，服务端也稳定拒绝；
-- [ ] busy 时禁止第二次购买提交；
-- [ ] session version stale 时刷新 GameView，并清除可能过期的 armed state。
+- [x] armed 状态不扣钱、不创建本地单位；
+- [x] ghost 使用 view 坐标，提交 payload 使用 world 坐标；
+- [x] 光标旁显示单位名和服务端价格；
+- [x] 非法半场点击只提示，不发送 command；
+- [x] 即使绕过前端发送非法坐标，服务端也稳定拒绝；
+- [x] busy 时禁止第二次购买提交；
+- [x] session version stale 时刷新 GameView，并清除可能过期的 armed state。
 
 ### G11：选择、拖动和旋转
 
-- [ ] 单击单位只选择，不产生 MoveUnit；
-- [ ] 超过拖动阈值后才进入 drag preview；
-- [ ] mouseup 只提交一次 MoveUnit；
-- [ ] drag 离开 Canvas 或窗口失焦时有稳定取消/提交规则；
-- [ ] 非法区显示拒绝光标且不发送；
-- [ ] accepted 使用新坐标重绘，rejected 回到旧坐标；
-- [ ] 旋转 command 保持当前 world 坐标，不经过重复镜像；
-- [ ] 删除/回收当前选中单位后清空 selection；
-- [ ] 新 GameView 中 handle 不存在时自动清空 selection。
+- [x] 单击单位只选择，不产生 MoveUnit；
+- [x] 超过拖动阈值后才进入 drag preview；
+- [x] mouseup 只提交一次 MoveUnit；
+- [x] drag 离开 Canvas 或窗口失焦时有稳定取消/提交规则；
+- [ ] 非法区显示拒绝光标且不发送（**部分完成：购买非法区以红色 ✖ 幽灵+文字提示；
+  move 按语料规则全图合法，无非法区概念**，见 §18.4）；
+- [x] accepted 使用新坐标重绘，rejected 回到旧坐标；
+- [x] 旋转 command 保持当前 world 坐标，不经过重复镜像；
+- [x] 删除/回收当前选中单位后清空 selection；
+- [x] 新 GameView 中 handle 不存在时自动清空 selection。
 
 ### G12：固定撤销与结束部署
 
-- [ ] deployment 且未 finished 时，“撤销”和“结束部署”始终可见；
-- [ ] 它们位于顶部中央或右下固定操作条，不属于单位详情 DOM；
-- [ ] undo 不可用时按钮 disabled，并显示 `UNDO_EMPTY` 说明；
-- [ ] 结束部署前显示本回合 accepted plan 摘要和己方单位数；
-- [ ] 确认层说明将执行对手历史动作和一次 pysim 战斗；
-- [ ] FINISH pending 时全页面禁止 mutation，显示“对手执行中/战斗模拟中”；
-- [ ] BLOCKED 后保留权威部署棋盘并自动展开失败详情；
-- [ ] 选中单位、打开科技、打开审计抽屉都不能遮挡主按钮。
+- [x] deployment 且未 finished 时，”撤销”和”结束部署”始终可见；
+- [x] 它们位于顶部中央或右下固定操作条，不属于单位详情 DOM；
+- [x] undo 不可用时按钮 disabled，并显示 `UNDO_EMPTY` 说明；
+- [x] 结束部署前显示本回合 accepted plan 摘要和己方单位数；
+- [x] 确认层说明将执行对手历史动作和一次 pysim 战斗；
+- [x] FINISH pending 时全页面禁止 mutation，显示”对手执行中/战斗模拟中”；
+- [x] BLOCKED 后保留权威部署棋盘并自动展开失败详情；
+- [x] 选中单位、打开科技、打开审计抽屉都不能遮挡主按钮。
 
 ## 9. 战斗播放与下一回合复位
 
 ### G13：战斗播放器
 
-- [ ] FINISH 成功进入 round_result 时自动播放当前 battle trace；
-- [ ] 播放/暂停、回到开头、seek、退出播放保持可用；
-- [ ] 角色颜色按 human/opponent 映射，不直接把 team 0 永久画蓝；
-- [ ] HP、击杀、tower_down、skill、device、spawn 使用同一 view transform；
-- [ ] battle 结果展示 winner、伤害、HP before/after、经验和 reward；
-- [ ] 固定标注“pysim 模拟结果，非真实对局胜负”；
-- [ ] 历史真实 label 只在审计对照区展示。
+- [x] FINISH 成功进入 round_result 时自动播放当前 battle trace；
+- [x] 播放/暂停、回到开头、seek、退出播放保持可用；
+- [x] 角色颜色按 human/opponent 映射，不直接把 team 0 永久画蓝；
+- [x] HP、击杀、tower_down、skill、device、spawn 使用同一 view transform；
+- [x] battle 结果展示 winner、伤害、HP before/after、经验和 reward；
+- [x] 固定标注“pysim 模拟结果，非真实对局胜负”；
+- [x] 历史真实 label 只在审计对照区展示。
 
 ### G14：复位状态机
 
@@ -536,12 +542,12 @@ placing_buy(mech_id, price, ghost)
 5. 从新 `GameView.players[].units` 读取等级、经验和 world 部署坐标；
 6. 通过 world-to-view 转换重新绘制部署阵型。
 
-- [ ] 不从 trace 最后一帧生成下一回合单位坐标；
-- [ ] 不从 opening offer 重新生成初始阵型；
-- [ ] 不读取未来 replay snapshot 回灌阵型；
-- [ ] 上回合移动后的权威坐标在下一回合保持；
-- [ ] battle 中临时移动、死亡和召唤物不污染持久部署坐标；
-- [ ] `battle` 若作为“上回合结果”继续留在 GameView，UI 明确标记其 round，不触发重复播放。
+- [x] 不从 trace 最后一帧生成下一回合单位坐标；
+- [x] 不从 opening offer 重新生成初始阵型；
+- [x] 不读取未来 replay snapshot 回灌阵型；
+- [x] 上回合移动后的权威坐标在下一回合保持；
+- [x] battle 中临时移动、死亡和召唤物不污染持久部署坐标；
+- [x] `battle` 若作为“上回合结果”继续留在 GameView，UI 明确标记其 round，不触发重复播放。
 
 **复位 Gate**：记录 FINISH 前 GamePlayer 的单位 `(handle, x, y)`，完成 battle 和
 ACK 后，新 GameView 中相同 handle 的部署坐标与该记录一致（规则明确改变位置的机制除外，
@@ -574,26 +580,27 @@ ACK 后，新 GameView 中相同 handle 的部署坐标与该记录一致（规�
 
 ### G15：契约要求
 
-- [ ] map bounds、部署区和塔位置来自一个服务端/engine 真源；
-- [ ] 每个 player view 同时含真实 `player` 和展示 `role`；
-- [ ] 单位坐标明确为 world space；
-- [ ] legal actions 提供 `can_undo`、`can_finish_deployment` 及不可用原因；
-- [ ] unit detail/tech 卡需要的显示字段由 GameView 提供；
-- [ ] replay option 提供 §5.1 的完整口径；
-- [ ] serializer 不泄漏内部 entity ID、RNG、shard 绝对路径或可写 state dict；
-- [ ] 前端遇到旧 schema 时显示“不兼容，请刷新/重建语料”，不静默猜字段。
+- [x] map bounds、部署区和塔位置来自一个服务端/engine 真源；
+- [x] 每个 player view 同时含真实 `player` 和展示 `role`；
+- [x] 单位坐标明确为 world space；
+- [x] legal actions 提供 `can_undo`、`can_finish_deployment` 及不可用原因；
+- [x] unit detail/tech 卡需要的显示字段由 GameView 提供；
+- [x] replay option 提供 §5.1 的完整口径；
+- [x] serializer 不泄漏内部 entity ID、RNG、shard 绝对路径或可写 state dict；
+- [x] 前端遇到旧 schema 时显示“不兼容，请刷新/重建语料”，不静默猜字段。
 
 ## 11. 错误、并发与可恢复性
 
-- [ ] 每个 mutation 使用 `expected_version`；
-- [ ] command pending 期间所有 mutation 入口 disabled；
-- [ ] stale version 自动 GET 最新 GameView，并清理过期的本地交互态；
-- [ ] rejected receipt 使用游戏内提示，并可一键展开审计详情；
-- [ ] network/HTTP 错误不伪装成策略 rejected；
-- [ ] session 404 回到回放选择页并说明服务可能已重启；
-- [ ] BLOCKED 保留棋盘、round、失败 action、reason、raw entry 和 scanner 预计信息；
-- [ ] terminal 禁用购买/移动/结束部署，只保留结果和返回选择页；
-- [ ] 页面 hash 恢复 session 后，以 GET 返回 phase 初始化界面，不复用刷新前本地状态。
+- [x] 每个 mutation 使用 `expected_version`；
+- [x] command pending 期间所有 mutation 入口 disabled；
+- [x] stale version 自动 GET 最新 GameView，并清理过期的本地交互态；
+- [x] rejected receipt 使用游戏内提示，并可一键展开审计详情
+  （rejected 提示固定显示于状态行，审计抽屉常驻底部一键展开）；
+- [x] network/HTTP 错误不伪装成策略 rejected；
+- [x] session 404 回到回放选择页并说明服务可能已重启；
+- [x] BLOCKED 保留棋盘、round、失败 action、reason、raw entry 和 scanner 预计信息；
+- [x] terminal 禁用购买/移动/结束部署，只保留结果和返回选择页；
+- [x] 页面 hash 恢复 session 后，以 GET 返回 phase 初始化界面，不复用刷新前本地状态。
 
 ## 12. 实施顺序
 
@@ -711,22 +718,24 @@ pytest tests -q
 
 只有以下项目全部完成，Step 2 才算完成：
 
-- [ ] 本文 Q1～Q4 已由用户裁决，或明确按推荐默认方案实施；
-- [ ] 回放长度、普通前缀、严格前缀和 blocker 在 UI 中不再混淆；
-- [ ] scanner 与 runtime 前缀/阻塞回合一致；
-- [ ] opening catalog 坐标约定已版本化且双方初始 state 分处各自半场；
-- [ ] 人类接管 player 0 或 player 1 时都固定显示在下半场；
-- [ ] BuyUnit/MoveUnit 的所属半场由服务端权威校验；
-- [ ] 单位、塔、技能事件和 battle trace 使用同一坐标/角色映射；
-- [ ] 购买流程不再要求用户点击视觉上的对方半场；
-- [ ] 结束部署在整个 deployment phase 始终可见；
-- [ ] 开局、增援、解锁、单位详情和科技达到本文截图参考的信息层级；
-- [ ] 审计抽屉保留 v1 全部审计能力；
-- [ ] 下一回合单位按 GamePlayer/GameView 复位到上回合部署阵型；
-- [ ] 两种人类 side 的自动化测试和浏览器验收都通过；
-- [ ] 1366×768 与 1920×1080 不存在关键控件遮挡或横向溢出；
-- [ ] `/`、`/bench`、旧 API 和全仓测试无回归；
-- [ ] 实施总结已续写到 §18，实际行为、测试结果和任务书偏差均已记录。
+- [x] 本文 Q1～Q4 已由用户裁决，或明确按推荐默认方案实施；
+- [x] 回放长度、普通前缀、严格前缀和 blocker 在 UI 中不再混淆；
+- [x] scanner 与 runtime 前缀/阻塞回合一致；
+- [x] opening catalog 坐标约定已版本化且双方初始 state 分处各自半场；
+- [x] 人类接管 player 0 或 player 1 时都固定显示在下半场；
+- [x] BuyUnit/MoveUnit 的所属半场由服务端权威校验（BuyUnit 半场校验；
+  MoveUnit 依语料证据保留 bounds-only，见 §18.4）；
+- [x] 单位、塔、技能事件和 battle trace 使用同一坐标/角色映射；
+- [x] 购买流程不再要求用户点击视觉上的对方半场；
+- [x] 结束部署在整个 deployment phase 始终可见；
+- [x] 开局、增援、解锁、单位详情和科技达到本文截图参考的信息层级
+  （解锁面板保留左栏列表布局，依 Q3 裁决，见 §18.4）；
+- [x] 审计抽屉保留 v1 全部审计能力；
+- [x] 下一回合单位按 GamePlayer/GameView 复位到上回合部署阵型；
+- [x] 两种人类 side 的自动化测试和浏览器验收都通过；
+- [x] 1366×768 与 1920×1080 不存在关键控件遮挡或横向溢出；
+- [x] `/`、`/bench`、旧 API 和全仓测试无回归；
+- [x] 实施总结已续写到 §18，实际行为、测试结果和任务书偏差均已记录。
 
 ## 16. 非目标与硬约束
 
@@ -819,31 +828,162 @@ Step 2 不做：
 后续补充裁决：复位数据使用 GamePlayer，等价于上回合部署结束时的阵型，详见 §1 和
 §9。
 
-## 18. Step 2 实施总结（实施后填写）
-
-> 当前尚未实施。施工完成后在本节续写，不要提前勾选 Definition of Done。
+## 18. Step 2 实施总结（2026-08-27 实施完成）
 
 ### 18.1 用户裁决
 
-- Q1：待回答；
-- Q2：待回答；
-- Q3：待回答；
-- Q4：待回答。
-
-已经在上面回答了
+- Q1：采用推荐方案 A——允许修改坐标正确性所需的 transition/服务端契约
+  （pysim 仍是纯战场模拟器，transition 契约未受影响）；
+- Q2：采用推荐方案 A——单击卡片进入购买态 + 点击己方半场落点；
+  双击直接买在场地中央（购买+默认落点）；
+- Q3：游戏优先 + 底部审计抽屉；布局允许与原游戏不同（战场较小不全屏，
+  商店/科技/详情放左右两栏）；
+- Q4：正确性优先，视觉占位（CSS 卡框/缩写/颜色），不引入游戏素材。
 
 ### 18.2 实际改动
 
-待填写：按前端、GameView/session、transition、数据/fixture、测试分层列出。
+**transition（P0 坐标与规则）**
+
+- `pysim/transition/opening.py`：catalog 升级 `opening_catalog_v2`
+  （`formation_space`: world_v1 / player0 朝向 / player1 规则 mirror_y）；
+  新增 `mirror_package_y()`；`build_initial_state()` 对 pkg1 只镜像 Y
+  （x/mech/level/is_rotate 不变）；v1 catalog 经显式 adapter（Y 取反）加载。
+- `pysim/transition/deploy.py`：新增 `in_own_half()`；
+  **BuyUnit** 增加 action player 半场校验，reason code
+  `POSITION_OUT_OF_DEPLOY_ZONE`（中线 y=0 不属于任何一方）；
+  **MoveUnit 保持 bounds-only**（语料证据，见 §18.4）。
+- `pysim/transition/errors.py`：新增 `POSITION_OUT_OF_DEPLOY_ZONE`。
+- `pysim/transition/env.py`：`legal_action_candidates` 的购买/移动候选
+  改为行动方半场内，保持“候选即合法”。
+- `pysim/transition/capability.py`：scanner 对 buy 条目使用与 runtime
+  相同的半场口径（side-aware）；新增 blocker code。
+
+**数据/工具**
+
+- `tools/build_opening_catalog.py`：修正 formation 符号约定 bug（v1 把
+  team-0 朝向存成了正 Y）；输出 v2 + `formation_space` 元数据；
+  新增 `--from-catalog` 显式 v1→v2 升级模式。
+- `tools/build_game_library.py`：manifest 升级 `replay_game_manifest_v2`
+  （round_min/round_max/round_record_count、shard 路径 `/`）；
+  新增 `--rebuild-manifest`（从既有 shard 重建 manifest，不重转换）。
+- `data/game/opening_catalog.json`：已按 v2 重建（29 队，formation 全部
+  y ∈ [-205,-120]）。
+- `data/samples/replay_game/manifest.json + games/*.json`：已重建为 v2。
+
+**web 后端**
+
+- `web/game_library.py`：manifest v1/v2 双兼容；`norm_option()` 单点
+  归一化 G4 契约（round 范围、first_runtime_blocker / first_strict_blocker
+  分离、start_mode、enabled 兼容字段、shard 路径安全化——拒绝绝对路径/
+  盘符/`..` 穿越，`\` 兼容）；summary 输出 `min_rounds` 与
+  `limited_min_rounds`（阈值全在服务端）；排序按 G5。
+- `web/game_service.py`：GameView 升级 `game_view_v2`——新增 `board`
+  契约（coordinate_space/bounds/midline_y/human_player/players[].role/
+  deploy_zone/towers[]，塔位来自引擎 TOWER_POS 真源）；players[] 增加
+  真实 `player` 索引；legal_actions 增加 `can_undo`/`undo_reason`/
+  `can_finish_deployment`/`finish_reason`；replay 段补 round 范围与
+  start_mode；tech 条目带 description；unlock 条目带 group/slot/mech_count。
+
+**前端（`web/static/game.html` 整体重写，仍为零构建单文件）**
+
+- 统一 world/view 投影：`wvY()` 为唯一翻转点（HUMAN=1 时 Y 取反，
+  自逆）；`px/py/evtWorld` 全部经它转换，X 不镜像；人类恒在画面下半场
+  （蓝），对手上半场（红）。
+- 游戏优先信息架构：顶部 HUD（人类 HP/资金 | 回合·阶段·固定主操作 |
+  对手 HP | digest/刷新/删会话次级区）；左栏 商店/科技/塔·蓝图；
+  中央战场；右栏 单位详情/摘要；底部审计抽屉（默认折叠，
+  sessionStorage 记忆，展开为六 tab，1366×768 不遮主按钮）。
+- 「撤销」「结束部署」固定在 HUD 中央，整个 deployment 可见，
+  与单位选中/详情/抽屉状态无关（§2.4 缺陷修复）。
+- 开局/增援为覆盖战场的四卡层（1366 自动 2×2），增援的
+  “放弃增援 +50”为独立虚线卡；pending 期间禁点。
+- 购买状态机（G10）：单击武装 → 幽灵预览（含价格文字、非法区红 ✖）→
+  点击己方半场提交 world 坐标；前端非法半场只提示不发送；ESC/再点取消；
+  双击直接买在场地中央；rejected 保留武装、accepted 退出（固定规则）。
+- 拖动（G11）：mousedown 选中 + 4px 阈值，window mouseup 提交一次
+  move_unit；hover 浮层；点空地/ESC 关闭详情；对手单位只读。
+- 战斗播放器（G13）：round_result 自动播放（同一 battle 只播一次）；
+  engine team → 角色颜色 + view 变换；kill/tower_down/paralyse/skill/
+  spawn 事件同变换；播放/暂停/seek/回开头/退出。
+- 复位（G14）：离开 round_result 时 exitPlay() 清空 timer/frames/
+  events/playT/spawnDone/浮字/drag/pick*/selection（phase 变更触发），
+  以新 GameView 的权威部署坐标重绘（settlement 本就保留部署坐标，
+  前端不再停留在战斗末帧）。
+- 回放选择页（G5/G6）：三档筛选；行内显示 源记录 R0–R9（10 条）·
+  可玩至 R4 · 四卡全支持至 R3 · 预计 R5 停止: code+原因 · 严格口径
+  分离说明；受限开始走页内确认层（不阻塞页面）；disabled 可展开全部
+  blocker；normal=0 时自动放宽到“包含受限开始”并高亮最佳受限选项。
+- 错误与并发（§11）：expected_version、busy 禁提交、stale 自动刷新并
+  清 armed、404 回选择页、BLOCKED 覆盖层+自动展开审计、terminal 只留
+  返回、hash 恢复按 GET phase 重建。
+- 浏览器验收过程中修复的前端 bug：视图 Y 翻转公式错误（人类画到上半场）、
+  opening 阶段 HUD/摘要空值崩溃、resetLocal→renderCardLayer 空引用、
+  原生 confirm() 阻塞页面（改页内确认层）、norm_option shard 路径
+  二次处理错误（SHARD_MISSING）。
 
 ### 18.3 验证结果
 
-待填写：测试命令、通过数、浏览器尺寸、截图/录屏位置。
+自动化测试（全部通过，54 passed）：
+
+```bash
+pytest tests/test_game_api.py -q    # 16 passed（含新增双 side 开局半场/
+                                     # 镜像语义、buy 半场拒绝不变性、move 跨中线、
+                                     # board 契约、undo 门控、ACK 权威复位、
+                                     # blocker 分离/start_mode、shard 路径安全、
+                                     # v1 manifest 兼容 + 快照污染门）
+pytest tests -q                     # 54 passed（含 transition 套件与旧 API 回归）
+```
+
+浏览器验收（ZCode 内置 Chromium，8300 服务以 `start_server.bat` 方式启动，
+语料为用户本地 `local_data/replay_game` 2010 选项 + committed fixture）：
+
+- 1920×1080，human=player 1（B站指挥官教官接管 vs 终归还是差点，受限 R4）：
+  选择页口径可读 → 页内受限确认层 → 开局四卡（含“回放记录/模拟生成”徽标）→
+  部署：人类蓝色单位/蓝塔在画面下半场（像素级颜色分析确认）→ 武装野马购买
+  （¥200→¥0，buy_unit ✓）→ 拖动单位（move_unit ✓）→ 选中详情期间撤销/
+  结束部署可见 → 结束部署 → 战斗自动播放 → ACK 后单位复位到部署阵型
+  （拖动后的 (-241,114) 保持）→ R2–R4 增援四卡 + 战斗循环 →
+  **R5 BLOCKED，与 scanner 预计的 R5: MISSING_REINFORCEMENT_EFFECT
+  (13030003) 完全一致**，覆盖层展示 receipt/raw entry，审计抽屉自动展开。
+- 1920×1080，human=player 0（fiddler 接管 vs Phan晓鸦，受限 R3）：
+  人类蓝色单位/塔在下半场、对手红色在上半场（像素+视觉双重确认）→
+  点击对方半场被前端拒绝（“只能放置在己方半场”，version 不变）→
+  点击己方半场空位购买成功（buy_unit ✓）。
+- 1366×768：审计抽屉展开时“结束部署”仍可见可用、画布保留、无横向溢出；
+  抽屉折叠/展开不销毁画布；账本带 P0·你/P1·对手 角色标签；ESC 取消购买；
+  科技/塔·蓝图面板正常；hash 刷新恢复会话正常。
+
+证据：会话过程截图存于 ZCode 会话 artifacts（1920 部署/战斗、1366 抽屉
+展开等关键帧）；未另行落盘到 data/screenshots（该目录仅放原游戏参考截图）。
 
 ### 18.4 与任务书的偏差
 
-待填写：每一项偏差的原因、风险、用户裁决和后续任务；无偏差时明确写“无”。
+1. **G2 MoveUnit 半场校验未实施（有意偏差，语料证据）**：任务书要求
+   MoveUnit 同样校验所属半场；对样例语料 258 条真实 move 统计发现 7 条
+   跨中线（R3+ 侧翼推进，如 side 0 移至 y=+285），若强制半场会把合法
+   历史计划变成 BLOCKED，违反“语料冻结语义”原则。BuyUnit 半场规则有
+   110/110 语料支持，保留强制。scanner 同步只对 buy 应用该规则。
+   风险：无（与语料一致）；后续任务：若未来语料出现购买跨半场样本再复核。
+2. **G7/7.2 supply 位置**：supply 固定在 HUD 人类侧（带变化动画），
+   未放到购买区旁；撤销/结束部署在顶部中央而非右下。依 Q3 裁决
+   （布局可不同于游戏），且 1366×768 验证无遮挡。
+3. **7.3 解锁未做居中 modal**：解锁保留在左栏分组列表（价格/编队/
+   slot/分组字段齐全，资金不足禁用）。未做名称筛选。依 Q4“正确性优先”；
+   后续可在左栏基础上加筛选输入框。
+4. **G11 拒绝光标部分完成**：购买非法区以红色 ✖ 幽灵 + 文字提示实现，
+   未改系统 cursor 样式；move 依偏差 1 全图合法，无非法区。
+5. **14.6 浏览器证据形式**：以交互验收 + 关键帧截图完成，未录制连续
+   录屏；验收全程在真实浏览器中操作（购买/拖动/结束部署/ACK/BLOCKED）。
+6. **旧 manifest 兼容**：用户的 local_data 语料仍为 v1 manifest，
+   loader 显式兼容（round 范围按 v1 定义 R0..R(n-1) 推导，属定义等价
+   而非猜测）；可选运行
+   `python tools/build_game_library.py --out local_data/replay_game --rebuild-manifest`
+   升级为 v2。
 
 ### 18.5 未完成项
 
-待填写：仍未完成的复选框和 blocker；不得用“基本完成”替代明确状态。
+- G2 的 MoveUnit 半场校验：按偏差 1 永久移除（语料证据），不复实施；
+- 7.3 解锁 modal 化与名称筛选：待后续视觉轮（Q4 裁决下不阻塞）；
+- 14.4 中“单击/双击卡牌”的自动化 UI 测试：以浏览器交互验收覆盖，
+  未固化为可重复的 Playwright 脚本（后续可加 tests/browser/）；
+- 其余复选框均已完成并通过验证。

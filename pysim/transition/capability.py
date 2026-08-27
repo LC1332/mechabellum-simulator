@@ -16,6 +16,7 @@ BLOCKER_CODES = (
     "UNSUPPORTED_ACTION_FIELD",
     "MISSING_RULE_DATA",
     "MALFORMED_REPLAY_REFERENCE",
+    "POSITION_OUT_OF_DEPLOY_ZONE",
 )
 
 # canonical kinds deploy_transition executes with full state effects
@@ -31,17 +32,29 @@ _FULLY_MODELED_BLUEPRINTS = {1, 2, 3, 4, 5, 401, 501}
 _FULLY_MODELED_COMMANDER_SKILLS = {1100001}   # 强化训练 exp jump
 
 
-def classify_norm_entry(e, rec=None, eco=None, gd=None):
+def classify_norm_entry(e, rec=None, eco=None, gd=None, side=None):
     """Norm entry -> blocker code or None when fully supported.
 
     `rec` is the round record (commanderSkills_raw needed to resolve
-    ID=0 commander releases, mirroring deploy._resolves_to)."""
+    ID=0 commander releases, mirroring deploy._resolves_to).
+    `side` (when given) applies the deploy-zone rule with the same
+    orientation as the runtime (deploy.in_own_half): one rule source."""
+    from .deploy import in_own_half
     t = e.get("t")
     if t in ("buy", "gift", "unlock", "move", "upgrade", "finish", "sell"):
         if t in ("buy", "gift") and gd is not None:
             mech = int(e.get("uid") or e.get("mech") or 0)
             if mech not in gd.mechs:
                 return "MISSING_RULE_DATA"
+        if side is not None and t == "buy":
+            # buys are strictly own-half in the corpus (110/110); moves may
+            # cross the midline (deploy keeps bounds-only for them)
+            try:
+                y = float(e.get("y"))
+            except (TypeError, ValueError):
+                y = None
+            if y is not None and not in_own_half(int(side), y):
+                return "POSITION_OUT_OF_DEPLOY_ZONE"
         return None
     if t == "tech":
         if gd is not None and int(e.get("tech", 0)) not in gd.techs:
@@ -143,10 +156,10 @@ def scan_offers(offers, eco, strict_all_supported=False):
     return None
 
 
-def scan_opponent_round(norm_entries, rec, eco, gd):
+def scan_opponent_round(norm_entries, rec, eco, gd, side=None):
     """One opponent round -> (blocker, first offending norm entry) or (None, None)."""
     for e in norm_entries or []:
-        b = classify_norm_entry(e, rec, eco, gd)
+        b = classify_norm_entry(e, rec, eco, gd, side=side)
         if b:
             return b, e
     return None, None
@@ -204,7 +217,7 @@ def scan_option(game, opponent_player, eco, gd, catalog_team_ids=None,
                              "detail": "unresolved refs: %s"
                                        % (nrep["unresolved_refs"][:2],)})
             break
-        b, entry = scan_opponent_round(entries, rec, eco, gd)
+        b, entry = scan_opponent_round(entries, rec, eco, gd, side=opp)
         if b:
             blockers.append({"code": b, "round": rnd, "side": opp,
                              "detail": _entry_detail(entry)})

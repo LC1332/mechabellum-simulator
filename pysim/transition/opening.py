@@ -8,6 +8,7 @@
 # Generated candidates come from opening_offer_generator_v1 (stable seed,
 # catalog packages, simulator-generated badge) — they do NOT claim to
 # reconstruct the game's unrecorded RNG.
+import copy
 import hashlib
 import json
 import os
@@ -15,8 +16,20 @@ import os
 from .model import (EnvironmentState, PlayerState, UnitCard, Phase,
                     SCHEMA_VERSION, RULESET_VERSION, ENGINE_VERSION)
 
-CATALOG_SCHEMA = "opening_catalog_v1"
+CATALOG_SCHEMA = "opening_catalog_v2"
+CATALOG_SCHEMA_V1 = "opening_catalog_v1"
 GENERATOR_VERSION = "opening_offer_generator_v1"
+
+# step2 任务书 G1: catalog v2 freezes every package in player-0 world
+# orientation (formation y < 0; player 1 owns y > 0). The runtime mirrors Y
+# when building player 1's initial units and NOTHING else — x, mech ids,
+# levels and is_rotate stay identical (is_rotate is an orientation flag of
+# the package itself, not a function of which side deploys it).
+FORMATION_SPACE = {
+    "coordinate_space": "world_v1",
+    "orientation": "player0",          # formation y < 0
+    "player1_rule": "mirror_y",        # y -> -y when side 1 deploys it
+}
 
 
 class OpeningError(Exception):
@@ -25,10 +38,40 @@ class OpeningError(Exception):
 
 def load_catalog(path):
     data = json.load(open(path, encoding="utf8"))
-    if data.get("schema_version") != CATALOG_SCHEMA:
-        raise OpeningError("catalog schema %s != %s"
-                           % (data.get("schema_version"), CATALOG_SCHEMA))
-    return data
+    sv = data.get("schema_version")
+    if sv == CATALOG_SCHEMA:
+        return data
+    if sv == CATALOG_SCHEMA_V1:
+        # explicit v1 adapter (step2 G1): v1 stored formations mirrored to
+        # POSITIVE y regardless of the evidence side, i.e. player-1
+        # orientation. Negating y converts to the v2 player-0 convention.
+        adapted = _adapt_v1_catalog(data)
+        adapted["adapted_from"] = CATALOG_SCHEMA_V1
+        return adapted
+    raise OpeningError("catalog schema %s != %s"
+                       % (sv, CATALOG_SCHEMA))
+
+
+def _adapt_v1_catalog(data):
+    out = copy.deepcopy(data)
+    out["schema_version"] = CATALOG_SCHEMA
+    out["formation_space"] = dict(FORMATION_SPACE,
+                                  note="adapted from opening_catalog_v1 "
+                                       "(positive-y orientation, y negated)")
+    for pkg in (out.get("packages") or {}).values():
+        for grp in pkg.get("units", []):
+            grp["formation"] = [[float(x), -float(y)] for (x, y) in
+                                grp.get("formation", [])]
+    return out
+
+
+def mirror_package_y(pkg):
+    """Same package deployed across the midline: formation y -> -y only."""
+    out = copy.deepcopy(pkg)
+    for grp in out.get("units", []):
+        grp["formation"] = [[float(x), -float(y)] for (x, y) in
+                            grp.get("formation", [])]
+    return out
 
 
 def package_of(catalog, team_id):
@@ -119,9 +162,14 @@ def player_state_from_package(pkg, start_entity_id=1, eco=None) -> PlayerState:
 def build_initial_state(pkg0, pkg1, provenance=(), eco=None) -> EnvironmentState:
     """Round-1 DEPLOYMENT state from two opening packages (rule execution,
     NOT round-1 snapshot backfill). Round-1 income is added separately by
-    the session (income policy), matching the replay's snapshot timing."""
+    the session (income policy), matching the replay's snapshot timing.
+
+    Both packages come from the catalog in player-0 world orientation
+    (formation y < 0): pkg0 deploys as stored, pkg1 mirrors Y only
+    (任务书 G1 — x/mech/level/is_rotate identical, no double rotation)."""
     p0, next_id = player_state_from_package(pkg0, start_entity_id=1, eco=eco)
-    p1, _ = player_state_from_package(pkg1, start_entity_id=next_id, eco=eco)
+    p1_pkg = mirror_package_y(pkg1)
+    p1, _ = player_state_from_package(p1_pkg, start_entity_id=next_id, eco=eco)
     top = max([u.entity_id for u in p1.units], default=next_id) + 1
     st = EnvironmentState(
         schema_version=SCHEMA_VERSION, ruleset_version=RULESET_VERSION,

@@ -50,12 +50,13 @@ def team_of(game, side):
 
 
 def formation_key(r1):
-    """Canonical (team-0 orientation) formation signature of a round-1 rec.
+    """Canonical (player-0 orientation) formation signature of a round-1 rec.
 
-    Team 0 owns y<0, team 1 y>0: mirror y so every package is stored in
-    team-0 orientation regardless of which side the evidence came from."""
+    World halves (step2 任务书 §4.1): player 0 owns y<0, player 1 y>0 —
+    mirror y so every package is frozen in player-0 orientation regardless
+    of which side the evidence came from."""
     units = sorted(r1.get("units") or [], key=lambda u: int(u["index"]))
-    sign = -1.0 if (units and float(units[0]["y"]) < 0) else 1.0
+    sign = 1.0 if (units and float(units[0]["y"]) < 0) else -1.0
     return tuple((int(u["id"]), int(u["level"]) + 1,
                   round(float(u["x"]), 1), round(float(u["y"]) * sign, 1),
                   bool(u.get("isRotate"))) for u in units)
@@ -155,22 +156,47 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--replay-dir")
     ap.add_argument("--rounds")
+    ap.add_argument("--from-catalog",
+                    help="adapt an existing v1 catalog to v2 (y negated; "
+                         "the only difference between the conventions)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--gamedata", default=None)
     args = ap.parse_args()
-    if not args.replay_dir and not args.rounds:
-        ap.error("need --replay-dir or --rounds")
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     gd_path = args.gamedata or os.path.join(root, "data", "gamedata.json")
     from pysim.gamedata import GameData
     gd = GameData(gd_path)
 
+    if args.from_catalog:
+        import json as _json
+        sys.path.insert(0, root)
+        from pysim.transition import opening as opening_mod
+        cat = opening_mod.load_catalog(args.from_catalog)
+        if cat.get("adapted_from"):
+            cat.pop("adapted_from", None)
+            cat["formation_space"] = dict(opening_mod.FORMATION_SPACE)
+            cat["generator"] = ("%s (upgraded from %s)"
+                                % (cat.get("generator",
+                                           "tools/build_opening_catalog.py"),
+                                   opening_mod.CATALOG_SCHEMA_V1))
+        out_dir = os.path.dirname(os.path.abspath(args.out))
+        os.makedirs(out_dir, exist_ok=True)
+        _json.dump(cat, open(args.out, "w", encoding="utf8"),
+                   ensure_ascii=False, indent=1)
+        print("catalog upgraded: %d teams -> %s"
+              % (len(cat.get("packages") or {}), args.out))
+        return
+
+    if not args.replay_dir and not args.rounds:
+        ap.error("need --replay-dir, --rounds or --from-catalog")
     games = game_entries(args)
     print("games:", len(games))
     packages = build(games)
     name_packages(packages, gd)
+    from pysim.transition import opening as opening_mod
     out = {
-        "schema_version": "opening_catalog_v1",
+        "schema_version": opening_mod.CATALOG_SCHEMA,
+        "formation_space": dict(opening_mod.FORMATION_SPACE),
         "generator": "tools/build_opening_catalog.py",
         "package_count": len(packages),
         "packages": packages,

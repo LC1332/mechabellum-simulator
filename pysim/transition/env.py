@@ -232,7 +232,10 @@ class TransitionEnv:
         out = [CanonicalAction(ActionKind.END_DEPLOY, None)]
         step_x, step_y = 700.0 / move_grid, 600.0 / move_grid
         xs = [-350.0 + (k + 0.5) * step_x for k in range(move_grid)]
-        ys = [-300.0 + (k + 0.5) * step_y for k in range(move_grid)]
+        # moves sample the acting player's OWN half only (side 0 y<0, side 1
+        # y>0), so every candidate stays inside the deploy zone
+        half0 = [-300.0 + (k + 0.5) * step_y for k in range(move_grid // 2)]
+        ys = half0 if player == 0 else [-y for y in half0]
         # moves: a sample of positions (the full grid per unit is huge; the
         # random policy samples unit x target from this product)
         from .model import MoveArgs, EntityRef
@@ -249,12 +252,15 @@ class TransitionEnv:
                 out.append(CanonicalAction(
                     ActionKind.MOVE_UNIT,
                     MoveArgs(ref=EntityRef(handle=h), x=xs[gi],
-                             y=ys[(j + gi) % move_grid], is_rotate=False)))
+                             y=ys[(j + gi) % len(ys)], is_rotate=False)))
         from .model import BuyArgs, UnlockArgs, UpgradeArgs, TechArgs
         for mech in sorted(p.unlocked_mechs):
             price = self.eco.buy_price(mech)
             if price is not None and p.supply >= price:
-                for (x, y) in ((-100.0, -150.0), (0.0, -150.0), (100.0, -150.0)):
+                # buy candidates sit inside the acting player's own half
+                # (deploy.in_own_half: side 0 y<0, side 1 y>0)
+                by = -150.0 if player == 0 else 150.0
+                for (x, y) in ((-100.0, by), (0.0, by), (100.0, by)):
                     out.append(CanonicalAction(
                         ActionKind.BUY_UNIT,
                         BuyArgs(mech_id=mech, x=x, y=y,

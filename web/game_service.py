@@ -23,8 +23,18 @@ from pysim.transition import (TransitionEnv, Economy, Income200r,
                               capability, opening as opening_mod)
 from pysim.transition.normalize import GIFT_OFFICERS
 from pysim.transition.deploy import TOWER_STRENGTHEN_COST, BLUEPRINT_COSTS
+from pysim.deploy import TOWER_POS
 
-GAME_VIEW_SCHEMA = "game_view_v1"
+GAME_VIEW_SCHEMA = "game_view_v2"
+BOARD_SPACE = "world_v1"
+BOARD_BOUNDS = {"x_min": -350.0, "x_max": 350.0,
+                "y_min": -300.0, "y_max": 300.0}
+# step2 任务书 §4.1: player 0 owns y<0, player 1 owns y>0, midline y=0
+# belongs to neither deploy zone (mirrors deploy.in_own_half).
+DEPLOY_ZONES = (
+    {"y_min": -300.0, "y_max": 0.0, "y_max_exclusive": True},
+    {"y_min": 0.0, "y_max": 300.0, "y_min_exclusive": True},
+)
 SESSION_PHASES = ("opening", "reinforcement", "deployment", "pre_battle",
                   "round_result", "terminal", "blocked")
 MIN_ROUNDS_DEFAULT = 5
@@ -831,6 +841,7 @@ class GameSession:
             "version": self.version,
             "phase": self.phase,
             "round": self.round,
+            "board": self._board_view(s),
             "replay": {
                 "replay_id": self.replay_id,
                 "file_label": self.option.get("file_label", ""),
@@ -841,7 +852,15 @@ class GameSession:
                 "human_name": self.option.get("human_name", ""),
                 "system_seed": self.system_seed,
                 "battle_seed_base": self.battle_seed_base,
-                "playable_through_round": self.option.get("playable_through_round"),
+                "playable_through_round": self.option.get(
+                    "playable_through_round"),
+                "round_min": self.option.get("round_min", 0),
+                "round_max": self.option.get("round_max", -1),
+                "round_record_count": self.option.get(
+                    "round_record_count", self.option.get("round_count", 0)),
+                "start_mode": self.option.get("start_mode",
+                                              "limited" if self.min_rounds < 5
+                                              else "normal"),
             },
             "players": self._player_views(s),
             "opening_offers": self.opening_offers if self.phase == "opening" else [],
@@ -860,11 +879,36 @@ class GameSession:
             "blocker": self.blocker,
         }
 
+    def _board_view(self, s):
+        """step2 G3/G15 board contract: one truth source for bounds, halves
+        and core-tower geometry (engine TOWER_POS), roles by human/opponent."""
+        players = []
+        for side in (0, 1):
+            levels = (0, 0)
+            if s is not None:
+                levels = tuple(int(x) for x in
+                               (s.players[side].tower_strengthen or (0, 0))[:2])
+            players.append({
+                "player": side,
+                "role": "human" if side == self.human else "opponent",
+                "deploy_zone": DEPLOY_ZONES[side],
+                "towers": [{"index": k, "x": TOWER_POS[side][k][0],
+                            "y": TOWER_POS[side][k][1],
+                            "level": levels[k] if k < len(levels) else 0}
+                           for k in (0, 1)],
+            })
+        return {"coordinate_space": BOARD_SPACE,
+                "bounds": dict(BOARD_BOUNDS),
+                "midline_y": 0.0,
+                "human_player": self.human,
+                "players": players}
+
     def _player_views(self, s):
         out = []
         for side in (0, 1):
             if s is None:
-                out.append({"role": "human" if side == self.human else "opponent",
+                out.append({"player": side,
+                            "role": "human" if side == self.human else "opponent",
                             "name": self.game["players"][side].get("name", "")})
                 continue
             p = s.players[side]
@@ -886,6 +930,7 @@ class GameSession:
                     "round_count": u.round_count,
                 })
             out.append({
+                "player": side,
                 "role": "human" if side == self.human else "opponent",
                 "name": self.game["players"][side].get("name", ""),
                 "hp": p.hp, "max_hp": p.max_hp, "supply": p.supply,
@@ -908,6 +953,15 @@ class GameSession:
         if s is None or self.phase not in ("deployment", "reinforcement"):
             return {}
         p = s.players[self.human]
+        finished = s.finished_deploy[self.human]
+        can_undo = self.phase == "deployment" and not finished \
+            and bool(self._undo_stack)
+        can_finish = self.phase == "deployment" and not finished
+        undo_reason = None
+        if not can_undo:
+            undo_reason = ("WRONG_PHASE" if self.phase != "deployment"
+                           else "PLAYER_ALREADY_FINISHED" if finished
+                           else "UNDO_EMPTY")
         buy, unlock, tech = [], [], []
         for mech in sorted(set(self.gd.cards)):
             card = self.gd.cards[mech]
@@ -924,7 +978,10 @@ class GameSession:
                 if price is not None:
                     unlock.append({"mech_id": mech, "name": card.name,
                                    "price": price,
-                                   "affordable": p.supply >= price})
+                                   "affordable": p.supply >= price,
+                                   "slot_size": card.slot_size,
+                                   "mech_count": card.mech_count,
+                                   "group": card.group})
         for mech, owned in p.tech_map:
             card = self.gd.cards.get(mech)
             owned = set(owned)
@@ -938,6 +995,7 @@ class GameSession:
                 price = self.eco.tech_price(mech, tid, len(owned))
                 tech.append({"mech_id": mech, "tech_id": tid,
                              "name": td.name if hasattr(td, "name") else str(tid),
+                             "description": getattr(td, "description", "") or "",
                              "price": price, "prerequisite_ok": ok,
                              "affordable": price is not None and p.supply >= price,
                              "owned": False})
@@ -992,6 +1050,11 @@ class GameSession:
             "blueprints": blueprints,
             "map_bounds": {"x": 350.0, "y": 300.0},
             "finished": s.finished_deploy[self.human],
+            "can_undo": can_undo, "undo_reason": undo_reason,
+            "can_finish_deployment": can_finish,
+            "finish_reason": None if can_finish else (
+                "WRONG_PHASE" if self.phase != "deployment"
+                else "PLAYER_ALREADY_FINISHED"),
         }
 
     def _historical_view(self):

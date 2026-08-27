@@ -615,6 +615,10 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
             return _receipt(i, kind.value, False, errors.MECH_NOT_UNLOCKED)
         if not (_in_bounds(args.x, args.y)):
             return _receipt(i, kind.value, False, errors.POSITION_OUT_OF_BOUNDS)
+        if not in_own_half(side, args.y):
+            return _receipt(i, kind.value, False,
+                            errors.POSITION_OUT_OF_DEPLOY_ZONE,
+                            detail=_zone_detail(side))
         limit = BASE_BUY_LIMIT + ctx.buy_limit_bonus
         if ctx.buy_count >= limit:
             return _receipt(i, kind.value, False, errors.BUY_LIMIT_REACHED,
@@ -713,6 +717,10 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
             return _receipt(i, kind.value, False, errors.UNKNOWN_ENTITY)
         if not _in_bounds(args.x, args.y):
             return _receipt(i, kind.value, False, errors.POSITION_OUT_OF_BOUNDS)
+        # corpus truth (step2 G2 audit): moves may reposition anywhere on the
+        # map (7/258 sample moves cross the midline — R3+ flank pushes), so
+        # only NEW buys are restricted to the acting player's half
+        rot = u.is_rotate if args.is_rotate is None else args.is_rotate
         rot = u.is_rotate if args.is_rotate is None else args.is_rotate
         ctx.units[j] = UnitCard(**{**u.__dict__, "x": args.x, "y": args.y,
                                    "is_rotate": rot})
@@ -801,6 +809,17 @@ def ctx_officers(ctx):
 
 def _in_bounds(x, y) -> bool:
     return abs(x) <= MAP_X and abs(y) <= MAP_Y
+
+
+def in_own_half(side: int, y: float) -> bool:
+    """Deployment-zone rule (step2 任务书 §4.1): player 0 owns y < 0,
+    player 1 owns y > 0; the midline y == 0 belongs to neither side."""
+    return y < 0 if side == 0 else y > 0
+
+
+def _zone_detail(side: int) -> str:
+    return "player %d deploys in %s (midline y=0 excluded)" % (
+        side, "y<0" if side == 0 else "y>0")
 
 
 def _next_replay_index(ctx) -> int:
