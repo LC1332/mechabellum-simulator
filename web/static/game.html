@@ -796,7 +796,11 @@ function hitUnit(x,y){
   for(const p of V?V.players:[]){
     for(const u of p.units||[]){
       const d=Math.hypot(u.x-x,u.y-y);
-      if(d<bd){bd=d;best={u,role:p.role};}
+      /* exact ties (perfectly stacked units) go to the human's unit —
+         it is the only one that can be selected and dragged */
+      if(d<bd||(d===bd&&p.role==="human"&&best&&best.role!=="human")){
+        bd=d;best={u,role:p.role};
+      }
     }
   }
   return best;

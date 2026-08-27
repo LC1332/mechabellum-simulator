@@ -561,9 +561,10 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
                 game_idx = spec[1] if spec is not None else \
                     _next_replay_index(ctx)
                 ctx.spawned_ids.add(eid)
+                gx, gy = _grant_spawn_pos(ctx, side)
                 ctx.units.append(UnitCard(
                     entity_id=eid, mech_id=mech, level=max(1, level),
-                    exp=0, x=0.0, y=0.0, sell_supply=price,
+                    exp=0, x=gx, y=gy, sell_supply=price,
                     replay_index=game_idx))
             spawned = count
         # routing: unit-strengthen / expert cards persist into officers;
@@ -815,6 +816,25 @@ def in_own_half(side: int, y: float) -> bool:
     """Deployment-zone rule (step2 任务书 §4.1): player 0 owns y < 0,
     player 1 owns y > 0; the midline y == 0 belongs to neither side."""
     return y < 0 if side == 0 else y > 0
+
+
+def _grant_spawn_pos(ctx, side):
+    """Reinforcement-grant arrival point: first free slot on the owner's
+    deploy lines (>= 32 from every existing unit, so grants never stack on
+    another unit or on the opponent's mirrored grant at the midline). The
+    unit stays movable — this is only where it appears, like the gift spawn
+    at y = -/+160."""
+    taken = [(u.x, u.y) for u in ctx.units]
+    xs = [0.0]
+    for s in range(1, 9):
+        xs += [s * 40.0, -s * 40.0]
+    for dist in (160.0, 220.0, 280.0):
+        y = -dist if side == 0 else dist
+        for x in xs:
+            if all((x - tx) ** 2 + (y - ty) ** 2 >= 32.0 ** 2
+                   for tx, ty in taken):
+                return x, y
+    return 0.0, (-160.0 if side == 0 else 160.0)
 
 
 def _zone_detail(side: int) -> str:
