@@ -208,6 +208,9 @@ MechanicSupport(
 ### 3.4 P2：模式与长期扩展
 
 - 2v2 的队伍、共享/独立经济、战场坐标、伤害和终局；
+
+comments: 非1对1标准模式不用做
+
 - 特殊模式与特殊地图；
 - 2119/2203/2207 以外版本的数据 migration；
 - 真正从空状态生成 shop、开局与全部外生随机事件；
@@ -438,3 +441,117 @@ provisional 可运行，却不能与 verified 合并统计。
 
 达到这一里程碑后，再继续扩 24 件装备和战场技能；否则直接往 `engine.py` 添加更多
 ID 特判，只会让当前的机制缺口更难测、更难回滚。
+
+## 10. 前端 Step 3 移交项：装备近似运行与未实现技能
+
+> 本节承接 [`前端step3实现.md`](前端step3实现.md)。Step 3 先完成装备和技能的
+> transition/state 链路；pysim 尚未实现的战斗效果继续由本计划负责。
+
+### 10.1 支持度口径调整
+
+Step 3 后不再用单一 supported/unsupported 表示机制完成度，统一拆为：
+
+```text
+transition_complete: bool
+battle_fidelity: exact | approximate | unsupported
+```
+
+装备完成库存、合法性和单位绑定后允许审计游戏继续运行，但在 battlefield 效果完成前
+只能标记为：
+
+```text
+transition_complete = true
+battle_fidelity = approximate
+effect_complete = false
+```
+
+因此需要同时保留：
+
+- runtime playable prefix：transition 能否无损执行动作和持久状态；
+- strict-effect prefix：战斗效果是否也已完整实现；
+- 首次 approximation 回合及机制 ID；
+- `silent_half_effect_count = 0`，所有近似必须进入报告、GameView 和 battle warning。
+
+未知装备 ID、未知目标限制或尚不能落入持久 state 的动作仍是 hard blocker，不能用
+approximate 放行。
+
+### 10.2 装备 E1 拆分
+
+原 §4 的 E1 拆成两个阶段：
+
+**E1a：Step 3 transition/state 链路**
+
+- [ ] 装备定义、库存多重集、`UseEquipment` typed action；
+- [ ] reinforcement/opening 获得装备、目标限制、替换和持久归属；
+- [ ] normalizer、replay adapter、save/load、digest、GameView、历史对手；
+- [ ] capability 标记 `transition_complete + battle_approximate`；
+- [ ] battle adapter 明确忽略装备效果并输出装备 ID warning。
+
+**E1b：本计划 battlefield effect 链路**
+
+- [ ] `UnitBattleInput.equipment_id` 进入 compiler 与 effect registry；
+- [ ] 按单件装备实现 modifier/event/trigger，不允许整类白名单；
+- [ ] 每件装备完成 A/B、叠加顺序、确定性和 trace 测试；
+- [ ] 单件完成后只移除该 equipment ID 的 approximation warning；
+- [ ] 24/24 装备完成前，未实现项继续保持 `battle_approximate`。
+
+§4 E2–E4 仍是装备战斗效果的正式实施清单，不因 transition 已能绑定装备而视为完成。
+§4 E5 的 `effect_complete` gate 继续要求 legality/economy/state/battle/settlement 六段全绿。
+
+### 10.3 已接通技能的正确 ID
+
+Step 3 只接通已有可信效果，并先修复旧映射错位：
+
+| Release ID | 技能 | Step 3 后状态 |
+|---:|---|---|
+| `300001` | 导弹打击 | battle exact/provisional 数值 |
+| `800001` | 空投护盾 | battle exact/provisional 半径 |
+| `100002` | 燃烧弹 | battle provisional 数值 |
+| `1200001` | 地底威胁 | summon provisional 数量/参数 |
+| `1200003` | 呼叫机群 | summon provisional 数量/参数 |
+| `1100001` | 强化训练 | transition effect，不进入 battlefield |
+
+必须永久保留以下错配回归：
+
+- `200001` 是 EMP，未实现前不得调用燃烧地面效果；
+- `1000001` 是再部署，未实现前不得调用召唤效果；
+- capability 由统一 skill registry 查询 ID，不能再复制 raw type 白名单。
+
+表中标为 provisional 的技能可以运行，但必须在指标中与 verified 分开；数值证据不足时
+不能仅因“引擎已有一个近似事件”就升级为 verified。
+
+### 10.4 未实现技能 backlog
+
+以下技能进入 battlefield 后续实现范围：
+
+| 类别 | ID/技能 |
+|---|---|
+| 状态/区域 | `200001` 电磁冲击、`200002` 巨型电磁冲击、`200003` 光子投射 |
+| 轰炸 | `300003` 轨道轰炸、`300004` 核弹、`300005` 闪电风暴、`300006` 离子轰炸、`300007` 轨道标枪 |
+| 持续地形 | `500002` 酸液弹、`600002` 烟雾弹 |
+| 部署规则 | `1000001` 再部署、`1500002` 移动信标 |
+| 召唤 | `1200002` 犀牛来袭、`1200004` 呼叫战舰、`1200005` 天降火神 |
+| 其他语料 ID | `400002` 黏油弹及 replay/census 中尚未进入版本化定义的变体 |
+
+每个技能必须独立完成：
+
+1. 卡牌 ID、Release ID、SkillIndex 的 codec；
+2. 获得时序、库存槽、目标类型、可用性和 CD；
+3. 费用与 ledger；
+4. transition legality 和拒绝不变性；
+5. `TimedEvent`/目标对象编译；
+6. battle effect、持续/叠加/免疫规则；
+7. trace、BattleOutcome 与确定性；
+8. 无效果/有效果 A/B 和 replay/corpus 证据；
+9. capability/runtime 一致性；
+10. 按单个技能 ID 移除 unsupported/approximation，禁止整类一次性宣称支持。
+
+### 10.5 后续完成 Gate
+
+- [ ] E1a 完成后装备不再阻塞 runtime，但 strict-effect prefix 保持诚实；
+- [ ] 每个装备/技能的 support 状态都来自同一 registry；
+- [ ] 未实现装备和技能在 battle 结果中均有具体 ID warning；
+- [ ] `200001`、`1000001` 的错误效果回归测试长期保留；
+- [ ] 任一单项升级为 exact 时都有 A/B、trace、确定性和证据记录；
+- [ ] 单项完成不得改变无该机制场景的旧 benchmark digest；
+- [ ] 全部装备和技能完成前，不修改文档口径把 transition 完整等同于 effect complete。
