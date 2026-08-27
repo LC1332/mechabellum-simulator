@@ -16,7 +16,7 @@ import os
 from dataclasses import dataclass, field
 from enum import Enum
 
-SCHEMA_VERSION = "transition-v0.4"
+SCHEMA_VERSION = "transition-v0.5"
 RULESET_VERSION = "normal_1v1_replay_v0"
 ENGINE_VERSION = "pysim-step29"
 
@@ -69,6 +69,11 @@ class PlayerState:
     tower_mods_raw: tuple = ()       # ActiveEnergyTowerSkill ids this round (5/6)
     devices_raw: tuple = ()          # ReleaseContraption (cid,x,y) this round
     skill_events_raw: tuple = ()     # ReleaseCommanderSkill (sid,x,y) this round
+    # battlefield v1 round-scoped field: entity ids bought/granted THIS round
+    # (flank.py rule: only new cards standing in the enemy half teleport in
+    # over FLANK_DELAY seconds; snapshot-carried units never delay). Reset
+    # by advance_round; old states/saves adapt to ()
+    spawned_this_round: tuple = ()
 
 
 @dataclass(frozen=True)
@@ -102,6 +107,7 @@ class ActionKind(str, Enum):
     RELEASE_COMMANDER_SKILL = "release_commander_skill"   # step3 任务书 §5.2
     USE_EQUIPMENT = "use_equipment"        # step3 任务书 §6.1
     END_DEPLOY = "end_deploy"
+    SURRENDER = "surrender"                # battlefield M1: typed GiveUp terminal
     RAW_UNSUPPORTED = "raw_unsupported"     # faithful marker for v0-unsupported raw types
 
 
@@ -192,6 +198,15 @@ class UseEquipmentArgs:
 
 
 @dataclass(frozen=True)
+class SurrenderArgs:
+    """Typed GiveUp (battlefield M1): the acting player surrenders — the
+    state atomically enters TERMINAL (reason "surrender"), no battle runs,
+    the opponent wins. Carries no parameters; the acting player is the
+    plan's player."""
+    pass
+
+
+@dataclass(frozen=True)
 class UnsupportedArgs:
     raw_type: str
     raw: tuple[tuple[str, object], ...]   # stable serialization of the raw record
@@ -199,7 +214,8 @@ class UnsupportedArgs:
 
 ActionArgs = (BuyArgs | MoveArgs | UpgradeArgs | UnlockArgs | TechArgs
               | ChooseReinforceArgs | SellArgs | GiftArgs
-              | ReleaseCommanderSkillArgs | UseEquipmentArgs | UnsupportedArgs)
+              | ReleaseCommanderSkillArgs | UseEquipmentArgs | SurrenderArgs
+              | UnsupportedArgs)
 
 
 @dataclass(frozen=True)

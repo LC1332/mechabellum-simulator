@@ -26,8 +26,9 @@ from dataclasses import dataclass, field
 # raw types carried through as `passthrough` entries (no modeled deploy
 # effect in v0; still participants in undo folding unless noted).
 # UseEquipment and MAPPED ReleaseCommanderSkill releases are emitted as
-# typed entries instead (step3 任务书 §5.2/§6.3); only the unmapped residue
-# stays passthrough here.
+# typed entries instead (step3 任务书 §5.2/§6.3); GiveUp becomes the typed
+# `surrender` entry (battlefield M1); only the unmapped residue stays
+# passthrough here.
 PASSTHROUGH_TYPES = {
     "ActiveEnergyTowerSkill",     # undoable (Q1)
     "ReleaseContraption",         # undoable (Q1)
@@ -35,7 +36,7 @@ PASSTHROUGH_TYPES = {
     "StrengthenTower",            # undoable (Q1)
     "ActiveBlueprint",            # undoable (Q7/Q8)
     "ReleaseCommanderSkill",      # unmapped releases (undoable, Q1)
-    "GiveUp",                     # terminal marker, not undoable
+    "GiveUp",                     # -> typed `surrender` entry (M1), not undoable
     "ChooseAdvanceTeam",          # round-0 marker, not undoable
 }
 
@@ -325,6 +326,10 @@ class Normalizer:
                 push("equip", k, [ei])
             elif t == "FinishDeploy":
                 emit({"t": "finish", "raw": [k]})
+            elif t == "GiveUp":
+                # battlefield M1: typed surrender — the game ends here; not
+                # undoable, never folded
+                emit({"t": "surrender", "raw": [k]})
             elif t in PASSTHROUGH_TYPES:
                 ei = emit(self._passthrough(a, k))
                 if t not in ("GiveUp", "ChooseAdvanceTeam"):

@@ -263,9 +263,13 @@ class ReplayAdapter:
                             uid = int(a.get("UID", 0) or 0)
                             uidx = a.get("UIDX")
                             mech = None
+                            equip = 0
                             if uidx is not None and int(uidx) >= 0:
-                                mech = next((int(u["id"]) for u in r["units"]
-                                             if int(u["index"]) == int(uidx)), None)
+                                for u in r["units"]:
+                                    if int(u["index"]) == int(uidx):
+                                        mech = int(u["id"])
+                                        equip = int(u.get("equipment", 0) or 0)
+                                        break
                             if mech is None and uid:
                                 mech = uid
                             if mech is None:
@@ -275,6 +279,10 @@ class ReplayAdapter:
                             if p is None:
                                 ok = False
                                 break
+                            # 强化模块 13030004: the target's upgrades cost
+                            # -100 (battlefield M1, deploy applies the same)
+                            if equip == 13030004:
+                                p = max(0, p - 100)
                             cost += p
                         elif t == "UnlockUnit":
                             p = eco.unlock_price(int(a["UID"]))

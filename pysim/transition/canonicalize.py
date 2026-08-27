@@ -13,7 +13,8 @@ from .errors import TransitionError
 from .model import (ActionKind, CanonicalAction, CanonicalActionPlan,
                     BuyArgs, MoveArgs, UpgradeArgs, UnlockArgs, TechArgs,
                     ChooseReinforceArgs, SellArgs, GiftArgs, UnsupportedArgs,
-                    ReleaseCommanderSkillArgs, UseEquipmentArgs, EntityRef)
+                    ReleaseCommanderSkillArgs, UseEquipmentArgs, EntityRef,
+                    SurrenderArgs)
 
 # raw types that must have been folded away before deploy
 FORBIDDEN_RAW_TYPES = ("Undo", "CancelReleaseCommanderSkill")
@@ -126,6 +127,10 @@ def canonicalize_plan(player: int, actions: list,
                                                else int(u)))), k))
         elif t == "finish":
             out.append(CanonicalAction(ActionKind.END_DEPLOY, None, k))
+        elif t == "surrender":
+            # battlefield M1: typed GiveUp terminal
+            out.append(CanonicalAction(ActionKind.SURRENDER, SurrenderArgs(),
+                                       k))
         elif t == "passthrough":
             rt = str(e.get("raw_type"))
             if rt in FORBIDDEN_RAW_TYPES:

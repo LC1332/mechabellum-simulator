@@ -30,6 +30,9 @@ from .deploy import (formation_positions, MAP_X, MAP_Y,
                      BLD_WALL, BLD_AA, BLD_RF, BLD_MAGNET,
                      MAGNET_TRIGGER, MAGNET_SLOW_R, MAGNET_SELF_T,
                      building_module_offsets)
+# battlefield E2 equipment table (single source; battlefield.effects imports
+# nothing from the engine so this cannot cycle)
+from .battlefield.effects.equipment import EQUIPMENT_BATTLE_SPECS as _EQ_SPECS
 
 DT = 0.01                 # 100 Hz
 FIGHT_TIME = 120.0
@@ -355,14 +358,17 @@ class Battle:
 
     # ---------- setup ----------
     def add_card(self, team, mech_id, level, x, y, is_rotate=False, techs=None,
-                 spawn_at=0.0, exp=0):
+                 spawn_at=0.0, exp=0, equipment_id=0):
         # techs=None -> card default technologies; list -> full effective set
         # (empty list disables techs entirely - debug switch)
         # spawn_at: teleport duration in seconds (step9 flank deploy); 0 = none
         # exp: snapshot exp carried into the fight (step14 opts.exp_seed;
         # 0 = old behavior, cards start the fight at 0 exp)
+        # equipment_id: bound equipment (battlefield E2); 0 = none. Static
+        # modifiers bake in _bake_card_mods AFTER the tech/officer stage
+        # (equipment_stage_v1; battlefield/effects/equipment.py is the table)
         self._pending.append((team, mech_id, level, x, y, is_rotate, techs,
-                              float(spawn_at), int(exp)))
+                              float(spawn_at), int(exp), int(equipment_id)))
 
     def add_tower(self, team, x, y, strengthen=0):
         """step8: a destructible crystal; its destruction paralyses the
@@ -411,7 +417,8 @@ class Battle:
     def finalize(self):
         gd = self.gd
         pos_list = []   # (team, mech, level, x, y, card_idx, spawn_at)
-        for team, mech_id, level, x, y, is_rotate, techs, spawn_at, exp0 in self._pending:
+        for team, mech_id, level, x, y, is_rotate, techs, spawn_at, exp0, eq0 \
+                in self._pending:
             m = gd.mechs.get(mch_id := mech_id)
             if m is None or m.main_skill_id == 0:
                 continue
@@ -429,7 +436,8 @@ class Battle:
                          and td.family == "technologyDatas"]
             self.cards.append({"mech": mech_id, "team": team, "level": max(1, level),
                                "exp": int(exp0) if self.opts.get("exp_seed", 0) else 0,
-                               "techs": list(techs), "_pos": (x, y)})
+                               "techs": list(techs), "_pos": (x, y),
+                               "equipment": int(eq0)})
             for px, py in formation_positions(gd, mech_id, x, y, is_rotate,
                                               scale=self.opts["form_scale"]):
                 pos_list.append((team, mech_id, max(1, level), px, py, c, spawn_at))
@@ -1272,16 +1280,26 @@ class Battle:
             if mul:
                 life_rate = (1.0 + agg["life_rate"]) * (1.0 + o_life) - 1.0
             new_max = m.life * level * (1.0 + life_rate) * self.calib_life[members]
+            dmg_rate = o_dmg if not mul else ((1.0 + o_dmg) - 1.0)
+            new_dmg = m.damage * level * (1.0 + dmg_rate) \
+                * self.calib_dmg[members]
+            new_speed = m.move_speed + agg["speed"] + o_spd
+            # battlefield E2 equipment stage (equipment_stage_v1): hp/dmg
+            # MULTIPLY the post-tech+officer value, speed adds flat. Zero
+            # for equipment_id 0, so non-equipment battles are unchanged.
+            eq = _EQ_SPECS.get(int(card.get("equipment") or 0))
+            if eq is not None:
+                new_max = new_max * (1.0 + eq.hp_mult)
+                new_dmg = new_dmg * (1.0 + eq.dmg_mult)
+                new_speed = new_speed + eq.speed_add
             if preserve_hp and np.any(self.max_hp[members] > 0):
                 frac = self.hp[members] / np.maximum(self.max_hp[members], 1e-9)
                 self.hp[members] = np.maximum(1.0, new_max * frac)
             else:
                 self.hp[members] = new_max
             self.max_hp[members] = new_max
-            dmg_rate = o_dmg if not mul else ((1.0 + o_dmg) - 1.0)
-            self.base_dmg[members] = m.damage * level * (1.0 + dmg_rate) \
-                * self.calib_dmg[members]
-            self.move_speed[members] = m.move_speed + agg["speed"] + o_spd
+            self.base_dmg[members] = new_dmg
+            self.move_speed[members] = new_speed
         self.tech_dmg[members] = 1.0 + agg["dmg_rate"]
         # step16 sub-table outputs
         self.air_dmg[members] = agg["air_rate"]
@@ -1353,6 +1371,11 @@ class Battle:
             self.atk_dur[members] = new_dur
             self.hit_at[members] = np.minimum(s.attack_point * new_dur / base_dur, new_dur)
             new_rng = s.range * (1.0 + agg["range_rate"]) + agg["range_val"] + o_rng
+            # equipment range stage: flat add AFTER tech/officer (激光瞄具
+            # +20); EMP-full reverts only the TECH delta (rng_td), so
+            # hardware range survives disable
+            if eq is not None:
+                new_rng = new_rng + eq.range_add
             self.range[members] = new_rng
             self.range_base[members] = new_rng
             self.stop_dist[members] = np.where(new_rng > 0, new_rng, 5.0)
@@ -4249,7 +4272,8 @@ def battle_from_units(gd, units0, units1, trace=False, tech_map0=None, tech_map1
                        float(u["x"]), float(u["y"]), bool(u.get("isRotate", False)),
                        techs=list(techs) if techs is not None else None,
                        spawn_at=float(u.get("spawnAt", 0) or 0),
-                       exp=int(u.get("exp", 0) or 0))
+                       exp=int(u.get("exp", 0) or 0),
+                       equipment_id=int(u.get("equipmentId", 0) or 0))
     b.trace_enabled = trace
     b.finalize()
     return b

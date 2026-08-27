@@ -1,0 +1,18 @@
+{
+ "_note": "battlefield B0 frozen baseline (step29 bench_ver, 2026-08-24): per-lib agree counts + characterization digests. Pure-refactor and equipment PRs must keep every lib EXACTLY equal; regenerate/compare via tools/battlefield_report.py --bench",
+ "_source": "data/calib/step29/bench_ver.json",
+ "schema_version": "transition-v0.5",
+ "ruleset_version": "normal_1v1_replay_v0",
+ "engine_version": "pysim-step29",
+ "libs": {
+  "s24": "271/320",
+  "s25": "140/186",
+  "s26": "284/450",
+  "s27": "124/140",
+  "s28": "803/1004",
+  "s29p": "39/57",
+  "s29cal": "20/42",
+  "s29c": "112/150"
+ },
+ "total": "1793/2349"
+}

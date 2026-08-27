@@ -445,10 +445,16 @@ def test_equipment_registry_covers_survey():
     assert survey <= set(equipment_mod.EQUIPMENT_DEFS)
     assert 13030009 in equipment_mod.EQUIPMENT_DEFS   # 增幅专家's core
     d = equipment_mod.EQUIPMENT_DEFS[13030001]
-    assert d.target_restriction == "any" and d.battle_fidelity == "approximate"
+    assert d.target_restriction == "any"
+    # battlefield E2: 激光瞄具 has a battle spec now -> "exact" path
+    # (confidence stays provisional until the equipment oracle, E6)
+    assert d.battle_fidelity == "exact"
     assert equipment_mod.EQUIPMENT_DEFS[1306001].target_restriction == "giant"
     assert equipment_mod.EQUIPMENT_DEFS[1307001].target_restriction == \
         "ground_giant"
+    # unimplemented ids keep the step3 approximation marker
+    assert equipment_mod.EQUIPMENT_DEFS[13030010].battle_fidelity == \
+        "approximate"
 
 
 def test_reinforce_equipment_charges_and_stocks():
@@ -597,24 +603,27 @@ def test_equipment_undo_folding_and_save_load():
 
 
 def test_equipment_survives_round_and_battle_warns():
-    st = sandbox(units0=((10, -60.0),), equip0=(13030007,))
+    # 13030010 统御核心 has no battle spec yet (cross-round death/income
+    # semantics, E5) -> still carries the approximation warning; the E2
+    # static items no longer warn (see test_battlefield suite)
+    st = sandbox(units0=((10, -60.0),), equip0=(13030010,))
     unit = st.players[0].units[0]
     res = apply0(st, CanonicalAction(ActionKind.USE_EQUIPMENT,
                                      UseEquipmentArgs(
-                                         equipment_id=13030007,
+                                         equipment_id=13030010,
                                          unit_ref=EntityRef(
                                              handle=unit.replay_index))))
     st2 = EnvironmentState(**{**res.state.__dict__,
                               "finished_deploy": (True, True),
                               "phase": Phase.PRE_BATTLE})
     outcome = run_battle(st2, GD, battle_seed=5)
-    assert any("13030007" in w and "battle_approximate" in w
+    assert any("13030010" in w and "battle_approximate" in w
                for w in outcome.fidelity_warnings), outcome.fidelity_warnings
     settled = settle_transition(st2, outcome, eco=ECO)
     nxt = advance_round(settled.state, None, None, gd=GD)
     kept = next(u for u in nxt.players[0].units
                 if u.entity_id == unit.entity_id)
-    assert kept.equipment_id == 13030007   # next-round snapshot ownership
+    assert kept.equipment_id == 13030010   # next-round snapshot ownership
 
 
 def test_amplification_expert_grants_three_cores():
@@ -645,18 +654,42 @@ def test_amplification_expert_grants_three_cores():
 
 # ================================================================ T6 axes
 def test_two_axis_support_matrix():
+    """M1: the two-axis view now carries confidence + effect_complete and
+    derives from the battlefield registry (provisional numbers are no
+    longer conflated with verified completeness)."""
+    # E2 implemented static equipment: path complete, confidence provisional
+    # (no real-game oracle yet) -> NOT effect_complete
     assert capability.mechanism_support("equipment", 13030001) == \
-        {"transition_complete": True, "battle_fidelity": "approximate"}
+        {"transition_complete": True, "battle_fidelity": "exact",
+         "confidence": "provisional", "effect_complete": False}
+    # unimplemented equipment: approximate, still runtime-playable
+    assert capability.mechanism_support("equipment", 13030010) == \
+        {"transition_complete": True, "battle_fidelity": "approximate",
+         "confidence": "unsupported", "effect_complete": False}
     assert capability.mechanism_support("equipment", 1) == \
-        {"transition_complete": False, "battle_fidelity": "unsupported"}
+        {"transition_complete": False, "battle_fidelity": "unsupported",
+         "confidence": "unsupported", "effect_complete": False}
+    # mapped skills: path exact, cal numbers provisional
     assert capability.mechanism_support("commander_skill", 300001)[
         "battle_fidelity"] == "exact"
+    assert capability.mechanism_support("commander_skill", 300001)[
+        "confidence"] == "provisional"
+    # 强化训练: user-frozen rule -> verified and effect-complete
+    assert capability.mechanism_support("commander_skill", 1100001)[
+        "effect_complete"] is True
     assert capability.mechanism_support("commander_skill", 200001)[
         "battle_fidelity"] == "unsupported"
     assert capability.mechanism_support("tower_skill", 5)[
         "battle_fidelity"] == "exact"
     assert capability.mechanism_support("blueprint", 2)[
         "transition_complete"] is True
+    # blueprint 3 stays provisional pending the corpus-conflict fixture
+    assert capability.mechanism_support("blueprint", 3)["confidence"] == \
+        "provisional"
+    # officers 10004/10007/10008/10009 now implemented (M1)
+    for oid in (10004, 10007, 10008, 10009):
+        fid = capability.mechanism_support("officer", oid)
+        assert fid["transition_complete"] and fid["battle_fidelity"] == "exact"
 
 
 def test_scan_option_reports_two_axis_prefixes():

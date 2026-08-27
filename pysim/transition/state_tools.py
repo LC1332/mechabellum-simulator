@@ -137,7 +137,8 @@ def state_from_dict(d: dict) -> EnvironmentState:
         for k in ("officers", "blueprints", "blueprints_round",
                   "commander_skills_raw",
                   "constructions_raw", "tower_mods_raw", "devices_raw",
-                  "skill_events_raw", "equipment_inventory"):
+                  "skill_events_raw", "equipment_inventory",
+                  "spawned_this_round"):
             p[k] = tuple(p.get(k) or ())
         p["tower_strengthen"] = tuple(p.get("tower_strengthen") or (0, 0))
         p["pre_round_fight_result"] = p.get("pre_round_fight_result")

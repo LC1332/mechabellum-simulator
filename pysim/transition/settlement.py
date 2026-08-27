@@ -94,6 +94,38 @@ def settle_transition(state: EnvironmentState, outcome: BattleOutcome,
                             battle_whitelist_violations=tuple(violations))
 
 
+def tick_skill_cooldowns(slots):
+    """battlefield M1: one round tick over commander-skill slots.
+
+    Corpus law (1106 games; cd-after-release counts 300001 800/800 cd=2,
+    1100001 1084/1084 cd=1, 900001 2479/2479 cd=0; dominant reactivate
+    streaks = max(cd, 1)): a slot released in round N displays
+    (inactive, cd=N_cd) at round N+1 start, decrements once per round and
+    re-arms when cd <= 1. cd=0 slots (回收 900001) therefore sit inactive
+    exactly the round after their release."""
+    out = []
+    for e in slots or ():
+        try:
+            active = str(e[2]).lower() == "true"
+            cd = int(float(e[3]))
+        except (TypeError, ValueError, IndexError):
+            out.append(tuple(e))
+            continue
+        if active:
+            out.append(tuple(e))
+            continue
+        if cd <= 1:
+            entry = list(e)
+            entry[2] = "true"
+            entry[3] = "0"
+            out.append(tuple(entry))
+        else:
+            entry = list(e)
+            entry[3] = str(cd - 1)
+            out.append(tuple(entry))
+    return out
+
+
 def advance_round(settled: EnvironmentState,
                   income_policy: IncomePolicy | None = None,
                   incomes: tuple[int, int] | None = None,
@@ -107,7 +139,11 @@ def advance_round(settled: EnvironmentState,
 
     Shared round event (step3 任务书 §5.3, gd given): officers grant their
     timed commander-skill slots and equipment at the new round's start — the
-    human and the historical opponent consume the SAME code path."""
+    human and the historical opponent consume the SAME code path.
+
+    battlefield M1: consumed skill slots tick their cooldown down (re-arm
+    at 0) and this round's spawn set resets (flank delays apply only to
+    units new in THEIR deploy round)."""
     if settled.phase is Phase.TERMINAL:
         raise errors.TransitionError("TERMINAL_STATE",
                                      "cannot advance a terminal state")
@@ -123,7 +159,7 @@ def advance_round(settled: EnvironmentState,
                                            p.pre_round_fight_result))
         else:
             inc = 0
-        skills = p.commander_skills_raw
+        skills = tick_skill_cooldowns(p.commander_skills_raw)
         equipment = tuple(p.equipment_inventory or ())
         if gd is not None:
             from .equipment import (round_officer_skills,
@@ -138,12 +174,13 @@ def advance_round(settled: EnvironmentState,
         players.append(PlayerState(**{**p.__dict__,
                                       "supply": p.supply + inc,
                                       "bought_this_round": 0,
-                                      "commander_skills_raw": skills,
+                                      "commander_skills_raw": tuple(skills),
                                       "equipment_inventory": equipment,
                                       "blueprints_round": (),
                                       "tower_mods_raw": (),
                                       "devices_raw": (),
-                                      "skill_events_raw": ()}))
+                                      "skill_events_raw": (),
+                                      "spawned_this_round": ()}))
     return EnvironmentState(
         schema_version=settled.schema_version,
         ruleset_version=settled.ruleset_version,

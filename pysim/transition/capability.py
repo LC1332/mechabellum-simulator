@@ -2,6 +2,11 @@
 # can execute faithfully, shared by the shard scanner (build time) and the
 # game session service (runtime) — one rule source, never two (任务书 G5).
 #
+# 重构计划 M1/B1: support judgments derive from the battlefield mechanic
+# registry (pysim/battlefield/registry.py) — six stages + confidence +
+# evidence per (mechanism, id). This module adds the NORM-entry/raw-record
+# classification the scanner needs; it must NOT keep a second mechanic table.
+#
 # The classifier works on NORM entries (normalize.py output, the stream the
 # runtime actually canonicalizes) plus the shared per-round reinforcement
 # offers. Blocker codes are the frozen 任务书 §4.1 set.
@@ -22,7 +27,8 @@ BLOCKER_CODES = (
 
 # canonical kinds deploy_transition executes with full state effects
 SUPPORTED_NORM_KINDS = {"buy", "gift", "unlock", "move", "upgrade", "tech",
-                        "sell", "finish", "reinforce", "release", "equip"}
+                        "sell", "finish", "reinforce", "release", "equip",
+                        "surrender"}
 
 # raw passthrough types deploy executes with a COMPLETE modeled effect
 # (supply + persistent state + battle side). Everything else is a blocker.
@@ -33,44 +39,27 @@ _FULLY_MODELED_RAW = {"StrengthenTower", "GiveUp"}
 _FULLY_MODELED_BLUEPRINTS = {1, 2, 3, 4, 5, 401, 501}
 
 
+def _registry():
+    from ..battlefield import registry
+    return registry
+
+
 def _mapped_skill_ids():
     from ..skills import COMMANDER_SKILLS, TRANSITION_SKILLS
     return set(COMMANDER_SKILLS) | set(TRANSITION_SKILLS)
 
 
 def mechanism_support(mechanism: str, ident):
-    """step3 任务书 §7.1 two-axis support for one mechanism id.
+    """step3 任务书 §7.1 two-axis support for one mechanism id, now derived
+    from the battlefield registry (M1): transition_complete, battle_fidelity,
+    plus confidence and effect_complete (重构计划 §10.1 — effect_complete
+    additionally requires six-stage closure AND verified confidence).
 
     transition_complete: deploy can change economy + persistent state with
     the real rule. battle_fidelity: exact | approximate | unsupported (does
-    pysim consume the effect?). Only (True, "exact") is effect-complete."""
-    from ..skills import COMMANDER_SKILLS
-    if mechanism == "commander_skill":
-        if int(ident) in COMMANDER_SKILLS:
-            return {"transition_complete": True, "battle_fidelity": "exact"}
-        if int(ident) in _mapped_skill_ids():
-            return {"transition_complete": True, "battle_fidelity": "exact"}
-        return {"transition_complete": False, "battle_fidelity": "unsupported"}
-    if mechanism == "equipment":
-        from .equipment import EQUIPMENT_DEFS
-        if int(ident) in EQUIPMENT_DEFS:
-            # transition-complete, pysim ignores the combat modifier
-            return {"transition_complete": True,
-                    "battle_fidelity": "approximate"}
-        return {"transition_complete": False, "battle_fidelity": "unsupported"}
-    if mechanism == "contraption":
-        if int(ident) in (10001, 20001):
-            return {"transition_complete": True, "battle_fidelity": "exact"}
-        return {"transition_complete": False, "battle_fidelity": "unsupported"}
-    if mechanism == "tower_skill":
-        if int(ident) in (5, 6):
-            return {"transition_complete": True, "battle_fidelity": "exact"}
-        return {"transition_complete": False, "battle_fidelity": "unsupported"}
-    if mechanism == "blueprint":
-        if int(ident) in _FULLY_MODELED_BLUEPRINTS:
-            return {"transition_complete": True, "battle_fidelity": "exact"}
-        return {"transition_complete": False, "battle_fidelity": "unsupported"}
-    return {"transition_complete": False, "battle_fidelity": "unsupported"}
+    pysim consume the effect? "exact" means the implementation path is
+    complete, NOT that the numbers are oracle-verified — check confidence)."""
+    return _registry().mechanism_support(mechanism, ident).two_axis()
 
 
 def classify_norm_entry(e, rec=None, eco=None, gd=None, side=None):
@@ -129,6 +118,9 @@ def classify_norm_entry(e, rec=None, eco=None, gd=None, side=None):
         if sid is not None and int(sid) in _mapped_skill_ids():
             return None
         return "UNSUPPORTED_ACTION_FIELD"     # precise blocker upstream
+    if t == "surrender":
+        # battlefield M1: typed GiveUp — deploy executes it terminally
+        return None
     if t == "equip":
         if mechanism_support("equipment", e.get("id", 0))[
                 "transition_complete"]:
@@ -183,7 +175,8 @@ def _resolve_skill_id(raw_rec, rec):
 
 
 def offer_fidelity(item_id, eco):
-    """Two-axis support of one reinforcement offer (equipment approximate)."""
+    """Two-axis support of one reinforcement offer (equipment approximate;
+    confidence/effect_complete ride along from the registry — M1)."""
     info = (eco.items.get(int(item_id)) or {}) if eco else {}
     if info.get("kind") == "装备":
         return mechanism_support("equipment", item_id)
@@ -198,12 +191,13 @@ def scan_offers(offers, eco, strict_all_supported=False):
     """The 4 shared reinforcement candidates -> blocker or None.
 
     任务书 G5 strict rule (strict_all_supported=True): every candidate must
-    be effect-complete (transition_complete AND battle exact — approximate
-    equipment fails strict), else the round is unplayable. v1 honest-choice
-    rule (default): all four costs must be KNOWN and at least one card fully
-    supported — the UI disables unsupported cards and offers the skip, so no
-    unmodeled effect ever executes; the strict prefix is still reported in
-    the manifest for audit."""
+    be effect-complete (six-stage closure AND verified confidence — M1: an
+    implemented-but-provisional equipment still fails strict), else the
+    round is unplayable. v1 honest-choice rule (default): all four costs
+    must be KNOWN and at least one card fully supported — the UI disables
+    unsupported cards and offers the skip, so no unmodeled effect ever
+    executes; the strict prefix is still reported in the manifest for
+    audit."""
     if not offers:
         return "MISSING_REINFORCEMENT_OFFERS"
     if len(offers) != 4:
@@ -217,9 +211,10 @@ def scan_offers(offers, eco, strict_all_supported=False):
             if strict_all_supported:
                 return "MISSING_REINFORCEMENT_EFFECT"
             continue
-        if fid["battle_fidelity"] != "exact" and strict_all_supported:
-            # transition-executable but approximate (equipment) — runtime
-            # keeps playing; the strict-effect prefix stops here
+        if strict_all_supported and not fid.get("effect_complete"):
+            # transition-executable but not effect-complete: battle path
+            # partial OR confidence provisional (equipment without oracle
+            # A/B) — runtime keeps playing; the strict-effect prefix stops
             return "APPROXIMATE_REINFORCEMENT_EFFECT"
         n_supported += 1
     if n_supported == 0:
@@ -306,20 +301,26 @@ def scan_option(game, opponent_player, eco, gd, catalog_team_ids=None,
             blockers.append({"code": b, "round": rnd, "side": opp,
                              "detail": _entry_detail(entry)})
             break
-        # opponent equipment bindings are approximate (transition executes,
-        # pysim ignores the modifier)
+        # opponent equipment bindings are approximate (transition executes;
+        # battle fidelity per registry id — implemented ids no longer mark
+        # the round approximate, but stay strict-blocked while provisional)
         for e in entries:
             if e.get("t") == "equip":
-                approximations.append({"round": rnd, "side": opp,
-                                       "mechanism": "equipment",
-                                       "id": int(e.get("id", 0) or 0)})
+                eid = int(e.get("id", 0) or 0)
+                fid = mechanism_support("equipment", eid)
+                if fid["battle_fidelity"] != "exact":
+                    approximations.append({"round": rnd, "side": opp,
+                                           "mechanism": "equipment",
+                                           "id": eid})
+                if fid.get("effect_complete"):
+                    continue           # verified + six-stage: not approximate
                 if not strict_blocked:
                     strict_blocked = True
                     blockers.append({
                         "code": "APPROXIMATE_REINFORCEMENT_EFFECT",
                         "round": rnd, "side": opp,
-                        "detail": "opponent UseEquipment %s (battle "
-                                  "approximate)" % e.get("id"),
+                        "detail": "opponent UseEquipment %s (%s)"
+                                  % (e.get("id"), fid.get("confidence")),
                         "strict": True})
         if rnd >= 2:
             off = offers_by_round.get(rnd)

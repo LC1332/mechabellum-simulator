@@ -112,6 +112,10 @@ class TransitionEnv:
         # fast-supply debts: blueprint 1 activations survive the round ->
         # next round's income owes -300 each (Income200r.fast_debts)
         self._record_fast_supply(dep.ledgers, s.round)
+        if dep.state.phase is Phase.TERMINAL:
+            # battlefield M1: typed SURRENDER ends the match atomically —
+            # no battle, no settlement; the surrendering side loses
+            return self._surrender_result(dep)
         if dep.state.phase is not Phase.PRE_BATTLE:
             return StepResult(state=dep.state, reward=(0.0, 0.0), done=False,
                               deploy_receipts=dep.receipts, ledgers=dep.ledgers,
@@ -120,6 +124,25 @@ class TransitionEnv:
                               info={"phase": dep.state.phase.value,
                                     "unsupported": dep.unsupported_types})
         return self._battle_settle_advance(dep, battle_seed)
+
+    def _surrender_result(self, dep) -> StepResult:
+        """Terminal view of a surrender: zero-sum ±1 reward, no outcome."""
+        reason = dep.state.terminal_reason or "surrender"
+        # "surrender:player0" means player 0 surrendered -> player 0 loses
+        loser = 0 if reason.endswith("player0") else \
+            (1 if reason.endswith("player1") else -1)
+        if loser == 0:
+            reward = (-1.0, 1.0)
+        elif loser == 1:
+            reward = (1.0, -1.0)
+        else:
+            reward = (0.0, 0.0)
+        return StepResult(
+            state=dep.state, reward=reward, done=True,
+            deploy_receipts=dep.receipts, ledgers=dep.ledgers,
+            battle_outcome=None, state_digest=state_digest(dep.state),
+            info={"phase": "terminal", "terminal_reason": reason,
+                  "unsupported": dep.unsupported_types})
 
     def finish_round(self, battle_seed: int | None = None,
                      with_trace: bool = False) -> StepResult:
@@ -267,9 +290,19 @@ class TransitionEnv:
                                 new_ref=len(p.units))))
         for j, u in enumerate(p.units):
             if u.level < 9:
-                need = self.eco.upgrade_exp_need(u.mech_id, u.level)
+                # same rule source as deploy's UPGRADE_UNIT: NO exp gate
+                # (corpus 455/455), officers mod + 强化模块 discount applied
+                from .deploy import (UPGRADE_DISCOUNT_EQUIPMENT,
+                                     UPGRADE_DISCOUNT_AMOUNT,
+                                     FEATURES as DEPLOY_FEATURES)
                 price = self.eco.upgrade_price(u.mech_id) or 0
-                if need >= 0 and u.exp >= need and p.supply >= price:
+                price = max(0, price + self.eco.upgrade_price_mod(
+                    u.mech_id, p.officers))
+                if DEPLOY_FEATURES["equipment_upgrade_discount"] \
+                        and int(u.equipment_id or 0) == \
+                        UPGRADE_DISCOUNT_EQUIPMENT:
+                    price = max(0, price - UPGRADE_DISCOUNT_AMOUNT)
+                if p.supply >= price:
                     out.append(CanonicalAction(
                         ActionKind.UPGRADE_UNIT,
                         UpgradeArgs(ref=EntityRef(

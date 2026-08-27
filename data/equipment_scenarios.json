@@ -1,0 +1,43 @@
+{
+ "_lib": "equipment_scenarios_v1",
+ "_note": "battlefield E2/E6 装备静态专项库: 每个场景给 A/B 两臂 (无装备 vs 有装备), composition 固定、种子固定。oracle 真值记录放 data/equipment_oracle/<name>.json (真实游戏对照), 未提供前 runner 只输出 pysim A/B 差异, 不得据此宣称 verified。",
+ "_scenario_schema": {
+  "name": "str",
+  "equipment_id": "int (B 臂绑定到 p0 的目标单位; A 臂为 0)",
+  "target_mech": "int (p0 侧佩戴装备的 mech)",
+  "p0_units": [{"id": "int", "level": "int(0-based like scenarios)", "x": "float", "y": "float"}],
+  "p1_units": [{"id": "int", "level": "int", "x": "float", "y": "float"}]
+ },
+ "scenarios": [
+  {"name": "eq_lasersight_ranger", "equipment_id": 13030001, "target_mech": 21,
+   "p0_units": [{"id": 21, "level": 1, "x": -60.0, "y": -150.0}],
+   "p1_units": [{"id": 10, "level": 1, "x": 0.0, "y": 150.0}]},
+  {"name": "eq_heavyarmor_crawler", "equipment_id": 13030002, "target_mech": 10,
+   "p0_units": [{"id": 10, "level": 1, "x": -60.0, "y": -150.0}],
+   "p1_units": [{"id": 21, "level": 1, "x": 0.0, "y": 150.0}]},
+  {"name": "eq_firecontrol_sabertooth", "equipment_id": 13030003, "target_mech": 21,
+   "p0_units": [{"id": 21, "level": 1, "x": -60.0, "y": -150.0}],
+   "p1_units": [{"id": 10, "level": 1, "x": 0.0, "y": 150.0}]},
+  {"name": "eq_speed_module_fang", "equipment_id": 13030005, "target_mech": 9,
+   "p0_units": [{"id": 9, "level": 1, "x": -60.0, "y": -150.0}],
+   "p1_units": [{"id": 10, "level": 1, "x": 0.0, "y": 150.0}]},
+  {"name": "eq_superheavy_fortress", "equipment_id": 13030006, "target_mech": 1,
+   "p0_units": [{"id": 1, "level": 1, "x": -60.0, "y": -150.0}],
+   "p1_units": [{"id": 21, "level": 1, "x": 0.0, "y": 150.0}]},
+  {"name": "eq_ampcore_wasp", "equipment_id": 13030007, "target_mech": 6,
+   "p0_units": [{"id": 6, "level": 1, "x": -60.0, "y": -150.0}],
+   "p1_units": [{"id": 9, "level": 1, "x": 0.0, "y": 150.0}]},
+  {"name": "eq_strengthen_thunder", "equipment_id": 13030004, "target_mech": 27,
+   "p0_units": [{"id": 27, "level": 1, "x": -60.0, "y": -150.0}],
+   "p1_units": [{"id": 10, "level": 1, "x": 0.0, "y": 150.0}]},
+  {"name": "eq_lasersight_stack_tech", "equipment_id": 13030001, "target_mech": 21,
+   "p0_units": [{"id": 21, "level": 2, "x": -60.0, "y": -150.0}],
+   "p1_units": [{"id": 10, "level": 2, "x": 0.0, "y": 150.0},
+                {"id": 10, "level": 2, "x": 40.0, "y": 150.0}]},
+  {"name": "eq_armor_vs_barrage", "equipment_id": 13030002, "target_mech": 12,
+   "p0_units": [{"id": 12, "level": 1, "x": -60.0, "y": -150.0}],
+   "p1_units": [{"id": 10, "level": 1, "x": 0.0, "y": 150.0},
+                {"id": 10, "level": 1, "x": 50.0, "y": 150.0},
+                {"id": 10, "level": 1, "x": -50.0, "y": 150.0}]}
+ ]
+}

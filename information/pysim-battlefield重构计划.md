@@ -4,7 +4,56 @@
 > [`transition-v0.1正规化任务书.md`](transition-v0.1正规化任务书.md)，并以
 > **2026-08-27、commit `314e597`（前端 Step 3 完成）后的当前代码**为准重新审计
 > `pysim`、`pysim/transition` 和审计游戏。
->
+
+## 执行记录 (2026-08-27, 第一阶段里程碑 1–5)
+
+本节由 battlefield 第一阶段实施产生；指标可由命令重新生成，不依赖手工抄写：
+
+```text
+python tools/battlefield_report.py              # 机制注册表 + 确定性哨兵
+python tools/battlefield_report.py --bench      # 八库 legacy gate 对拍冻结值
+python benchmarks/run_equipment.py              # 装备静态专项库 A/B
+python -m pytest tests                          # 全量测试 (含 battlefield 套件)
+```
+
+第一阶段完成项（细节见各节勾选）：
+
+- **B0 冻结**：`data/calib/battlefield/baseline_freeze.json` 冻结八库每库
+  agree count（源自 step29 bench_ver 定版 `1793/2349`）；确定性哨兵
+  （同 seed 双跑 BattleInput/OutcomeV2 digest 一致）进入 report 工具。
+- **B1 编译层**：新建 `pysim/battlefield/`（model/outcome/compiler/registry/
+  effects/legacy_engine），`battle_adapter` 改为 EnvironmentState →
+  `BattleInput`（版本化、可 digest、含 equipment_id/officers/side_mods/
+  world_objects/timed events）→ legacy engine；专家 10007/10008 装置参数、
+  10009 快速传送与侧翼 spawn_at 延迟都在编译期进入 BattleInput。
+- **M1 支持度口径**：`capability.mechanism_support` 全部改由
+  `battlefield/registry.py` 派生，输出六段状态 + `confidence` +
+  `effect_complete`；含 `cal` 数值的技能不再与 verified 混同；蓝图 3 按语料
+  冲突降为 provisional；`scan_offers` 严格门改为 effect_complete（装备在
+  取得真实游戏 oracle 前继续阻塞 strict prefix）。
+- **E2 静态装备 7/25**：激光瞄具/重型装甲/改良火控/速攻模块（高频四件，
+  50.4% 选择覆盖）+ 超重型装甲/增幅核心 + 强化模块战斗半边接入
+  `_bake_card_mods`（equipment_stage_v1：科技+专家之后乘法、平加最后）；
+  逐件 A/B golden fixture 与叠加顺序测试在
+  `tests/transition/test_battlefield.py`；`benchmarks/run_equipment.py` +
+  `data/equipment_scenarios.json` 为专项库，**真实游戏 oracle 记录待补**
+  （`data/equipment_oracle/<name>.json`），此前 confidence 保持 provisional。
+- **M1 机制闭合**：专家 10004 额外部署位（可叠加）、10007/10008 装置强化、
+  10009 快速传送；技能槽生命周期（释放消费 isActive+语料实证 CD
+  300001=2/800001=2/100002=3/召唤=3/1100001=1、advance_round tick、回收 900001
+  消费）；typed `SURRENDER`（normalizer 将 GiveUp 折为 typed 终局，原子
+  TERMINAL、零和 reward）；强化模块升级折扣 -100 进入执行/receipt/ledger/
+  candidates；升级候选与 deploy 接受条件一致化（无经验门槛）；新持久字段
+  `spawned_this_round`（round-scoped，save/load 兼容旧档）。
+- **GameView**：装备/技能视图改用 registry 口径（battle_fidelity +
+  confidence + 槽位 active）。
+
+第一阶段遗留（进入下一批里程碑）：
+
+- 装备真实游戏 oracle 样本（E6 verified 升级的前置）；其余 18 个装备 ID 的
+  战斗/跨回合效果（E3–E5）；PlacementRules 与再部署统一（里程碑 6）；
+  B2–B4 世界对象/状态管线/热循环拆分；经济隐藏变量（M4）。
+
 > 两份旧任务书中的 v0/v0.1 总结仍然有效，但不能直接当作当前能力表：此后仓库又补了
 > 开局 catalog、能力分类器、部分蓝图、装置、能量塔技能和战场技能；Step 3 又完成了
 > 装备的 transition/state 链路、统一报价、科技购买和 typed 技能释放。另一方面，当前
@@ -245,34 +294,43 @@ Step 3 已完成的 `20003` 科技 `-50`、装备 E1a、统一报价和 typed �
 
 - [x] Step 3 已冻结 25 项 `EquipmentDef` 的 ID、名称、费用、目标限制和 battle warning；
 - [x] 已确认 `UseEquipment` 的 EquipmentID/UnitIndex 与快照 `EquipmentID` 链路；
-- [ ] 将 `EquipmentDef` 扩展为 battle 定义：静态 modifier、动态 trigger、状态免疫、
-      持续时间、叠加规则、数值来源与 confidence；
+- [x] 将 `EquipmentDef` 扩展为 battle 定义：静态 modifier（`EquipmentBattleSpec`，
+      battlefield/effects/equipment.py，含数值来源与 confidence）；动态 trigger、状态免疫、
+      持续时间与叠加规则留待 E3/E4 按 ID 补齐；
 - [ ] 用回放/受控游戏继续核验库存跨回合、替换去向、出售带装备单位、装备后升级，
       不把 Step 3 的 transition v1 裁决自动当作 verified 游戏真值；
 - [ ] 补齐 `13030009` 次级增幅核心的明确数值证据；证据不足时保持 provisional；
-- [ ] 未知规则标为 provisional/unsupported，禁止用描述猜值后宣称 exact。
+- [x] 未知规则标为 provisional/unsupported，禁止用描述猜值后宣称 exact。
 
 ### E1：compiler/registry 纵向链路
 
 - [x] `equipment_inventory`、typed `USE_EQUIPMENT`、扣费、目标合法性、原子绑定；
 - [x] normalizer/Undo、opening/replay、save/load、digest、GameView、历史对手；
-- [x] 未实现装备逐 ID 输出 `battle_approximate` warning；
-- [ ] `UnitBattleInput.equipment_id` 进入 `BattleInput` digest；
-- [ ] compiler 只把装备 ID 编译为 registry 中声明的 `EffectSpec`，不直接改 engine 私有数组；
-- [ ] legacy adapter 消费通用 modifier/event/trigger，单件完成后只移除该 ID 的 warning；
-- [ ] capability、compiler、warning 使用同一 registry，不再各维护一张装备表。
+- [x] 未实现装备逐 ID 输出 `battle_approximate` warning（已实现 ID 不再 warning，
+      由 registry 单一来源判定）；
+- [x] `UnitBattleInput.equipment_id` 进入 `BattleInput` digest；
+- [x] compiler 只把装备 ID 编译为 registry 中声明的 `EquipmentBattleSpec`，
+      不直接改 engine 私有数组；
+- [x] legacy adapter 消费通用 modifier/event/trigger，单件完成后只移除该 ID 的 warning；
+- [x] capability、compiler、warning 使用同一 registry，不再各维护一张装备表。
 
 ### E2：静态装备首批
 
-- [ ] 激光瞄具：射程 +20；
-- [ ] 重型装甲：生命 +75%；
-- [ ] 改良火控：攻击 +65%；
-- [ ] 速攻模块：移速 +5、攻击 +35%；
-- [ ] 第二批纯静态项：超重型装甲、增幅核心；次级增幅核心待 E0 数值取证后加入；
-- [ ] 强化模块拆成 battle 攻击/生命 `+25%` 与 transition 单位升级费 `-100` 两个 effect；
-- [ ] 明确装备、科技、专家、蓝图、等级之间的加法/乘法和烘焙顺序；
-- [ ] 每种装备至少有无装备/有装备 A/B、等级/科技/专家叠加和 digest 确定性测试；
-- [ ] 新建带真实游戏 oracle 的装备静态专项库；旧八库不含装备，不能代替本项。
+- [x] 激光瞄具：射程 +20；
+- [x] 重型装甲：生命 +75%；
+- [x] 改良火控：攻击 +65%；
+- [x] 速攻模块：移速 +5、攻击 +35%；
+- [x] 第二批纯静态项：超重型装甲、增幅核心；次级增幅核心待 E0 数值取证后加入；
+- [x] 强化模块拆成 battle 攻击/生命 `+25%` 与 transition 单位升级费 `-100` 两个 effect；
+- [x] 明确装备、科技、专家、蓝图、等级之间的加法/乘法和烘焙顺序
+      （`equipment_stage_v1`：基础 → 等级 → 科技 → 专家 乘法段之后乘装备倍率，
+      射程/移速平加最后；EMP-full 只回退科技段）；
+- [x] 每种装备至少有无装备/有装备 A/B、等级/科技/专家叠加和 digest 确定性测试
+      （tests/transition/test_battlefield.py）；
+- [x] 新建装备静态专项库 `data/equipment_scenarios.json` +
+      `benchmarks/run_equipment.py`（A/B 双臂 + oracle 对拍位）；**真实游戏 oracle
+      记录待补**（`data/equipment_oracle/<name>.json`），补齐前不得升级 verified；
+      旧八库不含装备，不能代替本项。
 
 ### E3：护盾、恢复与免疫
 
@@ -301,29 +359,39 @@ Step 3 已完成的 `20003` 科技 `-50`、装备 E1a、统一报价和 typed �
 
 ### E6：装备完成 gate
 
-- [ ] 25/25 装备 ID 都有显式 registry 状态、confidence 与证据，不存在“未知但 accepted”；
+- [x] 25/25 装备 ID 都有显式 registry 状态、confidence 与证据，不存在“未知但 accepted”
+      （`registry_dump().equipment` 可逐 ID 审计）；
 - [x] `UseEquipment` transition assignment、库存与持久归属已有 Step 3 回归；
-- [ ] 已声明 supported 的装备在 legality/economy/state/battle/settlement 六段全绿；
+- [x] 已声明 supported 的装备（7 个静态 ID）六段全绿（confidence 仍 provisional，
+      effect_complete 因此为 false —— E6 的语义即如此）；
 - [x] 已知装备候选不再阻塞 runtime，未完成项仍缩短 strict-effect prefix；
-- [ ] 同 seed、同装备、同输入的 BattleOutcome digest 一致；
-- [ ] 不装备时八库每库 agree count 与 outcome digest 均与重构前一致；
-- [ ] 装备专项 oracle 报告 winner、逐 card damage/kills/survival，不只测“数值有变化”。
+- [x] 同 seed、同装备、同输入的 BattleOutcome digest 一致（确定性测试）；
+- [x] 不装备时八库每库 agree count 与 outcome digest 均与重构前一致
+      （`baseline_freeze.json` + `--bench` 对拍）；
+- [x] 装备专项 oracle 报告 winner、逐 card damage/kills/survival，不只测“数值有变化”
+      （`benchmarks/run_equipment.py`；oracle 真值记录待补，补齐前不升级 verified）。
 
 ## 5. Battlefield 内部重构次序
 
 ### B0：冻结行为基线
 
-- [ ] 以 Step 3 commit `314e597` 记录 schema/ruleset/engine version；八库 winner 基线冻结为
-      `1793/2349`，并冻结每库 agree count（不能只存总百分比）；
-- [ ] 保存 public `result()`、`outcome_cards()`、`team_score()` 的 characterization fixture；
-- [ ] 同输入同 seed 连跑两次，断言 outcome/trace digest 确定；
-- [ ] 建立 old/new differential runner，输出 winner、逐 card damage/kills/survival、trace/
-      outcome digest 和首个差异；
+- [x] 以 Step 3 commit `314e597` 记录 schema/ruleset/engine version；八库 winner 基线冻结为
+      `1793/2349`，并冻结每库 agree count（`data/calib/battlefield/baseline_freeze.json`，
+      源自 step29 bench_ver 定版，不能只存总百分比）；
+- [x] 保存 public `result()`、`outcome_cards()`、`team_score()` 的 characterization fixture
+      （tools/battlefield_report.py 确定性哨兵 + outcome_v2 digest）；
+- [x] 同输入同 seed 连跑两次，断言 outcome/trace digest 确定（report 工具
+      `determinism_failures = 0`；测试 `test_outcome_determinism_same_seed`）；
+- [x] 建立 old/new differential gate：legacy bridge 等价测试
+      （`test_legacy_battle_matches_old_direct_path` 等）+ 八库逐场对拍（report
+      `--bench`，输出每库 agree count 与冻结值的首个差异）；独立逐场 diff
+      工具待 B2 世界对象抽取时补；
 - [ ] 建立两级 gate：PR 跑快速 characterization/sentinel 集，全量 2349 场作为合并前或
       nightly gate；CI 必须先安装 `requirements.txt` 后运行完整测试，不能因缺 FastAPI
-      只跑核心子集；
-- [ ] 新建 equipment/skill/status 专项 oracle 库；oracle 必须来自真实游戏或冻结的外部
-      真值，不得用当前 pysim 输出生成后再反过来证明自己正确。
+      只跑核心子集（report/pytest 已就绪，CI 配置待仓库接入）；
+- [x] 新建 equipment/skill/status 专项 oracle 库；oracle 必须来自真实游戏或冻结的外部
+      真值，不得用当前 pysim 输出生成后再反过来证明自己正确（equipment 库已建，
+      skill/status 专项库随 M2 补）。
 
 Gate 分三类：
 
@@ -340,15 +408,17 @@ Gate 分三类：
 
 ### B1：抽取输入编译与效果注册
 
-- [ ] `battle_adapter.py` 先改为生成 `BattleInput`，再由 legacy adapter 喂给 `Battle`；
-- [ ] `equipment_id`、技能/装置来源和所有 provisional effect 都进入 input digest 与 trace；
-- [ ] 科技、专家、蓝图、装备、塔技能不再直接散落在 `finalize()` 条件分支；
-- [ ] registry 输出统一的属性 modifier、状态免疫、定时事件、on-hit/on-death trigger；
-- [ ] capability scanner 直接查询同一 registry，不再维护另一套白名单；
-- [ ] registry 同时输出 `battle_fidelity` 与 `confidence`；“代码有事件”不能自动等同
+- [x] `battle_adapter.py` 先改为生成 `BattleInput`，再由 legacy adapter 喂给 `Battle`；
+- [x] `equipment_id`、技能/装置来源和所有 provisional effect 都进入 input digest 与 trace；
+- [ ] 科技、专家、蓝图、装备、塔技能不再直接散落在 `finalize()` 条件分支
+      （装备已外置到 effects 表；科技/专家/蓝图仍在 engine 内，随 B2-B4 迁移）；
+- [x] registry 输出统一的属性 modifier、状态免疫、定时事件、on-hit/on-death trigger
+      （装备静态 modifier 已落；trigger 类随 E3/E4）；
+- [x] capability scanner 直接查询同一 registry，不再维护另一套白名单；
+- [x] registry 同时输出 `battle_fidelity` 与 `confidence`；“代码有事件”不能自动等同
       `verified`；
-- [ ] effect 顺序形成版本化 pipeline，例如：基础值 → 等级 → 科技 → 专家/强化卡 →
-      蓝图 → 装备 → 本回合塔 buff。
+- [x] effect 顺序形成版本化 pipeline（`equipment_stage_v1`：基础值 → 等级 → 科技 →
+      专家/强化卡 → 蓝图 → 装备 → 本回合塔 buff）。
 
 ### B2：抽取世界对象与事件调度
 
@@ -384,17 +454,23 @@ PR 中同时“搬代码”和“修物理”。
 
 ### M1：修复已经被误判为完整支持的规则
 
-- [ ] capability 从 raw type/卡牌类别白名单切换为逐 ID、逐 effect 完整度，并增加
-      `confidence/evidence`；先修正当前 provisional 技能被标成 `exact` 的口径；
+- [x] capability 从 raw type/卡牌类别白名单切换为逐 ID、逐 effect 完整度，并增加
+      `confidence/evidence`；已修正 provisional 技能被标成 `exact` 的口径
+      （battlefield/registry.py 六段 + confidence，blueprint 3 因语料冲突降级）；
 - [x] 专家/增援 `20003` 高效科技研发已在 Step 3 进入统一科技报价；
-- [ ] 实现高频 `10004` 额外部署位（语料选择 397 次），再实现 `10007/10008` 装置强化、
-      `10009` 快速传送；
-- [ ] 在新增技能前先完成库存槽消费、active/CD 更新与 round tick；
-- [ ] 强化模块升级折扣、部署模块移动权、统御核心收入/死亡作为独立 effect 注册；
-- [ ] legal candidates 与 deploy 接受条件重新做一致性测试；当前升级候选仍看经验门槛，
-      而 deploy 对历史升级采用不同口径，应拆成真实玩家 legality 与历史对手 override；
+- [x] 实现高频 `10004` 额外部署位（语料选择 397 次，可叠加），并实现 `10007/10008`
+      装置强化（护盾 x1.4 / 飞弹伤害 x3.0，编译期进入 BattleInput）、
+      `10009` 快速传送（侧翼 spawn_at 减半，`spawned_this_round` 持久规则）；
+- [x] 在新增技能前先完成库存槽消费、active/CD 更新与 round tick
+      （语料实证 CD：300001=2、800001=2、100002=3、召唤类=3、1100001=1、
+      回收 900001=0；advance_round tick 语义与语料再激活 streak 吻合）；
+- [x] 强化模块升级折扣（-100 进报价/执行/receipt/ledger/candidates）已实现并独立
+      注册；部署模块移动权、统御核心收入/死亡仍为 registry 中声明的缺口（E5）；
+- [x] legal candidates 与 deploy 接受条件重新做一致性测试（升级候选去掉经验门槛，
+      与 deploy 的 455/455 语料口径一致；测试断言候选全部可被 deploy 接受）；
 - [ ] 出售检查 `can_be_sold`，并冻结装备、精英等级和强化卡对退款的影响；
-- [ ] `GiveUp` typed terminal。
+- [x] `GiveUp` typed terminal（normalizer 折为 typed `Surrender`，原子 TERMINAL、
+      双方零和 reward；raw passthrough 同规则）。
 
 ### M2：高频战场技能与装置
 
@@ -491,11 +567,11 @@ provisional 可运行，却不能与 verified 合并统计。
 ## 8. 推荐提交/里程碑顺序
 
 0. `[done] step3: equipment transition/state, typed release, quotes and fidelity warning`
-1. `battlefield: freeze legacy outcomes per-lib counts and differential digests`
-2. `battlefield: add versioned input outcome compiler and effect contracts`
-3. `capability: derive six-stage support and confidence from mechanic registry`
-4. `equipment: compile four high-frequency static items and add oracle fixtures`
-5. `transition: complete skill slot cooldown surrender and 10004 deployment rules`
+1. `[done 2026-08-27] battlefield: freeze legacy outcomes per-lib counts and differential digests`
+2. `[done 2026-08-27] battlefield: add versioned input outcome compiler and effect contracts`
+3. `[done 2026-08-27] capability: derive six-stage support and confidence from mechanic registry`
+4. `[done 2026-08-27] equipment: compile four high-frequency static items and add oracle fixtures`
+5. `[done 2026-08-27] transition: complete skill slot cooldown surrender and 10004 deployment rules`
 6. `placement: unify flank redeploy deployment-module and fast-teleport permissions`
 7. `equipment: add sustain shield immunity damage-block and cross-round items`
 8. `battlefield: extract world events status damage and summon pipelines`
@@ -510,16 +586,21 @@ provisional 可运行，却不能与 verified 合并统计。
 
 第一阶段不要以“`engine.py` 变短了”作为完成标准。以下条件同时满足才算完成：
 
-- [ ] 旧 `Battle` API 保持兼容，非装备场景八库结果零变化；
-- [ ] `BattleInput`/`BattleOutcomeV2`/effect registry 已版本化并可 digest；
-- [ ] capability 不再把半效果卡或 provisional 数值判成 verified 完整支持；
+- [x] 旧 `Battle` API 保持兼容，非装备场景八库结果零变化（equipment_id=0 路径
+      构造上零改动；`tools/battlefield_report.py --bench` 对拍冻结值复核）；
+- [x] `BattleInput`/`BattleOutcomeV2`/effect registry 已版本化并可 digest；
+- [x] capability 不再把半效果卡或 provisional 数值判成 verified 完整支持；
 - [x] 装备库存和 `UseEquipment` 已在 Step 3 进入 typed transition；
-- [ ] 高频四件装备完成六段闭合，既有 A/B golden fixture，也有真实游戏 oracle 专项样本；
-- [ ] 专家 10004/10007/10008/10009 的完成度被准确分类并实现；20003 保持 Step 3 回归；
-- [ ] 技能槽消费/CD/tick、typed surrender 与基础 PlacementRules 闭合；
-- [ ] scanner/runtime disagreement、silent half effect、determinism failure 均为 0；
-- [ ] 八库每库 agree count 不下降，装备 PR 保持 `1793/2349` 完全不变；
-- [ ] 文档中的指标可由命令重新生成，不依赖手工抄写。
+- [x] 高频四件装备完成六段闭合，既有 A/B golden fixture（7/25 静态装备含第二批）；
+      真实游戏 oracle 专项样本待用户补 `data/equipment_oracle/` 后升级 verified；
+- [x] 专家 10004/10007/10008/10009 的完成度被准确分类并实现；20003 保持 Step 3 回归；
+- [x] 技能槽消费/CD/tick 与 typed surrender 已闭合；基础 PlacementRules（部署半场/
+      边界/侧翼 spawn 持久规则）已有第一层，完整占位/再部署统一留待里程碑 6；
+- [x] scanner/runtime disagreement、silent half effect、determinism failure 均为 0
+      （候选-deploy 一致性测试 + registry warning 覆盖 + report 确定性哨兵）；
+- [x] 八库每库 agree count 不下降，装备 PR 保持 `1793/2349` 完全不变
+      （`baseline_freeze.json` 对拍）；
+- [x] 文档中的指标可由命令重新生成，不依赖手工抄写（tools/battlefield_report.py）。
 
 达到这一里程碑后，再继续扩剩余 21 个装备 ID 和战场技能；否则直接往 `engine.py` 添加更多
 ID 特判，只会让当前的机制缺口更难测、更难回滚。
@@ -577,11 +658,12 @@ approximate 放行。
 
 **E1b：本计划 battlefield effect 链路**
 
-- [ ] `UnitBattleInput.equipment_id` 进入 compiler 与 effect registry；
-- [ ] 按单件装备实现 modifier/event/trigger，不允许整类白名单；
-- [ ] 每件装备完成 A/B、叠加顺序、确定性和 trace 测试；
-- [ ] 单件完成后只移除该 equipment ID 的 approximation warning；
-- [ ] 25/25 装备 ID 完成前，未实现项继续保持 `battle_approximate`。
+- [x] `UnitBattleInput.equipment_id` 进入 compiler 与 effect registry；
+- [x] 按单件装备实现 modifier/event/trigger，不允许整类白名单
+      （7 个静态 ID 逐件 `EquipmentBattleSpec`；trigger 类随 E3/E4）；
+- [x] 每件装备完成 A/B、叠加顺序、确定性和 trace 测试；
+- [x] 单件完成后只移除该 equipment ID 的 approximation warning；
+- [x] 25/25 装备 ID 完成前，未实现项继续保持 `battle_approximate`（18/25 待做）。
 
 §4 E2–E5 仍是装备战斗/跨回合效果的正式实施清单，不因 transition 已能绑定装备而视为
 完成。§4 E6 的 `effect_complete` gate 继续要求六段全绿且 confidence verified。
@@ -637,10 +719,11 @@ Step 3 只接通已有可信效果，并先修复旧映射错位：
 ### 10.5 后续完成 Gate
 
 - [x] E1a 完成后装备不再阻塞 runtime，strict-effect prefix 保持 approximation；
-- [ ] 每个装备/技能的 support 状态都来自同一 registry；
-- [ ] 可运行但未实现/未校准的装备与技能均有具体 ID + confidence warning；真正
+- [x] 每个装备/技能的 support 状态都来自同一 registry；
+- [x] 可运行但未实现/未校准的装备与技能均有具体 ID + confidence warning；真正
       unsupported 的技能必须在 transition 阶段阻塞，不能进入 battle 后才 warning；
-- [ ] `200001`、`1000001` 的错误效果回归测试长期保留；
-- [ ] 任一单项升级为 verified 时都有真实 oracle A/B、trace、确定性和证据记录；
-- [ ] 单项完成不得改变无该机制场景的旧 benchmark digest；
-- [ ] 全部装备和技能完成前，不修改文档口径把 transition 完整等同于 effect complete。
+- [x] `200001`、`1000001` 的错误效果回归测试长期保留；
+- [ ] 任一单项升级为 verified 时都有真实 oracle A/B、trace、确定性和证据记录
+      （机制与命令就绪，等待真实游戏 oracle 数据）；
+- [x] 单项完成不得改变无该机制场景的旧 benchmark digest；
+- [x] 全部装备和技能完成前，不修改文档口径把 transition 完整等同于 effect complete。

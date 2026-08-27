@@ -25,6 +25,11 @@ FEATURES = {
     "elite_officer_charge": True,   # ...and charges one upgrade price (Q11)
     "upgrade_exp_gate": True,       # veterans need a full exp bar to upgrade
     "manufacturing_discount": True, # 20022/20023 高效制造 -50 per matching buy
+    "skill_slot_lifecycle": True,   # battlefield M1: releases consume slots
+                                    # + set the corpus-verified cooldown
+    "extra_deploy_slots": True,     # officer 10004 额外部署位: +1 buy limit
+                                    # per held copy (可重复, survey desc)
+    "equipment_upgrade_discount": True,  # 强化模块 13030004: upgrade -100
 }
 
 # passive deploy-action supply costs (corpus-attributed 2026-08-26: r1
@@ -52,6 +57,9 @@ MANUFACTURING_OFFICERS = {20022: "giant", 20023: "small"}
 #   401/501 II tiers    cost 300 -> officer 20311/20301, replaces the I tier
 BLUEPRINT_OFFICERS = {4: 20310, 5: 20300, 401: 20311, 501: 20301}
 BASE_BUY_LIMIT = 5
+EXTRA_DEPLOY_OFFICER = 10004        # 额外部署位: +1 buy limit per copy
+UPGRADE_DISCOUNT_EQUIPMENT = 13030004   # 强化模块: upgrade cost -100
+UPGRADE_DISCOUNT_AMOUNT = 100
 
 
 @dataclass
@@ -88,6 +96,7 @@ class _RoundCtx:
     devices: list = field(default_factory=list)      # (cid,x,y) contraption releases
     skill_events: list = field(default_factory=list)  # (sid,x,y) commander releases
     equipment: list = field(default_factory=list)    # unequipped stock (multiset)
+    surrendered: bool = False        # battlefield M1: typed GiveUp terminal
 
 
 def deploy_transition(state: EnvironmentState,
@@ -144,12 +153,20 @@ def deploy_transition(state: EnvironmentState,
             devices=list(p.devices_raw or ()),
             skill_events=list(p.skill_events_raw or ()),
             equipment=list(p.equipment_inventory or ()),
+            # battlefield M1: buys/grants of EARLIER deploy calls this round
+            # stay flank-eligible across per-action invocations
+            spawned_ids=set(int(e) for e in
+                            (getattr(p, "spawned_this_round", ()) or ())),
             buy_limit_bonus=sum(1 for b in
                                 (getattr(p, "blueprints_round", ()) or ())
                                 if int(b) == 2),
             buy_level_bonus=sum(1 for b in
                                 (getattr(p, "blueprints_round", ()) or ())
                                 if int(b) == 3))
+        if FEATURES["extra_deploy_slots"]:
+            # 额外部署位 10004: +1 buy limit per held copy (可重复)
+            ctx.buy_limit_bonus += sum(1 for o in ctx.officers
+                                       if int(o) == EXTRA_DEPLOY_OFFICER)
         ctxs.append(ctx)
 
     for plan in plans:
@@ -172,6 +189,24 @@ def deploy_transition(state: EnvironmentState,
         all_receipts.append(tuple(receipts))
         states[side] = _freeze(ctx, states[side])
 
+    surrendered = [side for side in (0, 1) if ctxs[side].surrendered]
+    if surrendered:
+        # battlefield M1: typed SURRENDER (GiveUp) is atomic-terminal — no
+        # battle runs, the opponent wins; reward is decided by the env
+        new_state = EnvironmentState(
+            schema_version=state.schema_version,
+            ruleset_version=state.ruleset_version,
+            engine_version=state.engine_version, round=state.round,
+            phase=Phase.TERMINAL, players=tuple(states),
+            finished_deploy=(True, True),
+            next_entity_id=next_entity_id,
+            terminal_reason="surrender:player%d" % surrendered[0],
+            provenance=state.provenance)
+        assert_state_invariants(new_state)
+        return DeployResult(state=new_state, receipts=tuple(all_receipts),
+                            ledgers=tuple(c.ledger.build() for c in ctxs),
+                            unsupported_types=tuple(sorted(set(unsupported))),
+                            notes=tuple(notes))
     both_done = all(c.finished for c in ctxs)
     new_state = EnvironmentState(
         schema_version=state.schema_version, ruleset_version=state.ruleset_version,
@@ -207,7 +242,8 @@ def _freeze(ctx: _RoundCtx, base: PlayerState) -> PlayerState:
         equipment_inventory=tuple(sorted(ctx.equipment)),
         tower_mods_raw=tuple(ctx.tower_mods),
         devices_raw=tuple(ctx.devices),
-        skill_events_raw=tuple(ctx.skill_events))
+        skill_events_raw=tuple(ctx.skill_events),
+        spawned_this_round=tuple(sorted(ctx.spawned_ids)))
 
 
 def _receipt(i, kind, ok, reason, detail="", **kw) -> ActionReceipt:
@@ -353,6 +389,64 @@ def _release_target_kind(positions, unit_ref, construction_index) -> str:
     return "unknown"
 
 
+def _find_release_slot(ctx, sid, skill_index):
+    """battlefield M1: locate the ACTIVE slot backing this release WITHOUT
+    mutating anything. Returns (slot_position | None, error | None).
+
+    Resolution: an explicit skill_index targets exactly that slot (it must
+    be active and carry the id); a skill_id alone targets the FIRST active
+    slot with that id. When the feature flag is off or no slot backs the
+    release (granted-out-of-band ids in legacy fixtures), (None, None) -
+    the release proceeds without consumption."""
+    if not FEATURES["skill_slot_lifecycle"]:
+        return None, None
+    slots = ctx.commander_skills
+
+    def _active(pos):
+        try:
+            return str(slots[pos][2]).lower() == "true"
+        except (TypeError, ValueError, IndexError):
+            return False
+
+    def _id(pos):
+        try:
+            return int(slots[pos][1])
+        except (TypeError, ValueError, IndexError):
+            return None
+
+    if skill_index is not None:
+        pos = None
+        for k in range(len(slots)):
+            try:
+                if int(slots[k][0]) == int(skill_index):
+                    pos = k
+                    break
+            except (TypeError, ValueError, IndexError):
+                continue
+        if pos is None:
+            return None, "unknown skill_index %s" % skill_index
+        if not _active(pos):
+            return None, "skill slot %s not active" % skill_index
+        if _id(pos) != int(sid):
+            return None, ("skill slot %s carries id %s, released %s"
+                          % (skill_index, _id(pos), sid))
+        return pos, None
+    for k in range(len(slots)):
+        if _active(k) and _id(k) == int(sid):
+            return k, None
+    return None, None
+
+
+def _consume_slot(ctx, pos, sid):
+    """Apply the consumption AFTER the release succeeded: isActive=false +
+    the corpus-verified cooldown (advance_round ticks it back to active)."""
+    from ..battlefield.registry import skill_cooldown_rounds
+    entry = list(ctx.commander_skills[pos])
+    entry[2] = "false"
+    entry[3] = str(skill_cooldown_rounds(sid))
+    ctx.commander_skills[pos] = tuple(entry)
+
+
 def _release_commander_skill(ctx, side, i, kind_value, eco,
                              skill_index=None, skill_id=None, positions=(),
                              unit_ref=None, construction_index=None):
@@ -362,7 +456,11 @@ def _release_commander_skill(ctx, side, i, kind_value, eco,
     skills.COMMANDER_SKILLS ids become round battle events at the recorded
     positions. 200001 (EMP) / 1000001 (再部署) / anything unmapped returns a
     precise blocker carrying skill_id/skill_index/target_kind — never a
-    wrong approximation."""
+    wrong approximation.
+
+    battlefield M1: a successful release CONSUMES the backing inventory slot
+    (isActive=false + corpus-verified cooldown). Rejected releases never
+    mutate the slot (digest invariant)."""
     from ..skills import COMMANDER_SKILLS, TRANSITION_SKILLS
     sid = _resolve_release_id(ctx, skill_id, skill_index)
     target_kind = _release_target_kind(positions, unit_ref, construction_index)
@@ -378,6 +476,11 @@ def _release_commander_skill(ctx, side, i, kind_value, eco,
         return _receipt(i, kind_value, False, errors.UNSUPPORTED_ACTION,
                         detail="construction-target release unsupported "
                                "(%s)" % precise)
+    slot_pos, slot_err = _find_release_slot(ctx, sid, skill_index)
+    if slot_err is not None:
+        return _receipt(i, kind_value, False, "SKILL_SLOT_UNAVAILABLE",
+                        detail="%s (%s)" % (slot_err, precise))
+    consumed = slot_pos is not None
     if sid in TRANSITION_SKILLS:
         # 强化训练: target unit's exp jumps to its next upgrade threshold
         if unit_ref is None:
@@ -388,6 +491,8 @@ def _release_commander_skill(ctx, side, i, kind_value, eco,
             return _receipt(i, kind_value, False, errors.UNKNOWN_ENTITY,
                             detail="强化训练 target missing (%s)" % precise)
         need = eco.upgrade_exp_need(u.mech_id, u.level)
+        if consumed:
+            _consume_slot(ctx, slot_pos, sid)
         if need and need > 0 and u.exp < need:
             ctx.units[j] = UnitCard(**{**u.__dict__, "exp": need})
             return _receipt(i, kind_value, True, errors.OK,
@@ -400,14 +505,20 @@ def _release_commander_skill(ctx, side, i, kind_value, eco,
     if sid in COMMANDER_SKILLS:
         spots = [(float(x), float(y)) for (x, y) in (positions or ())] \
             or [(0.0, 0.0)]
+        if consumed:
+            _consume_slot(ctx, slot_pos, sid)
         for (sx2, sy2) in spots:
             ctx.skill_events.append((int(sid), float(sx2), float(sy2)))
         d = COMMANDER_SKILLS[sid]
         return _receipt(i, kind_value, True, errors.OK,
-                        detail="release %s(%s) x%d" % (
-                            sid, d.get("name", "?"), len(spots)),
+                        detail="release %s(%s) x%d%s" % (
+                            sid, d.get("name", "?"), len(spots),
+                            (" slot %s consumed" % slot_pos)
+                            if consumed else ""),
                         changed_paths=(
-                            "players[%d].skill_events_raw" % side,))
+                            "players[%d].skill_events_raw" % side,)
+                        + (("players[%d].commander_skills_raw" % side,)
+                           if consumed else ()))
     return _receipt(i, kind_value, False, errors.UNSUPPORTED_ACTION,
                     detail="commander skill not executed in v0 (%s)" % precise)
 
@@ -422,12 +533,28 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
         ctx.finished = True
         return _receipt(i, kind.value, True, errors.OK)
 
+    if kind is ActionKind.SURRENDER:
+        # battlefield M1: typed GiveUp — atomic terminal, no deploy effect,
+        # the opponent wins (env decides reward/terminal view)
+        if ctx.surrendered:
+            return _receipt(i, kind.value, False, "ALREADY_SURRENDERED")
+        ctx.surrendered = True
+        ctx.finished = True
+        return _receipt(i, kind.value, True, errors.OK,
+                        detail="surrender (terminal, opponent wins)")
+
+    if ctx.surrendered:
+        return _receipt(i, kind.value, False, errors.ACTION_AFTER_END_DEPLOY,
+                        detail="player already surrendered")
+
     if ctx.finished:
         # GiveUp is a terminal marker recorded after the finish click; it
-        # changes no deploy state and must not read as a core rejection
+        # now routes through the SAME surrender rule as the typed action
+        # (one rule source) instead of being a no-effect marker
         if kind is ActionKind.RAW_UNSUPPORTED and args.raw_type == "GiveUp":
+            ctx.surrendered = True
             return _receipt(i, kind.value, True, errors.OK,
-                            detail="giveup marker (no deploy effect)")
+                            detail="giveup (terminal, opponent wins)")
         return _receipt(i, kind.value, False, errors.ACTION_AFTER_END_DEPLOY)
 
     if kind is ActionKind.GIFT_UNIT:
@@ -788,6 +915,13 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
         if price is None:
             return _receipt(i, kind.value, False, errors.UNKNOWN_MECH)
         price = max(0, price + eco.upgrade_price_mod(u.mech_id, ctx.officers))
+        discount = 0
+        if FEATURES["equipment_upgrade_discount"] \
+                and int(u.equipment_id or 0) == UPGRADE_DISCOUNT_EQUIPMENT:
+            # 强化模块 13030004: 升级消耗的补给减少100 (survey card text;
+            # applies to THIS unit only — the bound item carries it)
+            discount = min(UPGRADE_DISCOUNT_AMOUNT, price)
+            price -= discount
         if u.level >= 9:
             return _receipt(i, kind.value, False, errors.MAX_LEVEL)
         # corpus truth (2026-08-26): every recorded UpgradeUnit of a live
@@ -807,6 +941,8 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
         ctx.units[j] = UnitCard(**{**u.__dict__, "level": u.level + 1,
                                    "exp": max(0, u.exp - consume)})
         return _receipt(i, kind.value, True, errors.OK, resource_delta=-price,
+                        detail=("强化模块 discount -%d; " % discount
+                                if discount else ""),
                         changed_paths=("players[%d].units[entity=%d].level" % (
                             side, u.entity_id),
                             "players[%d].units[entity=%d].exp" % (side, u.entity_id),
@@ -888,10 +1024,19 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
         ctx.ledger.add("sell:%s" % u.mech_id, refund, action_index=i,
                        entity_id=u.entity_id)
         del ctx.units[j]
+        # battlefield M1: selling consumes the recycle skill slot (corpus:
+        # 900001 releases show (inactive, cd=0) the following round)
+        sell_slot = None
+        if FEATURES["skill_slot_lifecycle"]:
+            sell_slot, _err = _find_release_slot(ctx, 900001, None)
+            if sell_slot is not None:
+                _consume_slot(ctx, sell_slot, 900001)
         return _receipt(i, kind.value, True, errors.OK, resource_delta=refund,
                         removed_entity_id=u.entity_id,
                         changed_paths=("players[%d].units" % side,
-                                       "players[%d].supply" % side))
+                                       "players[%d].supply" % side)
+                        + (("players[%d].commander_skills_raw" % side,)
+                           if sell_slot is not None else ()))
 
     if kind is ActionKind.RELEASE_COMMANDER_SKILL:
         return _release_commander_skill(

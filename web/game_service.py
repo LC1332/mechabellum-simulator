@@ -1106,19 +1106,28 @@ class GameSession:
                 except (TypeError, ValueError):
                     continue
                 d = COMMANDER_SKILLS.get(sid) or TRANSITION_SKILLS.get(sid)
+                from pysim.battlefield import registry as bf_registry
+                fid = bf_registry.mechanism_support(
+                    "commander_skill", sid).two_axis()
                 releases.append({
                     "slot_index": slot_idx, "skill_id": sid,
                     "name": (d or {}).get("name", str(sid)),
                     "target_kind": commander_skill_target_kind(sid),
                     "supported": d is not None,
-                    "battle_fidelity": "exact" if d is not None
+                    "active": str(e[2]).lower() == "true",
+                    "battle_fidelity": fid["battle_fidelity"]
+                    if d is not None else "unsupported",
+                    "confidence": fid["confidence"] if d is not None
                     else "unsupported",
                     "released_this_round": sum(
                         1 for r in (p.skill_events_raw or ())
                         if int(r[0]) == sid)})
         except Exception:
             pass
-        # pending equipment stock (step3 任务书 §6.5) with legal targets
+        # pending equipment stock (step3 任务书 §6.5) with legal targets;
+        # battlefield M1: fidelity/confidence derive from the mechanic
+        # registry (single source with capability + battle warnings)
+        from pysim.battlefield import registry as bf_registry
         inventory = []
         eq_ids = sorted(set(int(e) for e in (p.equipment_inventory or ())))
         for eid in eq_ids:
@@ -1131,13 +1140,16 @@ class GameSession:
                 ok, _why = equipment_target_ok(self.gd, eid, u.mech_id)
                 if ok:
                     targets.append(u.replay_index)
+            fid = bf_registry.mechanism_support("equipment", eid).two_axis()
             inventory.append({
                 "equipment_id": eid,
                 "name": d.name if d else str(eid),
                 "count": sum(1 for e in (p.equipment_inventory or ())
                              if int(e) == eid),
                 "target_restriction": d.target_restriction if d else "unknown",
-                "battle_fidelity": d.battle_fidelity if d else "unsupported",
+                "battle_fidelity": fid["battle_fidelity"]
+                if d else "unsupported",
+                "confidence": fid["confidence"] if d else "unsupported",
                 "supported": d is not None,
                 "legal_targets": targets})
         blueprints = []
