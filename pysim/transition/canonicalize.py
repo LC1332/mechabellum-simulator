@@ -13,7 +13,7 @@ from .errors import TransitionError
 from .model import (ActionKind, CanonicalAction, CanonicalActionPlan,
                     BuyArgs, MoveArgs, UpgradeArgs, UnlockArgs, TechArgs,
                     ChooseReinforceArgs, SellArgs, GiftArgs, UnsupportedArgs,
-                    EntityRef)
+                    ReleaseCommanderSkillArgs, UseEquipmentArgs, EntityRef)
 
 # raw types that must have been folded away before deploy
 FORBIDDEN_RAW_TYPES = ("Undo", "CancelReleaseCommanderSkill")
@@ -97,6 +97,32 @@ def canonicalize_plan(player: int, actions: list,
             out.append(CanonicalAction(
                 ActionKind.SELL_UNIT,
                 SellArgs(ref=EntityRef(handle=(None if u is None
+                                               else int(u)))), k))
+        elif t == "release":
+            # typed battlefield-skill release (step3 任务书 §5.2): the
+            # normalizer already resolved explicit-ID vs SkillIndex
+            u = e.get("unit")
+            cidx = e.get("construction")
+            out.append(CanonicalAction(
+                ActionKind.RELEASE_COMMANDER_SKILL,
+                ReleaseCommanderSkillArgs(
+                    skill_index=(None if e.get("skill_index") is None
+                                 else int(e["skill_index"])),
+                    skill_id=(None if e.get("skill") is None
+                              else int(e["skill"])),
+                    positions=tuple((float(x), float(y))
+                                    for (x, y) in (e.get("positions") or ())),
+                    unit_ref=(None if u is None
+                              else EntityRef(handle=int(u))),
+                    construction_index=(None if cidx is None
+                                        else int(cidx))), k))
+        elif t == "equip":
+            u = e.get("unit")
+            out.append(CanonicalAction(
+                ActionKind.USE_EQUIPMENT,
+                UseEquipmentArgs(
+                    equipment_id=int(e.get("id", 0) or 0),
+                    unit_ref=EntityRef(handle=(None if u is None
                                                else int(u)))), k))
         elif t == "finish":
             out.append(CanonicalAction(ActionKind.END_DEPLOY, None, k))

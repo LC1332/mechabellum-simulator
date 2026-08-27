@@ -182,7 +182,7 @@ class TransitionEnv:
             # round (settled.round + 1); precomputing here would be off by
             # one (income lands at the deploy start of the incoming round)
             self._state = advance_round(st.state, self.income_policy, incomes,
-                                        max_round=self.max_round)
+                                        max_round=self.max_round, gd=self.gd)
         info = {"settled_digest": st.state_digest,
                 "winner": outcome.winner,
                 "damage": tuple(outcome.damage_to_player),
@@ -275,8 +275,13 @@ class TransitionEnv:
                         UpgradeArgs(ref=EntityRef(
                             handle=u.replay_index if u.replay_index is not None
                             else j))))
-        for mech, techs in p.tech_map:
+        # tech candidates follow the FIELD mechs (step3 任务书 §4.1): the
+        # snapshot tech_map alone hides buyable first techs of newly bought
+        # mechs and leaks mechs whose last unit left the field
+        tech_owned_map = {int(m): tuple(t) for m, t in p.tech_map}
+        for mech in sorted({u.mech_id for u in p.units}):
             card = self.gd.cards.get(mech)
+            techs = tech_owned_map.get(mech, ())
             for tid in (card.technologies if card else ()):
                 if tid in techs:
                     continue
@@ -284,12 +289,12 @@ class TransitionEnv:
                 if td is None or (td.previous_tech_id
                                   and td.previous_tech_id not in techs):
                     continue
-                price = self.eco.tech_price(mech, tid, len(techs))
+                price = self.eco.tech_price(mech, tid, len(techs), p.officers)
                 if price is not None and p.supply >= price:
                     out.append(CanonicalAction(
                         ActionKind.BUY_TECH, TechArgs(mech_id=mech, tech_id=tid)))
         for mech in sorted(set(self.gd.cards) - set(p.unlocked_mechs)):
-            price = self.eco.unlock_price(mech)
+            price = self.eco.unlock_price(mech, p.officers)
             if price is not None and p.supply >= price:
                 out.append(CanonicalAction(
                     ActionKind.UNLOCK_UNIT, UnlockArgs(mech_id=mech)))

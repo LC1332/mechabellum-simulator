@@ -29,15 +29,21 @@ FEATURES = {
 
 # passive deploy-action supply costs (corpus-attributed 2026-08-26: r1
 # window algebra bp2-only -> 0 (1251 rounds), bp4/bp5 -> +100 each;
-# tower -> +100; con10001 -> +100, con20001 -> +50; prices_v1_passive)
-BLUEPRINT_COSTS = {3: 100, 4: 100, 5: 100, 401: 300, 501: 300}
+# tower -> +100; con10001 -> +100, con20001 -> +50; prices_v1_passive).
+# step3 任务书 §3 OVERRIDES the r1 algebra with the user-frozen fees
+# (2026-08-27): 批量征召 2 = 50 (activation is no longer free), 强化瞄准 5 =
+# 100, 高速移动 6 = 50 — deviation from prices_v1_passive recorded in the
+# step3 summary.
+BLUEPRINT_COSTS = {2: 50, 3: 100, 4: 100, 5: 100, 401: 300, 501: 300}
+# energy-tower round buffs: single rule source for both deploy and GameView
+TOWER_SKILL_COSTS = {5: 100, 6: 50}      # 5 强化瞄准 / 6 高速移动
 CONTRAPTION_COSTS = {"10001": 100, "20001": 50, "30001": 100}
 TOWER_STRENGTHEN_COST = 100
 MANUFACTURING_OFFICERS = {20022: "giant", 20023: "small"}
 # audit-game v1 blueprint semantics (information/commend_center的蓝图.md +
 # corpus probes _probe9/_probe14, 2026-08-27):
 #   1 快速补给  cost 0   -> +200 now / -300 next round (income side)
-#   2 批量征召  cost 0   -> this round's buy limit +1 (base limit 5, the
+#   2 批量征召  cost 50  -> this round's buy limit +1 (base limit 5, the
 #                          corpus never exceeds 5 buys/round; bp2 rounds top
 #                          out at 4 — flag until a limit-binding sample lands)
 #   3 精英征召  cost 100 -> this round's buys spawn at level+1 (order matters:
@@ -77,9 +83,11 @@ class _RoundCtx:
     digests: list = field(default_factory=list)
     tower_strengthen: tuple = (0, 0)   # (left, right) core tower levels
     blueprints: list = field(default_factory=list)   # activated blueprint ids
+    blueprints_round: list = field(default_factory=list)  # this round only
     tower_mods: list = field(default_factory=list)   # ActiveEnergyTowerSkill ids this round
     devices: list = field(default_factory=list)      # (cid,x,y) contraption releases
     skill_events: list = field(default_factory=list)  # (sid,x,y) commander releases
+    equipment: list = field(default_factory=list)    # unequipped stock (multiset)
 
 
 def deploy_transition(state: EnvironmentState,
@@ -125,14 +133,23 @@ def deploy_transition(state: EnvironmentState,
             commander_skills=[tuple(str(x) for x in e)
                               for e in p.commander_skills_raw],
             new_ref_entity={}, finished=state.finished_deploy[side],
-            buy_count=0,
+            buy_count=int(p.bought_this_round or 0),
             ledger=LedgerBuilder(p.supply),
             tower_strengthen=tuple(int(x) for x in (p.tower_strengthen
                                                     or (0, 0))[:2]),
             blueprints=list(p.blueprints),
+            blueprints_round=list(getattr(p, "blueprints_round", ())
+                                 or ()),
             tower_mods=list(p.tower_mods_raw or ()),
             devices=list(p.devices_raw or ()),
-            skill_events=list(p.skill_events_raw or ()))
+            skill_events=list(p.skill_events_raw or ()),
+            equipment=list(p.equipment_inventory or ()),
+            buy_limit_bonus=sum(1 for b in
+                                (getattr(p, "blueprints_round", ()) or ())
+                                if int(b) == 2),
+            buy_level_bonus=sum(1 for b in
+                                (getattr(p, "blueprints_round", ()) or ())
+                                if int(b) == 3))
         ctxs.append(ctx)
 
     for plan in plans:
@@ -182,10 +199,12 @@ def _freeze(ctx: _RoundCtx, base: PlayerState) -> PlayerState:
         tech_map=tuple(sorted((m, tuple(t)) for m, t in ctx.tech_bought.items())),
         officers=tuple(ctx.officers),
         blueprints=tuple(ctx.blueprints),
+        blueprints_round=tuple(ctx.blueprints_round),
         commander_skills_raw=tuple(tuple(e) for e in ctx.commander_skills),
         tower_strengthen=tuple(ctx.tower_strengthen),
         constructions_raw=base.constructions_raw,
         bought_this_round=ctx.buy_count,
+        equipment_inventory=tuple(sorted(ctx.equipment)),
         tower_mods_raw=tuple(ctx.tower_mods),
         devices_raw=tuple(ctx.devices),
         skill_events_raw=tuple(ctx.skill_events))
@@ -304,6 +323,95 @@ def _fold_tech(active: list, new_tech: int, prev_of: dict) -> list:
     return out
 
 
+def _resolve_release_id(ctx, skill_id, skill_index):
+    """Explicit non-zero id wins; else SkillIndex -> id via the current
+    commander-skill inventory (step3 任务书 §5.2 resolution rule)."""
+    if skill_id:
+        try:
+            return int(skill_id)
+        except (TypeError, ValueError):
+            return None
+    if skill_index is None:
+        return None
+    for entry in ctx_officers(ctx):
+        if entry and str(entry[0]) == str(skill_index):
+            try:
+                sid = int(entry[1])
+                return sid if sid else None
+            except (TypeError, ValueError):
+                return None
+    return None
+
+
+def _release_target_kind(positions, unit_ref, construction_index) -> str:
+    if construction_index is not None:
+        return "construction"
+    if unit_ref is not None:
+        return "unit"
+    if positions:
+        return "position"
+    return "unknown"
+
+
+def _release_commander_skill(ctx, side, i, kind_value, eco,
+                             skill_index=None, skill_id=None, positions=(),
+                             unit_ref=None, construction_index=None):
+    """Typed battlefield-skill release (step3 任务书 §5).
+
+    Mapped ids only: 1100001 强化训练 bumps the target unit's exp;
+    skills.COMMANDER_SKILLS ids become round battle events at the recorded
+    positions. 200001 (EMP) / 1000001 (再部署) / anything unmapped returns a
+    precise blocker carrying skill_id/skill_index/target_kind — never a
+    wrong approximation."""
+    from ..skills import COMMANDER_SKILLS, TRANSITION_SKILLS
+    sid = _resolve_release_id(ctx, skill_id, skill_index)
+    target_kind = _release_target_kind(positions, unit_ref, construction_index)
+    precise = "skill_id=%s skill_index=%s target_kind=%s" % (
+        sid if sid is not None else "-",
+        skill_index if skill_index is not None else "-", target_kind)
+    if sid is None:
+        return _receipt(i, kind_value, False, errors.UNSUPPORTED_ACTION,
+                        detail="unresolvable release (%s)" % precise)
+    if construction_index is not None:
+        # building recycles have no v0 effect: precise blocker carrying the
+        # target kind, never a positional approximation (step3 任务书 §5.2)
+        return _receipt(i, kind_value, False, errors.UNSUPPORTED_ACTION,
+                        detail="construction-target release unsupported "
+                               "(%s)" % precise)
+    if sid in TRANSITION_SKILLS:
+        # 强化训练: target unit's exp jumps to its next upgrade threshold
+        if unit_ref is None:
+            return _receipt(i, kind_value, False, errors.SKILL_TARGET_INVALID,
+                            detail="强化训练 needs a unit target (%s)" % precise)
+        j, u = _find_unit(ctx, unit_ref)
+        if u is None:
+            return _receipt(i, kind_value, False, errors.UNKNOWN_ENTITY,
+                            detail="强化训练 target missing (%s)" % precise)
+        need = eco.upgrade_exp_need(u.mech_id, u.level)
+        if need and need > 0 and u.exp < need:
+            ctx.units[j] = UnitCard(**{**u.__dict__, "exp": need})
+            return _receipt(i, kind_value, True, errors.OK,
+                            detail="强化训练 sets exp to %d" % need,
+                            changed_paths=(
+                                "players[%d].units[entity=%d].exp" % (
+                                    side, u.entity_id),))
+        return _receipt(i, kind_value, True, errors.OK,
+                        detail="强化训练 (no-op: exp already full or cap)")
+    if sid in COMMANDER_SKILLS:
+        spots = [(float(x), float(y)) for (x, y) in (positions or ())] \
+            or [(0.0, 0.0)]
+        for (sx2, sy2) in spots:
+            ctx.skill_events.append((int(sid), float(sx2), float(sy2)))
+        d = COMMANDER_SKILLS[sid]
+        return _receipt(i, kind_value, True, errors.OK,
+                        detail="release %s(%s) x%d" % (
+                            sid, d.get("name", "?"), len(spots)),
+                        changed_paths=(
+                            "players[%d].skill_events_raw" % side,))
+    return _receipt(i, kind_value, False, errors.UNSUPPORTED_ACTION,
+                    detail="commander skill not executed in v0 (%s)" % precise)
+
+
 def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
     kind = act.kind
     args = act.args
@@ -350,18 +458,32 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
                 ctx.supply += 200
                 ctx.ledger.add("blueprint_loan:+200", 200, action_index=i)
                 ctx.blueprints.append(1)
+                ctx.blueprints_round.append(1)
                 return _receipt(i, kind.value, True, errors.OK,
                                 resource_delta=200,
                                 changed_paths=("players[%d].supply" % side,
                                                "players[%d].blueprints" % side))
             if rid == 2:
-                # 批量征召: this round's buy limit +1 (free per corpus algebra)
+                # 批量征召: this round's buy limit +1; the activation costs
+                # 50 (step3 任务书 §3 frozen fee, superseding the r1-window
+                # free-algebra reading)
+                cost = BLUEPRINT_COSTS[2]
+                if ctx.supply < cost:
+                    return _receipt(i, kind.value, False,
+                                    errors.INSUFFICIENT_SUPPLY,
+                                    detail="blueprint %s needs %d" % (
+                                        rid, cost))
+                ctx.supply -= cost
+                ctx.ledger.add("blueprint:%s" % rid, -cost, action_index=i)
                 ctx.buy_limit_bonus += 1
                 ctx.blueprints.append(2)
+                ctx.blueprints_round.append(2)
                 return _receipt(i, kind.value, True, errors.OK,
+                                resource_delta=-cost,
                                 detail="批量征召: buy limit %d" % (
                                     BASE_BUY_LIMIT + ctx.buy_limit_bonus),
-                                changed_paths=("players[%d].blueprints" % side,))
+                                changed_paths=("players[%d].supply" % side,
+                                               "players[%d].blueprints" % side))
             if rid == 3:
                 # 精英征召: buys AFTER this point spawn at level+1 (doc order)
                 if ctx.supply < BLUEPRINT_COSTS[3]:
@@ -374,6 +496,7 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
                                action_index=i)
                 ctx.buy_level_bonus += 1
                 ctx.blueprints.append(3)
+                ctx.blueprints_round.append(3)
                 return _receipt(i, kind.value, True, errors.OK,
                                 resource_delta=-BLUEPRINT_COSTS[3],
                                 changed_paths=("players[%d].supply" % side,
@@ -393,6 +516,7 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
                     ctx.officers.remove(replace)
                 ctx.officers.append(officer)
                 ctx.blueprints.append(rid)
+                ctx.blueprints_round.append(rid)
                 return _receipt(i, kind.value, True, errors.OK,
                                 resource_delta=-cost,
                                 changed_paths=("players[%d].supply" % side,
@@ -451,67 +575,46 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
                                 "players[%d].tower_strengthen" % side,
                                 "players[%d].supply" % side))
         if rt == "ActiveEnergyTowerSkill":
-            # 能量塔技能 (free round buffs, stacking): 5 强化瞄准 = 全体远程
-            # 射程 +15, 6 高速移动 = 全体移速 +3 (battle adapter applies via
-            # b.tower_mods; ids 1/3/4 have no modeled effect and stay in the
-            # unsupported bucket via the capability scanner)
+            # 能量塔技能 (round buffs, stacking): 5 强化瞄准 = 全体远程
+            # 射程 +15 (cost 100), 6 高速移动 = 全体移速 +3 (cost 50) — the
+            # step3 §3 frozen fees (single source TOWER_SKILL_COSTS, shared
+            # with GameView); battle adapter applies via b.tower_mods; ids
+            # 1/3/4 have no modeled effect and stay unsupported
             sid = _raw_get(args, "SkillID")
-            if sid in (5, 6):
+            if sid in TOWER_SKILL_COSTS:
+                cost = TOWER_SKILL_COSTS[int(sid)]
+                if ctx.supply < cost:
+                    return _receipt(i, kind.value, False,
+                                    errors.INSUFFICIENT_SUPPLY,
+                                    detail="tower skill %d needs %d"
+                                           % (sid, cost))
+                ctx.supply -= cost
+                ctx.ledger.add("tower_skill:%d" % int(sid), -cost,
+                               action_index=i)
                 ctx.tower_mods.append(int(sid))
                 return _receipt(i, kind.value, True, errors.OK,
+                                resource_delta=-cost,
                                 detail="tower skill %d (%s)" % (
                                     sid, "强化瞄准+15射程" if sid == 5
                                     else "高速移动+3移速"),
                                 changed_paths=(
-                                    "players[%d].tower_mods_raw" % side,))
+                                    "players[%d].supply" % side,
+                                    "players[%d].tower_mods_raw" % side))
             return _receipt(i, kind.value, False, errors.UNSUPPORTED_ACTION,
                             detail="tower skill %s not executed in v0" % sid)
-        # modeled peeks (kept explicit; each changes only the flagged field):
-        if rt == "ReleaseCommanderSkill" and _resolves_to(args, ctx, 1100001):
-            # 强化训练: target unit's exp jumps to its next upgrade threshold
-            uidx = _raw_get(args, "UnitIndex")
-            j, u = _find_unit(ctx, EntityRef(handle=uidx))
-            if u is not None:
-                need = eco.upgrade_exp_need(u.mech_id, u.level)
-                if need and need > 0 and u.exp < need:
-                    ctx.units[j] = UnitCard(**{**u.__dict__, "exp": need})
-                    return _receipt(i, kind.value, True, errors.OK,
-                                    detail="强化训练 sets exp to %d" % need,
-                                    changed_paths=(
-                                        "players[%d].units[entity=%d].exp" % (
-                                            side, u.entity_id),))
-            return _receipt(i, kind.value, True, errors.OK,
-                            detail="强化训练 (no-op: exp already full or cap)")
         if rt == "ReleaseCommanderSkill":
-            # mapped battlefield skills (skills.COMMANDER_SKILLS): release
-            # becomes round battle events at the recorded positions; ids 1/3/4
-            # of the energy tower family and unmapped skills stay unsupported
-            from ..skills import COMMANDER_SKILLS
-            sid = _raw_get(args, "ID")
-            if not sid:
-                sidx = _raw_get(args, "SkillIndex")
-                if sidx is not None:
-                    for entry in ctx_officers(ctx):
-                        if entry and str(entry[0]) == str(sidx):
-                            try:
-                                sid = int(entry[1])
-                            except (TypeError, ValueError):
-                                sid = 0
-                            break
-            if sid in COMMANDER_SKILLS:
-                spots = _raw_positions(args)
-                if not spots:
-                    spots = [(0.0, 0.0)]
-                for (sx2, sy2) in spots:
-                    ctx.skill_events.append((int(sid), float(sx2), float(sy2)))
-                d = COMMANDER_SKILLS[sid]
-                return _receipt(i, kind.value, True, errors.OK,
-                                detail="release %s(%s) x%d" % (
-                                    sid, d.get("name", "?"), len(spots)),
-                                changed_paths=(
-                                    "players[%d].skill_events_raw" % side,))
-            return _receipt(i, kind.value, False, errors.UNSUPPORTED_ACTION,
-                            detail="commander skill %s not executed in v0" % sid)
+            # legacy raw form: resolve explicit ID vs SkillIndex, then share
+            # the typed release path (one rule source with the normalizer's
+            # typed entries; step3 任务书 §5.1/§5.2)
+            uidx = _raw_get(args, "UnitIndex")
+            cidx = _raw_get(args, "ConstructionIndex")
+            return _release_commander_skill(
+                ctx, side, i, kind.value, eco,
+                skill_index=_raw_get(args, "SkillIndex"),
+                skill_id=_raw_get(args, "ID") or 0,
+                positions=_raw_positions(args),
+                unit_ref=(None if uidx is None else EntityRef(handle=uidx)),
+                construction_index=cidx)
         return _receipt(i, kind.value, False, errors.UNSUPPORTED_ACTION,
                         detail="raw type %s not executed in v0" % args.raw_type)
 
@@ -521,13 +624,38 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
         if cost is None:
             return _receipt(i, kind.value, False, errors.UNKNOWN_ITEM,
                             detail="item %s" % item_id)
-        # equipment cards have no state effect AND no engine mechanic: charge-
-        # only acceptance would be a silent half-effect, so reject (the
-        # capability scanner blocks the same ids - one rule source)
         info = eco.items.get(item_id) if item_id else None
         if info and info.get("kind") == "装备":
-            return _receipt(i, kind.value, False, errors.UNSUPPORTED_ACTION,
-                            detail="equipment card %s not modeled" % item_id)
+            # step3 任务书 §6.3: equipment cards charge normally and stock one
+            # copy in the inventory (multiset). Battle fidelity stays
+            # `approximate` (pysim does not consume the combat modifier —
+            # battle results carry a fidelity warning); an UNREGISTERED
+            # equipment id remains a hard blocker.
+            from .equipment import EQUIPMENT_DEFS
+            d = EQUIPMENT_DEFS.get(int(item_id))
+            if d is None:
+                return _receipt(i, kind.value, False,
+                                errors.MISSING_RULE_DATA,
+                                detail="equipment card %s not registered"
+                                       % item_id)
+            if ctx.supply < cost:
+                return _receipt(i, kind.value, False,
+                                errors.INSUFFICIENT_SUPPLY,
+                                detail="need %d have %d" % (cost, ctx.supply))
+            ctx.supply -= cost
+            if cost:
+                ctx.ledger.add("reinforce:%s" % item_id, -cost,
+                               action_index=i)
+            ctx.equipment.append(int(item_id))
+            return _receipt(i, kind.value, True, errors.OK,
+                            resource_delta=-cost,
+                            detail="equipment %s(%s) stocked x%d "
+                                   "(battle_approximate)"
+                                   % (item_id, d.name,
+                                      ctx.equipment.count(int(item_id))),
+                            changed_paths=("players[%d].supply" % side,
+                                           "players[%d].equipment_inventory"
+                                           % side))
         if ctx.supply < cost:
             return _receipt(i, kind.value, False, errors.INSUFFICIENT_SUPPLY,
                             detail="need %d have %d" % (cost, ctx.supply))
@@ -592,19 +720,24 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
                         detail="grant=%s" % (spawned or 0))
 
     if kind is ActionKind.UNLOCK_UNIT:
-        price = eco.unlock_price(args.mech_id)
-        if price is None:
+        quote = eco.unlock_quote(args.mech_id, ctx.officers)
+        if quote is None:
             return _receipt(i, kind.value, False, errors.UNKNOWN_MECH)
         if args.mech_id in ctx.unlocked:
             return _receipt(i, kind.value, True, errors.OK,
                             detail="already unlocked (no charge)")
-        if ctx.supply < price:
+        if ctx.supply < quote.final_price:
             return _receipt(i, kind.value, False, errors.INSUFFICIENT_SUPPLY,
-                            detail="need %d have %d" % (price, ctx.supply))
-        ctx.supply -= price
-        ctx.ledger.add("unlock:%s" % args.mech_id, -price, action_index=i)
+                            detail="need %d have %d (%s)"
+                                   % (quote.final_price, ctx.supply,
+                                      quote.breakdown))
+        ctx.supply -= quote.final_price
+        ctx.ledger.add("unlock:%s" % args.mech_id, -quote.final_price,
+                       action_index=i)
         ctx.unlocked.add(args.mech_id)
-        return _receipt(i, kind.value, True, errors.OK, resource_delta=-price,
+        return _receipt(i, kind.value, True, errors.OK,
+                        resource_delta=-quote.final_price,
+                        detail=quote.breakdown,
                         changed_paths=("players[%d].unlocked_mechs" % side,
                                        "players[%d].supply" % side))
 
@@ -688,27 +821,44 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
             return _receipt(i, kind.value, False, errors.UNSUPPORTED_RULE_DATA,
                             detail="tech %s not in gamedata (no charge)" %
                                     args.tech_id)
+        card = eco.gd.cards.get(int(args.mech_id))
+        if card is None or int(args.tech_id) not in \
+                (card.technologies or ()):
+            return _receipt(i, kind.value, False, errors.UNKNOWN_TECH,
+                            detail="tech %s not of mech %s"
+                                   % (args.tech_id, args.mech_id))
+        # step3 任务书 §4.2: the mech must be on the field (>=1 unit)
+        if not any(u.mech_id == int(args.mech_id) for u in ctx.units):
+            return _receipt(i, kind.value, False, errors.TECH_MECH_NOT_ON_FIELD,
+                            detail="mech %s has no unit on the field"
+                                   % args.mech_id)
         owned = ctx.tech_bought.get(args.mech_id, [])
         if args.tech_id in owned:
             return _receipt(i, kind.value, True, errors.OK,
                             detail="tech already active (no charge)")
-        price = eco.tech_price(args.mech_id, args.tech_id, len(owned))
-        if price is None:
+        quote = eco.tech_quote(args.mech_id, args.tech_id, len(owned),
+                               ctx.officers)
+        if quote is None:
             return _receipt(i, kind.value, False, errors.UNKNOWN_TECH)
         if td.previous_tech_id and td.previous_tech_id not in owned \
                 and td.previous_tech_id != 0:
             # chain techs require their predecessor
             return _receipt(i, kind.value, False, errors.TECH_PREREQUISITE_MISSING,
                             detail="needs %d" % td.previous_tech_id)
-        if ctx.supply < price:
+        if ctx.supply < quote.final_price:
             return _receipt(i, kind.value, False, errors.INSUFFICIENT_SUPPLY,
-                            detail="need %d have %d" % (price, ctx.supply))
-        ctx.supply -= price
-        ctx.ledger.add("tech:%s" % args.tech_id, -price, action_index=i)
+                            detail="need %d have %d (%s)"
+                                   % (quote.final_price, ctx.supply,
+                                      quote.breakdown))
+        ctx.supply -= quote.final_price
+        ctx.ledger.add("tech:%s" % args.tech_id, -quote.final_price,
+                       action_index=i)
         prev_of = {t.id: t.previous_tech_id for t in eco.gd.techs.values()}
         ctx.tech_bought[args.mech_id] = _fold_tech(
             list(owned), args.tech_id, prev_of)
-        return _receipt(i, kind.value, True, errors.OK, resource_delta=-price,
+        return _receipt(i, kind.value, True, errors.OK,
+                        resource_delta=-quote.final_price,
+                        detail=quote.breakdown,
                         changed_paths=("players[%d].tech_map" % side,
                                        "players[%d].supply" % side))
 
@@ -742,6 +892,56 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
                         removed_entity_id=u.entity_id,
                         changed_paths=("players[%d].units" % side,
                                        "players[%d].supply" % side))
+
+    if kind is ActionKind.RELEASE_COMMANDER_SKILL:
+        return _release_commander_skill(
+            ctx, side, i, kind.value, eco,
+            skill_index=args.skill_index, skill_id=args.skill_id,
+            positions=args.positions, unit_ref=args.unit_ref,
+            construction_index=args.construction_index)
+
+    if kind is ActionKind.USE_EQUIPMENT:
+        from .equipment import EQUIPMENT_DEFS, equipment_target_ok
+        eid = int(args.equipment_id)
+        d = EQUIPMENT_DEFS.get(eid)
+        if d is None:
+            return _receipt(i, kind.value, False, errors.MISSING_RULE_DATA,
+                            detail="equipment %s unknown" % eid)
+        j, u = _find_unit(ctx, args.unit_ref)
+        if u is None:
+            return _receipt(i, kind.value, False, errors.UNKNOWN_ENTITY,
+                            detail="equipment %s target missing" % eid)
+        if eid not in ctx.equipment:
+            return _receipt(i, kind.value,
+                            False, errors.EQUIPMENT_NOT_IN_INVENTORY,
+                            detail="equipment %s (%s) not stocked"
+                                   % (eid, d.name))
+        card = eco.gd.cards.get(u.mech_id)
+        if not (card and card.can_add_equipment):
+            return _receipt(i, kind.value,
+                            False, errors.EQUIPMENT_TARGET_NOT_ALLOWED,
+                            detail="mech %s cannot carry equipment"
+                                   % u.mech_id)
+        ok, reason = equipment_target_ok(eco.gd, eid, u.mech_id)
+        if not ok:
+            return _receipt(i, kind.value,
+                            False, errors.EQUIPMENT_RESTRICTION_MISMATCH,
+                            detail="equipment %s (%s) restriction %s: %s"
+                                   % (eid, d.name, d.target_restriction,
+                                      reason))
+        # consume one copy from the multiset inventory; a previous binding is
+        # REPLACED and the old item does not return to stock
+        ctx.equipment.remove(eid)
+        replaced = u.equipment_id or 0
+        ctx.units[j] = UnitCard(**{**u.__dict__, "equipment_id": eid})
+        detail = "equip %s(%s) -> unit %s" % (eid, d.name, u.replay_index)
+        if replaced:
+            detail += " (replaced %s, not restocked)" % replaced
+        return _receipt(i, kind.value, True, errors.OK, detail=detail,
+                        changed_paths=(
+                            "players[%d].equipment_inventory" % side,
+                            "players[%d].units[entity=%d].equipment_id" % (
+                                side, u.entity_id)))
 
     return _receipt(i, str(kind), False, errors.UNSUPPORTED_ACTION,
                     detail="unhandled canonical kind")
@@ -780,28 +980,6 @@ def _raw_positions(args):
                 continue
         return out
     return []
-
-
-def _resolves_to(args, ctx, skill_id: int) -> bool:
-    """ReleaseCommanderSkill raw record -> resolved commander skill id.
-
-    ID=0 releases resolve through the player's commanderSkills state
-    (SkillIndex -> id, same-round snapshot entries)."""
-    raw_id = _raw_get(args, "ID")
-    if raw_id == skill_id:
-        return True
-    if raw_id not in (0, None):
-        return False
-    sidx = _raw_get(args, "SkillIndex")
-    if sidx is None:
-        return False
-    for entry in ctx_officers(ctx):
-        if entry and str(entry[0]) == str(sidx):
-            try:
-                return int(entry[1]) == skill_id
-            except (TypeError, ValueError):
-                return False
-    return False
 
 
 def ctx_officers(ctx):

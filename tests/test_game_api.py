@@ -92,12 +92,17 @@ def test_library_lists_options_with_prefix(client):
             if b.get("strict"):
                 assert b in (o["first_strict_blocker"], ) or True
     best = next(o for o in lib["options"] if o["option_id"] == "94974af9a119-0")
-    assert best["playable_through_round"] == 4
-    # strict blocker round 3, runtime blocker round 5 -> split fields (G4)
+    # step3: equipment offers stopped blocking the runtime -> prefix 4 -> 5;
+    # the strict-effect prefix now ends at R2 (equipment offers from R3 are
+    # battle-approximate) and the first runtime blocker moved R5 -> R6
+    assert best["playable_through_round"] == 5
+    assert best["runtime_playable_through_round"] == 5
+    assert best["approximate_from_round"] == 3
     assert best["first_strict_blocker"]["round"] == 3
-    assert best["first_runtime_blocker"]["round"] == 5
+    assert best["first_strict_blocker"]["code"] == "APPROXIMATE_REINFORCEMENT_EFFECT"
+    assert best["first_runtime_blocker"]["round"] == 6
     assert best["first_runtime_blocker"].get("strict") is None
-    assert best["start_mode"] == "limited"     # 4 >= limited floor (3)
+    assert best["start_mode"] == "normal"      # 5 >= min_rounds floor
     # sorted by playable prefix desc (G5)
     ptrs = [o["playable_through_round"] for o in lib["options"]]
     assert ptrs == sorted(ptrs, reverse=True)
@@ -118,7 +123,7 @@ def test_session_lifecycle_and_versioning(client):
     v = new_session(client)
     sid = v["session_id"]
     assert v["phase"] == "opening" and v["version"] == 0
-    assert v["schema_version"] == "game_view_v2"
+    assert v["schema_version"] == "game_view_v3"
 
     got = client.get("/api/game/sessions/%s" % sid).json()
     assert got["version"] == 0
@@ -518,7 +523,7 @@ def test_gameview_hides_internals(client):
     v = new_session(client)
     blob = json.dumps(v)
     for secret in ("next_entity_id", "entity_id", "rng", "shard", "_state",
-                   "fast_debts"):
+                   "fast_debts", "PriceQuote", "__type__"):
         assert secret not in blob, "GameView leaked %s" % secret
     # unit handles exist and are the action-reference space
     r = cmd(client, sid := v["session_id"], 0, "CHOOSE_OPENING",
@@ -527,6 +532,138 @@ def test_gameview_hides_internals(client):
     for p in v["players"]:
         for u in p.get("units", []):
             assert "handle" in u and u.get("entity_id") is None
+    client.delete("/api/game/sessions/%s" % sid)
+
+
+# ----------------------------------------------------- step3 GameView v3
+def _find_equip_round(client, v, sid, limit=8):
+    """Walk rounds until an equipment offer shows up; returns (view, offer)."""
+    guard = 0
+    while v["phase"] in ("deployment", "reinforcement", "round_result") \
+            and guard < 60:
+        guard += 1
+        if v["phase"] == "round_result":
+            v = cmd(client, sid, v["version"], "ACK_ROUND_RESULT").json()
+            continue
+        if v["phase"] == "reinforcement":
+            eq = [o for o in v["reinforcement_offers"]
+                  if o.get("battle_fidelity") == "approximate"]
+            if eq:
+                return v, eq[0]
+            sup = [o for o in v["reinforcement_offers"] if o["supported"]]
+            v = cmd(client, sid, v["version"], "CHOOSE_REINFORCEMENT",
+                    {"index": sup[-1]["index"] if sup else -1}).json()
+            continue
+        v = cmd(client, sid, v["version"], "FINISH_DEPLOYMENT").json()
+    return v, None
+
+
+def test_equipment_flow_through_api(client):
+    """step3 §6.5: equipment offer -> charge + inventory + legal targets in
+    GameView; use_equipment binds; a rejected binding keeps the stock."""
+    v = open_session(client)
+    sid = v["session_id"]
+    v, offer = _find_equip_round(client, v, sid)
+    if offer is None:
+        client.delete("/api/game/sessions/%s" % sid)
+        pytest.skip("no equipment offer inside the sample prefix")
+    assert offer["supported"] is True
+    v = cmd(client, sid, v["version"], "CHOOSE_REINFORCEMENT",
+            {"index": offer["index"]}).json()
+    assert v.get("rejected_receipt") is None, v.get("rejected_receipt")
+    assert v["phase"] == "deployment"
+    human = next(p for p in v["players"] if p["role"] == "human")
+    stocked = [e for e in human["equipment_inventory"]
+               if e["equipment_id"] == offer["card_id"]]
+    assert stocked, human["equipment_inventory"]
+    inv = v["legal_actions"]["equipment"]["inventory"]
+    entry = next(e for e in inv if e["equipment_id"] == offer["card_id"])
+    assert entry["count"] == 1
+    assert entry["battle_fidelity"] == "approximate"
+    # illegal target (not in legal_targets) -> rejected, stock unchanged
+    target = entry["legal_targets"][0]
+    illegal = next((u["handle"] for u in human["units"]
+                    if u["handle"] not in entry["legal_targets"]), None)
+    if illegal is not None:
+        r = cmd(client, sid, v["version"], "APPLY_ACTION", {
+            "action": {"kind": "use_equipment",
+                       "args": {"equipment_id": offer["card_id"],
+                                "unit_ref": {"handle": illegal}}}})
+        v2 = r.json()
+        rr = v2["rejected_receipt"]
+        assert rr and rr["reason_code"] in ("EQUIPMENT_RESTRICTION_MISMATCH",
+                                            "EQUIPMENT_TARGET_NOT_ALLOWED")
+        h2 = next(p for p in v2["players"] if p["role"] == "human")
+        assert any(e["equipment_id"] == offer["card_id"]
+                   for e in h2["equipment_inventory"]), "stock must persist"
+    # legal binding
+    r = cmd(client, sid, v["version"], "APPLY_ACTION", {
+        "action": {"kind": "use_equipment",
+                   "args": {"equipment_id": offer["card_id"],
+                            "unit_ref": {"handle": target}}}})
+    v3 = r.json()
+    assert not v3.get("rejected_receipt"), v3.get("rejected_receipt")
+    h3 = next(p for p in v3["players"] if p["role"] == "human")
+    bound = next(u for u in h3["units"] if u["handle"] == target)
+    assert bound["equipment_id"] == offer["card_id"]
+    assert bound["equipment_name"]
+    assert bound["equipment_fidelity"] == "approximate"
+    assert not any(e["equipment_id"] == offer["card_id"]
+                   for e in h3["equipment_inventory"])
+    client.delete("/api/game/sessions/%s" % sid)
+
+
+def test_tech_view_lists_field_mechs_with_quotes(client):
+    """step3 §4.3: the tech tab follows field mechs; the unlock quote
+    breakdown comes from the server (frontend never recomputes)."""
+    v = open_session(client)
+    sid = v["session_id"]
+    la = v["legal_actions"]
+    human = next(p for p in v["players"] if p["role"] == "human")
+    field_mecks = {u["mech_id"] for u in human["units"]}
+    assert {t["mech_id"] for t in la["tech"]} == field_mecks
+    for t in la["tech"]:
+        if t["owned"]:
+            assert t["price"] is None
+            continue
+        q = t["quote"]
+        assert q["final_price"] == t["price"]
+        assert q["base_price"] >= 0
+        for m in q["modifiers"]:
+            assert set(m) == {"source_id", "name", "amount"}
+    for u in la["unlock"]:
+        assert u["quote"]["final_price"] == u["price"]
+        assert u["affordable"] == (human["supply"] >= u["price"])
+    # tower skills carry the frozen costs
+    costs = {s["skill_id"]: s["cost"] for s in la["tower_skills"]}
+    assert costs == {5: 100, 6: 50}
+    # fidelity section mirrors the manifest prefixes
+    fid = v["fidelity"]
+    assert fid["runtime_playable_through_round"] == \
+        v["replay"]["playable_through_round"]
+    client.delete("/api/game/sessions/%s" % sid)
+
+
+def test_typed_skill_release_and_fleet_melee_blockers(client):
+    """step3 §5: typed release_commander_skill submissions; an unmapped id
+    gets a precise blocker and never a battle event."""
+    v = open_session(client)
+    sid = v["session_id"]
+    # unmapped EMP -> precise rejection, state unchanged
+    digest = v["state_digest"]
+    r = cmd(client, sid, v["version"], "APPLY_ACTION", {
+        "action": {"kind": "release_commander_skill",
+                   "args": {"skill_id": 200001,
+                            "positions": [{"x": 10, "y": 10}]}}})
+    v = r.json()
+    rr = v["rejected_receipt"]
+    assert rr and rr["reason_code"] == "UNSUPPORTED_ACTION"
+    assert "skill_id=200001" in rr["detail"]
+    assert v["state_digest"] == digest
+    # no slots -> nothing releasable in this view, or slots carry meta
+    for s in v["legal_actions"].get("skill_releases", []):
+        assert "slot_index" in s and "target_kind" in s \
+            and "supported" in s and "released_this_round" in s
     client.delete("/api/game/sessions/%s" % sid)
 
 

@@ -132,6 +132,21 @@ def battle_from_state(state: EnvironmentState, gd, battle_seed: int = 0,
     return b, entity_map, card_map
 
 
+def _equipment_warnings(state: EnvironmentState) -> tuple:
+    """step3 任务书 §7.2: pysim ignores equipment combat modifiers. Every
+    equipped equipment id (either side) produces one visible warning — the
+    effect is never silently dropped."""
+    seen = set()
+    for p in state.players:
+        for u in p.units:
+            eid = int(u.equipment_id or 0)
+            if eid:
+                seen.add(eid)
+    return tuple(
+        "equipment:%d battle effect not simulated (battle_approximate)" % eid
+        for eid in sorted(seen))
+
+
 def run_battle(state: EnvironmentState, gd, battle_seed: int = 0,
                opts=None, with_trace: bool = False):
     """Simulate one fight and produce the public outcome.
@@ -170,7 +185,8 @@ def run_battle(state: EnvironmentState, gd, battle_seed: int = 0,
         battle_seed=battle_seed, winner=int(winner),
         score_by_team=(int(s0), int(s1)), damage_to_player=dmg,
         cards=tuple(cards), end_time=float(b.end_tick) * 0.01,
-        engine_version=ENGINE_VERSION)
+        engine_version=ENGINE_VERSION,
+        fidelity_warnings=_equipment_warnings(state))
     if not with_trace:
         return outcome
     res = b.result(winner)

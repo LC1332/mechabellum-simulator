@@ -24,20 +24,65 @@
 from dataclasses import dataclass, field
 
 # raw types carried through as `passthrough` entries (no modeled deploy
-# effect in v0; still participants in undo folding unless noted)
+# effect in v0; still participants in undo folding unless noted).
+# UseEquipment and MAPPED ReleaseCommanderSkill releases are emitted as
+# typed entries instead (step3 任务书 §5.2/§6.3); only the unmapped residue
+# stays passthrough here.
 PASSTHROUGH_TYPES = {
     "ActiveEnergyTowerSkill",     # undoable (Q1)
     "ReleaseContraption",         # undoable (Q1)
-    "UseEquipment",               # undoable (Q1)
+    "UseEquipment",               # undoable (Q1) -> typed `equip` entry
     "StrengthenTower",            # undoable (Q1)
     "ActiveBlueprint",            # undoable (Q7/Q8)
-    "ReleaseCommanderSkill",      # non-skill releases (undoable, Q1)
+    "ReleaseCommanderSkill",      # unmapped releases (undoable, Q1)
     "GiveUp",                     # terminal marker, not undoable
     "ChooseAdvanceTeam",          # round-0 marker, not undoable
 }
 
 SELL_SKILL_IDS = {0, 900001}
 UNIT_SKILL_KEEP = {1100001, 1000001}   # 强化训练/再部署: unit-targeting, not sells
+
+
+def _mapped_release_ids():
+    """Commander skill ids with a trusted transition/battle effect."""
+    from ..skills import COMMANDER_SKILLS, TRANSITION_SKILLS
+    return set(COMMANDER_SKILLS) | set(TRANSITION_SKILLS)
+
+
+def _release_skill_id(raw: dict, skills_raw):
+    """ReleaseCommanderSkill record -> resolved skill id or None.
+
+    Explicit non-zero ID wins; otherwise SkillIndex resolves through the
+    round's commanderSkills snapshot entries (index -> id)."""
+    rid = _int(raw.get("ID"), 0)
+    if rid:
+        return rid
+    sidx = raw.get("SkillIndex")
+    if sidx is None:
+        return None
+    for entry in skills_raw or ():
+        if entry and str(entry.get("index")) == str(sidx):
+            try:
+                sid = int(entry.get("id"))
+                return sid if sid else None
+            except (TypeError, ValueError):
+                return None
+    return None
+
+
+def _positions_of(raw: dict):
+    """Positions field of a release record -> [(x, y), ...] (floats)."""
+    v = raw.get("Positions")
+    if isinstance(v, dict):
+        v = [v]
+    out = []
+    for p in (v or []):
+        try:
+            out.append((float(p.get("x", 0.0) or 0.0),
+                        float(p.get("y", 0.0) or 0.0)))
+        except (AttributeError, TypeError, ValueError):
+            continue
+    return out
 
 # Opening-team delayed gift units (corpus-frozen 2026-08-26, zero exceptions
 # in 1106 games): officer present from round 1 -> one free unit arrives at a
@@ -195,7 +240,9 @@ class Normalizer:
                 push("upgrade", k, [ei])
             elif t == "UnlockUnit":
                 mech = _int(a.get("UID"))
-                cost = self.eco.unlock_price(mech) if self.eco else None
+                cost = self.eco.unlock_price(
+                    mech, tuple(int(o) for o in rec.get("officers") or ())
+                ) if self.eco else None
                 ei = emit({"t": "unlock", "uid": mech, "cost": cost,
                            "raw": [k]})
                 push("unlock", k, [ei])
@@ -212,6 +259,19 @@ class Normalizer:
                     gi = None if gi is None else _int(gi)
                     ei = emit({"t": "sell", "unit": gi, "refund": None,
                                "skill_index": sidx, "raw": [k]})
+                    push("release", k, [ei])
+                elif (_release_skill_id(a, skills_raw)
+                        in _mapped_release_ids()):
+                    sid = _release_skill_id(a, skills_raw)
+                    uidx = a.get("UnitIndex")
+                    cidx = a.get("ConstructionIndex")
+                    ei = emit({"t": "release", "skill": int(sid),
+                               "skill_index": sidx,
+                               "positions": _positions_of(a),
+                               "unit": (None if uidx is None else _int(uidx)),
+                               "construction": (None if cidx is None
+                                                else _int(cidx)),
+                               "raw": [k]})
                     push("release", k, [ei])
                 else:
                     ei = emit(self._passthrough(a, k))
@@ -255,6 +315,14 @@ class Normalizer:
                     folded.append({"raw_index": op.raw_index, "undone_by": k,
                                    "kind": op.kind})
                 n_undo += 1
+            elif t == "UseEquipment":
+                # typed equipment binding (step3 任务书 §6.3): one undoable op
+                eid = _int(a.get("EquipmentID"))
+                uidx = a.get("UnitIndex")
+                ei = emit({"t": "equip", "id": eid,
+                           "unit": (None if uidx is None else _int(uidx)),
+                           "raw": [k]})
+                push("equip", k, [ei])
             elif t == "FinishDeploy":
                 emit({"t": "finish", "raw": [k]})
             elif t in PASSTHROUGH_TYPES:
@@ -270,6 +338,9 @@ class Normalizer:
         live = dict(mech_of)         # snapshot live -> mech (spawns added)
         live_sell = dict(sell_supply_of)
         unresolved = []
+        # step3 任务书 §2.1: price estimates consume the SAME quote entry as
+        # execution (expert discounts included, officers from the snapshot)
+        round_officers = tuple(int(o) for o in rec.get("officers") or ())
         # tech staircase seed: ACTIVE techs from the snapshot techMap (the
         # game prices from the mech's active-tech count incl. defaults)
         tech_owned = {int(m): len(lst)
@@ -290,7 +361,8 @@ class Normalizer:
                     live_sell[g["game_index"]] = price or 0
             elif t == "unlock":
                 if e.get("cost") is None and self.eco:
-                    e["cost"] = self.eco.unlock_price(e["uid"])
+                    e["cost"] = self.eco.unlock_price(e["uid"],
+                                                      round_officers)
             elif t == "upgrade":
                 if self.eco:
                     mech = e.get("uid") or live.get(e.get("unit"))
@@ -339,10 +411,19 @@ class Normalizer:
                 e["refund"] = live_sell.get(gi) or 0
                 del live[gi]
                 del live_sell[gi]
+            elif t == "equip":
+                gi = e.get("unit")
+                if gi is None or gi < 0 or gi not in live:
+                    unresolved.append({"raw": e["raw"][0], "t": t,
+                                       "unit": gi, "reason": "unknown_index"})
+                    continue
+                if e.get("uid") is not None and live[gi] != e.get("uid"):
+                    e["uid"] = live[gi]      # the game index is the truth
             elif t == "tech":
                 if self.eco:
                     e["cost"] = self.eco.tech_price(
-                        e["uid"], e["tech"], tech_owned.get(e["uid"], 0))
+                        e["uid"], e["tech"], tech_owned.get(e["uid"], 0),
+                        round_officers)
                     if e["cost"] is not None:
                         tech_owned[e["uid"]] = tech_owned.get(e["uid"], 0) + 1
 

@@ -16,7 +16,7 @@ import os
 from dataclasses import dataclass, field
 from enum import Enum
 
-SCHEMA_VERSION = "transition-v0.3"
+SCHEMA_VERSION = "transition-v0.4"
 RULESET_VERSION = "normal_1v1_replay_v0"
 ENGINE_VERSION = "pysim-step29"
 
@@ -54,10 +54,17 @@ class PlayerState:
     tech_map: tuple[tuple[int, tuple[int, ...]], ...]   # mech -> active tech ids
     officers: tuple[int, ...] = ()           # pass-through (battle side consumes)
     blueprints: tuple[int, ...] = ()         # pass-through research state
+    # round-scoped blueprint activations (reset by advance_round): the +1
+    # buy limit (2 批量征召) and the +1 buy level (3 精英征召) must survive
+    # the interactive per-action deploy calls within one round
+    blueprints_round: tuple = ()
     commander_skills_raw: tuple[tuple[str, ...], ...] = ()   # (index,id,isActive,cd) as str
     tower_strengthen: tuple[int, int] = (0, 0)
     constructions_raw: tuple[tuple[str, ...], ...] = ()      # (index,id,x,y) as str
     bought_this_round: int = 0       # buy counter (BuyCount shop field)
+    # step3 任务书 §6.1: equipment id MULTISET (same id may appear many
+    # times, never deduped); old states/saves adapt to ()
+    equipment_inventory: tuple = ()
     # audit-game v1 round-scoped fields (reset by advance_round):
     tower_mods_raw: tuple = ()       # ActiveEnergyTowerSkill ids this round (5/6)
     devices_raw: tuple = ()          # ReleaseContraption (cid,x,y) this round
@@ -92,6 +99,8 @@ class ActionKind(str, Enum):
     BUY_TECH = "buy_tech"
     MOVE_UNIT = "move_unit"
     SELL_UNIT = "sell_unit"                 # skill 900001 recycle
+    RELEASE_COMMANDER_SKILL = "release_commander_skill"   # step3 任务书 §5.2
+    USE_EQUIPMENT = "use_equipment"        # step3 任务书 §6.1
     END_DEPLOY = "end_deploy"
     RAW_UNSUPPORTED = "raw_unsupported"     # faithful marker for v0-unsupported raw types
 
@@ -161,13 +170,36 @@ class SellArgs:
 
 
 @dataclass(frozen=True)
+class ReleaseCommanderSkillArgs:
+    """Typed battlefield-skill release (step3 任务书 §5.2).
+
+    Resolution rule: an explicit skill_id wins; otherwise skill_index looks
+    the id up in the current commander-skill inventory. Target shape follows
+    the mapped skill: positions for battlefield skills, unit_ref for
+    强化训练 1100001, construction_index for building recycles (unsupported
+    in v0 — precise blocker, never a wrong effect)."""
+    skill_index: int | None = None
+    skill_id: int | None = None
+    positions: tuple = ()              # ((x, y), ...)
+    unit_ref: EntityRef | None = None
+    construction_index: int | None = None
+
+
+@dataclass(frozen=True)
+class UseEquipmentArgs:
+    equipment_id: int
+    unit_ref: EntityRef
+
+
+@dataclass(frozen=True)
 class UnsupportedArgs:
     raw_type: str
     raw: tuple[tuple[str, object], ...]   # stable serialization of the raw record
 
 
 ActionArgs = (BuyArgs | MoveArgs | UpgradeArgs | UnlockArgs | TechArgs
-              | ChooseReinforceArgs | SellArgs | GiftArgs | UnsupportedArgs)
+              | ChooseReinforceArgs | SellArgs | GiftArgs
+              | ReleaseCommanderSkillArgs | UseEquipmentArgs | UnsupportedArgs)
 
 
 @dataclass(frozen=True)
@@ -238,6 +270,10 @@ class BattleOutcome:
     cards: tuple[CardBattleResult, ...]
     end_time: float
     engine_version: str
+    # step3 任务书 §7.2: pysim ignores equipment combat modifiers — say so,
+    # never silently drop the effect (e.g. "equipment:13030007 battle effect
+    # not simulated (battle_approximate)")
+    fidelity_warnings: tuple = ()
 
     @classmethod
     def from_fight_report(cls, reports, seed=-1,

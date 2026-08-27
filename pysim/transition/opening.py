@@ -137,15 +137,41 @@ def _units_of(pkg, start_entity_id, eco):
     return units, eid
 
 
-def player_state_from_package(pkg, start_entity_id=1, eco=None) -> PlayerState:
+def player_state_from_package(pkg, start_entity_id=1, eco=None,
+                              gd=None) -> PlayerState:
     units, next_id = _units_of(pkg, start_entity_id, eco)
     unlocked = {int(m) for m in pkg.get("unlocked", [])}
     unlocked |= {u.mech_id for u in units}
     cons = tuple(tuple(str(x) for x in c)
                  for c in pkg.get("constructions", []))
     hp = int(pkg.get("hp", 4500))
+    officers = tuple(int(o) for o in pkg.get("officers", []))
     cs = tuple(tuple(str(x) for x in s)
                for s in pkg.get("commander_skills", []))
+    equipment = tuple(sorted(int(e) for e in pkg.get("equipment_inventory",
+                                                     []) or []))
+    # shared round event at round 1 (step3 任务书 §5.3): officer cmdSkills
+    # (e.g. 训练专家 1100001) and equipment grants (增幅专家 3x 13030009).
+    # Top-up semantics keep snapshot-derived slots/equipment from doubling.
+    if gd is not None:
+        from .equipment import (round_officer_skills,
+                                round_officer_equipment, top_up_skill_slots)
+        grants = round_officer_skills(gd, officers, 1)
+        if grants:
+            cs = tuple(top_up_skill_slots(cs, grants))
+        eq = round_officer_equipment(officers, 1)
+        if eq:
+            # top up to the grant multiplicity (never below the evidence
+            # multiset; 增幅专家's 3x 13030009 must keep its copies)
+            out = list(equipment)
+            grant_counts = {}
+            for e in eq:
+                grant_counts[e] = grant_counts.get(e, 0) + 1
+            for e, n in grant_counts.items():
+                have = sum(1 for x in out if x == e)
+                if n > have:
+                    out.extend([e] * (n - have))
+            equipment = tuple(sorted(out))
     return PlayerState(
         hp=hp, max_hp=int(pkg.get("max_hp", max(hp, 4500))),
         supply=int(pkg.get("supply", 0)), pre_round_fight_result=None,
@@ -153,23 +179,30 @@ def player_state_from_package(pkg, start_entity_id=1, eco=None) -> PlayerState:
         tech_map=tuple(sorted(
             (int(m), tuple(int(t) for t in lst))
             for m, lst in (pkg.get("tech_map") or {}).items())),
-        officers=tuple(int(o) for o in pkg.get("officers", [])),
+        officers=officers,
         blueprints=tuple(int(b) for b in pkg.get("blueprints", [])),
         commander_skills_raw=cs,
+        equipment_inventory=equipment,
         tower_strengthen=(0, 0), constructions_raw=cons), next_id
 
 
-def build_initial_state(pkg0, pkg1, provenance=(), eco=None) -> EnvironmentState:
+def build_initial_state(pkg0, pkg1, provenance=(), eco=None,
+                        gd=None) -> EnvironmentState:
     """Round-1 DEPLOYMENT state from two opening packages (rule execution,
     NOT round-1 snapshot backfill). Round-1 income is added separately by
     the session (income policy), matching the replay's snapshot timing.
 
     Both packages come from the catalog in player-0 world orientation
     (formation y < 0): pkg0 deploys as stored, pkg1 mirrors Y only
-    (任务书 G1 — x/mech/level/is_rotate identical, no double rotation)."""
-    p0, next_id = player_state_from_package(pkg0, start_entity_id=1, eco=eco)
+    (任务书 G1 — x/mech/level/is_rotate identical, no double rotation).
+
+    gd (given by the runtime) applies the round-1 officer grants (skills +
+    equipment) with the same code path as advance_round."""
+    p0, next_id = player_state_from_package(pkg0, start_entity_id=1, eco=eco,
+                                            gd=gd)
     p1_pkg = mirror_package_y(pkg1)
-    p1, _ = player_state_from_package(p1_pkg, start_entity_id=next_id, eco=eco)
+    p1, _ = player_state_from_package(p1_pkg, start_entity_id=next_id,
+                                      eco=eco, gd=gd)
     top = max([u.entity_id for u in p1.units], default=next_id) + 1
     st = EnvironmentState(
         schema_version=SCHEMA_VERSION, ruleset_version=RULESET_VERSION,

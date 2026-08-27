@@ -98,6 +98,16 @@ class GameLibrary:
         sptr = int(o.get("strict_playable_through_round", ptr) or 0)
         out["playable_through_round"] = ptr
         out["strict_playable_through_round"] = sptr
+        # step3 任务书 §7.3 two-axis prefixes (older manifests fall back to
+        # the v2 fields; equipment-free options coincide with them)
+        out["runtime_playable_through_round"] = int(
+            o.get("runtime_playable_through_round", ptr) or 0)
+        out["strict_effect_through_round"] = int(
+            o.get("strict_effect_through_round", sptr) or 0)
+        af = o.get("approximate_from_round")
+        out["approximate_from_round"] = int(af) if af is not None else None
+        out["approximate_mechanisms"] = list(o.get("approximate_mechanisms")
+                                             or [])
         blockers = list(o.get("blockers") or [])
         out["blockers"] = blockers
         # strict blockers only shorten the strict prefix; the runtime stop

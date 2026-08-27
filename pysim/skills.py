@@ -57,35 +57,58 @@ CONTRAPTIONS = {
 }
 
 COMMANDER_SKILLS = {
+    # step3 任务书 §5.1 frozen mapping (2026-08-27 user ruling; fixes the
+    # step15 misattribution): 200001 is EMP (NOT 燃烧弹) and 1000001 is
+    # 再部署 (NOT a summon) — both stay unmapped until their real effects
+    # are implemented, so a wrong approximation cannot leak into battles.
+    # 燃烧弹 is 100002; the summons are 1200001/1200003.
     # 导弹打击 family. 300001 is the base strike (620 uses); variants
     # 300003..300007 (leveled/multi-missile?) stay unmapped until calibration
     # so a wrong guess cannot pollute the A/B.
     300001: {"kind": "strike", "name": "导弹打击",
              "damage": 3000.0, "splash": 20.0,
              "conf": "wiki(1 missile 3000)+fit(cast 8-34m from enemies)"},
-    # step15: 燃烧弹 - burning ground patch. DPS from a Reddit test thread
-    # ("~350/s, 88 per 0.25s tick"); radius/duration are cal (patch assumed
-    # to burn the whole fight, re-ignited per cast).
-    200001: {"kind": "burn", "name": "燃烧弹",
+    # 燃烧弹 (burning ground patch; previously mis-filed under 200001).
+    # DPS from a Reddit test thread ("~350/s, 88 per 0.25s tick");
+    # radius/duration are cal (patch assumed to burn the whole fight).
+    100002: {"kind": "burn", "name": "燃烧弹",
              "dps": 352.0, "radius": 15.0,
-             "conf": "reddit(88dmg/0.25s)+cal(radius/duration)"},
+             "conf": "reddit(88dmg/0.25s)+cal(radius/duration)+"
+                     "id_fix(step3: 100002 not 200001)"},
     800001: {"kind": "barrier", "name": "空投护盾",
              "hp": 50000.0, "radius": BARRIER_RADIUS_DEFAULT,
              "conf": "wiki(50000)+fit(own-side casts 130-210m, r2+)"},
-    # CSD_Unit summons. 1000001 always carries unitIndex + backfield
-    # positions, 100002 casts land near enemies (33-73m) - wasp swarm vs
-    # crawler eruption reading; both flagged cal (flip on calibration games).
-    1000001: {"kind": "summon", "name": "呼叫机群",
-              "mech": 6, "count": 12, "level": 1,
-              "conf": "cal(mech/count provisional; wasp card = 12x HP311)"},
-    100002: {"kind": "summon", "name": "地底威胁",
+    # CSD summons (step3 id fix: previously mis-filed as 1000001/100002).
+    # 1200001 地底威胁 = crawler eruption (24x), 1200003 呼叫机群 = wasp
+    # swarm (12x); mech/count stay cal until calibration games.
+    1200001: {"kind": "summon", "name": "地底威胁",
               "mech": 10, "count": 24, "level": 1,
-              "conf": "cal(mech/count provisional; crawler card = 24x)"},
-    # deliberately NOT mapped (user: late tech / low value for v1):
-    #   400002 黏油弹 (oil, r7+), 20000x 燃烧弹, 12000xx 移动信标,
-    #   15000xx WayPoint, 900001 (40% of casts, supply family, unknown -
-    #   no construction-durability correlation, needs calibration)
+              "conf": "cal(mech/count provisional; crawler card = 24x)"
+                      "+id_fix(step3)"},
+    1200003: {"kind": "summon", "name": "呼叫机群",
+              "mech": 6, "count": 12, "level": 1,
+              "conf": "cal(mech/count provisional; wasp card = 12x HP311)"
+                      "+id_fix(step3)"},
+    # deliberately NOT mapped (real effect unimplemented — precise blockers,
+    # never a wrong approximation):
+    #   200001 EMP 电磁脉冲 (was wrongly burning ground in step15)
+    #   1000001 再部署 redeploy (was wrongly a summon in step15)
+    #   400002 黏油弹 (oil, r7+), 1200002/1200004+ 移动信标 variants,
+    #   15000xx WayPoint, 900001 supply family, 300004 核弹 (10012)
 }
+
+# transition-layer commander skills (no battle event): 1100001 强化训练
+# jumps the target unit's exp to its next upgrade threshold (deploy.py).
+TRANSITION_SKILLS = {1100001: {"name": "强化训练",
+                               "target_kind": "unit"}}
+
+
+def commander_skill_target_kind(sid: int) -> str:
+    """UI-facing target shape: position (map落点) / unit / unknown."""
+    d = COMMANDER_SKILLS.get(int(sid))
+    if d:
+        return "position"
+    return TRANSITION_SKILLS.get(int(sid), {}).get("target_kind", "unknown")
 
 
 def _first_pos(entry):

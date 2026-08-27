@@ -97,12 +97,17 @@ def settle_transition(state: EnvironmentState, outcome: BattleOutcome,
 def advance_round(settled: EnvironmentState,
                   income_policy: IncomePolicy | None = None,
                   incomes: tuple[int, int] | None = None,
-                  max_round: int = 40) -> EnvironmentState:
+                  max_round: int = 40,
+                  gd=None) -> EnvironmentState:
     """Round tick: round+1, income, phase back to DEPLOYMENT.
 
     incomes, when given, overrides the policy (replay runners pass the
     injected per-round amounts so historical actions stay affordable; the
-    amounts are logged in that round's ledger by the env)."""
+    amounts are logged in that round's ledger by the env).
+
+    Shared round event (step3 任务书 §5.3, gd given): officers grant their
+    timed commander-skill slots and equipment at the new round's start — the
+    human and the historical opponent consume the SAME code path."""
     if settled.phase is Phase.TERMINAL:
         raise errors.TransitionError("TERMINAL_STATE",
                                      "cannot advance a terminal state")
@@ -118,9 +123,24 @@ def advance_round(settled: EnvironmentState,
                                            p.pre_round_fight_result))
         else:
             inc = 0
+        skills = p.commander_skills_raw
+        equipment = tuple(p.equipment_inventory or ())
+        if gd is not None:
+            from .equipment import (round_officer_skills,
+                                    round_officer_equipment, top_up_skill_slots)
+            new_round = settled.round + 1
+            grants = round_officer_skills(gd, p.officers, new_round)
+            if grants:
+                skills = tuple(top_up_skill_slots(skills, grants))
+            eq_grants = round_officer_equipment(p.officers, new_round)
+            if eq_grants:
+                equipment = tuple(sorted(tuple(equipment) + eq_grants))
         players.append(PlayerState(**{**p.__dict__,
                                       "supply": p.supply + inc,
                                       "bought_this_round": 0,
+                                      "commander_skills_raw": skills,
+                                      "equipment_inventory": equipment,
+                                      "blueprints_round": (),
                                       "tower_mods_raw": (),
                                       "devices_raw": (),
                                       "skill_events_raw": ()}))

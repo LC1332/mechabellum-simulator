@@ -1215,6 +1215,10 @@ class Battle:
                 self.trace.append("E|%.2f|skill|%d|strike|%.0f,%.0f" % (t, team, x, y))
             for team, mech, sx, sy in getattr(self, "_summon_marks", []):
                 self.trace.append("E|0.00|skill|%d|summon|%.0f,%.0f" % (team, sx, sy))
+            # step3: pre-fight burn patches (燃烧弹 100002) get their trace
+            # line like every other skill channel (trace-only, no sim change)
+            for team, x, y, dps, radius in self._burns:
+                self.trace.append("E|0.00|skill|%d|burn|%.0f,%.0f" % (team, x, y))
 
         self._finalized = True
         return self

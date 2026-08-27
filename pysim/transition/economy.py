@@ -24,6 +24,56 @@ _REINFORCE_JSON = os.path.join(_ROOT, "information", "增援卡牌-回放全量�
 _LEVEL_PRICES = {1: 0, 2: 50, 3: 100, 4: 200}
 
 
+# ---------------------------------------------------------------- quotes
+# step3 任务书 §2.1: the single price entry. Execution, legality, GameView,
+# the normalizer and the replay income audit all consume the same PriceQuote;
+# the old int-returning methods remain thin compatibility wrappers.
+@dataclass(frozen=True)
+class PriceModifier:
+    source_id: int                 # officer id (or item id) causing it
+    name: str
+    amount: int                    # negative = discount
+
+
+@dataclass(frozen=True)
+class PriceQuote:
+    base_price: int
+    modifiers: tuple = ()          # tuple[PriceModifier, ...]
+    final_price: int = 0
+
+    def __post_init__(self):
+        if not self.modifiers:      # keep explicit zero-modifier quotes honest
+            object.__setattr__(self, "modifiers", ())
+
+    @property
+    def breakdown(self) -> str:
+        parts = ["base %d" % self.base_price]
+        for m in self.modifiers:
+            parts.append("%s%d %s" % ("+" if m.amount >= 0 else "",
+                                      m.amount, m.name))
+        parts.append("= %d" % self.final_price)
+        return " ".join(parts)
+
+
+# step3 任务书 §2.2 expert economy rules (frozen 2026-08-27). Giant/air
+# scope reads gamedata officer unitIds explicitly — never price/slot
+# heuristics. Multiple modifiers sum; the final price floors at 0.
+UNLOCK_DISCOUNT_OFFICERS = {
+    20005: -200,    # 巨型专家: listed giant/titan units
+    20021: -200,    # 空军专家: listed air units
+}
+TECH_DISCOUNT_OFFICERS = {
+    20036: (21, -50),     # 剑齿虎专家: sabertooth techs (mech 21)
+    20038: (20, -50),     # 火獾专家: fire badger techs (mech 20)
+    20003: (None, -50),   # 高效科技研发: all techs, active on acquisition
+}
+# round-1 one-time supply bonuses (step3 任务书 §2.2)
+ROUND1_SUPPLY_OFFICERS = {
+    20032: 100,      # 精英专家
+    10014: 50,       # 训练专家
+}
+
+
 def load_price_mods(path=_REINFORCE_JSON):
     """officer_id -> {'mech', 'buy', 'upgrade'} from 单位强化卡 descriptions.
 
@@ -105,6 +155,87 @@ class Economy:
         self.items = items if items is not None else load_reinforce_items()
         self.price_mods = load_price_mods()
 
+    # ------------------------------------------------------------ quotes
+    def unlock_quote(self, mech_id: int, officers=()) -> PriceQuote | None:
+        """Unlock price with expert discounts (step3 任务书 §2.2).
+
+        巨型专家 20005 / 空军专家 20021 subtract 200 from the unlock fee of
+        their gamedata-listed units (officer `unitIds`, explicit scope)."""
+        c = self.gd.cards.get(int(mech_id))
+        if c is None:
+            return None
+        base = int(c.unlock_price)
+        mods = []
+        offs = set(int(o) for o in officers or ())
+        for oid, amount in UNLOCK_DISCOUNT_OFFICERS.items():
+            if oid not in offs:
+                continue
+            o = self.gd.officers.get(oid)
+            unit_ids = set(o.unit_ids) if o else set()
+            if unit_ids and int(mech_id) in unit_ids:
+                mods.append(PriceModifier(
+                    oid, o.name if o else str(oid), amount))
+        final = max(0, base + sum(m.amount for m in mods))
+        return PriceQuote(base_price=base, modifiers=tuple(mods),
+                          final_price=final)
+
+    def tech_quote(self, mech_id: int, tech_id: int, owned_count: int,
+                   officers=()) -> PriceQuote | None:
+        """Tech price rule `prices_v1_tech` + expert discounts:
+        supply + 200 * owned_active, then 剑齿虎/火獾/高效研发 discounts.
+
+        `owned` counts the mech's ACTIVE techs at purchase time (the snapshot
+        techMap incl. card defaults — NOT this round's own buys)."""
+        t = self.gd.techs.get(int(tech_id))
+        if t is None:
+            return None
+        base = int(t.supply) + 200 * int(owned_count)
+        mods = []
+        offs = set(int(o) for o in officers or ())
+        for oid, (scope, amount) in TECH_DISCOUNT_OFFICERS.items():
+            if oid not in offs:
+                continue
+            if scope is not None and int(mech_id) != int(scope):
+                continue
+            o = self.gd.officers.get(oid)
+            mods.append(PriceModifier(
+                oid, o.name if o else str(oid), amount))
+        final = max(0, base + sum(m.amount for m in mods))
+        return PriceQuote(base_price=base, modifiers=tuple(mods),
+                          final_price=final)
+
+    def buy_quote(self, mech_id: int, officers=()) -> PriceQuote | None:
+        """Base buy price + 单位强化卡 recruit-price modifiers (the same data
+        source as buy_price_mod). Deploy-level bonuses (精英征召 level charge,
+        高效制造) stay deploy-side and are not part of this quote."""
+        base = self.buy_price(mech_id)
+        if base is None:
+            return None
+        mods = []
+        for oid, mod in self.price_mods.items():
+            if mod["mech"] == int(mech_id) and mod["buy"] and \
+                    int(oid) in set(int(o) for o in officers or ()):
+                mods.append(PriceModifier(int(oid), str(mod.get("name", oid)),
+                                          int(mod["buy"])))
+        final = max(0, base + sum(m.amount for m in mods))
+        return PriceQuote(base_price=base, modifiers=tuple(mods),
+                          final_price=final)
+
+    def upgrade_quote(self, mech_id: int, officers=()) -> PriceQuote | None:
+        base = self.upgrade_price(mech_id)
+        if base is None:
+            return None
+        mods = []
+        for oid, mod in self.price_mods.items():
+            if mod["mech"] == int(mech_id) and mod["upgrade"] and \
+                    int(oid) in set(int(o) for o in officers or ()):
+                mods.append(PriceModifier(int(oid), str(mod.get("name", oid)),
+                                          int(mod["upgrade"])))
+        final = max(0, base + sum(m.amount for m in mods))
+        return PriceQuote(base_price=base, modifiers=tuple(mods),
+                          final_price=final)
+
+    # ------------------------------------------------- compat int wrappers
     def buy_price(self, mech_id: int) -> int | None:
         c = self.gd.cards.get(int(mech_id))
         return int(c.base_money) if c else None
@@ -124,20 +255,14 @@ class Economy:
         return sum(mod["upgrade"] for oid, mod in self.price_mods.items()
                    if mod["mech"] == int(mech_id) and oid in offs)
 
-    def unlock_price(self, mech_id: int) -> int | None:
-        c = self.gd.cards.get(int(mech_id))
-        return int(c.unlock_price) if c else None
+    def unlock_price(self, mech_id: int, officers=()) -> int | None:
+        q = self.unlock_quote(mech_id, officers)
+        return None if q is None else q.final_price
 
-    def tech_price(self, mech_id: int, tech_id: int, owned_count: int) -> int | None:
-        """Tech price rule `prices_v1_tech` (unbiased corpus refit
-        2026-08-26 on price-known windows): supply + 200 * owned_active,
-        where owned counts the mech's ACTIVE techs at purchase time (the
-        snapshot techMap incl. card defaults — NOT this round's own buys,
-        see the replay2json pre-round techMap fix)."""
-        t = self.gd.techs.get(int(tech_id))
-        if t is None:
-            return None
-        return int(t.supply) + 200 * int(owned_count)
+    def tech_price(self, mech_id: int, tech_id: int, owned_count: int,
+                   officers=()) -> int | None:
+        q = self.tech_quote(mech_id, tech_id, owned_count, officers)
+        return None if q is None else q.final_price
 
     def item_cost(self, item_id: int) -> int | None:
         """0 for the skip choice (ID=0); None for unknown items."""
@@ -267,6 +392,11 @@ class Income200r(IncomePolicy):
                 inc += bonus
         if 10010 in officers and int(round_no) == 1:
             inc += FAST_SUPPLY_FIRST_ROUND_BONUS
+        if int(round_no) == 1:
+            # round-1 one-time expert supply (step3 任务书 §2.2)
+            for oid, bonus in ROUND1_SUPPLY_OFFICERS.items():
+                if oid in officers:
+                    inc += bonus
         inc -= FAST_SUPPLY_DEBT * self.fast_debts.get(
             (int(player_index), int(round_no)), 0)
         return inc

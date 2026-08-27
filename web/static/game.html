@@ -158,6 +158,7 @@ table.t th{color:var(--dim);font-weight:normal;background:var(--panel2)}
         <button data-t="shop" class="on">单位</button>
         <button data-t="tech">科技</button>
         <button data-t="tower">塔·蓝图</button>
+        <button data-t="equip">装备</button>
       </div>
       <div id="lbody"></div>
     </div>
@@ -207,11 +208,13 @@ table.t th{color:var(--dim);font-weight:normal;background:var(--panel2)}
 "use strict";
 /* =============================================================== api */
 const $=id=>document.getElementById(id);
-let V=null;            // authoritative GameView (game_view_v2)
+let V=null;            // authoritative GameView (game_view_v3)
 let HUMAN=0;           // world player index the human plays
 let busy=false;        // a command is in flight
 let pickBuy=null;      // {mech_id,price,name} armed buy (G10)
-let pickRelease=null;  // {sid,name} armed battlefield skill release
+let pickRelease=null;  // {sid,name} armed battlefield skill release (position target)
+let pickSkillUnit=null;// {skill_id,name} armed unit-target skill (强化训练)
+let pickEquip=null;    // {equipment_id,name,legal_targets} armed equipment target mode
 let selUnit=null;      // selected own unit handle
 let drag=null;         // {handle,ux,uy,x,y} in WORLD coords
 let ghost=null;        // {x,y} world coords for buy ghost
@@ -220,6 +223,7 @@ let frames=[],events=[],playT=0,playing=false,timer=null,spawnDone={},lastPos={}
 let playedBattleRound=null;   // battle round already auto-played
 let ltab="shop",atab="hrec";
 let lastSupply=null;
+let lastEquipKey="";   // inventory signature for auto-arm after reinforcement
 
 async function api(path,opts){
   const r=await fetch(path,opts);
@@ -292,9 +296,9 @@ function inOwnHalfWorld(y){return HUMAN===0?y<0:y>0;}
 /* ============================================================= rendering */
 let lastPhase=null;
 function render(view){
-  if(view.schema_version!=="game_view_v2"){
+  if(view.schema_version!=="game_view_v3"){
     showOverlay(`<h3 style="color:var(--bad)">GameView 契约不兼容</h3>
-      <p>页面需要 game_view_v2，服务返回 ${view.schema_version||"??"}。请刷新页面或重建语料后重试。</p>
+      <p>页面需要 game_view_v3，服务返回 ${view.schema_version||"??"}。请刷新页面或重建语料后重试。</p>
       <button onclick="hideOverlay()">关闭</button>`);
     return;
   }
@@ -307,9 +311,11 @@ function render(view){
   if(location.hash!=="#s="+V.session_id)location.hash="#s="+V.session_id;
   renderHud();
   if(lastPhase!==V.phase){          /* G14: 离开 phase 清理本地交互态 */
-    if(lastPhase!==null){selUnit=null;drag=null;pickBuy=null;pickRelease=null;ghost=null;}
+    if(lastPhase!==null){selUnit=null;drag=null;pickBuy=null;pickRelease=null;
+      pickSkillUnit=null;ghost=null;}
     lastPhase=V.phase;
   }
+  autoArmEquipment();               /* step3 §6.5: 新装备入库存后进入目标选择态 */
 
   /* battle auto-play once per battle round (G13) */
   if(V.phase==="round_result"&&V.battle&&V.battle.round!==playedBattleRound){
@@ -384,6 +390,7 @@ function renderLeft(){
   const b=$("lbody");
   if(ltab==="shop")b.innerHTML=shopHtml();
   else if(ltab==="tech")b.innerHTML=techHtml();
+  else if(ltab==="equip")b.innerHTML=equipHtml();
   else b.innerHTML=towerHtml();
   b.querySelectorAll("[data-buy]").forEach(el=>{
     el.onclick=()=>armBuy(+el.dataset.buy);
@@ -399,11 +406,20 @@ function renderLeft(){
   b.querySelectorAll("[data-tskill]").forEach(el=>el.onclick=()=>cmd("APPLY_ACTION",
     {action:{kind:"raw_unsupported",args:{raw_type:"ActiveEnergyTowerSkill",raw:[["SkillID",+el.dataset.tskill]]}}}));
   b.querySelectorAll("[data-release]").forEach(el=>el.onclick=()=>{
-    pickRelease={sid:+el.dataset.release,name:el.dataset.name};
-    pickBuy=null;ghost=null;
-    flash(`已选中战场技能 ${pickRelease.name} — 点击战场选择落点`);renderLeft();});
+    const kind=el.dataset.tkind||"position";
+    if(kind==="unit"){
+      pickSkillUnit={sid:+el.dataset.release,name:el.dataset.name};
+      pickRelease=null;pickBuy=null;ghost=null;
+      flash(`已选中 ${pickSkillUnit.name} — 点击己方单位作为目标`);
+    }else{
+      pickRelease={sid:+el.dataset.release,name:el.dataset.name};
+      pickSkillUnit=null;pickBuy=null;ghost=null;
+      flash(`已选中战场技能 ${pickRelease.name} — 点击战场选择落点`);
+    }
+    renderLeft();});
   b.querySelectorAll("[data-bp]").forEach(el=>el.onclick=()=>{
     cmd("APPLY_ACTION",{action:{kind:"raw_unsupported",args:{raw_type:"ActiveBlueprint",raw:[["ID",+el.dataset.bp]]}}});});
+  b.querySelectorAll("[data-equip]").forEach(el=>el.onclick=()=>armEquip(+el.dataset.equip));
 }
 function armBuy(id){
   const it=(V.legal_actions.buy||[]).find(x=>x.mech_id===id);
@@ -441,22 +457,72 @@ function techHtml(){
   if(!V.legal_actions.tech)return phaseWait();
   const byMech={};
   for(const t of V.legal_actions.tech)(byMech[t.mech_id]=byMech[t.mech_id]||[]).push(t);
-  let h="";
+  let h="<div class='dim' style='margin-bottom:6px'>按当前场上兵种展示（无单位的兵种不显示）</div>";
   for(const m of Object.keys(byMech).sort((a,b)=>a-b)){
     h+=`<div class="dim" style="margin:6px 0 3px">${mechName(+m)}</div>`;
     for(const t of byMech[m]){
-      h+=`<div class="shopitem"><div class="nm">${t.name}<br><small>#${t.tech_id}${t.prerequisite_ok?"":" · 需前置"}${t.description?" · "+t.description.slice(0,26):""}</small></div>
-        <div class="pr">¥${t.price}</div>
+      const mods=(t.quote&&t.quote.modifiers||[]).map(mo=>
+        `${mo.amount>0?"+":""}${mo.amount} ${mo.name}`).join(" · ");
+      if(t.owned){
+        h+=`<div class="shopitem locked"><div class="nm">${t.name}<br><small>#${t.tech_id}${t.description?" · "+t.description.slice(0,26):""}</small></div>
+          <span class="tag ok">已激活</span></div>`;
+        continue;
+      }
+      h+=`<div class="shopitem"><div class="nm">${t.name}<br><small>#${t.tech_id}${t.prerequisite_ok?"":" · 需前置"}${t.description?" · "+t.description.slice(0,26):""}${mods?`<br>报价: 基础 ${t.quote.base_price}${mods?" · "+mods:""} = <b class="gold">${t.quote.final_price}</b>`:""}</small></div>
+        <div class="pr">¥${t.price==null?"—":t.price}</div>
         <button data-tech="${t.tech_id}" data-mech="${m}" ${t.affordable&&t.prerequisite_ok?"":"disabled"}>购买</button></div>`;
     }
   }
-  const owned=techOwned();
-  if(owned)h+="<div class='dim' style='margin:8px 0 4px'>已激活</div>"+owned;
-  return h||"<div class='dim'>无可购买科技</div>";
+  return h||"<div class='dim'>场上没有可研究科技的兵种</div>";
 }
 function techOwned(){
   const p=humanP();if(!p.tech_map)return"";
   return p.tech_map.map(([m,ts])=>`<div class="shopitem locked"><div class="nm">${mechName(m)}</div><div class="dim">${ts.join(", ")||"—"}</div></div>`).join("");
+}
+/* step3 §6.5: pending equipment stock — click an item to arm target mode */
+function equipHtml(){
+  const eq=(V.legal_actions.equipment||{}).inventory;
+  if(!eq)return phaseWait();
+  let h="<div class='dim' style='margin-bottom:6px'>待装备库存（选择增援获得；点击后选择目标单位）</div>";
+  if(!eq.length)return h+"<div class='dim'>暂无待装备物品</div>";
+  for(const e of eq){
+    h+=`<div class="shopitem ${pickEquip&&pickEquip.equipment_id===e.equipment_id?"picked":""}">
+      <div class="nm">${e.name}<br><small>#${e.equipment_id} · ×${e.count} · ${restrictionLabel(e.target_restriction)}${e.supported?"":" · 未登记"}</small></div>
+      ${e.battle_fidelity==="approximate"?"<span class='tag gold'>pysim 未计算效果</span>":""}
+      <button data-equip="${e.equipment_id}" ${e.supported?"":"disabled"}>装备</button></div>`;
+  }
+  h+="<div class='dim' style='margin-top:6px'>ESC 只退出目标选择，装备保留在库存。</div>";
+  return h;
+}
+function restrictionLabel(r){
+  return r==="giant"?"仅巨型单位":r==="ground_giant"?"仅地面巨型单位":r==="any"?"任意可装备单位":"未知限制";
+}
+function armEquip(id){
+  const inv=((V.legal_actions.equipment||{}).inventory||[]);
+  const e=inv.find(x=>x.equipment_id===id);
+  if(!e)return;
+  if(pickEquip&&pickEquip.equipment_id===id){pickEquip=null;flash("已取消装备目标选择（装备保留在库存）");}
+  else{
+    pickEquip={equipment_id:id,name:e.name,legal_targets:e.legal_targets||[]};
+    pickBuy=null;pickRelease=null;pickSkillUnit=null;
+    ltab="equip";
+    flash(`已选中 ${e.name} — 点击高亮的己方单位装备（ESC 取消）`);
+  }
+  renderLeft();drawEdit();
+}
+/* step3 §6.5: entering deployment with fresh stock auto-arms the new item */
+function autoArmEquipment(){
+  const inv=((V.legal_actions||{}).equipment||{}).inventory||[];
+  const key=inv.map(e=>e.equipment_id+":"+e.count).join(",");
+  if(key===lastEquipKey)return;
+  const grew=!lastEquipKey&&key||key.length>lastEquipKey.length;
+  lastEquipKey=key;
+  if(V.phase!=="deployment"&&V.phase!=="reinforcement")return;
+  if(key&&grew){
+    const e=inv.find(x=>x.supported&&x.legal_targets&&x.legal_targets.length);
+    if(e){pickEquip={equipment_id:e.equipment_id,name:e.name,legal_targets:e.legal_targets};
+      ltab="equip";flash("新装备 "+e.name+" 已入库 — 点击高亮的己方单位装备（ESC 取消）");}
+  }
 }
 function towerHtml(){
   if(!V.legal_actions.towers)return phaseWait();
@@ -464,18 +530,18 @@ function towerHtml(){
   for(const t of V.legal_actions.towers)
     h+=`<div class="shopitem"><div class="nm">塔 #${t.index}</div><div>Lv ${t.level}/${t.max}</div>
       <button data-tower="${t.index}" ${t.affordable&&t.level<t.max?"":"disabled"}>强化</button></div>`;
-  h+="<div class='dim' style='margin:8px 0 6px'>能量塔技能（免费，本回合生效）</div>";
+  h+="<div class='dim' style='margin:8px 0 6px'>能量塔技能（本回合生效，可叠加）</div>";
   for(const sk of V.legal_actions.tower_skills||[])
     h+=`<div class="shopitem"><div class="nm">${sk.name}<br><small>${sk.detail}</small></div>
-      <div class="dim">×${sk.active_count}</div>
-      <button data-tskill="${sk.skill_id}">释放</button></div>`;
+      <div><span class="pr">¥${sk.cost}</span> <span class="dim">×${sk.active_count}</span></div>
+      <button data-tskill="${sk.skill_id}" ${sk.affordable?"":"disabled"}>释放</button></div>`;
   const rels=V.legal_actions.skill_releases||[];
   if(rels.length){
-    h+="<div class='dim' style='margin:8px 0 6px'>战场技能（点选后点击地图落点）</div>";
+    h+="<div class='dim' style='margin:8px 0 6px'>战场技能（按槽位释放）</div>";
     for(const r of rels)
-      h+=`<div class="shopitem ${pickRelease&&pickRelease.sid===r.skill_id?"picked":""}">
-        <div class="nm">${r.name}<br><small>${r.kind} · 已释放×${r.released_this_round}</small></div>
-        <button data-release="${r.skill_id}" data-name="${r.name}">释放</button></div>`;
+      h+=`<div class="shopitem ${!r.supported?"locked":(pickRelease&&pickRelease.sid===r.skill_id)||(pickSkillUnit&&pickSkillUnit.sid===r.skill_id)?"picked":""}">
+        <div class="nm">${r.name}<br><small>槽${r.slot_index} · #${r.skill_id} · ${r.target_kind==="unit"?"单位目标":"地图落点"} · 已释放×${r.released_this_round}</small></div>
+        <button data-release="${r.skill_id}" data-name="${r.name}" data-tkind="${r.target_kind}" ${r.supported?"":"disabled"}>释放</button></div>`;
   }
   h+="<div class='dim' style='margin:8px 0 6px'>蓝图（研究中心）</div>";
   for(const b of V.legal_actions.blueprints||[])
@@ -508,12 +574,13 @@ function renderRight(){
 function unitHtml(u){
   const p=humanP();
   const canUp=u.level<9&&p.supply>=(u.upgrade_price||0);
+  const eqName=u.equipment_name?`${u.equipment_name} (#${u.equipment_id})`:(u.equipment_id?("#"+u.equipment_id):"无");
   return `<div class="gold" style="margin-bottom:6px">${u.name} <small>#${u.handle} · 己方</small></div>
   <div class="kv"><span class="k">等级</span><b>${u.level}</b>${u.level>=9?"（满级）":""}</div>
   <div class="kv"><span class="k">经验</span>${u.exp} / ${u.exp_need||"—"}</div>
   <div class="kv"><span class="k">部署坐标</span>(${Math.round(u.x)}, ${Math.round(u.y)}) ${u.is_rotate?"⟳旋转":""}</div>
   <div class="kv"><span class="k">编队/回合</span>规模见商店 · 已部署 ${u.round_count} 回合</div>
-  <div class="kv"><span class="k">装备</span>${u.equipment_id?("#"+u.equipment_id):"暂无数据"}</div>
+  <div class="kv"><span class="k">装备</span>${eqName}${u.equipment_fidelity==="approximate"?" <span class='tag gold'>pysim 未计算效果</span>":""}</div>
   <div class="kv"><span class="k">科技</span>${(p.tech_map.find(x=>x[0]===u.mech_id)||[])[1]?.join(", ")||"—"}</div>
   <div class="kv"><span class="k">基础属性</span>暂无数据（以 GameView 为准，不做前端估算）</div>
   <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
@@ -604,8 +671,10 @@ function renderCardLayer(){
       <div class="card ${o.supported?"":"unsupported"}">
         <h3>#${o.card_id} ${o.name}</h3>
         <span class="tag ${o.supported?"ok":"bad"}">${o.supported?"可选":"未支持"}</span>
+        ${o.battle_fidelity==="approximate"?"<span class='tag gold'>装备 · 战斗近似</span>":""}
         <div style="font-size:11px">${o.category||""} · 费用 ¥${o.cost}</div>
         <div class="dim" style="font-size:11px;min-height:2.2em">${o.description||""}</div>
+        ${o.battle_fidelity==="approximate"?"<div class='dim' style='font-size:10px'>选择后入库存可装备；pysim 暂不计算其战斗效果</div>":""}
         <div class="foot">${o.supported
           ?`<button class="primary" data-reinf="${o.index}">选择</button>`
           :`<div class="bad" style="font-size:11px">${o.unsupported_reason||""}</div>`}</div>
@@ -697,6 +766,7 @@ function battleHtml(){
      <tr><td class="dim">伤害</td><td>${b.damage_to_player[0]}</td><td>${b.damage_to_player[1]}</td></tr>
      <tr><td class="dim">幸存价值</td><td>${b.score_by_team[0]}</td><td>${b.score_by_team[1]}</td></tr></table>
     ${b.replay_oracle?`<div class="dim" style="margin-top:4px">回放真实结果: ${b.replay_oracle.label}（得分 ${JSON.stringify(b.replay_oracle.real_scores)}）— 仅对照</div>`:""}
+    ${(b.fidelity_warnings||[]).length?`<div class="bad" style="margin-top:4px">⚠ ${(b.fidelity_warnings||[]).join("<br>⚠ ")}</div>`:""}
     <table class="t" style="margin-top:6px"><tr><th>单位</th><th>方</th><th>exp</th><th>伤害</th><th>击杀</th><th>幸存</th></tr>
     ${b.cards.filter(c=>c.player!==null).map(c=>`<tr><td>${c.name} L${c.level_after}</td>
       <td>${roleTag(c.player)}</td>
@@ -765,6 +835,24 @@ function drawEdit(){
   const hp=humanP(),op=oppP();
   for(const u of op.units||[])drawUnit(u,"opponent",selUnit!==null&&u.handle===selUnit);
   for(const u of hp.units||[])drawUnit(u,"human",selUnit!==null&&u.handle===selUnit);
+  /* step3 §6.5: legal equipment targets glow; illegal units stay plain */
+  if(pickEquip&&mode==="edit"){
+    for(const u of hp.units||[]){
+      if((pickEquip.legal_targets||[]).includes(u.handle)){
+        const x=px(u.x),y=py(u.y);
+        ctx.strokeStyle="#7ec97e";ctx.lineWidth=2.5;
+        ctx.beginPath();ctx.arc(x,y,17,0,7);ctx.stroke();
+      }
+    }
+  }
+  /* step3 §5.4: unit-target skill mode highlights own units */
+  if(pickSkillUnit&&mode==="edit"){
+    for(const u of hp.units||[]){
+      const x=px(u.x),y=py(u.y);
+      ctx.strokeStyle="#7fd";ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(x,y,16,0,7);ctx.stroke();
+    }
+  }
   if(drag){
     ctx.strokeStyle="#ffd54a";ctx.setLineDash([4,3]);
     ctx.beginPath();ctx.moveTo(px(drag.ux),py(drag.uy));ctx.lineTo(px(drag.x),py(drag.y));
@@ -806,7 +894,8 @@ function hitUnit(x,y){
   return best;
 }
 cv.addEventListener("mousedown",e=>{
-  if(mode!=="play"&&V&&V.phase==="deployment"&&!humanP().finished_deploy&&!pickBuy&&!pickRelease){
+  if(mode!=="play"&&V&&V.phase==="deployment"&&!humanP().finished_deploy
+     &&!pickBuy&&!pickRelease&&!pickEquip&&!pickSkillUnit){
     const [x,y]=evtWorld(e);
     const hit=hitUnit(x,y);
     if(hit&&hit.role==="human"){
@@ -851,13 +940,34 @@ cv.addEventListener("click",e=>{
   if(mode==="play"||!V)return;
   const [x,y]=evtWorld(e);
   const hit=hitUnit(x,y);
+  /* armed interaction modes intercept before plain selection (step3 §5.4/§6.5) */
+  if(V.phase==="deployment"&&!humanP().finished_deploy&&pickEquip){
+    if(hit&&hit.role==="human"&&(pickEquip.legal_targets||[]).includes(hit.u.handle)){
+      cmd("APPLY_ACTION",{action:{kind:"use_equipment",args:{
+        equipment_id:pickEquip.equipment_id,unit_ref:{handle:hit.u.handle}}}});
+      pickEquip=null;ghost=null;renderLeft();drawEdit();
+    }else{
+      flash("只能装备到高亮的合法单位（ESC 取消，装备保留在库存）");
+    }
+    return;
+  }
+  if(V.phase==="deployment"&&!humanP().finished_deploy&&pickSkillUnit){
+    if(hit&&hit.role==="human"){
+      cmd("APPLY_ACTION",{action:{kind:"release_commander_skill",args:{
+        skill_id:pickSkillUnit.sid,unit_ref:{handle:hit.u.handle}}}});
+      pickSkillUnit=null;renderLeft();drawEdit();
+    }else{
+      flash("需要点击己方单位作为目标（ESC 取消）");
+    }
+    return;
+  }
   if(hit){selUnit=hit.u.handle;renderRight();drawEdit();return;}
   if(selUnit!==null){selUnit=null;renderRight();drawEdit();}   /* 点空地关闭详情 */
   if(V.phase!=="deployment"||humanP().finished_deploy)return;
   if(pickRelease){
-    cmd("APPLY_ACTION",{action:{kind:"raw_unsupported",args:{
-      raw_type:"ReleaseCommanderSkill",
-      raw:[["ID",pickRelease.sid],["Positions",[{x:Math.round(x*10)/10,y:Math.round(y*10)/10}]]]}}});
+    cmd("APPLY_ACTION",{action:{kind:"release_commander_skill",args:{
+      skill_id:pickRelease.sid,
+      positions:[{x:Math.round(x*10)/10,y:Math.round(y*10)/10}]}}});
     pickRelease=null;ghost=null;renderLeft();return;
   }
   if(pickBuy){
@@ -869,7 +979,12 @@ cv.addEventListener("click",e=>{
 });
 window.addEventListener("keydown",e=>{
   if(e.key==="Escape"){
-    if(pickBuy||pickRelease){pickBuy=null;pickRelease=null;ghost=null;renderLeft();drawEdit();flash("已取消");}
+    if(pickBuy||pickRelease||pickEquip||pickSkillUnit){
+      pickBuy=null;pickRelease=null;pickSkillUnit=null;ghost=null;
+      if(pickEquip){pickEquip=null;flash("已退出装备目标选择（装备保留在库存）");}
+      else flash("已取消");
+      renderLeft();drawEdit();
+    }
     else if(selUnit!==null){selUnit=null;renderRight();drawEdit();}
     hideOverlay();
   }
@@ -953,7 +1068,7 @@ $("ppExit").onclick=()=>{exitPlay();drawEdit();};
 function exitPlay(){       /* G14: 播放器状态全部丢弃，部署坐标来自 GameView */
   mode="edit";playing=false;clearInterval(timer);
   frames=[];events=[];playT=0;spawnDone={};lastPos={};
-  drag=null;pickBuy=null;pickRelease=null;ghost=null;
+  drag=null;pickBuy=null;pickRelease=null;pickSkillUnit=null;pickEquip=null;ghost=null;
   $("playctl").style.display="none";
   renderCardLayer();
 }
@@ -1016,13 +1131,17 @@ function renderOpts(lib){
       const modeTag=o.start_mode==="normal"?`<span class="tag ok">可玩至 R${o.playable_through_round}</span>`
         :o.start_mode==="limited"?`<span class="tag gold">受限 · 可玩至 R${o.playable_through_round}</span>`
         :`<span class="tag bad">前缀 R${o.playable_through_round} · 禁用</span>`;
+      /* step3 §7.3: fidelity badges — approximation never mixes into the strict prefix */
+      const sffx=o.strict_effect_through_round!=null?o.strict_effect_through_round:o.strict_playable_through_round;
+      const fidTags=`<span class="tag">严格效果至 R${sffx}</span>`+
+        (o.approximate_from_round!=null?`<span class="tag gold">从 R${o.approximate_from_round} 起装备效果未模拟</span>`:"");
       let blk="";
       if(o.start_mode==="disabled"&&rb)
         blk=`<div class="blockers">⛔ 预计 R${rb.round}: ${rb.code} ${(rb.detail||"").slice(0,70)}</div>`;
       else if(rb)
         blk=`<div class="blockers">预计 R${rb.round} 停止: ${rb.code} ${(rb.detail||"").slice(0,70)}</div>`;
       let strictNote="";
-      if(sb&&o.strict_playable_through_round<o.round_max)
+      if(sb&&sffx<o.round_max)
         strictNote=`<div class="blockers dim">严格口径 R${sb.round}: ${sb.code}（仅截断严格前缀，普通开始可改选其他卡）</div>`;
       const btns=o.start_mode==="normal"
         ?`<button class="primary big" data-start="${o.option_id}" data-mode="normal">开始</button>`
@@ -1032,8 +1151,7 @@ function renderOpts(lib){
       return `<div class="optrow ${o.start_mode==="normal"?"":"dis"}">
       <div class="grow">
         <b>${o.human_name}</b> <span class="dim">接管</span> vs <b>${o.opponent_name}</b> <span class="dim">(对手=玩家${o.opponent_player})</span>
-        <div class="tags">${modeTag}<span class="tag">${srcRange}</span>
-          <span class="tag">四卡全支持至 R${o.strict_playable_through_round}</span><span class="tag">v${o.game_version}</span></div>
+        <div class="tags">${modeTag}<span class="tag">${srcRange}</span>${fidTags}<span class="tag">v${o.game_version}</span></div>
         <div class="dim" style="font-size:11px">${o.file_label}</div>
         ${blk}${strictNote}
       </div>
@@ -1078,8 +1196,9 @@ async function createSession(o,startMode){
   busy=false;
 }
 function resetLocal(){       /* 进入新会话：不复用刷新前本地状态 */
-  V=null;HUMAN=0;pickBuy=null;pickRelease=null;selUnit=null;drag=null;ghost=null;
-  mode="edit";playedBattleRound=null;lastSupply=null;lastPhase=null;
+  V=null;HUMAN=0;pickBuy=null;pickRelease=null;pickSkillUnit=null;pickEquip=null;
+  selUnit=null;drag=null;ghost=null;
+  mode="edit";playedBattleRound=null;lastSupply=null;lastPhase=null;lastEquipKey="";
   exitPlay();
 }
 function backToSelect(msg){

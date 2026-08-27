@@ -12,6 +12,7 @@ BLOCKER_CODES = (
     "MISSING_REINFORCEMENT_OFFERS",
     "UNSUPPORTED_REINFORCEMENT",
     "MISSING_REINFORCEMENT_EFFECT",
+    "APPROXIMATE_REINFORCEMENT_EFFECT",   # step3: strict-only (equipment)
     "UNSUPPORTED_RAW_ACTION",
     "UNSUPPORTED_ACTION_FIELD",
     "MISSING_RULE_DATA",
@@ -21,24 +22,68 @@ BLOCKER_CODES = (
 
 # canonical kinds deploy_transition executes with full state effects
 SUPPORTED_NORM_KINDS = {"buy", "gift", "unlock", "move", "upgrade", "tech",
-                        "sell", "finish", "reinforce"}
+                        "sell", "finish", "reinforce", "release", "equip"}
 
 # raw passthrough types deploy executes with a COMPLETE modeled effect
 # (supply + persistent state + battle side). Everything else is a blocker.
 # Blueprint semantics v1 (deploy.BLUEPRINT_OFFICERS / BLUEPRINT_COSTS):
-# 1 快速补给, 2 批量征召(buy limit), 3 精英征召(buy level), 4/5/401/501 officers.
+# 1 快速补给, 2 批量征召(buy limit, cost 50), 3 精英征召(buy level),
+# 4/5/401/501 officers.
 _FULLY_MODELED_RAW = {"StrengthenTower", "GiveUp"}
 _FULLY_MODELED_BLUEPRINTS = {1, 2, 3, 4, 5, 401, 501}
-_FULLY_MODELED_COMMANDER_SKILLS = {1100001}   # 强化训练 exp jump
+
+
+def _mapped_skill_ids():
+    from ..skills import COMMANDER_SKILLS, TRANSITION_SKILLS
+    return set(COMMANDER_SKILLS) | set(TRANSITION_SKILLS)
+
+
+def mechanism_support(mechanism: str, ident):
+    """step3 任务书 §7.1 two-axis support for one mechanism id.
+
+    transition_complete: deploy can change economy + persistent state with
+    the real rule. battle_fidelity: exact | approximate | unsupported (does
+    pysim consume the effect?). Only (True, "exact") is effect-complete."""
+    from ..skills import COMMANDER_SKILLS
+    if mechanism == "commander_skill":
+        if int(ident) in COMMANDER_SKILLS:
+            return {"transition_complete": True, "battle_fidelity": "exact"}
+        if int(ident) in _mapped_skill_ids():
+            return {"transition_complete": True, "battle_fidelity": "exact"}
+        return {"transition_complete": False, "battle_fidelity": "unsupported"}
+    if mechanism == "equipment":
+        from .equipment import EQUIPMENT_DEFS
+        if int(ident) in EQUIPMENT_DEFS:
+            # transition-complete, pysim ignores the combat modifier
+            return {"transition_complete": True,
+                    "battle_fidelity": "approximate"}
+        return {"transition_complete": False, "battle_fidelity": "unsupported"}
+    if mechanism == "contraption":
+        if int(ident) in (10001, 20001):
+            return {"transition_complete": True, "battle_fidelity": "exact"}
+        return {"transition_complete": False, "battle_fidelity": "unsupported"}
+    if mechanism == "tower_skill":
+        if int(ident) in (5, 6):
+            return {"transition_complete": True, "battle_fidelity": "exact"}
+        return {"transition_complete": False, "battle_fidelity": "unsupported"}
+    if mechanism == "blueprint":
+        if int(ident) in _FULLY_MODELED_BLUEPRINTS:
+            return {"transition_complete": True, "battle_fidelity": "exact"}
+        return {"transition_complete": False, "battle_fidelity": "unsupported"}
+    return {"transition_complete": False, "battle_fidelity": "unsupported"}
 
 
 def classify_norm_entry(e, rec=None, eco=None, gd=None, side=None):
     """Norm entry -> blocker code or None when fully supported.
 
     `rec` is the round record (commanderSkills_raw needed to resolve
-    ID=0 commander releases, mirroring deploy._resolves_to).
+    ID=0 commander releases, mirroring deploy._resolve_release_id).
     `side` (when given) applies the deploy-zone rule with the same
-    orientation as the runtime (deploy.in_own_half): one rule source."""
+    orientation as the runtime (deploy.in_own_half): one rule source.
+
+    step3 §7: equipment entries (typed `equip` / 装备 reinforce offers) are
+    transition-complete and APPROXIMATE — they classify as supported here
+    (runtime playable) and separately shorten the strict-effect prefix."""
     from .deploy import in_own_half
     t = e.get("t")
     if t in ("buy", "gift", "unlock", "move", "upgrade", "finish", "sell"):
@@ -72,11 +117,23 @@ def classify_norm_entry(e, rec=None, eco=None, gd=None, side=None):
         if grant and gd is not None and grant[0] not in gd.mechs:
             return "MISSING_REINFORCEMENT_EFFECT"
         info = eco.items.get(item_id) or {}
-        # 装备 has no state handler AND no engine mechanic (G4 registry v1);
-        # 舰长技能/战术 enters the inventory and releases map to battle events
         if info.get("kind") == "装备":
-            return "MISSING_REINFORCEMENT_EFFECT"
+            # step3 §6: known equipment stocks the inventory (approximate
+            # battle fidelity, no runtime blocker); unknown ids block
+            if mechanism_support("equipment", item_id)["transition_complete"]:
+                return None
+            return "MISSING_RULE_DATA"
         return None
+    if t == "release":
+        sid = e.get("skill")
+        if sid is not None and int(sid) in _mapped_skill_ids():
+            return None
+        return "UNSUPPORTED_ACTION_FIELD"     # precise blocker upstream
+    if t == "equip":
+        if mechanism_support("equipment", e.get("id", 0))[
+                "transition_complete"]:
+            return None
+        return "MISSING_RULE_DATA"
     if t == "passthrough":
         return classify_raw(e.get("raw_type"), e.get("raw_rec") or {}, rec)
     return "UNSUPPORTED_RAW_ACTION"
@@ -94,7 +151,7 @@ def classify_raw(raw_type, raw_rec, rec=None):
     if raw_type == "ActiveEnergyTowerSkill":
         sid = _as_int(raw_rec.get("SkillID"))
         if sid in (5, 6):
-            return None                       # stacking round buffs, free
+            return None                       # stacking round buffs
         return "UNSUPPORTED_ACTION_FIELD"     # ids 1/3/4 unmapped
     if raw_type == "ReleaseContraption":
         cid = _as_int(raw_rec.get("ContraptionID"))
@@ -102,23 +159,20 @@ def classify_raw(raw_type, raw_rec, rec=None):
             return None                       # turret / barrier battle events
         return "UNSUPPORTED_ACTION_FIELD"     # 30001 unmapped
     if raw_type == "ReleaseCommanderSkill":
-        from ..skills import COMMANDER_SKILLS
         sid = _as_int(raw_rec.get("ID"))
-        if sid in COMMANDER_SKILLS or sid in _FULLY_MODELED_COMMANDER_SKILLS:
+        if not sid:
+            sid = _resolve_skill_id(raw_rec, rec)
+        if sid in _mapped_skill_ids():
             return None
-        if sid == 0:
-            resolved = _resolve_skill_id(raw_rec, rec)
-            if resolved in COMMANDER_SKILLS:
-                return None
-            # unresolved ID=0 releases are blocked (deploy cannot resolve
-            # them either once they reach the passthrough branch)
+        # unmapped (200001 EMP / 1000001 再部署 / ...) and unresolved ID=0
+        # releases stay precise blockers — never a wrong approximation
         return "UNSUPPORTED_ACTION_FIELD"
     return "UNSUPPORTED_RAW_ACTION"
 
 
 def _resolve_skill_id(raw_rec, rec):
     """SkillIndex -> skill id through the round's commanderSkills_raw
-    (same-round snapshot, mirroring deploy._resolves_to's lookup)."""
+    (same-round snapshot, mirroring deploy._resolve_release_id's lookup)."""
     sidx = raw_rec.get("SkillIndex")
     if sidx is None or rec is None:
         return None
@@ -128,12 +182,25 @@ def _resolve_skill_id(raw_rec, rec):
     return None
 
 
+def offer_fidelity(item_id, eco):
+    """Two-axis support of one reinforcement offer (equipment approximate)."""
+    info = (eco.items.get(int(item_id)) or {}) if eco else {}
+    if info.get("kind") == "装备":
+        return mechanism_support("equipment", item_id)
+    b = classify_norm_entry({"t": "reinforce", "id": int(item_id)},
+                            None, eco, eco.gd if eco else None)
+    if b is None:
+        return {"transition_complete": True, "battle_fidelity": "exact"}
+    return {"transition_complete": False, "battle_fidelity": "unsupported"}
+
+
 def scan_offers(offers, eco, strict_all_supported=False):
     """The 4 shared reinforcement candidates -> blocker or None.
 
     任务书 G5 strict rule (strict_all_supported=True): every candidate must
-    be effect-complete, else the round is unplayable. v1 honest-choice rule
-    (default): all four costs must be KNOWN and at least one card fully
+    be effect-complete (transition_complete AND battle exact — approximate
+    equipment fails strict), else the round is unplayable. v1 honest-choice
+    rule (default): all four costs must be KNOWN and at least one card fully
     supported — the UI disables unsupported cards and offers the skip, so no
     unmodeled effect ever executes; the strict prefix is still reported in
     the manifest for audit."""
@@ -145,12 +212,16 @@ def scan_offers(offers, eco, strict_all_supported=False):
     for item_id in offers:
         if eco.item_cost(int(item_id)) is None:
             return "UNSUPPORTED_REINFORCEMENT"
-        b = classify_norm_entry({"t": "reinforce", "id": int(item_id)},
-                                None, eco, eco.gd)
-        if b is None:
-            n_supported += 1
-        elif strict_all_supported:
-            return b
+        fid = offer_fidelity(int(item_id), eco)
+        if not fid["transition_complete"]:
+            if strict_all_supported:
+                return "MISSING_REINFORCEMENT_EFFECT"
+            continue
+        if fid["battle_fidelity"] != "exact" and strict_all_supported:
+            # transition-executable but approximate (equipment) — runtime
+            # keeps playing; the strict-effect prefix stops here
+            return "APPROXIMATE_REINFORCEMENT_EFFECT"
+        n_supported += 1
     if n_supported == 0:
         return "MISSING_REINFORCEMENT_EFFECT"
     return None
@@ -167,13 +238,22 @@ def scan_opponent_round(norm_entries, rec, eco, gd, side=None):
 
 def scan_option(game, opponent_player, eco, gd, catalog_team_ids=None,
                 opening_of=None):
-    """Playable prefix (round 0 based count of playable rounds) for one
-    opponent option + the full blocker list.
+    """Playable prefixes + blocker list for one opponent option.
+
+    Two axes (step3 任务书 §7.3):
+      - runtime_playable_through_round: rounds whose opponent actions and
+        offers are transition-executable (approximate equipment INCLUDED);
+      - strict_effect_through_round: additionally effect-complete — stops at
+        the first round where an approximate mechanic enters (equipment
+        offer or opponent UseEquipment);
+      - approximate_from_round / approximate_mechanisms: the visibility
+        contract for the UI badge (「从 Rn 起装备效果未模拟」).
 
     opening_of: {(side): team_id} recorded ChooseAdvanceTeam ids; both sides
     need a catalog package (the human keeps the recorded candidate of their
     side as one of the 4 opening offers)."""
     blockers = []
+    approximations = []
     opp, hum = int(opponent_player), 1 - int(opponent_player)
     offers_by_round = {int(k): v for k, v in
                        (game.get("reinforce_offers") or {}).items()}
@@ -191,6 +271,10 @@ def scan_option(game, opponent_player, eco, gd, catalog_team_ids=None,
                                  "detail": "team %s not in catalog" % tid})
                 return {"playable_through_round": 0,
                         "strict_playable_through_round": 0,
+                        "runtime_playable_through_round": 0,
+                        "strict_effect_through_round": 0,
+                        "approximate_from_round": None,
+                        "approximate_mechanisms": [],
                         "blockers": blockers}
 
     playable = 0
@@ -222,6 +306,21 @@ def scan_option(game, opponent_player, eco, gd, catalog_team_ids=None,
             blockers.append({"code": b, "round": rnd, "side": opp,
                              "detail": _entry_detail(entry)})
             break
+        # opponent equipment bindings are approximate (transition executes,
+        # pysim ignores the modifier)
+        for e in entries:
+            if e.get("t") == "equip":
+                approximations.append({"round": rnd, "side": opp,
+                                       "mechanism": "equipment",
+                                       "id": int(e.get("id", 0) or 0)})
+                if not strict_blocked:
+                    strict_blocked = True
+                    blockers.append({
+                        "code": "APPROXIMATE_REINFORCEMENT_EFFECT",
+                        "round": rnd, "side": opp,
+                        "detail": "opponent UseEquipment %s (battle "
+                                  "approximate)" % e.get("id"),
+                        "strict": True})
         if rnd >= 2:
             off = offers_by_round.get(rnd)
             ob = scan_offers(off, eco)
@@ -229,6 +328,12 @@ def scan_option(game, opponent_player, eco, gd, catalog_team_ids=None,
                 blockers.append({"code": ob, "round": rnd, "side": None,
                                  "detail": "offers %s" % (off,)})
                 break
+            for item_id in (off or []):
+                fid = offer_fidelity(int(item_id), eco)
+                if fid["battle_fidelity"] == "approximate":
+                    approximations.append({"round": rnd, "side": None,
+                                           "mechanism": "equipment",
+                                           "id": int(item_id)})
             sb = scan_offers(off, eco, strict_all_supported=True)
             if sb and not strict_blocked:
                 strict_blocked = True
@@ -239,8 +344,16 @@ def scan_option(game, opponent_player, eco, gd, catalog_team_ids=None,
         playable = rnd
         if not strict_blocked:
             strict_playable = rnd
+    approx_from = None
+    for a in sorted(approximations, key=lambda x: x["round"]):
+        approx_from = a["round"]
+        break
     return {"playable_through_round": playable,
             "strict_playable_through_round": strict_playable,
+            "runtime_playable_through_round": playable,
+            "strict_effect_through_round": strict_playable,
+            "approximate_from_round": approx_from,
+            "approximate_mechanisms": approximations,
             "blockers": blockers}
 
 

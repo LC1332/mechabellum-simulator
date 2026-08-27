@@ -200,6 +200,15 @@ def option_row(rid, opp, hum, shard, shard_path, rounds0,
         "strict_playable_through_round":
             scan.get("strict_playable_through_round",
                      scan["playable_through_round"]),
+        "runtime_playable_through_round":
+            scan.get("runtime_playable_through_round",
+                     scan["playable_through_round"]),
+        "strict_effect_through_round":
+            scan.get("strict_effect_through_round",
+                     scan.get("strict_playable_through_round",
+                              scan["playable_through_round"])),
+        "approximate_from_round": scan.get("approximate_from_round"),
+        "approximate_mechanisms": scan.get("approximate_mechanisms", []),
         "blockers": scan["blockers"],
         "enabled": scan["playable_through_round"] >= min_rounds,
         "shard": shard_path,

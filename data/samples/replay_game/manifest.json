@@ -3,7 +3,7 @@
  "ruleset_version": "normal_1v1_replay_v0",
  "min_rounds_default": 5,
  "corpus_label": "data/samples/replay_game",
- "built_at": "2026-08-27 09:01:47",
+ "built_at": "2026-08-27 12:17:51",
  "options": [
   {
    "replay_id": "6a21468d36c0",
@@ -20,6 +20,10 @@
    "round_record_count": 5,
    "playable_through_round": 0,
    "strict_playable_through_round": 0,
+   "runtime_playable_through_round": 0,
+   "strict_effect_through_round": 0,
+   "approximate_from_round": null,
+   "approximate_mechanisms": [],
    "blockers": [
     {
      "code": "UNSUPPORTED_ACTION_FIELD",
@@ -46,6 +50,10 @@
    "round_record_count": 5,
    "playable_through_round": 0,
    "strict_playable_through_round": 0,
+   "runtime_playable_through_round": 0,
+   "strict_effect_through_round": 0,
+   "approximate_from_round": null,
+   "approximate_mechanisms": [],
    "blockers": [
     {
      "code": "UNSUPPORTED_ACTION_FIELD",
@@ -70,24 +78,53 @@
    "round_min": 0,
    "round_max": 9,
    "round_record_count": 10,
-   "playable_through_round": 4,
+   "playable_through_round": 5,
    "strict_playable_through_round": 2,
+   "runtime_playable_through_round": 5,
+   "strict_effect_through_round": 2,
+   "approximate_from_round": 3,
+   "approximate_mechanisms": [
+    {
+     "round": 3,
+     "side": null,
+     "mechanism": "equipment",
+     "id": 13040001
+    },
+    {
+     "round": 5,
+     "side": 0,
+     "mechanism": "equipment",
+     "id": 13030003
+    },
+    {
+     "round": 5,
+     "side": null,
+     "mechanism": "equipment",
+     "id": 1307001
+    },
+    {
+     "round": 5,
+     "side": null,
+     "mechanism": "equipment",
+     "id": 13030003
+    }
+   ],
    "blockers": [
     {
-     "code": "MISSING_REINFORCEMENT_EFFECT",
+     "code": "APPROXIMATE_REINFORCEMENT_EFFECT",
      "round": 3,
      "side": null,
      "detail": "strict: not all 4 offers effect-complete [31201, 10004, 31801, 13040001]",
      "strict": true
     },
     {
-     "code": "MISSING_REINFORCEMENT_EFFECT",
-     "round": 5,
+     "code": "UNSUPPORTED_ACTION_FIELD",
+     "round": 6,
      "side": 0,
-     "detail": "reinforce {'id': 13030003}"
+     "detail": "passthrough {'raw_type': 'ReleaseCommanderSkill'}"
     }
    ],
-   "enabled": false,
+   "enabled": true,
    "shard": "games/94974af9a119.json"
   },
   {
@@ -105,6 +142,10 @@
    "round_record_count": 10,
    "playable_through_round": 1,
    "strict_playable_through_round": 1,
+   "runtime_playable_through_round": 1,
+   "strict_effect_through_round": 1,
+   "approximate_from_round": null,
+   "approximate_mechanisms": [],
    "blockers": [
     {
      "code": "UNSUPPORTED_ACTION_FIELD",
@@ -131,19 +172,42 @@
    "round_record_count": 10,
    "playable_through_round": 4,
    "strict_playable_through_round": 3,
+   "runtime_playable_through_round": 4,
+   "strict_effect_through_round": 3,
+   "approximate_from_round": 4,
+   "approximate_mechanisms": [
+    {
+     "round": 4,
+     "side": null,
+     "mechanism": "equipment",
+     "id": 1307001
+    },
+    {
+     "round": 4,
+     "side": null,
+     "mechanism": "equipment",
+     "id": 1308001
+    },
+    {
+     "round": 4,
+     "side": null,
+     "mechanism": "equipment",
+     "id": 13010001
+    }
+   ],
    "blockers": [
     {
-     "code": "MISSING_REINFORCEMENT_EFFECT",
+     "code": "APPROXIMATE_REINFORCEMENT_EFFECT",
      "round": 4,
      "side": null,
      "detail": "strict: not all 4 offers effect-complete [1307001, 30502, 1308001, 13010001]",
      "strict": true
     },
     {
-     "code": "MISSING_REINFORCEMENT_EFFECT",
+     "code": "UNSUPPORTED_ACTION_FIELD",
      "round": 5,
      "side": 0,
-     "detail": "reinforce {'id': 13030002}"
+     "detail": "passthrough {'raw_type': 'ActiveEnergyTowerSkill'}"
     }
    ],
    "enabled": false,
@@ -164,6 +228,10 @@
    "round_record_count": 10,
    "playable_through_round": 0,
    "strict_playable_through_round": 0,
+   "runtime_playable_through_round": 0,
+   "strict_effect_through_round": 0,
+   "approximate_from_round": null,
+   "approximate_mechanisms": [],
    "blockers": [
     {
      "code": "UNSUPPORTED_ACTION_FIELD",
@@ -177,5 +245,5 @@
   }
  ],
  "option_count": 6,
- "enabled_count": 0
+ "enabled_count": 1
 }

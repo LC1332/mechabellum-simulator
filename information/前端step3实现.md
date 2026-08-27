@@ -456,3 +456,65 @@ GameView/battle 增加 `fidelity_warnings`。选择页允许正常或受限开�
 - runtime/strict-effect 可玩前缀变化；
 - 与本任务书的偏差及其证据；
 - 仍需移交 battlefield 的装备和技能效果。
+
+### 13.1 实施总结（2026-08-27，已完成）
+
+**实际代码与数据改动**
+
+| 模块 | 改动 |
+|---|---|
+| `pysim/transition/economy.py` | 新增 `PriceQuote`/`PriceModifier` 与 `unlock_quote`/`tech_quote`/`buy_quote`/`upgrade_quote`；`unlock_price`/`tech_price` 变为薄 wrapper（不再是业务真源）。专家规则：巨型 20005/空军 20021 解锁 `-200`（gamedata `unitIds` 显式范围）、剑齿虎 20036/火獾 20038/高效研发 20003 科技 `-50`、精英 20032/训练 10014 首回合补给 `+100/+50`（`ROUND1_SUPPLY_OFFICERS`，仅 round 1）。多 modifier 相加、下限 0。 |
+| `pysim/transition/deploy.py` | `BLUEPRINT_COSTS[2]=50`；新增 `TOWER_SKILL_COSTS={5:100, 6:50}`（强化瞄准/高速移动执行前查资金、原子扣费、ledger reason `tower_skill:*`）；UNLOCK/BUY_TECH 消费 quote（receipt detail 带 breakdown）；BUY_TECH 新校验：tech 属于该兵种 `technologies`、兵种在场（`TECH_MECH_NOT_ON_FIELD`）；typed `RELEASE_COMMANDER_SKILL`（显式 ID 优先、否则 SkillIndex 查库存；1100001 目标单位经验、battle 技能写 `skill_events_raw`、未映射/建筑回收返回含 `skill_id/skill_index/target_kind` 的精确 blocker）；typed `USE_EQUIPMENT`（库存消耗、`canAddEquipment`、any/giant/ground_giant 限制、替换不回库）；装备增援卡扣费入库存；修复 `bought_this_round` 与蓝图回合效果（`blueprints_round`）在逐动作 deploy 调用间不累计的问题（购买上限此前实际未生效）。 |
+| `pysim/transition/equipment.py`（新） | 版本化 `EquipmentDef` 注册表（24 张调查表装备 + 增幅专家的 `13030009`），目标限制（any/giant/ground_giant）在表内冻结——runtime 不解析中文描述；巨型集合取 gamedata officer 20005 `unitIds`（不用 slot/价格启发式）；`OFFICER_EQUIPMENT_GRANTS`（10013 → R1 三份 13030009）；`round_officer_skills`/`round_officer_equipment`/`top_up_skill_slots` 共享回合事件。 |
+| `pysim/transition/model.py` | schema 升级 `transition-v0.4`；`PlayerState.equipment_inventory`（多重集 tuple）与 `blueprints_round`；`ActionKind.RELEASE_COMMANDER_SKILL`/`USE_EQUIPMENT` + `ReleaseCommanderSkillArgs`/`UseEquipmentArgs`；`BattleOutcome.fidelity_warnings`。 |
+| `pysim/skills.py` | ID 修正（§5.1 冻结映射）：`300001` 导弹打击、`800001` 空投护盾、`100002` 燃烧弹（原 200001 为 EMP，移除）、`1200001` 地底威胁、`1200003` 呼叫机群（原 1000001 为再部署，移除）；`TRANSITION_SKILLS={1100001}`；`commander_skill_target_kind`。 |
+| `pysim/transition/normalize.py` | 已映射技能释放→typed `release` 条目（含 positions/unit/construction）；`UseEquipment`→typed `equip` 条目（参与 Undo 折叠）；unlock/tech 估价传入快照 officers（同一 quote 源）。 |
+| `pysim/transition/canonicalize.py` | `release`→`RELEASE_COMMANDER_SKILL`、`equip`→`USE_EQUIPMENT` typed action。 |
+| `pysim/transition/capability.py` | 两轴 `mechanism_support()`（transition_complete × battle_fidelity exact/approximate/unsupported）；已知装备 offer/equip 不再是 runtime blocker；strict 扫描在 approximate 处停止（`APPROXIMATE_REINFORCEMENT_EFFECT`，strict-only）；`scan_option` 新增 `runtime_playable_through_round`/`strict_effect_through_round`/`approximate_from_round`/`approximate_mechanisms`（保留旧字段兼容）。 |
+| `pysim/transition/settlement.py` | `advance_round(gd=)` 共享回合事件：按 officer `activeRound/cmdSkills` 发放技能槽（导弹专家 R2 两份 300001、训练专家 R1 一份 1100001），发放装备（增幅专家三份 13030009）；重置 `blueprints_round`。人类/历史对手共用。 |
+| `pysim/transition/opening.py` | package 支持 `equipment_inventory`；`build_initial_state(gd=)` 在 round 1 应用技能/装备发放（top-up 语义，不与快照证据重复）。 |
+| `pysim/transition/battle_adapter.py` | `run_battle` 输出 `fidelity_warnings`（每个已装备 id 一条 `equipment:N battle effect not simulated (battle_approximate)`）。 |
+| `pysim/engine.py` | finalize 时 burn（燃烧弹）patch 补发 trace `E|0.00|skill|team|burn|x,y` 行——仅 trace 通道，模拟数值与既有战斗 digest 不变。 |
+| `web/game_service.py` | GameView 升级 `game_view_v3`：unlock/tech/buy 报价拆分（`quote.base_price/modifiers/final_price`）、科技栏按场上兵种分组并含已激活项、能量塔技能 cost/affordable、技能槽（`slot_index/skill_id/target_kind/supported/released_this_round`）、装备库存+合法目标、`fidelity` 前缀段、battle `fidelity_warnings`、增援卡 `battle_fidelity` 徽标；`action_from_json` 支持 typed release/use_equipment。 |
+| `web/game_library.py` | manifest 兼容读取新两轴字段（v1/v2 manifest 回退旧字段）。 |
+| `web/static/game.html` | 前端：科技栏报价明细与已激活态、装备页签（待装备库存/限制标签/近似标记）、能量塔技能费用、技能槽按目标类型进入地图落点或单位目标模式、装备目标选择态（合法单位高亮、ESC 只退出选择态、库存保留、选卡后自动进入）、单位详情装备名+近似标记、选择页两轴/近似徽标、战斗结果近似警告。 |
+| `tools/build_opening_catalog.py` | 归纳 round 1 幸存 `UseEquipment` 为开局装备多重集（Normalizer 折叠 Undo 后计数）。 |
+| `tools/build_game_library.py` | manifest option 输出新两轴字段。 |
+| 数据 | 重建 `data/game/opening_catalog.json`（29 队，全量 1106 局）与 `data/samples/replay_game`（原 3 局样本，重新 normalize + 重扫）；`local_data/replay_game`（1960 选项）仅本地重建、不入库。 |
+
+**自动化测试与浏览器验收**
+
+- `python -m pytest tests -q`：**96 passed**（基线 54 + 新增 42：`tests/transition/test_step3.py` 39 个覆盖 §9.1–§9.4，`test_game_api.py` 新增 3 个覆盖 §9.5 装备链路/科技视图/typed 释放）。
+- 浏览器验收（`http://127.0.0.1:8300/game`，重启 dev server 加载新代码后人工驱动）：
+  - 选择页：最佳选项显示「可玩至 R6 · 严格效果至 R2 · 从 R3 起装备效果未模拟」，strict/runtime blocker 分行显示；
+  - 训练专家开局 → R1 技能槽「强化训练 槽0 · #1100001 · 单位目标」→ 点选后点己方单位，receipt `强化训练 sets exp to 650`；
+  - 科技栏仅显示场上兵种（长弓/狼蛛），购买 receipt 为 `base 250 = 250`（报价明细格式）；首回合收入含训练专家 +50（¥250→购买后 ¥0）；
+  - 塔·蓝图页：强化瞄准 ¥100 / 高速移动 ¥50 / 批量征召 ¥50；
+  - R3 装备卡「便携式护盾 · 装备 · 战斗近似」可选 → 入库存 → 装备页签自动进入目标选择态、合法单位绿色高亮、非法点击被拒且库存保留 → 绑定后 receipt `equip 13010001(便携式护盾) -> unit 6`、单位详情显示装备名+近似标记；
+  - R3 战斗后 `fidelity_warnings=['equipment:13010001 battle effect not simulated (battle_approximate)']`，装备归属跨回合保留（unit 6 仍持有）。
+
+**runtime/strict-effect 可玩前缀变化（重建后样本 manifest）**
+
+| option | 旧 runtime | 新 runtime | 旧 strict | 新 strict_effect | approximate_from |
+|---|---:|---:|---:|---:|---:|
+| 94974af9a119-0 | R4 | **R5** | R2 | R2 | R3 |
+| b198291ffab1-0 | R4 | R4 | R3 | R3 | R4 |
+| 其余 4 个 option | 0/1 | 0/1 | =runtime | =runtime | —（前缀内在 R1 即被未映射技能阻断） |
+
+本地全量语料（1960 选项）同步重建；装备增援不再截断 runtime 前缀（最佳样本 R4→R5，本地最佳 R6）。
+
+**与本任务书的偏差及证据**
+
+1. 批量征召 50 / 强化瞄准 100 / 高速移动 50 与 `prices_v1_passive` 的 r1 窗口代数（bp2=0、tower 免费）冲突——按 §3 用户冻结费用执行，偏差已在 `deploy.py` 注释与本节记录。
+2. `derive_incomes`（回放注入收入推导）仍用无 officers 的基础价：它从快照差分反推收入，价格只影响「哪些回合可精确推导」的判定，不是报价真源；未在本次扩展（回放 runner 用注入表，audit game 用 Income200r）。
+3. 购买价 quote（GameView 与执行一致的部分）仍不含 deploy 层的精英征召等级费/高效制造折扣（原有行为，任务书 T1 gate 未涉及购买口径；精英费在 receipt 层可见）。
+4. 增援估价/科技阶梯在 normalizer 内传入了快照 officers，但未重算已提交的 `data/samples/rounds.json` norm 工件以外的大型语料（shard 内 `actions_norm` 已随库重建全部重算）。
+5. 装备目标限制表为人工冻结（依据调查表描述），`13030009` 的费用按增幅专家免费获得记 0。
+6. `advance_round` 的技能/装备发放需要 `gd` 参数；旧调用（不传 gd）保持原行为（无发放），仅 env/opening 新路径传入。
+
+**仍需移交 [`pysim-battlefield重构计划.md`](pysim-battlefield重构计划.md) 的效果**
+
+- 24+1 种装备的 pysim 战斗 modifier/trigger（当前 `battle_fidelity=approximate`，战斗结果始终带 warning）；
+- EMP `200001`、再部署 `1000001`、核弹 `300004`（10012）、`300003..300007` 导弹变体、`400002` 黏油弹、`1200002/1200004+` 信标、装置 `30001` 等未映射技能的真实效果；
+- 召唤参数（1200001/1200003 的 mech/count）仍为 cal 标注，校准局后定版；
+- 强化瞄准/高速移动对 pysim 的 `tower_mods` 通路已存在（射程+15/移速+3），但费用与 buff 的持续时间语义只按「本回合」建模。

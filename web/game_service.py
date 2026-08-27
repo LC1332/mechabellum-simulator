@@ -18,14 +18,17 @@ from pysim.transition import (TransitionEnv, Economy, Income200r,
                               EntityRef, BuyArgs, MoveArgs, UpgradeArgs,
                               UnlockArgs, TechArgs, SellArgs, GiftArgs,
                               ChooseReinforceArgs, UnsupportedArgs,
+                              ReleaseCommanderSkillArgs, UseEquipmentArgs,
                               deploy_transition, state_digest, state_to_dict,
                               copy_state, canonicalize_plan,
                               capability, opening as opening_mod)
+from pysim.transition.equipment import (EQUIPMENT_DEFS, equipment_target_ok)
 from pysim.transition.normalize import GIFT_OFFICERS
-from pysim.transition.deploy import TOWER_STRENGTHEN_COST, BLUEPRINT_COSTS
+from pysim.transition.deploy import (TOWER_STRENGTHEN_COST, BLUEPRINT_COSTS,
+                                     TOWER_SKILL_COSTS)
 from pysim.deploy import TOWER_POS
 
-GAME_VIEW_SCHEMA = "game_view_v2"
+GAME_VIEW_SCHEMA = "game_view_v3"
 BOARD_SPACE = "world_v1"
 BOARD_BOUNDS = {"x_min": -350.0, "x_max": 350.0,
                 "y_min": -300.0, "y_max": 300.0}
@@ -41,7 +44,7 @@ MIN_ROUNDS_DEFAULT = 5
 TOWER_MAX_LEVEL = 9
 BLUEPRINT_INFO = {
     1: {"name": "快速补给", "cost": 0, "detail": "+200 立即, 下回合 -300 (收入侧)"},
-    2: {"name": "批量征召", "cost": 0, "detail": "本回合购买上限 +1"},
+    2: {"name": "批量征召", "cost": 50, "detail": "本回合购买上限 +1 (激活费 ¥50)"},
     3: {"name": "精英征召", "cost": 100, "detail": "本回合后续购买单位 +1 级"},
     4: {"name": "进攻强化 I", "cost": 100, "detail": "永久 +12% 伤害"},
     5: {"name": "防御强化 I", "cost": 100, "detail": "永久 +15% 生命"},
@@ -85,6 +88,23 @@ def action_from_json(d):
         return CanonicalAction(kind, UnlockArgs(mech_id=int(a["mech_id"])))
     if kind is ActionKind.SELL_UNIT:
         return CanonicalAction(kind, SellArgs(ref=_ref(a["ref"])))
+    if kind is ActionKind.RELEASE_COMMANDER_SKILL:
+        pos_in = a.get("positions") or []
+        positions = tuple((float(p.get("x", 0.0)), float(p.get("y", 0.0)))
+                          for p in pos_in if isinstance(p, dict))
+        uref = a.get("unit_ref")
+        cidx = a.get("construction_index")
+        return CanonicalAction(kind, ReleaseCommanderSkillArgs(
+            skill_index=(None if a.get("skill_index") is None
+                         else int(a["skill_index"])),
+            skill_id=(None if a.get("skill_id") is None
+                      else int(a["skill_id"])),
+            positions=positions,
+            unit_ref=_ref(uref) if uref is not None else None,
+            construction_index=(None if cidx is None else int(cidx))))
+    if kind is ActionKind.USE_EQUIPMENT:
+        return CanonicalAction(kind, UseEquipmentArgs(
+            equipment_id=int(a["equipment_id"]), unit_ref=_ref(a["unit_ref"])))
     if kind is ActionKind.RAW_UNSUPPORTED:
         raw_in = a.get("raw") or {}
         if isinstance(raw_in, dict):
@@ -106,6 +126,8 @@ def _ref(d):
 APPLYABLE_KINDS = {ActionKind.BUY_UNIT, ActionKind.MOVE_UNIT,
                    ActionKind.UPGRADE_UNIT, ActionKind.BUY_TECH,
                    ActionKind.UNLOCK_UNIT, ActionKind.SELL_UNIT,
+                   ActionKind.RELEASE_COMMANDER_SKILL,
+                   ActionKind.USE_EQUIPMENT,
                    ActionKind.RAW_UNSUPPORTED}
 
 
@@ -266,6 +288,7 @@ class GameSession:
             else:
                 blocker = capability.classify_norm_entry(
                     {"t": "reinforce", "id": item_id}, None, self.eco, self.gd)
+            fid = capability.offer_fidelity(int(item_id), self.eco)
             views.append({
                 "index": i, "card_id": item_id,
                 "name": info.get("name", str(item_id)),
@@ -274,6 +297,8 @@ class GameSession:
                 "description": self._item_description(item_id),
                 "supported": blocker is None,
                 "unsupported_reason": blocker,
+                # step3 §7: 装备卡 transition 可执行但战斗近似
+                "battle_fidelity": fid["battle_fidelity"],
             })
         return views
 
@@ -361,7 +386,8 @@ class GameSession:
             ("generator", opening_mod.GENERATOR_VERSION),
         )
         state = opening_mod.build_initial_state(
-            pkgs[0], pkgs[1], provenance=provenance, eco=self.eco)
+            pkgs[0], pkgs[1], provenance=provenance, eco=self.eco,
+            gd=self.gd)
         self.env.reset(state)
         # round-1 income (Income200r round tick at deploy start)
         inc = tuple(int(self.env.income_policy.income(
@@ -693,6 +719,7 @@ class GameSession:
             "trace": extra.get("trace") or [],
             "towers_down": extra.get("towers_down") or {},
             "survivors": extra.get("survivors") or {},
+            "fidelity_warnings": list(outcome.fidelity_warnings or ()),
             "replay_oracle": self._replay_oracle(self.round),
             "note": "pysim 模拟结果 (非真实对局胜负)",
         }
@@ -867,6 +894,7 @@ class GameSession:
             "reinforcement_offers": (self._reinforce_offer_views(self.round)
                                      if self.phase == "reinforcement" else []),
             "legal_actions": self._legal_view(s),
+            "fidelity": self._fidelity_view(),
             "receipts": self._receipts[-160:],
             "ledger": [e for e in self._ledger if e["round"] == self.round],
             "audit_events": self._audit[-audit_tail:],
@@ -877,6 +905,22 @@ class GameSession:
             "battle": self.battle,
             "stop_reason": self.stop_reason,
             "blocker": self.blocker,
+        }
+
+    def _fidelity_view(self):
+        """step3 任务书 §7.3: the option's two-axis prefixes, surfaced in the
+        GameView so the UI can badge approximation honestly."""
+        return {
+            "runtime_playable_through_round": self.option.get(
+                "runtime_playable_through_round",
+                self.option.get("playable_through_round")),
+            "strict_effect_through_round": self.option.get(
+                "strict_effect_through_round",
+                self.option.get("strict_playable_through_round")),
+            "approximate_from_round": self.option.get(
+                "approximate_from_round"),
+            "approximate_mechanisms": self.option.get(
+                "approximate_mechanisms") or [],
         }
 
     def _board_view(self, s):
@@ -917,6 +961,7 @@ class GameSession:
                 up_price = self.eco.upgrade_price(u.mech_id)
                 up_price = max(0, (up_price or 0) +
                                self.eco.upgrade_price_mod(u.mech_id, p.officers))
+                eq = EQUIPMENT_DEFS.get(int(u.equipment_id or 0))
                 units.append({
                     "handle": u.replay_index,
                     "mech_id": u.mech_id, "name": self._mech_name(u.mech_id),
@@ -926,6 +971,10 @@ class GameSession:
                     "x": u.x, "y": u.y, "is_rotate": u.is_rotate,
                     "sell_supply": u.sell_supply,
                     "equipment_id": u.equipment_id,
+                    "equipment_name": eq.name if eq else None,
+                    "equipment_fidelity": (eq.battle_fidelity
+                                           if eq and int(u.equipment_id or 0)
+                                           else None),
                     "upgrade_price": up_price if u.level < 9 else None,
                     "round_count": u.round_count,
                 })
@@ -944,8 +993,21 @@ class GameSession:
                 "blueprints": list(p.blueprints),
                 "tower_strengthen": list(p.tower_strengthen),
                 "constructions": [list(c) for c in p.constructions_raw],
+                "equipment_inventory": [
+                    {"equipment_id": int(e),
+                     "name": (EQUIPMENT_DEFS.get(int(e)).name
+                              if EQUIPMENT_DEFS.get(int(e)) else str(e))}
+                    for e in (p.equipment_inventory or ())],
             })
         return out
+
+    def _quote_view(self, q):
+        """PriceQuote -> public breakdown dict (GameView never leaks the
+        dataclass; the frontend renders, never recomputes)."""
+        return {"base_price": q.base_price,
+                "modifiers": [{"source_id": m.source_id, "name": m.name,
+                               "amount": m.amount} for m in q.modifiers],
+                "final_price": q.final_price}
 
     def _legal_view(self, s):
         """UI-facing legality summary — every number traces to eco/gamedata;
@@ -966,38 +1028,52 @@ class GameSession:
         for mech in sorted(set(self.gd.cards)):
             card = self.gd.cards[mech]
             if mech in p.unlocked_mechs:
-                price = (self.eco.buy_price(mech) or 0) \
-                    + self.eco.buy_price_mod(mech, p.officers)
+                q = self.eco.buy_quote(mech, p.officers)
                 buy.append({"mech_id": mech, "name": card.name,
-                            "price": max(0, price),
-                            "affordable": p.supply >= max(0, price),
+                            "price": q.final_price,
+                            "quote": self._quote_view(q),
+                            "affordable": p.supply >= q.final_price,
                             "slot_size": card.slot_size,
                             "mech_count": card.mech_count})
             else:
-                price = self.eco.unlock_price(mech)
-                if price is not None:
+                q = self.eco.unlock_quote(mech, p.officers)
+                if q is not None:
                     unlock.append({"mech_id": mech, "name": card.name,
-                                   "price": price,
-                                   "affordable": p.supply >= price,
+                                   "price": q.final_price,
+                                   "quote": self._quote_view(q),
+                                   "affordable": p.supply >= q.final_price,
                                    "slot_size": card.slot_size,
                                    "mech_count": card.mech_count,
                                    "group": card.group})
-        for mech, owned in p.tech_map:
+        # step3 任务书 §4.1: tech candidates come from the FIELD mechs
+        # (units[].mech_id dedup), not from tech_map alone
+        owned_map = {int(m): set(t) for m, t in p.tech_map}
+        for mech in sorted({u.mech_id for u in p.units}):
             card = self.gd.cards.get(mech)
-            owned = set(owned)
+            owned = owned_map.get(mech, set())
             for tid in (card.technologies if card else ()):
-                if tid in owned:
-                    continue
                 td = self.gd.techs.get(tid)
                 if td is None:
                     continue
+                if tid in owned:
+                    tech.append({"mech_id": mech, "tech_id": tid,
+                                 "name": td.name if td.name else str(tid),
+                                 "description": td.description or "",
+                                 "price": None, "quote": None,
+                                 "prerequisite_ok": True, "affordable": False,
+                                 "owned": True})
+                    continue
                 ok = not td.previous_tech_id or td.previous_tech_id in owned
-                price = self.eco.tech_price(mech, tid, len(owned))
+                q = self.eco.tech_quote(mech, tid, len(owned), p.officers)
                 tech.append({"mech_id": mech, "tech_id": tid,
-                             "name": td.name if hasattr(td, "name") else str(tid),
-                             "description": getattr(td, "description", "") or "",
-                             "price": price, "prerequisite_ok": ok,
-                             "affordable": price is not None and p.supply >= price,
+                             "name": td.name if td.name else str(tid),
+                             "description": td.description or "",
+                             "price": None if q is None else q.final_price,
+                             "quote": None if q is None
+                             else self._quote_view(q),
+                             "prerequisite_ok": ok,
+                             "affordable": q is not None
+                             and p.supply >= q.final_price,
                              "owned": False})
         towers = []
         for k in (0, 1):
@@ -1009,31 +1085,61 @@ class GameSession:
         n5 = sum(1 for s in (p.tower_mods_raw or ()) if int(s) == 5)
         n6 = sum(1 for s in (p.tower_mods_raw or ()) if int(s) == 6)
         tower_skills = [
-            {"skill_id": 5, "name": "强化瞄准", "cost": 0,
+            {"skill_id": 5, "name": "强化瞄准", "cost": TOWER_SKILL_COSTS[5],
              "detail": "本回合全体远程射程 +15 (可叠加)",
-             "active_count": n5, "affordable": True},
-            {"skill_id": 6, "name": "高速移动", "cost": 0,
+             "active_count": n5,
+             "affordable": p.supply >= TOWER_SKILL_COSTS[5]},
+            {"skill_id": 6, "name": "高速移动", "cost": TOWER_SKILL_COSTS[6],
              "detail": "本回合全体移速 +3 (可叠加)",
-             "active_count": n6, "affordable": True},
+             "active_count": n6,
+             "affordable": p.supply >= TOWER_SKILL_COSTS[6]},
         ]
-        # releasable battlefield skills from the player's inventory
+        # skill slots (step3 任务书 §5.4): index, resolved id, name, target
+        # kind, support and this round's release count per slot
         releases = []
         try:
-            from pysim.skills import COMMANDER_SKILLS
+            from pysim.skills import (COMMANDER_SKILLS, TRANSITION_SKILLS,
+                                      commander_skill_target_kind)
             for e in p.commander_skills_raw or ():
                 try:
-                    sid = int(e[1])
+                    slot_idx, sid = int(e[0]), int(e[1])
                 except (TypeError, ValueError):
                     continue
-                d = COMMANDER_SKILLS.get(sid)
-                if d:
-                    releases.append({"skill_id": sid, "name": d.get("name", str(sid)),
-                                     "kind": d["kind"],
-                                     "released_this_round": sum(
-                                         1 for r in (p.skill_events_raw or ())
-                                         if int(r[0]) == sid)})
+                d = COMMANDER_SKILLS.get(sid) or TRANSITION_SKILLS.get(sid)
+                releases.append({
+                    "slot_index": slot_idx, "skill_id": sid,
+                    "name": (d or {}).get("name", str(sid)),
+                    "target_kind": commander_skill_target_kind(sid),
+                    "supported": d is not None,
+                    "battle_fidelity": "exact" if d is not None
+                    else "unsupported",
+                    "released_this_round": sum(
+                        1 for r in (p.skill_events_raw or ())
+                        if int(r[0]) == sid)})
         except Exception:
             pass
+        # pending equipment stock (step3 任务书 §6.5) with legal targets
+        inventory = []
+        eq_ids = sorted(set(int(e) for e in (p.equipment_inventory or ())))
+        for eid in eq_ids:
+            d = EQUIPMENT_DEFS.get(eid)
+            targets = []
+            for u in p.units:
+                card = self.gd.cards.get(u.mech_id)
+                if not (card and card.can_add_equipment):
+                    continue
+                ok, _why = equipment_target_ok(self.gd, eid, u.mech_id)
+                if ok:
+                    targets.append(u.replay_index)
+            inventory.append({
+                "equipment_id": eid,
+                "name": d.name if d else str(eid),
+                "count": sum(1 for e in (p.equipment_inventory or ())
+                             if int(e) == eid),
+                "target_restriction": d.target_restriction if d else "unknown",
+                "battle_fidelity": d.battle_fidelity if d else "unsupported",
+                "supported": d is not None,
+                "legal_targets": targets})
         blueprints = []
         for bid, info in BLUEPRINT_INFO.items():
             cost = BLUEPRINT_COSTS.get(bid, info["cost"])
@@ -1047,6 +1153,7 @@ class GameSession:
             "buy": buy, "unlock": unlock, "tech": tech,
             "towers": towers, "tower_skills": tower_skills,
             "skill_releases": releases,
+            "equipment": {"inventory": inventory},
             "blueprints": blueprints,
             "map_bounds": {"x": 350.0, "y": 300.0},
             "finished": s.finished_deploy[self.human],

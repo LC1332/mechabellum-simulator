@@ -1,6 +1,11 @@
 {
  "schema_version": "opening_catalog_v2",
- "generator": "tools/build_opening_catalog.py (upgraded from opening_catalog_v1)",
+ "formation_space": {
+  "coordinate_space": "world_v1",
+  "orientation": "player0",
+  "player1_rule": "mirror_y"
+ },
+ "generator": "tools/build_opening_catalog.py",
  "package_count": 29,
  "packages": {
   "9894": {
@@ -55,7 +60,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9901": {
    "team_id": 9901,
@@ -109,7 +115,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9877": {
    "team_id": 9877,
@@ -163,7 +170,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9871": {
    "team_id": 9871,
@@ -217,7 +225,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9910": {
    "team_id": 9910,
@@ -271,7 +280,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9909": {
    "team_id": 9909,
@@ -325,7 +335,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9906": {
    "team_id": 9906,
@@ -379,7 +390,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9895": {
    "team_id": 9895,
@@ -433,7 +445,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9903": {
    "team_id": 9903,
@@ -487,7 +500,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9885": {
    "team_id": 9885,
@@ -541,7 +555,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9896": {
    "team_id": 9896,
@@ -595,7 +610,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9890": {
    "team_id": 9890,
@@ -649,7 +665,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9907": {
    "team_id": 9907,
@@ -703,7 +720,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9892": {
    "team_id": 9892,
@@ -757,7 +775,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9873": {
    "team_id": 9873,
@@ -811,7 +830,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9902": {
    "team_id": 9902,
@@ -865,7 +885,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9891": {
    "team_id": 9891,
@@ -919,7 +940,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9893": {
    "team_id": 9893,
@@ -973,7 +995,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9905": {
    "team_id": 9905,
@@ -1027,7 +1050,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9904": {
    "team_id": 9904,
@@ -1081,7 +1105,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9883": {
    "team_id": 9883,
@@ -1135,7 +1160,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9875": {
    "team_id": 9875,
@@ -1189,7 +1215,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9874": {
    "team_id": 9874,
@@ -1243,7 +1270,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9897": {
    "team_id": 9897,
@@ -1297,7 +1325,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9900": {
    "team_id": 9900,
@@ -1351,7 +1380,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9889": {
    "team_id": 9889,
@@ -1405,7 +1435,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9879": {
    "team_id": 9879,
@@ -1459,7 +1490,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9908": {
    "team_id": 9908,
@@ -1513,7 +1545,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   },
   "9899": {
    "team_id": 9899,
@@ -1567,12 +1600,8 @@
    ],
    "tech_map": {},
    "constructions": [],
-   "commander_skills": []
+   "commander_skills": [],
+   "equipment_inventory": []
   }
- },
- "formation_space": {
-  "coordinate_space": "world_v1",
-  "orientation": "player0",
-  "player1_rule": "mirror_y"
  }
 }

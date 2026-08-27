@@ -62,6 +62,18 @@ def formation_key(r1):
                   bool(u.get("isRotate"))) for u in units)
 
 
+def _round1_equipment(rounds):
+    """Opening equipment multiset: ids of the round-1 SURVIVING UseEquipment
+    actions (undo/cancel folded by the shared normalizer; step3 任务书 §6.4).
+    增幅专家's free copies top this up at runtime (opening.top_up grants)."""
+    if len(rounds) < 2:
+        return []
+    from pysim.transition.normalize import Normalizer
+    res = Normalizer().normalize_round(rounds[1])
+    return sorted(int(e.get("id", 0) or 0)
+                  for e in res.actions_norm if e.get("t") == "equip")
+
+
 def build(games):
     catalog = {}
     for g in games:
@@ -85,7 +97,7 @@ def build(games):
                 "team_id": team_id,
                 "formations": {},
                 "officers": {}, "hp": {}, "supply": {}, "unlocked": {},
-                "skills": {},
+                "skills": {}, "equipment": {},
                 "examples": 0,
             })
             entry["examples"] += 1
@@ -104,6 +116,8 @@ def build(games):
                               e.get("coolingRound")]
                              for e in (r1.get("commanderSkills_raw") or [])])
             entry["skills"][sk] = entry["skills"].get(sk, 0) + 1
+            eq = json.dumps(_round1_equipment(rounds))
+            entry["equipment"][eq] = entry["equipment"].get(eq, 0) + 1
     # freeze: modal evidence per team
     packages = {}
     for tid, e in catalog.items():
@@ -111,6 +125,8 @@ def build(games):
         officers = json.loads(max(e["officers"].items(), key=lambda kv: kv[1])[0])
         unlocked = json.loads(max(e["unlocked"].items(), key=lambda kv: kv[1])[0])
         skills = json.loads(max(e["skills"].items(), key=lambda kv: kv[1])[0])
+        equipment = json.loads(max(e["equipment"].items(),
+                                   key=lambda kv: kv[1])[0])
         hp = int(max(e["hp"].items(), key=lambda kv: kv[1])[0])
         supply = int(max(e["supply"].items(), key=lambda kv: kv[1])[0])
         groups = []
@@ -131,6 +147,7 @@ def build(games):
             "units": groups,
             "tech_map": {}, "constructions": [],
             "commander_skills": [list(s) for s in skills],
+            "equipment_inventory": [int(x) for x in equipment],
         }
     return packages
 
