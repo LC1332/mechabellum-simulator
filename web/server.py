@@ -406,4 +406,5 @@ app.mount("/", StaticFiles(directory=os.path.join(os.path.dirname(os.path.abspat
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8300)
+    uvicorn.run(app, host="127.0.0.1",
+                port=int(os.environ.get("PORT") or 8300))

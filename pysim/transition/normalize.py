@@ -27,10 +27,11 @@ from dataclasses import dataclass, field
 # effect in v0; still participants in undo folding unless noted).
 # UseEquipment and MAPPED ReleaseCommanderSkill releases are emitted as
 # typed entries instead (step3 任务书 §5.2/§6.3); GiveUp becomes the typed
-# `surrender` entry (battlefield M1); only the unmapped residue stays
-# passthrough here.
+# `surrender` entry (battlefield M1); ActiveEnergyTowerSkill ids 5/6 become
+# the typed `tower_skill` entry (step4 任务书 §2.3); only the unmapped
+# residue stays passthrough here.
 PASSTHROUGH_TYPES = {
-    "ActiveEnergyTowerSkill",     # undoable (Q1)
+    "ActiveEnergyTowerSkill",     # undoable (Q1); ids 5/6 -> typed tower_skill
     "ReleaseContraption",         # undoable (Q1)
     "UseEquipment",               # undoable (Q1) -> typed `equip` entry
     "StrengthenTower",            # undoable (Q1)
@@ -39,6 +40,12 @@ PASSTHROUGH_TYPES = {
     "GiveUp",                     # -> typed `surrender` entry (M1), not undoable
     "ChooseAdvanceTeam",          # round-0 marker, not undoable
 }
+
+# mapped 能量塔技能 ids (step4 任务书 §1.4 + user ruling 2026-08-27): the
+# five commend-center items, ONE-SHOT PER ROUND: 1 快速补给 / 3 批量征召 /
+# 4 精英征召 / 5 强化瞄准 / 6 高速移动. id 2 never appears in the corpus and
+# stays passthrough -> precise UNSUPPORTED_ACTION_FIELD.
+TOWER_SKILL_IDS = {1, 3, 4, 5, 6}
 
 SELL_SKILL_IDS = {0, 900001}
 UNIT_SKILL_KEEP = {1100001, 1000001}   # 强化训练/再部署: unit-targeting, not sells
@@ -72,15 +79,16 @@ def _release_skill_id(raw: dict, skills_raw):
 
 
 def _positions_of(raw: dict):
-    """Positions field of a release record -> [(x, y), ...] (floats)."""
+    """Positions field of a release record -> [[x, y], ...] (floats, JSON
+    native so norm artifacts round-trip tuples/lists identically)."""
     v = raw.get("Positions")
     if isinstance(v, dict):
         v = [v]
     out = []
     for p in (v or []):
         try:
-            out.append((float(p.get("x", 0.0) or 0.0),
-                        float(p.get("y", 0.0) or 0.0)))
+            out.append([float(p.get("x", 0.0) or 0.0),
+                        float(p.get("y", 0.0) or 0.0)])
         except (AttributeError, TypeError, ValueError):
             continue
     return out
@@ -149,6 +157,28 @@ class Normalizer:
         n_undo = n_cancel = undo_on_empty = 0
         op_seq = 0
         skills_raw = rec.get("commanderSkills_raw") or ()
+        # step4: LIVE skill-slot view. The snapshot's commanderSkills_raw is
+        # pre-deploy: slots stocked by THIS round's 舰长技能 card picks are
+        # invisible to it, yet later ReleaseCommanderSkill records resolve
+        # their SkillIndex against them (e.g. pick 再部署 1000001 -> release
+        # it on a locked unit in the same round). Track exactly the sources
+        # the deploy working view also sees (snapshot slots + in-round picks)
+        # — deliberately NOT snapshot-officer round grants: the runtime's
+        # officer set comes from the opening catalog / reinforce execution
+        # and can differ from the snapshot, and scanner/runtime agreement
+        # beats an extra heuristic.
+        skills_live = [dict(e) for e in skills_raw
+                       if isinstance(e, dict) and "index" in e]
+
+        def _next_skill_index():
+            best = -1
+            for e in skills_live:
+                try:
+                    best = max(best, int(e.get("index")))
+                except (TypeError, ValueError):
+                    continue
+            return best + 1
+
         sell_supply_of = {ix: int(u.get("sellSupply", 0) or 0)
                           for ix, u in snap.items()}
         mech_of = {ix: int(u["id"]) for ix, u in snap.items()}
@@ -204,6 +234,12 @@ class Normalizer:
                 grants = []
                 emit({"t": "reinforce", "id": item, "cost": cost,
                       "grants": grants, "raw": [k]})
+                # step4: a 舰长技能/战术 pick stocks a LIVE skill slot for
+                # this round's later releases (mirrors deploy's inventory)
+                info = self.eco.items.get(item) if (self.eco and item) else None
+                if info and info.get("kind") == "舰长技能/战术":
+                    skills_live.append({"index": str(_next_skill_index()),
+                                        "id": str(item)})
                 if grant:
                     mech, count, level = grant
                     for _ in range(count):
@@ -255,22 +291,28 @@ class Normalizer:
                 push("tech", k, [ei])
             elif t == "ReleaseCommanderSkill":
                 sidx = _int(a.get("SkillIndex"))
-                if self._resolves_sell(a, skills_raw):
+                if self._resolves_sell(a, skills_live):
                     gi = a.get("UnitIndex")
                     gi = None if gi is None else _int(gi)
                     ei = emit({"t": "sell", "unit": gi, "refund": None,
                                "skill_index": sidx, "raw": [k]})
                     push("release", k, [ei])
-                elif (_release_skill_id(a, skills_raw)
+                elif (_release_skill_id(a, skills_live)
                         in _mapped_release_ids()):
-                    sid = _release_skill_id(a, skills_raw)
+                    sid = _release_skill_id(a, skills_live)
                     uidx = a.get("UnitIndex")
                     cidx = a.get("ConstructionIndex")
+                    # raw -1 means "no target of that kind" (e.g. redeploy
+                    # records carry placeholder Positions + UnitIndex=-1),
+                    # NOT index -1: None them out or the typed entry would
+                    # claim a construction/unit target it does not have
                     ei = emit({"t": "release", "skill": int(sid),
                                "skill_index": sidx,
                                "positions": _positions_of(a),
-                               "unit": (None if uidx is None else _int(uidx)),
+                               "unit": (None if uidx is None or _int(uidx) < 0
+                                        else _int(uidx)),
                                "construction": (None if cidx is None
+                                                or _int(cidx) < 0
                                                 else _int(cidx)),
                                "raw": [k]})
                     push("release", k, [ei])
@@ -324,6 +366,13 @@ class Normalizer:
                            "unit": (None if uidx is None else _int(uidx)),
                            "raw": [k]})
                 push("equip", k, [ei])
+            elif t == "ActiveEnergyTowerSkill" \
+                    and _int(a.get("SkillID")) in TOWER_SKILL_IDS:
+                # typed 能量塔技能 (step4 任务书 §2.3): one undoable op;
+                # unmapped ids fall through to passthrough below
+                ei = emit({"t": "tower_skill",
+                           "skill": _int(a.get("SkillID")), "raw": [k]})
+                push("tower_skill", k, [ei])
             elif t == "FinishDeploy":
                 emit({"t": "finish", "raw": [k]})
             elif t == "GiveUp":

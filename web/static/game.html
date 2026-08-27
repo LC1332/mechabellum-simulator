@@ -296,9 +296,9 @@ function inOwnHalfWorld(y){return HUMAN===0?y<0:y>0;}
 /* ============================================================= rendering */
 let lastPhase=null;
 function render(view){
-  if(view.schema_version!=="game_view_v3"){
+  if(view.schema_version!=="game_view_v4"){
     showOverlay(`<h3 style="color:var(--bad)">GameView 契约不兼容</h3>
-      <p>页面需要 game_view_v3，服务返回 ${view.schema_version||"??"}。请刷新页面或重建语料后重试。</p>
+      <p>页面需要 game_view_v4，服务返回 ${view.schema_version||"??"}。请刷新页面或重建语料后重试。</p>
       <button onclick="hideOverlay()">关闭</button>`);
     return;
   }
@@ -363,6 +363,10 @@ function renderHud(){
     round_result:"战斗结算",terminal:"对局结束",blocked:"已阻塞",
     pre_battle:"待战斗"}[V.phase]||V.phase;
   let mid=`<span class="rnd">R${V.round}</span><span class="tag gold">${ph}</span>`;
+  if(V.phase==="deployment"||V.phase==="reinforcement"){
+    const bl=(V.legal_actions||{}).buy_limit;
+    if(bl)mid+=`<span class="tag" title="基础 ${bl.base}${bl.blueprint_bonus?" + 批量征召×"+bl.blueprint_bonus:""}${bl.officer_bonus?" + 额外部署位×"+bl.officer_bonus:""}">已购买 ${bl.used}/${bl.limit}</span>`;
+  }
   if(V.stop_reason&&V.phase!=="blocked")mid+=`<span class="tag bad">${V.stop_reason}</span>`;
   $("hudPhase").innerHTML=mid;
 
@@ -404,13 +408,16 @@ function renderLeft(){
   b.querySelectorAll("[data-tower]").forEach(el=>el.onclick=()=>cmd("APPLY_ACTION",
     {action:{kind:"raw_unsupported",args:{raw_type:"StrengthenTower",raw:[["Index",+el.dataset.tower]]}}}));
   b.querySelectorAll("[data-tskill]").forEach(el=>el.onclick=()=>cmd("APPLY_ACTION",
-    {action:{kind:"raw_unsupported",args:{raw_type:"ActiveEnergyTowerSkill",raw:[["SkillID",+el.dataset.tskill]]}}}));
+    {action:{kind:"activate_energy_tower_skill",args:{skill_id:+el.dataset.tskill}}}));
   b.querySelectorAll("[data-release]").forEach(el=>el.onclick=()=>{
     const kind=el.dataset.tkind||"position";
     if(kind==="unit"){
-      pickSkillUnit={sid:+el.dataset.release,name:el.dataset.name};
+      const slot=(V.legal_actions.skill_releases||[]).find(r=>r.skill_id===+el.dataset.release);
+      pickSkillUnit={sid:+el.dataset.release,name:el.dataset.name,
+        legal_targets:slot?(slot.legal_targets||null):null,
+        redeploy:!!(slot&&slot.redeploy)};
       pickRelease=null;pickBuy=null;ghost=null;
-      flash(`已选中 ${pickSkillUnit.name} — 点击己方单位作为目标`);
+      flash(`已选中 ${pickSkillUnit.name} — ${pickSkillUnit.redeploy?"点击被锁定的己方单位解锁移动":"点击己方单位作为目标"}`);
     }else{
       pickRelease={sid:+el.dataset.release,name:el.dataset.name};
       pickSkillUnit=null;pickBuy=null;ghost=null;
@@ -425,6 +432,9 @@ function armBuy(id){
   const it=(V.legal_actions.buy||[]).find(x=>x.mech_id===id);
   if(!it)return;
   if(!it.affordable){flash(`资金不足：${it.name} 需要 ¥${it.price}`);return;}
+  if(it.purchasable===false){
+    const bl=(V.legal_actions.buy_limit||humanP().buy_limit);
+    flash(`本回合购买额度已用完（${bl?bl.used+"/"+bl.limit:""}）— 批量征召或额外部署位可增加额度`);return;}
   if(pickBuy&&pickBuy.mech_id===id){pickBuy=null;ghost=null;flash("取消购买");}
   else{pickBuy={mech_id:id,price:it.price,name:it.name};pickRelease=null;
     flash(`已选中 ${it.name}（¥${it.price}）— 点击己方半场放置，ESC 取消`);}
@@ -432,19 +442,25 @@ function armBuy(id){
 }
 function quickBuy(id){                       // Q2 裁决：双击直接买在场地中央
   const it=(V.legal_actions.buy||[]).find(x=>x.mech_id===id);
-  if(!it||!it.affordable){flash(`资金不足：${it.name} 需要 ¥${it.price}`);return;}
+  if(!it)return;
+  if(!it.affordable){flash(`资金不足：${it.name} 需要 ¥${it.price}`);return;}
+  if(it.purchasable===false){
+    const bl=(V.legal_actions.buy_limit||humanP().buy_limit);
+    flash(`本回合购买额度已用完（${bl?bl.used+"/"+bl.limit:""}）`);return;}
   const y=HUMAN===0?-160:160;
   pickBuy=null;ghost=null;renderLeft();
   cmd("APPLY_ACTION",{action:{kind:"buy_unit",args:{mech_id:id,x:0,y}}});
 }
 function shopHtml(){
   if(!V.legal_actions.buy)return phaseWait();
-  let h="<div class='dim' style='margin-bottom:6px'>已解锁 — 单击选中后点击己方半场放置；双击直接买在场地中央</div>";
+  const bl=V.legal_actions.buy_limit;
+  const quota=bl?` · 购买额度 <b class="gold">${bl.used}/${bl.limit}</b>${bl.blueprint_bonus||bl.officer_bonus?` <span class="dim">(基础 ${bl.base}${bl.blueprint_bonus?" + 批量征召 "+bl.blueprint_bonus:""}${bl.officer_bonus?" + 额外部署位 "+bl.officer_bonus:""})</span>`:""}`:"";
+  let h=`<div class='dim' style='margin-bottom:6px'>已解锁 — 单击选中后点击己方半场放置；双击直接买在场地中央${quota}</div>`;
   for(const it of V.legal_actions.buy||[]){
     h+=`<div class="shopitem ${pickBuy&&pickBuy.mech_id===it.mech_id?"picked":""}" data-buy="${it.mech_id}" tabindex="0">
       <div class="nm">${it.name}<small>编队 ×${it.mech_count} · 槽位 ${it.slot_size}</small></div>
       <div class="pr">¥${it.price}</div>
-      ${it.affordable?"":`<div class="bad">缺¥</div>`}</div>`;
+      ${!it.affordable?`<div class="bad">缺¥</div>`:(it.purchasable===false?`<div class="bad">额度满</div>`:"")}</div>`;
   }
   h+="<div class='dim' style='margin:8px 0 6px'>未解锁</div>";
   for(const it of V.legal_actions.unlock||[]){
@@ -530,18 +546,18 @@ function towerHtml(){
   for(const t of V.legal_actions.towers)
     h+=`<div class="shopitem"><div class="nm">塔 #${t.index}</div><div>Lv ${t.level}/${t.max}</div>
       <button data-tower="${t.index}" ${t.affordable&&t.level<t.max?"":"disabled"}>强化</button></div>`;
-  h+="<div class='dim' style='margin:8px 0 6px'>能量塔技能（本回合生效，可叠加）</div>";
+  h+="<div class='dim' style='margin:8px 0 6px'>能量塔技能（本回合生效，每回合每技能限购一次）</div>";
   for(const sk of V.legal_actions.tower_skills||[])
-    h+=`<div class="shopitem"><div class="nm">${sk.name}<br><small>${sk.detail}</small></div>
-      <div><span class="pr">¥${sk.cost}</span> <span class="dim">×${sk.active_count}</span></div>
-      <button data-tskill="${sk.skill_id}" ${sk.affordable?"":"disabled"}>释放</button></div>`;
+    h+=`<div class="shopitem ${sk.active_count?"locked":""}"><div class="nm">${sk.name}<br><small>${sk.detail}</small></div>
+      <div><span class="pr">¥${sk.cost}</span> ${sk.active_count?`<span class="tag ok">已激活</span>`:`<span class="dim">未激活</span>`}</div>
+      <button data-tskill="${sk.skill_id}" ${sk.purchasable?"":"disabled"}>${sk.active_count?"已购":"释放"}</button></div>`;
   const rels=V.legal_actions.skill_releases||[];
   if(rels.length){
     h+="<div class='dim' style='margin:8px 0 6px'>战场技能（按槽位释放）</div>";
     for(const r of rels)
       h+=`<div class="shopitem ${!r.supported?"locked":(pickRelease&&pickRelease.sid===r.skill_id)||(pickSkillUnit&&pickSkillUnit.sid===r.skill_id)?"picked":""}">
-        <div class="nm">${r.name}<br><small>槽${r.slot_index} · #${r.skill_id} · ${r.target_kind==="unit"?"单位目标":"地图落点"} · 已释放×${r.released_this_round}</small></div>
-        <button data-release="${r.skill_id}" data-name="${r.name}" data-tkind="${r.target_kind}" ${r.supported?"":"disabled"}>释放</button></div>`;
+        <div class="nm">${r.name}<br><small>槽${r.slot_index} · #${r.skill_id} · ${r.target_kind==="unit"?(r.redeploy?"单位目标 · 解锁移动":"单位目标"):"地图落点"} · ${r.active?(r.redeploy&&r.released_this_round?"本回合已用":"可用"):`冷却中`}</small></div>
+        <button data-release="${r.skill_id}" data-name="${r.name}" data-tkind="${r.target_kind}" ${r.supported&&r.active?"":"disabled"}>释放</button></div>`;
   }
   h+="<div class='dim' style='margin:8px 0 6px'>蓝图（研究中心）</div>";
   for(const b of V.legal_actions.blueprints||[])
@@ -571,24 +587,30 @@ function renderRight(){
   }
   b.innerHTML=summaryHtml();
 }
+const MOVE_REASON_LABEL={NEW_THIS_ROUND:"本回合新单位",DEPLOYMENT_MODULE:"部署模块",
+  MOBILITY_TECH:"高速引擎",REDEPLOY_SKILL:"再部署"};
 function unitHtml(u){
   const p=humanP();
   const canUp=u.level<9&&p.supply>=(u.upgrade_price||0);
   const eqName=u.equipment_name?`${u.equipment_name} (#${u.equipment_id})`:(u.equipment_id?("#"+u.equipment_id):"无");
+  const mv=u.movable===undefined?null:(u.movable
+    ?`<span class="ok">可移动</span> <span class="dim">(${(u.move_reasons||[]).map(r=>MOVE_REASON_LABEL[r]||r).join(" + ")||"—"})</span>`
+    :`<span class="bad">🔒 不可移动</span> <span class="dim">(上回合已参战；新单位/部署模块/高速引擎/再部署可解锁)</span>`);
   return `<div class="gold" style="margin-bottom:6px">${u.name} <small>#${u.handle} · 己方</small></div>
   <div class="kv"><span class="k">等级</span><b>${u.level}</b>${u.level>=9?"（满级）":""}</div>
   <div class="kv"><span class="k">经验</span>${u.exp} / ${u.exp_need||"—"}</div>
   <div class="kv"><span class="k">部署坐标</span>(${Math.round(u.x)}, ${Math.round(u.y)}) ${u.is_rotate?"⟳旋转":""}</div>
   <div class="kv"><span class="k">编队/回合</span>规模见商店 · 已部署 ${u.round_count} 回合</div>
+  ${mv?`<div class="kv"><span class="k">移动</span>${mv}</div>`:""}
   <div class="kv"><span class="k">装备</span>${eqName}${u.equipment_fidelity==="approximate"?" <span class='tag gold'>pysim 未计算效果</span>":""}</div>
   <div class="kv"><span class="k">科技</span>${(p.tech_map.find(x=>x[0]===u.mech_id)||[])[1]?.join(", ")||"—"}</div>
   <div class="kv"><span class="k">基础属性</span>暂无数据（以 GameView 为准，不做前端估算）</div>
   <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
     <button id="btnUpg" class="primary" ${canUp?"":"disabled"}>升级 ¥${u.upgrade_price??"—"}</button>
-    <button id="btnRot" ${V.phase==="deployment"?"":"disabled"}>旋转</button>
+    <button id="btnRot" ${(V.phase==="deployment"&&u.movable!==false)?"":"disabled"} title="${u.movable===false?"不可移动的单位不能旋转":"旋转朝向"}">旋转</button>
     <button id="btnSell" ${V.phase==="deployment"?"":"disabled"}>回收 +¥${u.sell_supply}</button>
   </div>
-  <div class="dim" style="margin-top:8px">拖动单位到目标位置后松开即提交移动；主操作「结束部署」固定在顶部中央。</div>`;
+  <div class="dim" style="margin-top:8px">${u.movable===false?"🔒 本回合不可拖动/旋转":"拖动单位到目标位置后松开即提交移动"}；主操作「结束部署」固定在顶部中央。</div>`;
 }
 function oppUnitHtml(u){
   return `<div class="gold" style="margin-bottom:6px">${u.name} <small>#${u.handle} · 对手（只读）</small></div>
@@ -818,6 +840,7 @@ function drawHex(x,y,r,color){
 function drawUnit(u,role,selected){
   const x=px(u.x),y=py(u.y);
   ctx.save();ctx.translate(x,y);
+  const locked=role==="human"&&u.movable===false;
   ctx.fillStyle=selected?"#8a7a2e":COL[role].fill;
   ctx.strokeStyle=selected?"#ffd54a":COL[role].stroke;
   ctx.lineWidth=selected?2.5:1.5;
@@ -827,6 +850,12 @@ function drawUnit(u,role,selected){
   ctx.fillStyle="#e8eef5";ctx.font="9px 'Segoe UI'";ctx.textAlign="center";
   ctx.fillText(u.name.slice(0,4)+"L"+u.level,0,-15);
   if(u.is_rotate){ctx.strokeStyle="#ffd54a";ctx.strokeRect(-12,-12,24,24);}
+  if(locked){                 /* step4 §4.2: locked unit badge (fought last round) */
+    ctx.strokeStyle="rgba(122,134,153,.8)";ctx.lineWidth=1.2;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.arc(0,0,13,0,7);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle="#7a8699";ctx.font="8px 'Segoe UI'";
+    ctx.fillText("🔒",0,4);
+  }
   ctx.restore();
 }
 function drawEdit(){
@@ -845,9 +874,12 @@ function drawEdit(){
       }
     }
   }
-  /* step3 §5.4: unit-target skill mode highlights own units */
+  /* step3 §5.4 + step4 §5: unit-target skill mode highlights its LEGAL
+     targets (再部署 highlights only currently locked own units) */
   if(pickSkillUnit&&mode==="edit"){
+    const legal=pickSkillUnit.legal_targets;
     for(const u of hp.units||[]){
+      if(legal&&!legal.includes(u.handle))continue;
       const x=px(u.x),y=py(u.y);
       ctx.strokeStyle="#7fd";ctx.lineWidth=2;
       ctx.beginPath();ctx.arc(x,y,16,0,7);ctx.stroke();
@@ -900,7 +932,12 @@ cv.addEventListener("mousedown",e=>{
     const hit=hitUnit(x,y);
     if(hit&&hit.role==="human"){
       selUnit=hit.u.handle;
-      drag={handle:hit.u.handle,ux:hit.u.x,uy:hit.u.y,x,y,sx:x,sy:y};
+      if(hit.u.movable===false){          /* step4 §4.2: locked units never drag */
+        drag=null;
+        flash(`🔒 ${hit.u.name} 上回合已参战，本回合不可移动（新单位/部署模块/高速引擎/再部署除外）`);
+      }else{
+        drag={handle:hit.u.handle,ux:hit.u.x,uy:hit.u.y,x,y,sx:x,sy:y};
+      }
       renderRight();drawEdit();
     }
   }
@@ -918,8 +955,10 @@ cv.addEventListener("mousemove",e=>{
     const tip=$("tip");
     if(hit){
       const r=cv.getBoundingClientRect(),st=$("stage").getBoundingClientRect();
+      const lockTxt=(hit.role==="human"&&hit.u.movable===false)
+        ?`<br><span class="bad">🔒 本回合不可移动</span>`:"";
       tip.innerHTML=`<b>${hit.u.name}</b> L${hit.u.level} · exp ${hit.u.exp}`+
-        `<br><span class="dim">${hit.role==="human"?"己方":"对手"} · (${Math.round(hit.u.x)}, ${Math.round(hit.u.y)})${hit.u.is_rotate?" ⟳":""}</span>`;
+        `<br><span class="dim">${hit.role==="human"?"己方":"对手"} · (${Math.round(hit.u.x)}, ${Math.round(hit.u.y)})${hit.u.is_rotate?" ⟳":""}</span>`+lockTxt;
       tip.style.display="block";
       tip.style.left=Math.min(e.clientX-st.left+14,st.width-190)+"px";
       tip.style.top=Math.min(e.clientY-st.top+10,st.height-60)+"px";
@@ -953,6 +992,13 @@ cv.addEventListener("click",e=>{
   }
   if(V.phase==="deployment"&&!humanP().finished_deploy&&pickSkillUnit){
     if(hit&&hit.role==="human"){
+      const legal=pickSkillUnit.legal_targets;
+      if(legal&&!legal.includes(hit.u.handle)){
+        flash(pickSkillUnit.redeploy
+          ?`${hit.u.name} 本回合已可移动，无需再部署（选择被 🔒 锁定的单位）`
+          :`该单位不是 ${pickSkillUnit.name} 的合法目标`);
+        return;
+      }
       cmd("APPLY_ACTION",{action:{kind:"release_commander_skill",args:{
         skill_id:pickSkillUnit.sid,unit_ref:{handle:hit.u.handle}}}});
       pickSkillUnit=null;renderLeft();drawEdit();

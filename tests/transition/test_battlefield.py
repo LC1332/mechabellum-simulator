@@ -363,12 +363,13 @@ def test_compiler_flank_spawn_and_quick_teleport():
 
 # ================================================================ M1 deploy
 def test_officer_10004_extra_deploy_slot():
-    """额外部署位: +1 buy limit per held copy (可重复 -> stacks)."""
+    """额外部署位: +1 buy limit per held copy (可重复 -> stacks).
+    step4: BASE_BUY_LIMIT 2 (user ruling) — 1 copy -> 3, 2 copies -> 4."""
     st = sandbox(units0=((10, -60.0),), units1=((10, 60.0),),
                  officers0=(10004,))
     bought = 0
     s = st
-    for k in range(6):            # BASE_BUY_LIMIT 5 + 1
+    for k in range(3):            # BASE_BUY_LIMIT 2 + 1 copy
         rr = apply0(s, CanonicalAction(
             ActionKind.BUY_UNIT, BuyArgs(mech_id=2, x=0.0, y=-100.0 - k,
                                          new_ref=k + 1)))
@@ -383,12 +384,15 @@ def test_officer_10004_extra_deploy_slot():
     st2 = sandbox(units0=((10, -60.0),), units1=((10, 60.0),),
                   officers0=(10004, 10004))
     s2 = st2
-    for k in range(7):
+    for k in range(4):            # 2 + 2 copies
         rr = apply0(s2, CanonicalAction(
             ActionKind.BUY_UNIT, BuyArgs(mech_id=2, x=0.0, y=-100.0 - k,
                                          new_ref=k + 1)))
         assert rr.receipts[0][0].accepted
         s2 = rr.state
+    rr = apply0(s2, CanonicalAction(
+        ActionKind.BUY_UNIT, BuyArgs(mech_id=2, x=0.0, y=-199.0, new_ref=98)))
+    assert not rr.receipts[0][0].accepted
 
 
 def test_skill_slot_consumption_and_reject():

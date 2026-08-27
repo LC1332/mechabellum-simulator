@@ -164,8 +164,15 @@ def advance_round(settled: EnvironmentState,
         if gd is not None:
             from .equipment import (round_officer_skills,
                                     round_officer_equipment, top_up_skill_slots)
+            from .deploy import BLUEPRINT_SKILLS
             new_round = settled.round + 1
             grants = round_officer_skills(gd, p.officers, new_round)
+            # step4 (user ruling 2026-08-27): blueprint 1/2/3 research
+            # unlocks the mapped commander skill — the slot arrives at the
+            # NEXT round start (corpus lag=+1 ~100%). Idempotent top-up.
+            grants += tuple(BLUEPRINT_SKILLS[int(b)]
+                            for b in (p.blueprints or ())
+                            if int(b) in BLUEPRINT_SKILLS)
             if grants:
                 skills = tuple(top_up_skill_slots(skills, grants))
             eq_grants = round_officer_equipment(p.officers, new_round)
@@ -180,7 +187,8 @@ def advance_round(settled: EnvironmentState,
                                       "tower_mods_raw": (),
                                       "devices_raw": (),
                                       "skill_events_raw": (),
-                                      "spawned_this_round": ()}))
+                                      "spawned_this_round": (),
+                                      "redeployed_this_round": ()}))
     return EnvironmentState(
         schema_version=settled.schema_version,
         ruleset_version=settled.ruleset_version,

@@ -28,13 +28,13 @@ BLOCKER_CODES = (
 # canonical kinds deploy_transition executes with full state effects
 SUPPORTED_NORM_KINDS = {"buy", "gift", "unlock", "move", "upgrade", "tech",
                         "sell", "finish", "reinforce", "release", "equip",
-                        "surrender"}
+                        "surrender", "tower_skill"}
 
 # raw passthrough types deploy executes with a COMPLETE modeled effect
 # (supply + persistent state + battle side). Everything else is a blocker.
-# Blueprint semantics v1 (deploy.BLUEPRINT_OFFICERS / BLUEPRINT_COSTS):
-# 1 快速补给, 2 批量征召(buy limit, cost 50), 3 精英征召(buy level),
-# 4/5/401/501 officers.
+# Blueprint semantics (step4 user ruling): 1/2/3 = commander-skill research
+# (黏油弹400002/战地回收900001/移动信标1500001, slot granted next round),
+# 4/5/401/501 = permanent officers.
 _FULLY_MODELED_RAW = {"StrengthenTower", "GiveUp"}
 _FULLY_MODELED_BLUEPRINTS = {1, 2, 3, 4, 5, 401, 501}
 
@@ -121,6 +121,13 @@ def classify_norm_entry(e, rec=None, eco=None, gd=None, side=None):
     if t == "surrender":
         # battlefield M1: typed GiveUp — deploy executes it terminally
         return None
+    if t == "tower_skill":
+        # step4 任务书 §1.4: typed 能量塔技能 5/6 (registry-backed support)
+        sid = _as_int(e.get("skill"))
+        if sid is not None and mechanism_support("tower_skill", sid)[
+                "transition_complete"]:
+            return None
+        return "UNSUPPORTED_ACTION_FIELD"     # ids 1/3/4 unmapped
     if t == "equip":
         if mechanism_support("equipment", e.get("id", 0))[
                 "transition_complete"]:
@@ -142,9 +149,9 @@ def classify_raw(raw_type, raw_rec, rec=None):
         return "UNSUPPORTED_ACTION_FIELD"     # battle effect unmodeled
     if raw_type == "ActiveEnergyTowerSkill":
         sid = _as_int(raw_rec.get("SkillID"))
-        if sid in (5, 6):
-            return None                       # stacking round buffs
-        return "UNSUPPORTED_ACTION_FIELD"     # ids 1/3/4 unmapped
+        if sid in (1, 3, 4, 5, 6):
+            return None                       # one-shot round skills (typed)
+        return "UNSUPPORTED_ACTION_FIELD"     # id 2 (never observed) unmapped
     if raw_type == "ReleaseContraption":
         cid = _as_int(raw_rec.get("ContraptionID"))
         if cid in (10001, 20001):
@@ -223,8 +230,34 @@ def scan_offers(offers, eco, strict_all_supported=False):
 
 
 def scan_opponent_round(norm_entries, rec, eco, gd, side=None):
-    """One opponent round -> (blocker, first offending norm entry) or (None, None)."""
+    """One opponent round -> (blocker, first offending norm entry) or (None, None).
+
+    step4: the round's paid buys must respect the same buy limit as the
+    runtime — base 2 + 能量塔技能3 批量征召 purchases earlier in the stream
+    (typed `tower_skill` or legacy `ActiveEnergyTowerSkill` passthrough) +
+    10004 held at the snapshot or picked mid-round. Blueprint 2 research
+    grants NO quota (user ruling; corpus wall 0/16,512)."""
+    from .rules import BASE_BUY_LIMIT, EXTRA_DEPLOY_OFFICER
+    officers = [int(o) for o in ((rec or {}).get("officers") or [])]
+    off_bonus = sum(1 for o in officers if o == EXTRA_DEPLOY_OFFICER)
+    mass = 0
+    used = 0
     for e in norm_entries or []:
+        t = e.get("t")
+        if t == "buy":
+            used += 1
+            if used > BASE_BUY_LIMIT + mass + off_bonus:
+                return "BUY_LIMIT_REACHED", e
+        elif t == "reinforce" and int(e.get("id", 0) or 0) == \
+                EXTRA_DEPLOY_OFFICER:
+            off_bonus += 1
+        elif t == "tower_skill" and int(e.get("skill", 0) or 0) == 3:
+            mass += 1
+        elif t == "passthrough":
+            rt = e.get("raw_type")
+            if rt == "ActiveEnergyTowerSkill" and \
+                    _as_int((e.get("raw_rec") or {}).get("SkillID")) == 3:
+                mass += 1
         b = classify_norm_entry(e, rec, eco, gd, side=side)
         if b:
             return b, e

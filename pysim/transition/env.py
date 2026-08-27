@@ -260,9 +260,14 @@ class TransitionEnv:
         half0 = [-300.0 + (k + 0.5) * step_y for k in range(move_grid // 2)]
         ys = half0 if player == 0 else [-y for y in half0]
         # moves: a sample of positions (the full grid per unit is huge; the
-        # random policy samples unit x target from this product)
+        # random policy samples unit x target from this product). Only
+        # units with movement permission are candidates (step4 任务书 §1.2 —
+        # same rule source as MOVE_UNIT's deploy check).
         from .model import MoveArgs, EntityRef
+        from .rules import movement_permission
         for j, u in enumerate(p.units):
+            if not movement_permission(p, u).allowed:
+                continue
             h = u.replay_index if u.replay_index is not None else j
             out.append(CanonicalAction(
                 ActionKind.MOVE_UNIT,
@@ -277,9 +282,12 @@ class TransitionEnv:
                     MoveArgs(ref=EntityRef(handle=h), x=xs[gi],
                              y=ys[(j + gi) % len(ys)], is_rotate=False)))
         from .model import BuyArgs, UnlockArgs, UpgradeArgs, TechArgs
+        from .rules import buy_limit_quote
+        buy_quote = buy_limit_quote(p)
         for mech in sorted(p.unlocked_mechs):
             price = self.eco.buy_price(mech)
-            if price is not None and p.supply >= price:
+            if price is not None and p.supply >= price \
+                    and buy_quote.remaining > 0:
                 # buy candidates sit inside the acting player's own half
                 # (deploy.in_own_half: side 0 y<0, side 1 y>0)
                 by = -150.0 if player == 0 else 150.0

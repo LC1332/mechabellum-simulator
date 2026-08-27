@@ -382,7 +382,9 @@ class Battle:
           {"kind": "barrier", x, y, hp, radius}                -> 护盾装置/空投护盾
           {"kind": "strike",  x, y, damage, splash, t?}        -> 导弹打击
           {"kind": "summon",  x, y, mech, count, level}        -> 呼叫机群/地底威胁
-        Must be called before finalize()."""
+        step4 P1 strike extensions: "ff" (friendly fire — 轨道轰炸/核弹 hit
+        BOTH teams' units, QA#6) and "bypass" (轨道标枪 ignores barrier
+        absorption). Must be called before finalize()."""
         kind = ev.get("kind")
         x, y = float(ev.get("x", 0.0)), float(ev.get("y", 0.0))
         if kind == "summon":
@@ -395,7 +397,9 @@ class Battle:
         elif kind == "strike":
             self._strikes.append((team, x, y, float(ev.get("damage", 0.0)),
                                   float(ev.get("splash", 0.0)),
-                                  float(ev.get("t", 0.0))))
+                                  float(ev.get("t", 0.0)),
+                                  bool(ev.get("ff", False)),
+                                  bool(ev.get("bypass", False))))
         elif kind == "burn":
             # step15 燃烧弹: burning ground patch, dps while enemies stand in
             # it (radius from cal; patch burns the whole fight)
@@ -1219,7 +1223,7 @@ class Battle:
                 self.trace.append("E|0.00|skill|%d|%s|%.0f,%.0f" % (team, kind, x, y))
             for team, cid, x, y, gidx in self._buildings:
                 self.trace.append("E|0.00|bld|%d|%d|%d|%.0f,%.0f" % (team, cid, gidx, x, y))
-            for team, x, y, dmg, splash, t in self._strikes:
+            for team, x, y, dmg, splash, t, _ff, _byp in self._strikes:
                 self.trace.append("E|%.2f|skill|%d|strike|%.0f,%.0f" % (t, team, x, y))
             for team, mech, sx, sy in getattr(self, "_summon_marks", []):
                 self.trace.append("E|0.00|skill|%d|summon|%.0f,%.0f" % (team, sx, sy))
@@ -2452,19 +2456,27 @@ class Battle:
                     self._burns.append([self.team[src], float(px), float(py),
                                         dps, rad, self.time + life])
 
-    def _fire_strike(self, team, x, y, dmg, splash, t):
+    def _fire_strike(self, team, x, y, dmg, splash, t, ff=False, bypass=False):
         # step8-B: area strike at a fixed point, killerless (no exp);
-        # units only - towers, devices and buildings are not strike targets
-        enemies = np.where((~self.dead) & (self.team != team)
-                           & (~self.is_tower) & (~self.is_device)
-                           & (~self.is_bld))[0]
-        if len(enemies):
-            dx = self.x[enemies] - x
-            dy = self.y[enemies] - y
-            hitmask = np.sqrt(dx * dx + dy * dy) - self.radius[enemies] <= splash
-            for v in enemies[hitmask]:
+        # units only - towers, devices and buildings are not strike targets.
+        # step4 P1: ff=True hits BOTH teams (轨道轰炸/核弹 friendly fire,
+        # QA#6); bypass=True marks the queued events so _apply_damage skips
+        # barrier absorption (轨道标枪).
+        foes = np.where((~self.dead)
+                        & ((self.team != team) | bool(ff))
+                        & (~self.is_tower) & (~self.is_device)
+                        & (~self.is_bld))[0]
+        if len(foes):
+            dx = self.x[foes] - x
+            dy = self.y[foes] - y
+            hitmask = np.sqrt(dx * dx + dy * dy) - self.radius[foes] <= splash
+            for v in foes[hitmask]:
                 self._ev_victim.append(int(v)); self._ev_dmg.append(dmg)
                 self._ev_killer.append(-1)
+                if bypass:
+                    if not hasattr(self, "_bypass_ev_idx"):
+                        self._bypass_ev_idx = set()
+                    self._bypass_ev_idx.add(len(self._ev_victim) - 1)
         if self.trace_enabled:
             self.trace.append("E|%.2f|skill|%d|strike_hit|%.0f,%.0f" % (self.time, team, x, y))
 
@@ -2576,6 +2588,10 @@ class Battle:
         # this event queue); the overflow of the shield-breaking hit passes
         # through to the victim. Direct hits on the barrier itself are not
         # redirected.
+        # step4 QA#6: barriers cover GROUND friendlies only — air units
+        # (凤凰/兵蜂/深渊 ...) get no barrier protection.
+        # step4 P1: bypass-flagged events (轨道标枪) skip the redirect.
+        bypass_idx = getattr(self, "_bypass_ev_idx", None) or ()
         bars = np.where((self.mech_id == DEVICE_BARRIER) & (~self.dead)
                         & (self.hp > 0))[0] if np.any(self.is_device) else []
         if len(bars):
@@ -2583,8 +2599,10 @@ class Battle:
                 vi = int(v[k])
                 if self.mech_id[vi] == DEVICE_BARRIER:
                     continue
-                if dm[k] <= 0:
+                if dm[k] <= 0 or k in bypass_idx:
                     continue
+                if self.is_fly[vi]:
+                    continue        # QA#6: no barrier cover for air units
                 for bi in bars:
                     bi = int(bi)
                     if self.dead[bi] or self.hp[bi] <= 0 or self.team[vi] != self.team[bi]:
@@ -2781,6 +2799,8 @@ class Battle:
                 self.aegis[vi] = False
                 self.aegis_until[vi] = t_now + 4.0
         self._ev_victim.clear(); self._ev_dmg.clear(); self._ev_killer.clear()
+        if hasattr(self, "_bypass_ev_idx"):
+            self._bypass_ev_idx.clear()
 
     def _process_deaths(self, newly, last_k):
         t = self.time

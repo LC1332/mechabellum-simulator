@@ -39,26 +39,20 @@
    ]
   },
   {
-   "t": "passthrough",
-   "raw_type": "ReleaseCommanderSkill",
+   "t": "release",
+   "skill": 1000001,
+   "skill_index": 1,
+   "positions": [
+    [
+     -269.0,
+     -166.0
+    ]
+   ],
+   "unit": 16,
+   "construction": null,
    "raw": [
     4
-   ],
-   "raw_rec": {
-    "Time": 25.0,
-    "LocalTime": 80.9,
-    "ID": 0,
-    "SkillIndex": 1,
-    "Positions": [
-     {
-      "x": -269.0,
-      "y": -166.0
-     }
-    ],
-    "UnitIndex": 16,
-    "ConstructionIndex": -1
-   },
-   "skill_index": 1
+   ]
   },
   {
    "t": "move",
@@ -72,26 +66,20 @@
    ]
   },
   {
-   "t": "passthrough",
-   "raw_type": "ReleaseCommanderSkill",
+   "t": "release",
+   "skill": 1200001,
+   "skill_index": 3,
+   "positions": [
+    [
+     -288.0,
+     -208.0
+    ]
+   ],
+   "unit": null,
+   "construction": null,
    "raw": [
     6
-   ],
-   "raw_rec": {
-    "Time": 28.0,
-    "LocalTime": 80.9,
-    "ID": 0,
-    "SkillIndex": 3,
-    "Positions": [
-     {
-      "x": -288.0,
-      "y": -208.0
-     }
-    ],
-    "UnitIndex": -1,
-    "ConstructionIndex": -1
-   },
-   "skill_index": 3
+   ]
   },
   {
    "t": "buy",
@@ -176,16 +164,11 @@
    ]
   },
   {
-   "t": "passthrough",
-   "raw_type": "ActiveEnergyTowerSkill",
+   "t": "tower_skill",
+   "skill": 3,
    "raw": [
     16
-   ],
-   "raw_rec": {
-    "Time": 47.0,
-    "LocalTime": 80.9,
-    "SkillID": 3
-   }
+   ]
   },
   {
    "t": "buy",
@@ -231,16 +214,11 @@
    }
   },
   {
-   "t": "passthrough",
-   "raw_type": "ActiveEnergyTowerSkill",
+   "t": "tower_skill",
+   "skill": 5,
    "raw": [
     27
-   ],
-   "raw_rec": {
-    "Time": 68.0,
-    "LocalTime": 80.9,
-    "SkillID": 5
-   }
+   ]
   },
   {
    "t": "move",
@@ -303,7 +281,7 @@
    {
     "raw_index": 25,
     "undone_by": 26,
-    "kind": "passthrough"
+    "kind": "tower_skill"
    }
   ],
   "unresolved_refs": [],

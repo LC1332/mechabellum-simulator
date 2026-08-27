@@ -19,16 +19,19 @@ from pysim.transition import (TransitionEnv, Economy, Income200r,
                               UnlockArgs, TechArgs, SellArgs, GiftArgs,
                               ChooseReinforceArgs, UnsupportedArgs,
                               ReleaseCommanderSkillArgs, UseEquipmentArgs,
+                              ActivateEnergyTowerSkillArgs,
                               deploy_transition, state_digest, state_to_dict,
                               copy_state, canonicalize_plan,
-                              capability, opening as opening_mod)
+                              capability, opening as opening_mod,
+                              buy_limit_quote, movement_permission,
+                              REDEPLOY_SKILL_ID)
 from pysim.transition.equipment import (EQUIPMENT_DEFS, equipment_target_ok)
 from pysim.transition.normalize import GIFT_OFFICERS
 from pysim.transition.deploy import (TOWER_STRENGTHEN_COST, BLUEPRINT_COSTS,
                                      TOWER_SKILL_COSTS)
 from pysim.deploy import TOWER_POS
 
-GAME_VIEW_SCHEMA = "game_view_v3"
+GAME_VIEW_SCHEMA = "game_view_v4"
 BOARD_SPACE = "world_v1"
 BOARD_BOUNDS = {"x_min": -350.0, "x_max": 350.0,
                 "y_min": -300.0, "y_max": 300.0}
@@ -43,9 +46,12 @@ SESSION_PHASES = ("opening", "reinforcement", "deployment", "pre_battle",
 MIN_ROUNDS_DEFAULT = 5
 TOWER_MAX_LEVEL = 9
 BLUEPRINT_INFO = {
-    1: {"name": "快速补给", "cost": 0, "detail": "+200 立即, 下回合 -300 (收入侧)"},
-    2: {"name": "批量征召", "cost": 50, "detail": "本回合购买上限 +1 (激活费 ¥50)"},
-    3: {"name": "精英征召", "cost": 100, "detail": "本回合后续购买单位 +1 级"},
+    1: {"name": "黏油弹（研究）", "cost": 150,
+        "detail": "解锁指挥官技能 黏油弹 #400002（下回合入槽）"},
+    2: {"name": "战地回收（研究）", "cost": 100,
+        "detail": "解锁指挥官技能 战地回收 #900001（下回合入槽）"},
+    3: {"name": "移动信标（研究）", "cost": 100,
+        "detail": "解锁指挥官技能 移动信标 #1500001（下回合入槽）"},
     4: {"name": "进攻强化 I", "cost": 100, "detail": "永久 +12% 伤害"},
     5: {"name": "防御强化 I", "cost": 100, "detail": "永久 +15% 生命"},
     401: {"name": "进攻强化 II", "cost": 300, "detail": "永久 +36% 伤害(替换I)"},
@@ -105,6 +111,10 @@ def action_from_json(d):
     if kind is ActionKind.USE_EQUIPMENT:
         return CanonicalAction(kind, UseEquipmentArgs(
             equipment_id=int(a["equipment_id"]), unit_ref=_ref(a["unit_ref"])))
+    if kind is ActionKind.ACTIVATE_ENERGY_TOWER_SKILL:
+        # step4 任务书 §2.3: typed 能量塔技能 (5 强化瞄准 / 6 高速移动)
+        return CanonicalAction(kind, ActivateEnergyTowerSkillArgs(
+            skill_id=int(a["skill_id"])))
     if kind is ActionKind.RAW_UNSUPPORTED:
         raw_in = a.get("raw") or {}
         if isinstance(raw_in, dict):
@@ -128,6 +138,7 @@ APPLYABLE_KINDS = {ActionKind.BUY_UNIT, ActionKind.MOVE_UNIT,
                    ActionKind.UNLOCK_UNIT, ActionKind.SELL_UNIT,
                    ActionKind.RELEASE_COMMANDER_SKILL,
                    ActionKind.USE_EQUIPMENT,
+                   ActionKind.ACTIVATE_ENERGY_TOWER_SKILL,
                    ActionKind.RAW_UNSUPPORTED}
 
 
@@ -962,6 +973,9 @@ class GameSession:
                 up_price = max(0, (up_price or 0) +
                                self.eco.upgrade_price_mod(u.mech_id, p.officers))
                 eq = EQUIPMENT_DEFS.get(int(u.equipment_id or 0))
+                # step4 任务书 §4.2: per-unit movement permission (server
+                # verdict; the frontend only disables interaction)
+                perm = movement_permission(p, u)
                 units.append({
                     "handle": u.replay_index,
                     "mech_id": u.mech_id, "name": self._mech_name(u.mech_id),
@@ -977,7 +991,12 @@ class GameSession:
                                            else None),
                     "upgrade_price": up_price if u.level < 9 else None,
                     "round_count": u.round_count,
+                    "movable": perm.allowed,
+                    "move_reasons": list(perm.reasons),
+                    "move_blocker": None if perm.allowed
+                    else "UNIT_NOT_MOVABLE_THIS_ROUND",
                 })
+            quote = buy_limit_quote(p)
             out.append({
                 "player": side,
                 "role": "human" if side == self.human else "opponent",
@@ -987,6 +1006,11 @@ class GameSession:
                 "pre_round_fight_result": p.pre_round_fight_result,
                 "finished_deploy": s.finished_deploy[side],
                 "units": units,
+                "buy_limit": {"base": quote.base,
+                              "blueprint_bonus": quote.blueprint_bonus,
+                              "officer_bonus": quote.officer_bonus,
+                              "used": quote.used, "limit": quote.limit,
+                              "remaining": quote.remaining},
                 "unlocked_mechs": sorted(p.unlocked_mechs),
                 "tech_map": [[m, list(t)] for m, t in p.tech_map],
                 "officers": [self._officer_name(o) for o in p.officers],
@@ -1025,6 +1049,7 @@ class GameSession:
                            else "PLAYER_ALREADY_FINISHED" if finished
                            else "UNDO_EMPTY")
         buy, unlock, tech = [], [], []
+        quote = buy_limit_quote(p)
         for mech in sorted(set(self.gd.cards)):
             card = self.gd.cards[mech]
             if mech in p.unlocked_mechs:
@@ -1033,6 +1058,8 @@ class GameSession:
                             "price": q.final_price,
                             "quote": self._quote_view(q),
                             "affordable": p.supply >= q.final_price,
+                            "purchasable": (p.supply >= q.final_price
+                                            and quote.remaining > 0),
                             "slot_size": card.slot_size,
                             "mech_count": card.mech_count})
             else:
@@ -1082,18 +1109,35 @@ class GameSession:
                            "cost": TOWER_STRENGTHEN_COST,
                            "affordable": p.supply >= TOWER_STRENGTHEN_COST,
                            "max": TOWER_MAX_LEVEL})
+        n1 = sum(1 for s in (p.blueprints_round or ()) if int(s) == 101)
+        n3 = sum(1 for s in (p.blueprints_round or ()) if int(s) == 102)
+        n4 = sum(1 for s in (p.blueprints_round or ()) if int(s) == 103)
         n5 = sum(1 for s in (p.tower_mods_raw or ()) if int(s) == 5)
         n6 = sum(1 for s in (p.tower_mods_raw or ()) if int(s) == 6)
-        tower_skills = [
-            {"skill_id": 5, "name": "强化瞄准", "cost": TOWER_SKILL_COSTS[5],
-             "detail": "本回合全体远程射程 +15 (可叠加)",
-             "active_count": n5,
-             "affordable": p.supply >= TOWER_SKILL_COSTS[5]},
-            {"skill_id": 6, "name": "高速移动", "cost": TOWER_SKILL_COSTS[6],
-             "detail": "本回合全体移速 +3 (可叠加)",
-             "active_count": n6,
-             "affordable": p.supply >= TOWER_SKILL_COSTS[6]},
-        ]
+        # step4 任务书 §1.4/QA#4 + user ruling: the five commend-center
+        # items are one-shot per round (3 批量征召 lifts the buy limit,
+        # 4 精英征召 levels subsequent buys, 1 快速补给 is the loan)
+        from pysim.battlefield import registry as bf_registry2
+        tower_skills = []
+        for sid, name, detail in (
+                (1, "快速补给", "立即 +200，下回合收入 -300（每回合限购一次）"),
+                (3, "批量征召", "本回合购买上限 +1（每回合限购一次）"),
+                (4, "精英征召", "本回合后续购买单位 +1 级（每回合限购一次）"),
+                (5, "强化瞄准", "本回合全体远程射程 +15（每回合限购一次）"),
+                (6, "高速移动", "本回合全体移速 +3（每回合限购一次）")):
+            fid = bf_registry2.mechanism_support("tower_skill", sid).two_axis()
+            active = {1: n1, 3: n3, 4: n4, 5: n5, 6: n6}[sid]
+            tower_skills.append({
+                "skill_id": sid, "name": name,
+                "cost": TOWER_SKILL_COSTS[sid], "detail": detail,
+                "active_count": active,
+                "affordable": p.supply >= TOWER_SKILL_COSTS[sid],
+                "purchasable": (active == 0
+                                and p.supply >= TOWER_SKILL_COSTS[sid]),
+                "supported": fid["transition_complete"],
+                "battle_fidelity": fid["battle_fidelity"],
+                "confidence": fid["confidence"],
+            })
         # skill slots (step3 任务书 §5.4): index, resolved id, name, target
         # kind, support and this round's release count per slot
         releases = []
@@ -1109,6 +1153,17 @@ class GameSession:
                 from pysim.battlefield import registry as bf_registry
                 fid = bf_registry.mechanism_support(
                     "commander_skill", sid).two_axis()
+                # step4 任务书 §5: unit-target slots list their legal
+                # targets — 再部署 highlights only currently LOCKED own
+                # units (its effect is unlocking them)
+                targets = None
+                if d is not None \
+                        and commander_skill_target_kind(sid) == "unit":
+                    if sid == REDEPLOY_SKILL_ID:
+                        targets = [u.replay_index for u in p.units
+                                   if not movement_permission(p, u).allowed]
+                    else:
+                        targets = [u.replay_index for u in p.units]
                 releases.append({
                     "slot_index": slot_idx, "skill_id": sid,
                     "name": (d or {}).get("name", str(sid)),
@@ -1119,9 +1174,14 @@ class GameSession:
                     if d is not None else "unsupported",
                     "confidence": fid["confidence"] if d is not None
                     else "unsupported",
-                    "released_this_round": sum(
-                        1 for r in (p.skill_events_raw or ())
-                        if int(r[0]) == sid)})
+                    "legal_targets": targets,
+                    "redeploy": sid == REDEPLOY_SKILL_ID,
+                    "released_this_round": (
+                        len(p.redeployed_this_round or ())
+                        if sid == REDEPLOY_SKILL_ID else
+                        sum(1 for r in (p.skill_events_raw or ())
+                            if int(r[0]) == sid)),
+                })
         except Exception:
             pass
         # pending equipment stock (step3 任务书 §6.5) with legal targets;
@@ -1163,6 +1223,11 @@ class GameSession:
                                "supported": True})
         return {
             "buy": buy, "unlock": unlock, "tech": tech,
+            "buy_limit": {"base": quote.base,
+                          "blueprint_bonus": quote.blueprint_bonus,
+                          "officer_bonus": quote.officer_bonus,
+                          "used": quote.used, "limit": quote.limit,
+                          "remaining": quote.remaining},
             "towers": towers, "tower_skills": tower_skills,
             "skill_releases": releases,
             "equipment": {"inventory": inventory},

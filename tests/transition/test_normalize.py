@@ -139,7 +139,7 @@ def test_cancel_removes_release_and_undo_restores():
         ]))
     assert kinds(r2.actions_norm) == ["release"]
     assert r2.actions_norm[0]["skill"] == 300001
-    assert r2.actions_norm[0]["positions"] == [(1.0, 1.0)]
+    assert r2.actions_norm[0]["positions"] == [[1.0, 1.0]]
     # an UNMAPPED skill still degrades to passthrough (precise blocker)
     skills_emp = [{"index": "2", "id": "200001", "isActive": "true",
                    "coolingRound": "0"}]

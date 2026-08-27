@@ -167,12 +167,26 @@ class ReplayAdapter:
         cs = tuple(tuple(str(x) for x in (
             e.get("index"), e.get("id"), e.get("isActive"), e.get("coolingRound")))
             for e in (round_rec.get("commanderSkills_raw") or []))
+        # step4: the snapshot is PRE-deploy — the game ticks skill cooldowns
+        # at the deploy-phase start (the same tick advance_round applies), so
+        # slots displayed (inactive, cd<=1) re-arm BEFORE any action. Without
+        # this tick the adapter would refuse releases the game accepted
+        # (e.g. 再部署 1000001 picked last round, shown cd=0).
+        if int(before_round) >= 2:
+            from .settlement import tick_skill_cooldowns
+            cs = tuple(tick_skill_cooldowns(cs))
         cons = tuple(tuple(str(x) for x in (
             e.get("index"), e.get("id"), e.get("x"), e.get("y")))
             for e in (round_rec.get("constructions_raw") or []))
         twr = tuple(_as_int(x) for x in
                     (round_rec.get("towerStrengthen_raw") or (0, 0))[:2])
         max_hp = self._max_hp(round_rec, player_rec)
+        # step4 任务书 §1.2/QA#1: round-1 snapshot units are the OPENING
+        # units — they have not fought a battle yet, so every one of them is
+        # movable. Later rounds start with NO spawned rights: the round's own
+        # actions (buys/grants/equips/redeploys) build them (§4.1).
+        spawned = tuple(sorted(u.entity_id for u in units)) \
+            if int(before_round) <= 1 else ()
         return PlayerState(
             hp=int(round_rec.get("reactorCore", 0) or 0),
             max_hp=max_hp,
@@ -186,6 +200,7 @@ class ReplayAdapter:
             commander_skills_raw=cs,
             tower_strengthen=twr,
             constructions_raw=cons,
+            spawned_this_round=spawned,
             bought_this_round=0)
 
     @staticmethod

@@ -14,7 +14,7 @@ from .model import (ActionKind, CanonicalAction, CanonicalActionPlan,
                     BuyArgs, MoveArgs, UpgradeArgs, UnlockArgs, TechArgs,
                     ChooseReinforceArgs, SellArgs, GiftArgs, UnsupportedArgs,
                     ReleaseCommanderSkillArgs, UseEquipmentArgs, EntityRef,
-                    SurrenderArgs)
+                    ActivateEnergyTowerSkillArgs, SurrenderArgs)
 
 # raw types that must have been folded away before deploy
 FORBIDDEN_RAW_TYPES = ("Undo", "CancelReleaseCommanderSkill")
@@ -125,6 +125,12 @@ def canonicalize_plan(player: int, actions: list,
                     equipment_id=int(e.get("id", 0) or 0),
                     unit_ref=EntityRef(handle=(None if u is None
                                                else int(u)))), k))
+        elif t == "tower_skill":
+            # typed 能量塔技能 (step4 任务书 §2.3)
+            out.append(CanonicalAction(
+                ActionKind.ACTIVATE_ENERGY_TOWER_SKILL,
+                ActivateEnergyTowerSkillArgs(
+                    skill_id=int(e.get("skill", 0) or 0)), k))
         elif t == "finish":
             out.append(CanonicalAction(ActionKind.END_DEPLOY, None, k))
         elif t == "surrender":

@@ -72,6 +72,14 @@ def legacy_battle(bi: BattleInput, gd, opts=None, with_trace: bool = False):
         if ev.kind == "strike":
             out["damage"] = params.get("damage", d["damage"])
             out["splash"] = params.get("splash", d["splash"])
+            # step4 P1 strike extensions: delayed (t), friendly fire (ff) and
+            # barrier bypass (轨道标枪)
+            if "t" in params:
+                out["t"] = float(params["t"])
+            if params.get("ff") or d.get("ff"):
+                out["ff"] = True
+            if params.get("bypass") or d.get("bypass"):
+                out["bypass"] = True
         elif ev.kind == "barrier":
             out["hp"] = params.get("hp", d["hp"])
             out["radius"] = params.get("radius", d["radius"])

@@ -56,7 +56,13 @@ def _device_params(cid, officers) -> tuple:
 
 def _skill_event_params(sid, d) -> tuple:
     if d["kind"] == "strike":
-        return (("damage", float(d["damage"])), ("splash", float(d["splash"])))
+        out = (("damage", float(d["damage"])), ("splash", float(d["splash"])),
+               ("t", float(d.get("t", 0.0) or 0.0)))
+        if d.get("ff"):
+            out = out + (("ff", 1.0),)
+        if d.get("bypass"):
+            out = out + (("bypass", 1.0),)
+        return out
     if d["kind"] == "barrier":
         return (("hp", float(d["hp"])), ("radius", float(d["radius"])))
     if d["kind"] == "summon":
@@ -85,7 +91,10 @@ def compile_battle_input(state, battle_seed: int = 0) -> BattleInput:
                 position=(tx, ty),
                 params=(("strengthen", float(lv or 0)),),
                 persistent=True, source="tower_strengthen"))
-        # round buffs from ActiveEnergyTowerSkill (stacking, free)
+        # round buffs from ActiveEnergyTowerSkill — the transition layer
+        # charges the fee at activation (deploy._activate_tower_skill) and
+        # allows ONE purchase per id per round (step4 QA#4); here the buff
+        # itself is compile-time only
         rng = spd = 0.0
         for sid in p.tower_mods_raw or ():
             if int(sid) == 5:
@@ -110,7 +119,9 @@ def compile_battle_input(state, battle_seed: int = 0) -> BattleInput:
                                                       and 10007 in officers)
                       else ("/10008" if (cid == 10001 and 10008 in officers)
                             else ""))))
-        # commander battlefield skills released this round
+        # commander battlefield skills released this round; multi-strike ids
+        # (轨道轰炸) expand deterministically here so the full落点 distribution
+        # lands in the digestable BattleInput (step4 任务书 §7.1)
         for n, rel in enumerate(p.skill_events_raw or ()):
             try:
                 sid, sx, sy = int(rel[0]), float(rel[1]), float(rel[2])
@@ -118,6 +129,16 @@ def compile_battle_input(state, battle_seed: int = 0) -> BattleInput:
                 continue
             d = COMMANDER_SKILLS.get(sid)
             if not d:
+                continue
+            if d["kind"] == "strike" and int(d.get("strikes", 1) or 1) > 1:
+                from ..skills import expand_strike_events
+                for m, sev in enumerate(expand_strike_events(sid, sx, sy)):
+                    events.append(TimedEvent(
+                        sev["kind"], side,
+                        "skill:%d:%d:%d" % (sid, n, m), sid,
+                        position=(sev["x"], sev["y"]),
+                        params=_skill_event_params(sid, d),
+                        source="ReleaseCommanderSkill"))
                 continue
             events.append(TimedEvent(
                 d["kind"], side, "skill:%d:%d" % (sid, n), sid,

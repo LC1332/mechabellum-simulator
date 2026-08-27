@@ -17,7 +17,8 @@ from pysim.transition import (Economy, Income200r, Phase, ActionKind,
                               deploy_transition, run_battle, settle_transition,
                               advance_round, state_digest, state_to_dict,
                               state_from_dict, copy_state, canonicalize_plan,
-                              capability, equipment as equipment_mod)
+                              capability, equipment as equipment_mod,
+                              BASE_BUY_LIMIT)
 from pysim.transition.model import (BuyArgs, TechArgs, UnlockArgs,
                                     ChooseReinforceArgs,
                                     ReleaseCommanderSkillArgs,
@@ -173,16 +174,20 @@ def test_tower_skill_costs_and_ledger():
     assert res2.state.players[0].tower_mods_raw == (5, 6)
 
 
-def test_blueprint2_charges_fifty_and_raises_limit():
+def test_blueprint_research_unlocks_commander_skill():
+    """step4 user ruling: blueprint 1/2/3 = commander-skill RESEARCH
+    (one-time; NO quota/level/loan effect — those are tower skills 3/4/1).
+    bp2 战地回收 costs 100 and unlocks skill 900001 at the NEXT round start."""
     st0 = sandbox()
     res = apply0(st0, raw_action("ActiveBlueprint", [("ID", 2)]))
     r = res.receipts[0][0]
-    assert r.accepted and r.resource_delta == -50
-    assert any(e.reason == "blueprint:2" and e.amount == -50
+    assert r.accepted and r.resource_delta == -100
+    assert any(e.reason == "blueprint:2" and e.amount == -100
                for e in res.ledgers[0].entries)
-    # buy limit +1: 6 buys accepted with BASE_BUY_LIMIT 5
+    assert res.state.players[0].blueprints == (2,)
+    # research does NOT lift the buy limit: the 3rd buy is still rejected
     st = res.state
-    for k in range(6):
+    for k in range(BASE_BUY_LIMIT):
         rr = apply0(st, CanonicalAction(ActionKind.BUY_UNIT, BuyArgs(
             mech_id=2, x=0.0, y=-100.0 - k, new_ref=k + 1)))
         assert rr.receipts[0][0].accepted, rr.receipts[0][0].detail
@@ -191,12 +196,30 @@ def test_blueprint2_charges_fifty_and_raises_limit():
         mech_id=2, x=0.0, y=-199.0, new_ref=99)))
     assert not rr.receipts[0][0].accepted
     assert rr.receipts[0][0].reason_code == "BUY_LIMIT_REACHED"
+    # no slot yet; advance_round grants 900001 (corpus lag=+1)
+    assert res.state.players[0].commander_skills_raw == ()
+    st2 = EnvironmentState(**{**st.__dict__, "finished_deploy": (True, True),
+                              "phase": Phase.PRE_BATTLE})
+    outcome = run_battle(st2, GD, battle_seed=6)
+    settled = settle_transition(st2, outcome, eco=ECO)
+    nxt = advance_round(settled.state, None, None, gd=GD)
+    ids = [int(e[1]) for e in nxt.players[0].commander_skills_raw]
+    assert 900001 in ids
+    # re-research the same blueprint: no double charge
+    res2 = apply0(res.state, raw_action("ActiveBlueprint", [("ID", 2)]))
+    assert res2.receipts[0][0].accepted
+    assert res2.receipts[0][0].resource_delta == 0
+    assert res2.state.players[0].supply == res.state.players[0].supply
 
 
 @pytest.mark.parametrize("raw_type,raw,cost", [
+    ("ActiveEnergyTowerSkill", [("SkillID", 3)], 50),
+    ("ActiveEnergyTowerSkill", [("SkillID", 4)], 100),
     ("ActiveEnergyTowerSkill", [("SkillID", 5)], 100),
     ("ActiveEnergyTowerSkill", [("SkillID", 6)], 50),
-    ("ActiveBlueprint", [("ID", 2)], 50),
+    ("ActiveBlueprint", [("ID", 1)], 150),
+    ("ActiveBlueprint", [("ID", 2)], 100),
+    ("ActiveBlueprint", [("ID", 3)], 100),
 ])
 def test_insufficient_funds_reject_and_keep_digest(raw_type, raw, cost):
     st = sandbox(supply0=cost - 1)
@@ -289,14 +312,23 @@ def test_env_tech_candidates_follow_field_mechs():
 
 # ================================================================ T4 skills
 def test_skill_id_mapping_frozen():
-    """§5.1: 200001 is EMP (unmapped), 1000001 is redeploy (unmapped);
-    燃烧弹 is 100002; summons are 1200001/1200003."""
-    assert set(COMMANDER_SKILLS) == {300001, 800001, 100002, 1200001, 1200003}
+    """§5.1 + step4 §7.1: 200001 is EMP (unmapped), 1000001 is redeploy
+    (TRANSITION_SKILLS); 燃烧弹 is 100002; summons are 1200001/1200003 and
+    the step4 P1 set 1200002/1200004/1200005; strikes 300003/300004/300007."""
+    assert set(COMMANDER_SKILLS) == {300001, 300003, 300004, 300007, 800001,
+                                     100002, 1200001, 1200002, 1200003,
+                                     1200004, 1200005}
     assert 200001 not in COMMANDER_SKILLS
     assert 1000001 not in COMMANDER_SKILLS
     assert COMMANDER_SKILLS[100002]["kind"] == "burn"
     assert COMMANDER_SKILLS[1200001]["name"] == "地底威胁"
     assert COMMANDER_SKILLS[1200003]["name"] == "呼叫机群"
+    assert COMMANDER_SKILLS[300003]["strikes"] == 15
+    assert COMMANDER_SKILLS[300004]["t"] == 15.0
+    assert COMMANDER_SKILLS[300007]["bypass"] is True
+    assert COMMANDER_SKILLS[1200002]["mech"] == 5     # 犀牛
+    assert COMMANDER_SKILLS[1200004]["mech"] == 11    # 霸主
+    assert COMMANDER_SKILLS[1200005]["mech"] == 3     # 火神
 
 
 def test_missile_expert_round2_two_slots():
@@ -384,11 +416,14 @@ def test_unmapped_and_wrong_target_precise_blockers():
     assert not r.accepted and r.reason_code == "UNSUPPORTED_ACTION"
     assert "skill_id=200001" in r.detail and "target_kind=position" in r.detail
     assert res.state.players[0].skill_events_raw == ()
-    # redeploy 1000001 must NOT summon
+    # redeploy 1000001 must NOT summon — position-target release is a
+    # precise SKILL_TARGET_INVALID (step4 §1.3: unit-target skill), and it
+    # never touches the battle event stream
     res2 = apply0(st, raw_action("ReleaseCommanderSkill",
                                  [("ID", 1000001),
                                   ("Positions", [{"x": 1, "y": 2}])]))
     assert not res2.receipts[0][0].accepted
+    assert res2.receipts[0][0].reason_code == "SKILL_TARGET_INVALID"
     assert res2.state.players[0].skill_events_raw == ()
     # building recycle carries construction target kind (precise blocker)
     res3 = apply0(st, raw_action("ReleaseCommanderSkill",
@@ -397,11 +432,12 @@ def test_unmapped_and_wrong_target_precise_blockers():
     assert not r3.accepted and r3.reason_code == "UNSUPPORTED_ACTION"
     assert "target_kind=construction" in r3.detail and "skill_id=300001" \
         in r3.detail
-    # scanner agreement: same rule source
+    # scanner agreement: same rule source (1000001 is a mapped transition
+    # skill since step4 — the scanner accepts it, deploy executes it)
     assert capability.classify_raw("ReleaseCommanderSkill",
                                    {"ID": 200001}) == "UNSUPPORTED_ACTION_FIELD"
     assert capability.classify_raw("ReleaseCommanderSkill",
-                                   {"ID": 1000001}) == "UNSUPPORTED_ACTION_FIELD"
+                                   {"ID": 1000001}) is None
     assert capability.classify_raw("ReleaseCommanderSkill",
                                    {"ID": 300001}) is None
 
@@ -681,11 +717,14 @@ def test_two_axis_support_matrix():
         "battle_fidelity"] == "unsupported"
     assert capability.mechanism_support("tower_skill", 5)[
         "battle_fidelity"] == "exact"
+    # step4: blueprint 1/2/3 = commander-skill research (user ruling +
+    # corpus unlock correlation) — verified, and 批量征召 lives on tower 3
     assert capability.mechanism_support("blueprint", 2)[
         "transition_complete"] is True
-    # blueprint 3 stays provisional pending the corpus-conflict fixture
     assert capability.mechanism_support("blueprint", 3)["confidence"] == \
-        "provisional"
+        "verified"
+    assert capability.mechanism_support("tower_skill", 3)[
+        "effect_complete"] is True
     # officers 10004/10007/10008/10009 now implemented (M1)
     for oid in (10004, 10007, 10008, 10009):
         fid = capability.mechanism_support("officer", oid)

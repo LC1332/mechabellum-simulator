@@ -16,9 +16,9 @@ import os
 from dataclasses import dataclass, field
 from enum import Enum
 
-SCHEMA_VERSION = "transition-v0.5"
+SCHEMA_VERSION = "transition-v0.6"
 RULESET_VERSION = "normal_1v1_replay_v0"
-ENGINE_VERSION = "pysim-step29"
+ENGINE_VERSION = "pysim-step30"
 
 
 class Phase(str, Enum):
@@ -74,6 +74,10 @@ class PlayerState:
     # over FLANK_DELAY seconds; snapshot-carried units never delay). Reset
     # by advance_round; old states/saves adapt to ()
     spawned_this_round: tuple = ()
+    # step4 任务书 §2.2: entity ids unlocked by a 再部署 1000001 release THIS
+    # round (units that fought last round become movable). Reset by
+    # advance_round; old states/saves adapt to ()
+    redeployed_this_round: tuple = ()
 
 
 @dataclass(frozen=True)
@@ -106,6 +110,7 @@ class ActionKind(str, Enum):
     SELL_UNIT = "sell_unit"                 # skill 900001 recycle
     RELEASE_COMMANDER_SKILL = "release_commander_skill"   # step3 任务书 §5.2
     USE_EQUIPMENT = "use_equipment"        # step3 任务书 §6.1
+    ACTIVATE_ENERGY_TOWER_SKILL = "activate_energy_tower_skill"  # step4 §2.3
     END_DEPLOY = "end_deploy"
     SURRENDER = "surrender"                # battlefield M1: typed GiveUp terminal
     RAW_UNSUPPORTED = "raw_unsupported"     # faithful marker for v0-unsupported raw types
@@ -198,6 +203,14 @@ class UseEquipmentArgs:
 
 
 @dataclass(frozen=True)
+class ActivateEnergyTowerSkillArgs:
+    """Typed 能量塔技能 activation (step4 任务书 §2.3): skill 5 强化瞄准
+    (cost 100, 全体远程射程 +15) / 6 高速移动 (cost 50, 全体移速 +3) —
+    round-scoped buff, single purchase per id per round (QA#4)."""
+    skill_id: int
+
+
+@dataclass(frozen=True)
 class SurrenderArgs:
     """Typed GiveUp (battlefield M1): the acting player surrenders — the
     state atomically enters TERMINAL (reason "surrender"), no battle runs,
@@ -214,7 +227,8 @@ class UnsupportedArgs:
 
 ActionArgs = (BuyArgs | MoveArgs | UpgradeArgs | UnlockArgs | TechArgs
               | ChooseReinforceArgs | SellArgs | GiftArgs
-              | ReleaseCommanderSkillArgs | UseEquipmentArgs | SurrenderArgs
+              | ReleaseCommanderSkillArgs | UseEquipmentArgs
+              | ActivateEnergyTowerSkillArgs | SurrenderArgs
               | UnsupportedArgs)
 
 

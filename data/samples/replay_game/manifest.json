@@ -2,8 +2,8 @@
  "schema_version": "replay_game_manifest_v2",
  "ruleset_version": "normal_1v1_replay_v0",
  "min_rounds_default": 5,
- "corpus_label": "data/samples/replay_game",
- "built_at": "2026-08-27 12:17:51",
+ "corpus_label": "data\\samples\\replay_game",
+ "built_at": "2026-08-27 22:15:27",
  "options": [
   {
    "replay_id": "6a21468d36c0",
@@ -79,9 +79,9 @@
    "round_max": 9,
    "round_record_count": 10,
    "playable_through_round": 5,
-   "strict_playable_through_round": 2,
+   "strict_playable_through_round": 1,
    "runtime_playable_through_round": 5,
-   "strict_effect_through_round": 2,
+   "strict_effect_through_round": 1,
    "approximate_from_round": 3,
    "approximate_mechanisms": [
     {
@@ -92,29 +92,17 @@
     },
     {
      "round": 5,
-     "side": 0,
-     "mechanism": "equipment",
-     "id": 13030003
-    },
-    {
-     "round": 5,
      "side": null,
      "mechanism": "equipment",
      "id": 1307001
-    },
-    {
-     "round": 5,
-     "side": null,
-     "mechanism": "equipment",
-     "id": 13030003
     }
    ],
    "blockers": [
     {
      "code": "APPROXIMATE_REINFORCEMENT_EFFECT",
-     "round": 3,
+     "round": 2,
      "side": null,
-     "detail": "strict: not all 4 offers effect-complete [31201, 10004, 31801, 13040001]",
+     "detail": "strict: not all 4 offers effect-complete [102115, 102219, 1021124, 1022131]",
      "strict": true
     },
     {
@@ -140,18 +128,32 @@
    "round_min": 0,
    "round_max": 9,
    "round_record_count": 10,
-   "playable_through_round": 1,
+   "playable_through_round": 3,
    "strict_playable_through_round": 1,
-   "runtime_playable_through_round": 1,
+   "runtime_playable_through_round": 3,
    "strict_effect_through_round": 1,
-   "approximate_from_round": null,
-   "approximate_mechanisms": [],
+   "approximate_from_round": 3,
+   "approximate_mechanisms": [
+    {
+     "round": 3,
+     "side": null,
+     "mechanism": "equipment",
+     "id": 13040001
+    }
+   ],
    "blockers": [
     {
-     "code": "UNSUPPORTED_ACTION_FIELD",
+     "code": "APPROXIMATE_REINFORCEMENT_EFFECT",
      "round": 2,
+     "side": null,
+     "detail": "strict: not all 4 offers effect-complete [102115, 102219, 1021124, 1022131]",
+     "strict": true
+    },
+    {
+     "code": "UNSUPPORTED_ACTION_FIELD",
+     "round": 4,
      "side": 1,
-     "detail": "passthrough {'raw_type': 'ActiveEnergyTowerSkill'}"
+     "detail": "passthrough {'raw_type': 'ReleaseCommanderSkill'}"
     }
    ],
    "enabled": false,
@@ -170,10 +172,10 @@
    "round_min": 0,
    "round_max": 9,
    "round_record_count": 10,
-   "playable_through_round": 4,
-   "strict_playable_through_round": 3,
-   "runtime_playable_through_round": 4,
-   "strict_effect_through_round": 3,
+   "playable_through_round": 6,
+   "strict_playable_through_round": 1,
+   "runtime_playable_through_round": 6,
+   "strict_effect_through_round": 1,
    "approximate_from_round": 4,
    "approximate_mechanisms": [
     {
@@ -198,19 +200,19 @@
    "blockers": [
     {
      "code": "APPROXIMATE_REINFORCEMENT_EFFECT",
-     "round": 4,
+     "round": 2,
      "side": null,
-     "detail": "strict: not all 4 offers effect-complete [1307001, 30502, 1308001, 13010001]",
+     "detail": "strict: not all 4 offers effect-complete [800001, 200001, 31202, 32701]",
      "strict": true
     },
     {
      "code": "UNSUPPORTED_ACTION_FIELD",
-     "round": 5,
+     "round": 7,
      "side": 0,
-     "detail": "passthrough {'raw_type': 'ActiveEnergyTowerSkill'}"
+     "detail": "passthrough {'raw_type': 'ReleaseCommanderSkill'}"
     }
    ],
-   "enabled": false,
+   "enabled": true,
    "shard": "games/b198291ffab1.json"
   },
   {
@@ -245,5 +247,5 @@
   }
  ],
  "option_count": 6,
- "enabled_count": 1
+ "enabled_count": 2
 }

@@ -137,7 +137,11 @@ _SKILL_CD = {300001: (2, "cd=2: 800/800 corpus releases"),
              100002: (3, "cd=3: 200/200 corpus releases"),
              1200001: (3, "cd=3: 222/222 corpus releases"),
              1200003: (3, "cd=3: 363/363 corpus releases"),
-             1100001: (1, "cd=1: 1084/1084 corpus releases")}
+             1100001: (1, "cd=1: 1084/1084 corpus releases"),
+             # step4 任务书 §1.3/QA#3: 再部署 cooldown = next round (user
+             # ruling); corpus cd counts for the new P1 ids stay unmeasured
+             # (cal) — 0 re-arms next round
+             1000001: (1, "cd=1: step4 QA#3 user ruling (next round)")}
 
 _SKILL_CONFIDENCE = {
     # strike damage is wiki-backed but splash 20 has no source yet
@@ -158,6 +162,25 @@ _SKILL_CONFIDENCE = {
     1100001: ("verified", ("step3任务书§5:强化训练 exp->next threshold "
                            "(user-frozen rule)",
                            "corpus:" + _SKILL_CD[1100001][1])),
+    # step4 任务书 §1.3/QA#3: redeploy rule frozen by the user (transition
+    # only, per-slot once per round, cd=1) — no battle numbers involved
+    1000001: ("verified", ("step4任务书§1.3+QA#3:再部署 unlock move right "
+                           "(user-frozen rule, transition-only)",
+                           "corpus:" + _SKILL_CD[1000001][1])),
+    # step4 任务书 §7.1 P1 additions: numbers user-frozen 2026-08-27, but
+    # spread/timing/splash stay cal — confidence provisional (never verified
+    # without an oracle calibration game)
+    300003: ("provisional", ("step4 P1: 15x2500 multi-strike (user table)",
+                             "spread pattern cal (sunflower), splash cal",
+                             "ff per QA#6 user ruling")),
+    300004: ("provisional", ("step4 P1: 70000 at t=15s (user table)",
+                             "splash cal (40)",
+                             "ff per QA#6 user ruling")),
+    300007: ("provisional", ("step4 P1: r30 70000 (user table)",
+                             "barrier bypass per QA#6 user ruling")),
+    1200002: ("provisional", ("step4 P1: airdrop 1 犀牛 mech 5 (user table)",)),
+    1200004: ("provisional", ("step4 P1: airdrop 1 霸主 mech 11 (user table)",)),
+    1200005: ("provisional", ("step4 P1: airdrop 1 火神 mech 3 (user table)",)),
 }
 
 
@@ -191,22 +214,43 @@ def _contraption_support(cid: int) -> MechanicSupport:
 # ---------------------------------------------------------------- tower skill
 def _tower_skill_support(sid: int) -> MechanicSupport:
     sid = int(sid)
+    if sid == 3:
+        return _full(sid, "tower_skill", "verified",
+                     ("step4 user ruling 2026-08-27: 批量征召 cost 50, this "
+                      "round's buy limit +1 (前置)",
+                      "corpus wall: 0/16,512 buy-rounds exceed "
+                      "2+tower3+10004; 6,953 rounds show it between buy#2 "
+                      "and buy#3"))
+    if sid == 1:
+        return _full(sid, "tower_skill", "verified",
+                     ("step4 user ruling 2026-08-27: 快速补给 cost 0, +200 "
+                      "now / -300 next round income"))
+    if sid == 4:
+        return _full(sid, "tower_skill", "verified",
+                     ("step4 user ruling 2026-08-27 + doc order examples: "
+                      "精英征召 cost 100, buys AFTER it spawn at level+1"))
     if sid in (5, 6):
         return _full(sid, "tower_skill", "verified",
                      ("step3任务书§3:5=射程+15/6=移速+3, fees frozen "
-                      "(user ruling 2026-08-27)",))
+                      "(user ruling 2026-08-27)",
+                      "step4 QA#4: single purchase per id per round"))
     return _unmodeled(sid, "tower_skill")
 
 
 # ----------------------------------------------------------------- blueprint
+# step4 FINAL (user ruling 2026-08-27 + corpus unlock probes): blueprint
+# 1/2/3 = commander-skill RESEARCH (one-time; slot granted next round):
+#   1 黏油弹 150 -> skill 400002, 2 战地回收 100 -> 900001,
+#   3 移动信标 100 -> 1500001
+# (unlock correlation: 470/470 and 1837/1860 researched->seen, ZERO
+# unresearched sightings; slot lag = +1 round ~100%)
 _BLUEPRINT_EVIDENCE = {
-    1: ("corpus:+200/-300 algebra (prices_v1_passive)", "verified"),
-    2: ("corpus:r1 window algebra + step3任务书§3 fee 50", "verified"),
-    # 重构计划 §3.1: blueprint 3 conflicts with the v0.1 §10 corpus ruling
-    # (blueprint 2/3 never boost buy level; +1 comes from elite cards only)
-    # -> provisional until the targeted fixture resolves it
-    3: ("CONFLICT:deploy gives +1 buy level vs v0.1§10 corpus (blueprints "
-        "never boost level); provisional until adjudicated", "provisional"),
+    1: ("step4 user ruling: 黏油弹 research 150 -> unlock 400002 "
+        "(corpus correlation 470/470)", "verified"),
+    2: ("step4 user ruling: 战地回收 research 100 -> unlock 900001 "
+        "(corpus correlation 1837/1860, never unresearched)", "verified"),
+    3: ("step4 user ruling: 移动信标 research 100 -> unlock 1500001 "
+        "(corpus correlation 548, lag=+1)", "verified"),
     4: ("corpus:_probe9/_probe14 officer 20310 mapping", "verified"),
     5: ("corpus:_probe9/_probe14 officer 20300 mapping", "verified"),
     401: ("corpus:_probe14 II tier replaces I", "verified"),

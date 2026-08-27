@@ -128,13 +128,17 @@ def _deploy_round(gi, rnd, side, income_policy=None):
 
 
 def test_sample_unit_set_majority_exact():
-    # the two sample games: deploy reproduction rate (auto-level tolerated)
+    # the two sample games: deploy reproduction rate (auto-level tolerated).
+    # step4 final: with tower skill 3 (批量征召) modeled as the per-round +1
+    # quota purchase, the corpus is CONSISTENT with base 2 — quota-diverged
+    # rounds (if any ever appear) are excluded from the denominator as rule
+    # divergence rather than regression.
     from collections import Counter
 
     def key(u):
         return (u.mech_id, u.level, round(u.x, 1), round(u.y, 1), u.is_rotate)
 
-    n = ok = 0
+    n = ok = quota_diverged = 0
     for gi in range(len(ADAPTER.games())):
         g = ADAPTER.games()[gi]
         for side in (0, 1):
@@ -146,6 +150,10 @@ def test_sample_unit_set_majority_exact():
                 try:
                     dep, _, _ = _deploy_round(gi, rnd, side)
                 except Exception:                       # noqa: BLE001
+                    continue
+                if any(not r.accepted and r.reason_code == "BUY_LIMIT_REACHED"
+                       for r in dep.receipts[0]):
+                    quota_diverged += 1
                     continue
                 nxt = rs[i + 1]["units"]
                 want = Counter((int(u["id"]), int(u["level"]) + 1,
@@ -163,6 +171,7 @@ def test_sample_unit_set_majority_exact():
                         e[0] == m[0] and e[1] == m[1] - 1 and e[2:] == m[2:]
                         for e, m in zip(extra, missing)):
                     ok += 1
+    assert quota_diverged == 0
     assert n >= 30
     assert ok / n >= 0.75, "unit-set exact rate degraded: %d/%d" % (ok, n)
 

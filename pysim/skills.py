@@ -62,45 +62,80 @@ COMMANDER_SKILLS = {
     # 再部署 (NOT a summon) — both stay unmapped until their real effects
     # are implemented, so a wrong approximation cannot leak into battles.
     # 燃烧弹 is 100002; the summons are 1200001/1200003.
-    # 导弹打击 family. 300001 is the base strike (620 uses); variants
-    # 300003..300007 (leveled/multi-missile?) stay unmapped until calibration
-    # so a wrong guess cannot pollute the A/B.
+    # 导弹打击 family. 300001 is the base strike (620 uses); the P1
+    # variants (step4 任务书 §7.1, user-frozen numbers 2026-08-27) join it:
+    # 300003 轨道轰炸 (15 x 2500 multi-strike), 300004 核弹 (t=15s, 70000),
+    # 300007 轨道标枪 (r30, 70000, bypasses barriers). Distribution/timing
+    # details stay cal — confidence provisional.
     300001: {"kind": "strike", "name": "导弹打击",
              "damage": 3000.0, "splash": 20.0,
              "conf": "wiki(1 missile 3000)+fit(cast 8-34m from enemies)"},
+    300003: {"kind": "strike", "name": "轨道轰炸",
+             "damage": 2500.0, "splash": 20.0, "strikes": 15,
+             "ff": True,
+             "conf": "step4 P1: 15x2500 (user table); spread pattern cal "
+                     "(sunflower, deterministic); friendly fire per QA#6"},
+    300004: {"kind": "strike", "name": "核弹",
+             "damage": 70000.0, "splash": 40.0, "t": 15.0,
+             "ff": True,
+             "conf": "step4 P1: 70000 at t=15s (user table); splash 40 cal; "
+                     "friendly fire per QA#6"},
+    300007: {"kind": "strike", "name": "轨道标枪",
+             "damage": 70000.0, "splash": 30.0,
+             "bypass": True,
+             "conf": "step4 P1: r30 70000 bypass barriers (user table+QA#6)"},
     # 燃烧弹 (burning ground patch; previously mis-filed under 200001).
-    # DPS from a Reddit test thread ("~350/s, 88 per 0.25s tick");
-    # radius/duration are cal (patch assumed to burn the whole fight).
+    # step4 QA#5 ruling (2026-08-27): the commander-skill napalm is a
+    # STRAIGHT firewall at 270/s (survey table correct); pysim still models
+    # a circular patch until the P2 TimedAreaEffect/line framework lands —
+    # dps corrected 352 -> 270, shape stays an approximation (provisional).
     100002: {"kind": "burn", "name": "燃烧弹",
-             "dps": 352.0, "radius": 15.0,
-             "conf": "reddit(88dmg/0.25s)+cal(radius/duration)+"
-                     "id_fix(step3: 100002 not 200001)"},
+             "dps": 270.0, "radius": 15.0,
+             "conf": "step4 QA#5: line firewall 270/s (survey); circle "
+                     "approx until P2 area framework; duration cal"},
     800001: {"kind": "barrier", "name": "空投护盾",
              "hp": 50000.0, "radius": BARRIER_RADIUS_DEFAULT,
              "conf": "wiki(50000)+fit(own-side casts 130-210m, r2+)"},
     # CSD summons (step3 id fix: previously mis-filed as 1000001/100002).
     # 1200001 地底威胁 = crawler eruption (24x), 1200003 呼叫机群 = wasp
     # swarm (12x); mech/count stay cal until calibration games.
+    # step4 P1 single-unit airdrops (user table 2026-08-27): 1200002 犀牛
+    # (mech 5), 1200004 霸主 (mech 11), 1200005 火神 (mech 3) — battle-only
+    # summons, never persistent units.
     1200001: {"kind": "summon", "name": "地底威胁",
               "mech": 10, "count": 24, "level": 1,
               "conf": "cal(mech/count provisional; crawler card = 24x)"
                       "+id_fix(step3)"},
+    1200002: {"kind": "summon", "name": "犀牛来袭",
+              "mech": 5, "count": 1, "level": 1,
+              "conf": "step4 P1: airdrop 1 犀牛 (mech 5, user table)"},
     1200003: {"kind": "summon", "name": "呼叫机群",
               "mech": 6, "count": 12, "level": 1,
               "conf": "cal(mech/count provisional; wasp card = 12x HP311)"
                       "+id_fix(step3)"},
+    1200004: {"kind": "summon", "name": "呼叫战舰",
+              "mech": 11, "count": 1, "level": 1,
+              "conf": "step4 P1: airdrop 1 霸主 (mech 11, user table)"},
+    1200005: {"kind": "summon", "name": "天降火神",
+              "mech": 3, "count": 1, "level": 1,
+              "conf": "step4 P1: airdrop 1 火神 (mech 3, user table)"},
     # deliberately NOT mapped (real effect unimplemented — precise blockers,
     # never a wrong approximation):
-    #   200001 EMP 电磁脉冲 (was wrongly burning ground in step15)
-    #   1000001 再部署 redeploy (was wrongly a summon in step15)
-    #   400002 黏油弹 (oil, r7+), 1200002/1200004+ 移动信标 variants,
-    #   15000xx WayPoint, 900001 supply family, 300004 核弹 (10012)
+    #   200001/200002 EMP 电磁冲击 (was wrongly burning ground in step15)
+    #   1000001 再部署 redeploy -> TRANSITION_SKILLS (transition-only)
+    #   400002 黏油弹 (oil, r7+), 1200006+ 移动信标 variants,
+    #   15000xx WayPoint, 900001 supply family, 300005/300006 (P2 areas),
+    #   200003 光子投射, 500002 酸液弹, 600002 烟雾弹, 1500002 移动信标
 }
 
 # transition-layer commander skills (no battle event): 1100001 强化训练
-# jumps the target unit's exp to its next upgrade threshold (deploy.py).
-TRANSITION_SKILLS = {1100001: {"name": "强化训练",
-                               "target_kind": "unit"}}
+# jumps the target unit's exp to its next upgrade threshold (deploy.py);
+# 1000001 再部署 unlocks one locked unit's move this round (step4 任务书
+# §1.3 — per-slot once per round, cd=1, next round usable again).
+TRANSITION_SKILLS = {
+    1100001: {"name": "强化训练", "target_kind": "unit"},
+    1000001: {"name": "再部署", "target_kind": "unit"},
+}
 
 
 def commander_skill_target_kind(sid: int) -> str:
@@ -116,6 +151,50 @@ def _first_pos(entry):
     if ps:
         return float(ps[0][0]), float(ps[0][1])
     return float(entry.get("x", 0.0) or 0.0), float(entry.get("y", 0.0) or 0.0)
+
+
+# deterministic multi-strike spread (step4 任务书 §7.1: 落点分布进入
+# seed/digest): sunflower pattern — radius grows with sqrt(i), golden-angle
+# azimuth; pure function of (sid, x, y) so the BattleInput digest is stable
+# across runs and rebuilds.
+_SPREAD_STEP = 11.0
+_GOLDEN_ANGLE = 2.399963229728653
+
+
+def spread_offsets(sid: int, n: int):
+    """Deterministic impact offsets [(dx, dy), ...] around one release."""
+    import math
+    out = [(0.0, 0.0)]
+    for i in range(1, max(1, n)):
+        r = _SPREAD_STEP * math.sqrt(i)
+        a = i * _GOLDEN_ANGLE + (int(sid) % 7) * 0.37
+        out.append((r * math.cos(a), r * math.sin(a)))
+    return out[:max(1, n)]
+
+
+def expand_strike_events(sid: int, x: float, y: float):
+    """One strike-skill release at (x, y) -> engine strike event dicts
+    (multi-strike skills expand to one event per impact; single-strike ids
+    stay one event). Deterministic; consumed by battlefield/compiler so the
+    full落点 distribution lands in the digestable BattleInput."""
+    d = COMMANDER_SKILLS.get(int(sid))
+    if not d or d["kind"] != "strike":
+        return []
+    n = int(d.get("strikes", 1) or 1)
+    base = {"kind": "strike", "name": d["name"], "id": int(sid),
+            "damage": float(d["damage"]), "splash": float(d["splash"]),
+            "t": float(d.get("t", 0.0) or 0.0)}
+    if d.get("ff"):
+        base["ff"] = True
+    if d.get("bypass"):
+        base["bypass"] = True
+    out = []
+    for (dx, dy) in spread_offsets(sid, n):
+        ev = dict(base)
+        ev["x"] = float(x) + dx
+        ev["y"] = float(y) + dy
+        out.append(ev)
+    return out
 
 
 def events_from_skill_actions(actions):
@@ -139,18 +218,20 @@ def events_from_skill_actions(actions):
                 ev["radius"] = d["radius"]
             out.append(ev)
         elif a.get("type") == "commander":
-            d = COMMANDER_SKILLS.get(int(a.get("id", 0) or 0))
+            sid = int(a.get("id", 0) or 0)
+            d = COMMANDER_SKILLS.get(sid)
             if not d:
                 continue
             ps = a.get("positions") or []
             spots = [(float(p[0]), float(p[1])) for p in ps] or [_first_pos(a)]
             for x, y in spots:
-                ev = {"kind": d["kind"], "x": x, "y": y, "name": d["name"],
-                      "id": int(a.get("id"))}
                 if d["kind"] == "strike":
-                    ev["damage"] = d["damage"]
-                    ev["splash"] = d["splash"]
-                elif d["kind"] == "barrier":
+                    # multi-strike ids expand deterministically (step4 §7.1)
+                    out.extend(expand_strike_events(sid, x, y))
+                    continue
+                ev = {"kind": d["kind"], "x": x, "y": y, "name": d["name"],
+                      "id": sid}
+                if d["kind"] == "barrier":
                     ev["hp"] = d["hp"]
                     ev["radius"] = d["radius"]
                 elif d["kind"] == "summon":
@@ -180,7 +261,10 @@ def battle_skill_catalog():
         ev = {"channel": "commander", "id": sid, "name": d["name"],
               "kind": d["kind"], "conf": d["conf"]}
         if d["kind"] == "strike":
-            ev["params"] = {"damage": d["damage"], "splash": d["splash"]}
+            ev["params"] = {"damage": d["damage"], "splash": d["splash"],
+                            "t": d.get("t", 0.0), "strikes": d.get("strikes", 1),
+                            "ff": bool(d.get("ff")),
+                            "bypass": bool(d.get("bypass"))}
         elif d["kind"] == "barrier":
             ev["params"] = {"hp": d["hp"], "radius": d["radius"]}
         elif d["kind"] == "summon":

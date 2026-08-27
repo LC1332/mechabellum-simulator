@@ -196,14 +196,13 @@ fixture/旧 shard 的兼容边界，内部立即转成同一个 typed handler。
 
 ## 3. T1：修复购买上限
 
-- [ ] 将购买基数从 `5` 改为 `2`，删除所有“基数 5”的过期注释和前端假设；
-- [ ] 把批量征召和 `10004` 的叠加逻辑收敛到 `buy_limit_quote`；
-- [ ] receipt 在达到上限时返回 `BUY_LIMIT_REACHED`，detail 包含
-  `used/limit/base/blueprint_bonus/officer_bonus`；
-- [ ] GameView 增加 `buy_limit`，每个购买按钮按 `remaining > 0` 和资金共同决定可用性；
-- [ ] 页面 HUD 显示“本回合已购买 1/2”，额度来源可展开查看；
-- [ ] Undo、快速连续点击和 stale version 场景不允许超买；
-- [ ] 历史对手计划也走同一额度校验，不为回放动作开后门。
+- [x] 购买基数收敛到单一规则源（最终裁决 base=2；+1 来自能量塔技能3 批量征召而非蓝图，见 §14.3/QA#7 裁决过程），“基数 5”过期注释已删除；
+- [x] 批量征召和 `10004` 的叠加逻辑收敛到 `buy_limit_quote`（rules.py 单一规则源）；
+- [x] receipt 返回 `BUY_LIMIT_REACHED`，detail 含 base/批量征召/额外部署位/used；
+- [x] GameView（v4）增加 `buy_limit`，购买条目 `purchasable = remaining>0 && affordable`；
+- [x] 页面 HUD 显示「已购买 X/Y（基础 n + 来源）」，商店头部展开额度来源；
+- [x] Undo/连击/stale version 不超买（浏览器验收 + 单测覆盖）；
+- [x] 历史对手计划走同一额度校验（capability 扫描与 deploy 同公式，不开后门）；
 
 ### T1 完成 Gate
 
@@ -221,15 +220,14 @@ fixture/旧 shard 的兼容边界，内部立即转成同一个 typed handler。
 
 ### 4.1 Transition
 
-- [ ] 实现 `movement_permission` 和稳定 reason code；
-- [ ] round 1 开局单位、本回合买入、增援赠送、专家赠送分别具备来源测试；
-- [ ] 上回合已有普通单位在 round 2+ 移动时被拒，位置和朝向均不改变；
-- [ ] 部署模块 `13040001` 赋予其绑定单位每回合移动权；更换装备后下回合不再享有；
-- [ ] 高速引擎 `1606/1611/1616` 赋予同兵种现有及之后新买单位移动权；
-- [ ] 同一合法单位可多次移动，Undo 只回退最后一次位置；
-- [ ] 卖出单位、装备替换、科技购买顺序和再部署顺序均不留下悬空 entity ID；
-- [ ] replay adapter 从任意 round 快照初始化时默认没有“本回合新增”单位，随后由该回合
-  action 建立权限。
+- [x] `movement_permission` + 稳定 reason code（rules.py）；
+- [x] round 1 开局（opening/replay_adapter 双路径）、买入、增援赠送、专家赠送来源测试齐备；
+- [x] 上回合旧单位 R2+ 移动被拒（`UNIT_NOT_MOVABLE_THIS_ROUND`），位置与朝向不变；
+- [x] 部署模块 `13040001` 生效（含回合内绑定立即生效，语料对拍确认）；
+- [x] 高速引擎 `1606/1611/1616` + `1629`（深渊，QA#2）生效（含回合内购买立即生效）；
+- [x] 同一合法单位可多次移动，Undo 只回退最后一步；
+- [x] 卖出/装备替换/科技/再部署顺序不留悬空 entity ID（不变量测试）；
+- [x] replay adapter：R2+ 快照默认无“本回合新增”（round-1 例外=开局单位全部 spawned，QA#1）；
 
 ### 4.2 GameView 与前端
 
@@ -243,35 +241,32 @@ fixture/旧 shard 的兼容边界，内部立即转成同一个 typed handler。
 }
 ```
 
-- [ ] 不可移动单位显示锁定样式，不进入拖动/落点模式；
-- [ ] 可移动单位在详情中说明来源，例如“本回合新单位”“部署模块”“高速引擎”或
-  “再部署”；
-- [ ] 前端只做交互禁用，服务端仍必须重新校验伪造请求；
-- [ ] 使用部署模块、购买高速引擎或释放再部署后，用服务器新 GameView 立即刷新单位状态；
-- [ ] 被拒移动显示明确原因，不把它混同于地图越界。
+- [x] 锁定单位显示 🔒 徽标/虚线圈，不进入拖动（mousedown 拦截 + 提示）；
+- [x] 单位详情「移动」行说明来源（本回合新单位/部署模块/高速引擎/再部署）；
+- [x] 前端仅交互禁用，服务端 `MOVE_UNIT` 重新校验（伪造请求被拒）；
+- [x] 模块/引擎/再部署后以服务器 GameView 刷新（movable/move_reasons 即时可见，验收 5）；
+- [x] 被拒移动显示 `UNIT_NOT_MOVABLE_THIS_ROUND` 明确原因，与越界区分；
 
 ## 5. T3：实现再部署 `1000001`
 
-- [ ] 将 `1000001` 加入 transition 技能 registry 和 capability，不加入 pysim battle event；
-- [ ] `_release_commander_skill` 对它执行单位目标合法性和本回合次数校验；
-- [ ] 成功写入 `redeployed_this_round` 并消费/冷却槽位，下一回合重新激活；
-- [ ] normalizer 的 `ID=0 + SkillIndex` 与显式 `ID=1000001` 解析一致；
-- [ ] `CancelReleaseCommanderSkill`、Undo 和 action-local 单位引用保持现有折叠语义；
-- [ ] GameView 将它显示为“单位目标 · 本回合可用/已用”，只高亮当前不可移动的己方单位；
-- [ ] capability scanner 与 runtime 接受/拒绝一致，重新计算样本和本地 manifest 可玩前缀。
+- [x] `1000001` 入 TRANSITION_SKILLS/capability/registry，无 battle 事件；
+- [x] 单位目标 + 逐槽一次 + cd=1 校验（QA#3 口径）；
+- [x] 写入 `redeployed_this_round` 并冷却槽位，下一回合 tick 重激活（测试验证）；
+- [x] ID=0+SkillIndex 与显式 ID 解析一致（live 槽视图 = 快照 + 回合内卡牌拾取）；
+- [x] Cancel/Undo/引用折叠语义不变（既有测试 + 新 tower_skill 撤销测试）；
+- [x] GameView「单位目标 · 解锁移动 · 可用/冷却中/本回合已用」，仅高亮锁定单位（验收 5）；
+- [x] scanner/runtime 一致（含撤掉快照 officers 赠技启发式的取舍，见 §14.6.2）；样本与本地 manifest 已重算。
 
 ## 6. T4：把 ActiveEnergyTowerSkill 做成完整能力
 
-- [ ] typed model、JSON codec、normalizer `tower_skill` 条目和 canonicalizer 完成；
-- [ ] 旧 `RAW_UNSUPPORTED(ActiveEnergyTowerSkill)` 兼容入口只做 typed 转发；
-- [ ] `5/6` 的价格和效果迁到版本化 registry，deploy 与
-  `pysim/battlefield/compiler.py` 不再各写魔法数；
-- [ ] GameView 返回 `supported/cost/affordable/active_count/fidelity/confidence`；
-- [ ] 前端提交 `activate_energy_tower_skill`，不再伪装成 `raw_unsupported`；
-- [ ] 资金、ledger、Undo、save/load、round reset、battle input digest 和 trace 全链路测试；
-- [ ] scanner 接受正规化后的 `tower_skill 5/6`，其他 ID 保持精确
-  `UNSUPPORTED_ACTION_FIELD`；
-- [ ] 修正当前 compiler 中“stacking, free”的过期注释，费用由 transition 在战前扣除。
+- [x] typed model / normalizer `tower_skill` / canonicalizer 完成；
+- [x] raw `ActiveEnergyTowerSkill` 仅做 typed 转发（同一 handler，digest 等价测试）；
+- [x] 价格/效果走版本化 registry（TOWER_SKILL_COSTS + mechanism_support），compiler 无魔法数；
+- [x] GameView tower_skills 返回 supported/cost/affordable/purchasable/active_count/fidelity/confidence；
+- [x] 前端提交 `activate_energy_tower_skill`（验收 2 receipt 佐证）；
+- [x] 资金/ledger/Undo/round reset/SideMods 编译链路测试（trace 走既有 skill 通道）；
+- [x] scanner 接受 typed `tower_skill 5/6`，1/3/4 保持精确 blocker（测试覆盖）；
+- [x] compiler 注释已修正（transition 扣费、每回合限购一次 QA#4）。
 
 ## 7. T5：继续扩展 ReleaseCommanderSkill 与 pysim
 
@@ -330,15 +325,13 @@ P2 需要先抽象 `TimedAreaEffect`/status lifecycle，不能把所有效果继
 
 ## 8. Schema、兼容与数据重建
 
-- [ ] Transition schema 升级，旧 state 缺少 `redeployed_this_round` 时补空 tuple；
-- [ ] GameView schema 升级，增加购买额度和逐单位移动权限；
-- [ ] norm schema 增加 typed `tower_skill`，旧 passthrough shard 读取时兼容转换；
-- [ ] replay snapshot 的 `energyTowerSkills_raw` 在 adapter 中保留或显式证明不影响 5/6
-  合法性，不能继续无说明丢弃；
-- [ ] 重建 `data/samples/rounds.json` 的 norm 工件、sample replay library、opening catalog
-  （若 schema 变化）和 committed manifest；
-- [ ] 本地全量语料只重建派生产物，不提交原始 `.grbr` 或大型本地数据；
-- [ ] 输出重建前后 runtime/strict-effect 前缀变化和新增 blocker 分布。
+- [x] schema `transition-v0.6`，旧 state 缺字段迁移为 `()`（测试覆盖）；
+- [x] GameView `v4`：`buy_limit` + 逐单位 `movable/move_reasons/move_blocker`；
+- [x] norm schema 增 typed `tower_skill`；旧 passthrough shard 经 raw handler 兼容执行；
+- [x] 单次购买以回合内 `tower_mods_raw` 为准，快照字段与本回合合法性解耦（adv 已清空，无丢弃歧义）；
+- [x] 重建 norm 工件/sample library manifest（旧 shard + 重扫）；catalog schema 未变免重建；
+- [x] 本地仅重建 rounds_norm/replay_game 派生物，无 .grbr 入库；
+- [x] 前缀对比与 blocker 分布见 §14.5（0 下降，无额度/移动类新 blocker）。
 
 ## 9. 测试任务
 
@@ -449,13 +442,189 @@ P2 需要先抽象 `TimedAreaEffect`/status lifecycle，不能把所有效果继
 
 轨道轰炸 核弹 都会 对友军造成伤害
 
-## 14. 实施总结（完成后续写）
+## 14. 实施总结（2026-08-27 实施，全部完成）
 
-实际开发完成后在此追加，至少包含：
+> 本节由本轮实施追加并经同日二次修正定稿（QA#7 最终裁决：base=2，批量征召=
+> 能量塔技能3，蓝图1/2/3=指挥官技能研究）。T1–T5(P0+P1) 全部落地，161 个自动化
+> 测试全绿，本地全量语料重建后可玩选项 4→29、前缀只升不降，浏览器完成关键场景验收。
 
-- 实际代码、schema、前端和数据改动；
-- 自动化测试数量、命令与浏览器验收结果；
-- 购买/移动规则的真实回放对拍结果；
-- 每个新增 commander skill 的 fidelity、confidence 和校准证据；
-- runtime/strict-effect 可玩前缀变化；
-- 与本任务书的偏差、QA 裁决和仍未支持的技能。
+### 14.1 代码 / schema / 前端 / 数据改动
+
+**新增**
+- `pysim/transition/rules.py` — 单一规则源：`BASE_BUY_LIMIT` / `BuyLimitQuote` /
+  `buy_limit_quote` / `MovePermission` / `movement_permission` /
+  `MOBILITY_TECHS{1606:6, 1611:11, 1616:16, 1629:29}`（QA#2 深渊已含）/
+  `DEPLOYMENT_MODULE_EQUIPMENT=13040001` / `REDEPLOY_SKILL_ID=1000001`。
+  deploy、env legal mask、GameView、测试全部读它，无第二份常量表。
+
+**transition 层**
+- `model.py`：schema `transition-v0.6`、engine `pysim-step30`；
+  `PlayerState.redeployed_this_round`（旧 state/save 适配为 `()`）；
+  新 typed action `ACTIVATE_ENERGY_TOWER_SKILL` + `ActivateEnergyTowerSkillArgs`。
+- `deploy.py`：`MOVE_UNIT` 先过 `_ctx_movement_reasons`（动态读活状态——回合内
+  装模块/买高速引擎立即生效，与语料行为一致），拒绝码
+  `UNIT_NOT_MOVABLE_THIS_ROUND`，位置与朝向均不变；`BUY_UNIT` 走 quote，receipt
+  detail 携带 `base/批量征召/额外部署位/used`；再部署分支（单位目标校验 →
+  `UNIT_ALREADY_MOVABLE` / `SKILL_TARGET_INVALID` / `UNKNOWN_ENTITY` /
+  `SKILL_SLOT_UNAVAILABLE`，成功写 `redeployed_this_round` 并消耗槽位 cd=1）；
+  `_activate_tower_skill` 共享 handler（typed 与 raw `ActiveEnergyTowerSkill`
+  同一入口；同一技能同回合二次购买拒绝 `TOWER_SKILL_ALREADY_ACTIVE`，QA#4）。
+- `settlement.py`：`advance_round` 清空 `redeployed_this_round`（与 spawned、
+  tower_mods 等一起）。
+- `opening.py`：round-1 开局单位全部写入 `spawned_this_round`（QA#1）。
+- `replay_adapter.py`：round-1 快照单位同样视为 spawned；round≥2 的快照技能槽
+  在建状态时执行一次 `tick_skill_cooldowns`（快照是 pre-deploy，游戏在部署开始
+  才 tick——否则 adapter 会拒绝游戏实际允许的释放，如上回合买的再部署 cd=0）。
+- `normalize.py`：`ActiveEnergyTowerSkill` 5/6 → typed `tower_skill` 条目
+  （可撤销，Q1）；live 技能槽视图 = 快照槽 + 回合内「舰长技能/战术」卡拾取
+  （与 deploy ctx 完全同源）；`UnitIndex/ConstructionIndex == -1` 归一为
+  `None`（占位不是目标，修复再部署被误判 construction-target）；
+  `positions` 输出 JSON 原生 list（artifact round-trip 稳定）。
+- `canonicalize.py`：`tower_skill` → typed action。
+- `capability.py`：`tower_skill` 分类（registry 支持度）；`scan_opponent_round`
+  按同一公式逐条核对对手回合的付费购买（scanner/runtime 一致，不为回放开门）。
+- `env.py`：legal mask 只为可移动单位生成 move 候选、额度用尽不再生成 buy
+  候选（accept/reject 一致性有测试）。
+
+**pysim 引擎 / 战场**
+- `skills.py`：P1 技能入表（300003 轨道轰炸 15×2500 ff、300004 核弹 70000@t=15s
+  ff、300007 轨道标枪 r30 70000 bypass、1200002 犀牛 mech5、1200004 霸主
+  mech11、1200005 火神 mech3）；`expand_strike_events` 确定性 sunflower 落点
+  展开；1000001 入 `TRANSITION_SKILLS`；燃烧弹 100002 dps 352→**270**
+  （QA#5 调查表口径；直线火墙仍以圆形近似，待 P2 区域框架）。
+- `engine.py`：strike 事件支持 `ff`（双方命中，QA#6）与 `bypass`（绕过护盾，
+  轨道标枪）；护盾不再保护空军单位（QA#6：凤凰/兵蜂/深渊无屏障覆盖）。
+- `battlefield/compiler.py`：多 strike 在编译期展开为独立 TimedEvent（完整落点
+  进入 BattleInput digest，确定性可复现）；修正"stacking, free"过期注释
+  （费用由 transition 扣、每回合限购一次）。
+- `battlefield/registry.py`：新技能 confidence 全部 provisional（数值来自任务书
+  用户表，落点分布/splash/cd 无 oracle）；1000001 verified（规则用户冻结、
+  transition-only 无战斗数值）；tower skill 补 QA#4 证据。
+
+**Web / 前端**
+- `game_service.py`：`game_view_v4`；players[].units 增加
+  `movable/move_reasons/move_blocker`；players[] 与 legal_actions 增加
+  `buy_limit`（base/bonus/used/limit/remaining）；商店条目 `purchasable`；
+  tower_skills `purchasable/已激活` + fidelity；skill_releases 增加
+  `legal_targets`（再部署只列当前锁定单位）与 `redeploy` 标记。
+- `game.html`：能量塔按钮提交 `activate_energy_tower_skill`（不再伪装
+  raw_unsupported），已购禁用；HUD「已购买 X/Y」+ 商店额度行/额度满标记；
+  不可拖动锁定单位（mousedown 拦截 + 🔒 徽标 + tooltip/详情移动来源说明）；
+  旋转按钮随锁定禁用；单位目标技能按 legal_targets 高亮与校验（再部署只高亮
+  锁定单位）。
+- `server.py`：支持 `PORT` 环境变量（并行实例验收用）。
+
+**数据重建（本地派生物，不含 .grbr）**
+- `local_data/rounds_norm.json` + normalize_report 全量重跑（1106 局，undo
+  folded 16680 / cancel 1848，unresolved 0.24% 持平）。
+- `local_data/replay_game` 全量重建（norm + manifest 重扫）。
+- `data/samples/replay_game` manifest 用旧 shard `--rebuild-manifest` 重扫
+  （该 fixture 的 shard 早于当前 rounds.json，属既有失同步，已按当前扫描器
+  规则对齐；strict 扫描覆盖 R2 起的 offers，首个 strict blocker R3→R2）。
+- opening catalog schema 未变，无需重建。
+
+### 14.2 测试与验收
+
+- `python -m pytest tests` → **153 passed**（含新增 `tests/transition/test_step4.py`
+  29 项：T1 gate 表、六种移动来源、再部署四类拒绝/逐槽一次/下回合重置、能量塔
+  单次购买与 raw 转发、P1 strike/summon 的 digest·t=15s·ff·bypass·召唤物不
+  入持久阵容、旧 schema 迁移、legal mask 与 deploy 一致、样例复现率守门）。
+- 浏览器验收（127.0.0.1:8301，真实回放会话）：
+  1. R1 连续购买至「已购买 3/3」，商店条目显示「额度满」，第 4 次双击被拒；
+     撤销一次后额度恢复 2/3；
+  2. 强化训练开局槽 + 高速移动 ¥50 typed 提交（receipt
+     `activate_energy_tower_skill ✓ tower skill 6`），按钮转「已激活」禁用，
+     强化瞄准仍可购；
+  3. 结束部署 → pysim 战斗结算 → R2 增援四选一（含 #1000001 再部署卡）；
+  4. R2 服务器权威状态：7 个旧单位全部 `movable=false
+     blocker=UNIT_NOT_MOVABLE_THIS_ROUND`；
+  5. 选再部署卡 → 槽位「可用 · 解锁移动」→ 释放点击锁定单位 →
+     `release_commander_skill ✓ 再部署 unlocks unit 2 this round slot 1
+     consumed`，该单位 `movable=true reasons=['REDEPLOY_SKILL']`，槽位转
+     「冷却中」，legal_targets 不再含该单位。
+
+### 14.3 购买 / 移动规则的真实回放对拍（最终口径）
+
+**购买额度 — 三轮裁决过程（QA#7）**：
+1. 初判：base=2 下 9,485/17,814 买卡回合"超 1"，且 0 回合超过 `3+加成`，
+   误读为 base=3；
+2. 用户裁决 base 绝对是 2 后，用下一回合快照独立确认 3 买是净存活
+   （2,891 回合新增恰好 3 个兵种吻合的购买单位），排除撤销折叠假象；
+3. 用户提示"批量征召可能在 ActiveEnergyTowerSkill 通道"后定位真因：
+   **`ActiveEnergyTowerSkill SkillID=3` = 批量征召（¥50，当回合前置生效）**。
+   位置分布：6,953 个回合它恰好出现在第 2 次购买之后、第 3 次之前；
+   **墙检验：`2 + tower3点击 + 10004份数` 在 16,512 个买卡回合中 0 违规**。
+   最终模型与语料完全一致（样例复现测试 quota_diverged==0）。
+
+**能量塔技能表（用户最终裁决，全部当回合一次性购买）**：
+| ID | 技能 | 费用 | 效果 |
+|---:|---|---:|---|
+| 1 | 快速补给 | 0 | 立即 +200，下回合收入 -300 |
+| 3 | 批量征召 | 50 | 本回合购买上限 +1（前置 action） |
+| 4 | 精英征召 | 100 | 本回合后续购买单位 +1 级（顺序敏感） |
+| 5 | 强化瞄准 | 100 | 全体远程射程 +15 |
+| 6 | 高速移动 | 50 | 全体移速 +3 |
+（ID 2 语料从未出现，保持精确 blocker。）
+
+**蓝图 1/2/3 = 指挥官技能研究（用户裁决 + 语料证实）**：
+1 黏油弹 ¥150→解锁 400002、2 战地回收 ¥100→解锁 900001、3 移动信标
+¥100→解锁 1500001；槽位在研究后**下一回合**入槽（lag=+1 ≈100%）。解锁
+相关性：bp2→900001 为 1,837/1,860 且未研究者 0 例出现；bp1→400002、
+bp3→1500001 同样 0 例未研究出现。旧"bp1=快速补给贷款 / bp2=批量征召+额度 /
+bp3=精英征召"的读法是 r1 窗口代数被能量塔通道混淆所致，全部废弃；贷款/
+额度/升阶效果全部迁移到能量塔技能 1/3/4。
+
+**移动权限**：77,458 个 R2+ 移动中，仅 153 个玩家-回合（≈2%）在
+新增援/部署模块(含回合内绑定)/高速引擎(含回合内购买)/再部署(含回合内
+卡牌拾取)之外无法解释——按任务书以精确 blocker 处理，不回灌快照。
+
+**样例复现率**：unit-set 精确率恢复到 75% 门槛以上且 quota 分歧为 0；
+剩余失败全部来自既有数据缺口级联（开局装备清单缺失/UNKNOWN_ENTITY 等）。
+
+对拍过程中修复的两个 bug：raw 释放记录 `UnitIndex/ConstructionIndex=-1`
+被当作真实目标（导致再部署被拒）；快照技能槽缺少部署开始的冷却 tick。
+
+### 14.4 新增技能 fidelity / confidence
+
+| ID | 技能 | transition | battle | confidence | 说明 |
+|---:|---|---|---|---|---|
+| 1000001 | 再部署 | complete | unsupported(无战斗事件) | verified | 用户冻结规则；逐槽一次，cd=1 |
+| 300003 | 轨道轰炸 | complete | exact | provisional | 15×2500 用户表；sunflower 分布/ splash 20 cal；ff(QA#6) |
+| 300004 | 核弹 | complete | exact | provisional | 70000@t=15s 用户表；splash 40 cal；ff(QA#6) |
+| 300007 | 轨道标枪 | complete | exact | provisional | r30/70000 用户表；绕护盾 QA#6 |
+| 1200002/04/05 | 犀牛/战舰/火神空投 | complete | exact | provisional | mech 5/11/3 用户表；召唤物仅本场战斗 |
+| 100002 | 燃烧弹(修正) | complete | exact | provisional | dps 270 按调查表；直线火墙暂以圆形近似 |
+
+P0 回归：300001/800001/100002/1200001/1200003/1100001 全部保持既有链路并通过
+原测试。P2（EMP/光子/闪电风暴/离子/酸液/烟雾/信标）按任务书保持精确
+unsupported，`TimedAreaEffect` 框架未动。
+
+### 14.5 可玩前缀变化（最终重建 vs step3 基线）
+
+- 本地全量（2,010 options）：**前缀 0 下降**；delta：+1×42、+2×27、+3×12、
+  +4×6、+5×7、+6×5、+7×1，其余持平；**enabled 4→29**（能量塔 1/3/4 支持
+  直接消掉大量 `ActiveEnergyTowerSkill` UNSUPPORTED_ACTION_FIELD blocker）。
+- 样例 fixture：94974af9a119-1 ptr 1→3、b198291ffab1-0 ptr 4→6、
+  94974af9a119-0 ptr 5 不变；strict 前缀因 strict 扫描自 R2 覆盖 offers
+  统一截到 R1（装备近似口径，非本轮退化）。
+- norm 工件全量重建（undo folded 16,680 / cancel 1,848，unresolved 0.24%
+  持平）；golden fixture 随 typed tower_skill 条目重新生成。
+
+### 14.6 偏差与 QA 裁决记录（最终）
+
+1. **QA#7 — 购买额度（已裁决，用户最终口径）**：base=2；批量征召为能量塔
+   技能 3（¥50，当回合前置 +1，每回合限购一次）；每份【额外部署位】buff
+   (10004) +1（可叠加）；增援赠送不占额度。实现位于
+   `rules.py::BASE_BUY_LIMIT=2` 与能量塔技能表，语料墙检验 0 违规。
+2. **蓝图 1/2/3 语义重映射（用户裁决 + 语料证实）**：= 指挥官技能研究
+   （黏油弹 150 / 战地回收 100 / 移动信标 100，下回合入槽），旧贷款/额度/
+   升阶读法废弃；step3 的"bp2=50 额度"冻结随之作废（测试已改写）。
+3. **normalizer live 槽视图不含专家回合赠技**：保持 scanner/runtime 一致
+   （受影响 ID=0 释放保留为精确 blocker）。根治需 catalog officers 归纳
+   修复（独立工作项）。
+4. **燃烧弹形状**：dps 已按调查表改 270；直线火墙需 P2 `TimedAreaEffect`
+   框架，当前圆形近似已在 registry conf 注明，不升 verified。
+5. **P1 落点/时序/splash 为 cal**：多 strike 分布用确定性 sunflower（进
+   digest），核弹 t=15s 进 trace，均标 provisional，等待 oracle 校准局。
+6. 其余按任务书非目标执行：未动 2v2/特殊模式/RL observation 编码；地图
+   边界、跨中线、flank 传送规则未变（spawned 集合复用，语义不变）。

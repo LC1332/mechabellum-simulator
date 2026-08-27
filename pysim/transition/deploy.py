@@ -11,7 +11,14 @@ from . import errors
 from .canonicalize import FORBIDDEN_RAW_TYPES
 from .model import (ActionKind, CanonicalActionPlan, EnvironmentState,
                     PlayerState, UnitCard, Phase, ActionReceipt, EntityRef,
-                    GiftArgs)
+                    GiftArgs, ActivateEnergyTowerSkillArgs)
+from .rules import (BASE_BUY_LIMIT, EXTRA_DEPLOY_OFFICER,
+                    DEPLOYMENT_MODULE_EQUIPMENT, REDEPLOY_SKILL_ID,
+                    BuyLimitQuote, buy_limit_quote, movement_reasons,
+                    MOVE_REASON_NEW, MOVE_REASON_MODULE, MOVE_REASON_TECH,
+                    MOVE_REASON_REDEPLOY, TOWER_LOAN_SENTINEL,
+                    TOWER_MASS_SENTINEL, TOWER_ELITE_SENTINEL)
+from . import rules
 from .state_tools import state_digest, with_player, assert_state_invariants
 from .economy import Economy, LedgerBuilder
 
@@ -35,29 +42,44 @@ FEATURES = {
 # passive deploy-action supply costs (corpus-attributed 2026-08-26: r1
 # window algebra bp2-only -> 0 (1251 rounds), bp4/bp5 -> +100 each;
 # tower -> +100; con10001 -> +100, con20001 -> +50; prices_v1_passive).
-# step3 任务书 §3 OVERRIDES the r1 algebra with the user-frozen fees
-# (2026-08-27): 批量征召 2 = 50 (activation is no longer free), 强化瞄准 5 =
-# 100, 高速移动 6 = 50 — deviation from prices_v1_passive recorded in the
-# step3 summary.
-BLUEPRINT_COSTS = {2: 50, 3: 100, 4: 100, 5: 100, 401: 300, 501: 300}
-# energy-tower round buffs: single rule source for both deploy and GameView
-TOWER_SKILL_COSTS = {5: 100, 6: 50}      # 5 强化瞄准 / 6 高速移动
+# step4 FINAL ruling (user, 2026-08-27): the five commend-center items
+# (快速补给/批量征召/精英征召/强化瞄准/高速移动) are ONE-SHOT PER ROUND
+# purchases via ActiveEnergyTowerSkill — NOT blueprints. Blueprint 1/2/3 are
+# the commander-skill RESEARCH unlocks (one-time per game, slot granted at
+# the NEXT round start; corpus unlock correlation 98.8%/100%/0-unresearched).
+# The step3 r1-window algebra that read bp1=loan/bp2=free was confounded by
+# the tower channel and is retired here.
+BLUEPRINT_COSTS = {1: 150, 2: 100, 3: 100, 4: 100, 5: 100, 401: 300, 501: 300}
+# energy-tower round skills (user ruling 2026-08-27): id table
+# (corpus-anchored): 1 快速补给 0 (+200 now / -300 next round income),
+# 3 批量征召 50 (this round's buy limit +1, 前置 action), 4 精英征召 100
+# (buys AFTER it spawn at level+1, order matters), 5 强化瞄准 100
+# (range +15), 6 高速移动 50 (speed +3). id 2 never appears in the corpus.
+# Buy-limit wall evidence: base 2 + tower3 + 10004 => 0 violations across
+# 16,512 corpus buy-rounds.
+TOWER_SKILL_COSTS = {1: 0, 3: 50, 4: 100, 5: 100, 6: 50}
+# round-scoped sentinels live in rules.py (single source: the quote reads
+# them); re-exported here for the deploy handlers
+TOWER_LOAN_SENTINEL = TOWER_LOAN_SENTINEL
+TOWER_MASS_SENTINEL = TOWER_MASS_SENTINEL
+TOWER_ELITE_SENTINEL = TOWER_ELITE_SENTINEL
 CONTRAPTION_COSTS = {"10001": 100, "20001": 50, "30001": 100}
 TOWER_STRENGTHEN_COST = 100
 MANUFACTURING_OFFICERS = {20022: "giant", 20023: "small"}
-# audit-game v1 blueprint semantics (information/commend_center的蓝图.md +
-# corpus probes _probe9/_probe14, 2026-08-27):
-#   1 快速补给  cost 0   -> +200 now / -300 next round (income side)
-#   2 批量征召  cost 50  -> this round's buy limit +1 (base limit 5, the
-#                          corpus never exceeds 5 buys/round; bp2 rounds top
-#                          out at 4 — flag until a limit-binding sample lands)
-#   3 精英征召  cost 100 -> this round's buys spawn at level+1 (order matters:
-#                          only buys AFTER the activation; doc examples)
+# blueprint semantics (user ruling 2026-08-27 + corpus unlock probes):
+#   1 黏油弹   cost 150 -> research: commander skill 400002 next round
+#   2 战地回收 cost 100 -> research: commander skill 900001 next round
+#   3 移动信标 cost 100 -> research: commander skill 1500001 next round
 #   4/5 进攻/防御强化I  cost 100 -> permanent officer 20310/20300
 #   401/501 II tiers    cost 300 -> officer 20311/20301, replaces the I tier
+# (unlock correlation: bp1->400002 470/470 researched-seen, never without;
+# bp2->900001 1837/1860; bp3->1500001 548; slot lag = +1 round ~100%)
+BLUEPRINT_SKILLS = {1: 400002, 2: 900001, 3: 1500001}
 BLUEPRINT_OFFICERS = {4: 20310, 5: 20300, 401: 20311, 501: 20301}
-BASE_BUY_LIMIT = 5
-EXTRA_DEPLOY_OFFICER = 10004        # 额外部署位: +1 buy limit per copy
+# step4 任务书 §1.1 (user ruling 2026-08-27): base buy limit single-sourced
+# in rules.py — re-exported here for older importers
+BASE_BUY_LIMIT = BASE_BUY_LIMIT
+EXTRA_DEPLOY_OFFICER = EXTRA_DEPLOY_OFFICER     # 额外部署位: +1 per copy
 UPGRADE_DISCOUNT_EQUIPMENT = 13030004   # 强化模块: upgrade cost -100
 UPGRADE_DISCOUNT_AMOUNT = 100
 
@@ -86,6 +108,7 @@ class _RoundCtx:
     ledger: LedgerBuilder
     commander_skills: list = field(default_factory=list)  # (index,id,active,cd) skill inventory
     spawned_ids: set = field(default_factory=set)   # units created this round
+    redeployed_ids: set = field(default_factory=set)  # 再部署 unlocks this round
     buy_level_bonus: int = 0
     buy_limit_bonus: int = 0        # 批量征召 (blueprint 2): +1 this round
     digests: list = field(default_factory=list)
@@ -157,12 +180,16 @@ def deploy_transition(state: EnvironmentState,
             # stay flank-eligible across per-action invocations
             spawned_ids=set(int(e) for e in
                             (getattr(p, "spawned_this_round", ()) or ())),
+            # step4 §2.2: 再部署 unlocks of earlier deploy calls this round
+            redeployed_ids=set(int(e) for e in
+                               (getattr(p, "redeployed_this_round", ())
+                                or ())),
             buy_limit_bonus=sum(1 for b in
                                 (getattr(p, "blueprints_round", ()) or ())
-                                if int(b) == 2),
+                                if int(b) == rules.TOWER_MASS_SENTINEL),
             buy_level_bonus=sum(1 for b in
                                 (getattr(p, "blueprints_round", ()) or ())
-                                if int(b) == 3))
+                                if int(b) in (3, rules.TOWER_ELITE_SENTINEL)))
         if FEATURES["extra_deploy_slots"]:
             # 额外部署位 10004: +1 buy limit per held copy (可重复)
             ctx.buy_limit_bonus += sum(1 for o in ctx.officers
@@ -243,7 +270,8 @@ def _freeze(ctx: _RoundCtx, base: PlayerState) -> PlayerState:
         tower_mods_raw=tuple(ctx.tower_mods),
         devices_raw=tuple(ctx.devices),
         skill_events_raw=tuple(ctx.skill_events),
-        spawned_this_round=tuple(sorted(ctx.spawned_ids)))
+        spawned_this_round=tuple(sorted(ctx.spawned_ids)),
+        redeployed_this_round=tuple(sorted(ctx.redeployed_ids)))
 
 
 def _receipt(i, kind, ok, reason, detail="", **kw) -> ActionReceipt:
@@ -447,6 +475,83 @@ def _consume_slot(ctx, pos, sid):
     ctx.commander_skills[pos] = tuple(entry)
 
 
+def _activate_tower_skill(ctx, side, i, kind_value, sid):
+    """Typed 能量塔技能 activation (step4 任务书 §1.4 + user ruling
+    2026-08-27): the five commend-center items are ONE-SHOT PER ROUND:
+      1 快速补给 (0)   +200 supply now / -300 next round (income debt)
+      3 批量征召 (50)  this round's buy limit +1 (前置 action)
+      4 精英征召 (100) buys AFTER this spawn at level+1 (order matters)
+      5 强化瞄准 (100) 全体远程射程 +15 (battle SideMods)
+      6 高速移动 (50)  全体移速 +3 (battle SideMods)
+    Single purchase per id per round; unknown ids (e.g. the never-observed
+    id 2) stay precise blockers."""
+    if sid is None:
+        return _receipt(i, kind_value, False, errors.UNSUPPORTED_ACTION,
+                        detail="tower skill id missing")
+    try:
+        sid = int(sid)
+    except (TypeError, ValueError):
+        return _receipt(i, kind_value, False, errors.UNSUPPORTED_ACTION,
+                        detail="tower skill %s not executed in v0" % sid)
+    if sid not in TOWER_SKILL_COSTS:
+        return _receipt(i, kind_value, False, errors.UNSUPPORTED_ACTION,
+                        detail="tower skill %s not executed in v0" % sid)
+    # per-item round sentinels (single purchase per id per round)
+    sentinel = {1: TOWER_LOAN_SENTINEL, 3: TOWER_MASS_SENTINEL,
+                4: TOWER_ELITE_SENTINEL}.get(sid)
+    if sentinel is not None and sentinel in ctx.blueprints_round:
+        return _receipt(i, kind_value, False, errors.TOWER_SKILL_ALREADY_ACTIVE,
+                        detail="tower skill %d already purchased this round "
+                               "(single purchase)" % sid)
+    if sid in (5, 6) and int(sid) in (int(s) for s in ctx.tower_mods):
+        return _receipt(i, kind_value, False, errors.TOWER_SKILL_ALREADY_ACTIVE,
+                        detail="tower skill %d already active this round "
+                               "(single purchase)" % sid)
+    cost = TOWER_SKILL_COSTS[int(sid)]
+    if ctx.supply < cost:
+        return _receipt(i, kind_value, False, errors.INSUFFICIENT_SUPPLY,
+                        detail="tower skill %d needs %d" % (sid, cost))
+    if sid == 1:
+        # 快速补给: +200 now; the -300 lands on next round's income
+        # (Income200r.fast_debts, picked up from the ledger reason)
+        ctx.supply += 200
+        ctx.ledger.add("blueprint_loan:+200", 200, action_index=i)
+        ctx.blueprints_round.append(TOWER_LOAN_SENTINEL)
+        return _receipt(i, kind_value, True, errors.OK,
+                        resource_delta=200,
+                        detail="快速补给 +200 (下回合收入 -300)",
+                        changed_paths=("players[%d].supply" % side,))
+    ctx.supply -= cost
+    ctx.ledger.add("tower_skill:%d" % int(sid), -cost, action_index=i)
+    if sid == 3:
+        # 批量征召: this round's buy limit +1 (the very next buy may use it)
+        ctx.blueprints_round.append(TOWER_MASS_SENTINEL)
+        ctx.buy_limit_bonus += 1
+        q = _ctx_buy_limit_quote(ctx)
+        return _receipt(i, kind_value, True, errors.OK,
+                        resource_delta=-cost,
+                        detail="批量征召: buy limit %d (%s)"
+                               % (q.limit, q.breakdown),
+                        changed_paths=("players[%d].supply" % side,))
+    if sid == 4:
+        # 精英征召: buys AFTER this point spawn at level+1 (doc order rule)
+        ctx.blueprints_round.append(TOWER_ELITE_SENTINEL)
+        ctx.buy_level_bonus += 1
+        return _receipt(i, kind_value, True, errors.OK,
+                        resource_delta=-cost,
+                        detail="精英征召: subsequent buys spawn at level+1 "
+                               "this round",
+                        changed_paths=("players[%d].supply" % side,))
+    # 5/6: round battle buffs consumed by battlefield/compiler SideMods
+    ctx.tower_mods.append(int(sid))
+    return _receipt(i, kind_value, True, errors.OK,
+                    resource_delta=-cost,
+                    detail="tower skill %d (%s)" % (
+                        sid, "强化瞄准+15射程" if sid == 5 else "高速移动+3移速"),
+                    changed_paths=("players[%d].supply" % side,
+                                   "players[%d].tower_mods_raw" % side))
+
+
 def _release_commander_skill(ctx, side, i, kind_value, eco,
                              skill_index=None, skill_id=None, positions=(),
                              unit_ref=None, construction_index=None):
@@ -482,6 +587,36 @@ def _release_commander_skill(ctx, side, i, kind_value, eco,
                         detail="%s (%s)" % (slot_err, precise))
     consumed = slot_pos is not None
     if sid in TRANSITION_SKILLS:
+        if sid == REDEPLOY_SKILL_ID:
+            # step4 任务书 §1.3/QA#3: 再部署 is transition-only — the target
+            # (an own unit locked this round) joins this round's move
+            # permission; the backing slot cools down (next round usable
+            # again; two redeploy slots = two releases per round). No pysim
+            # battle event, no summon.
+            if unit_ref is None:
+                return _receipt(i, kind_value, False, errors.SKILL_TARGET_INVALID,
+                                detail="再部署 needs a unit target (%s)" % precise)
+            j, u = _find_unit(ctx, unit_ref)
+            if u is None:
+                return _receipt(i, kind_value, False, errors.UNKNOWN_ENTITY,
+                                detail="再部署 target missing (%s)" % precise)
+            reasons = _ctx_movement_reasons(ctx, u)
+            if reasons:
+                return _receipt(i, kind_value, False, errors.UNIT_ALREADY_MOVABLE,
+                                detail="再部署 target movable via %s (%s)"
+                                       % ("+".join(reasons), precise))
+            if consumed:
+                _consume_slot(ctx, slot_pos, sid)
+            ctx.redeployed_ids.add(int(u.entity_id))
+            return _receipt(i, kind_value, True, errors.OK,
+                            detail="再部署 unlocks unit %s this round%s"
+                                   % (u.replay_index,
+                                      (" slot %s consumed" % slot_pos)
+                                      if consumed else ""),
+                            changed_paths=(
+                                "players[%d].redeployed_this_round" % side,)
+                            + (("players[%d].commander_skills_raw" % side,)
+                               if consumed else ()))
         # 强化训练: target unit's exp jumps to its next upgrade threshold
         if unit_ref is None:
             return _receipt(i, kind_value, False, errors.SKILL_TARGET_INVALID,
@@ -579,55 +714,34 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
         rt = args.raw_type
         rid = _raw_get(args, "ID")
         if rt == "ActiveBlueprint":
-            if rid == 1:
-                # 快速补给: +200 now; the -300 next round lands on the
-                # income side (Income200r.fast_debts, recorded by the env)
-                ctx.supply += 200
-                ctx.ledger.add("blueprint_loan:+200", 200, action_index=i)
-                ctx.blueprints.append(1)
-                ctx.blueprints_round.append(1)
-                return _receipt(i, kind.value, True, errors.OK,
-                                resource_delta=200,
-                                changed_paths=("players[%d].supply" % side,
-                                               "players[%d].blueprints" % side))
-            if rid == 2:
-                # 批量征召: this round's buy limit +1; the activation costs
-                # 50 (step3 任务书 §3 frozen fee, superseding the r1-window
-                # free-algebra reading)
-                cost = BLUEPRINT_COSTS[2]
+            if int(rid) in BLUEPRINT_SKILLS:
+                # 指挥官技能研究 (user ruling 2026-08-27): one-time research
+                # unlocking the mapped commander skill; the SLOT is granted at
+                # the NEXT round start (advance_round, corpus lag=+1 ~100%).
+                # bp1=黏油弹400002/150, bp2=战地回收900001/100,
+                # bp3=移动信标1500001/100
+                bid = int(rid)
+                if bid in [int(b) for b in ctx.blueprints]:
+                    return _receipt(i, kind.value, True, errors.OK,
+                                    detail="blueprint %d already researched "
+                                           "(no charge)" % bid)
+                cost = BLUEPRINT_COSTS[bid]
                 if ctx.supply < cost:
                     return _receipt(i, kind.value, False,
                                     errors.INSUFFICIENT_SUPPLY,
-                                    detail="blueprint %s needs %d" % (
+                                    detail="blueprint %d needs %d" % (
                                         rid, cost))
                 ctx.supply -= cost
                 ctx.ledger.add("blueprint:%s" % rid, -cost, action_index=i)
-                ctx.buy_limit_bonus += 1
-                ctx.blueprints.append(2)
-                ctx.blueprints_round.append(2)
+                ctx.blueprints.append(bid)
+                ctx.blueprints_round.append(bid)
                 return _receipt(i, kind.value, True, errors.OK,
                                 resource_delta=-cost,
-                                detail="批量征召: buy limit %d" % (
-                                    BASE_BUY_LIMIT + ctx.buy_limit_bonus),
+                                detail="研究 %d: 解锁指挥官技能 %d (下回合入槽)"
+                                       % (bid, BLUEPRINT_SKILLS[bid]),
                                 changed_paths=("players[%d].supply" % side,
-                                               "players[%d].blueprints" % side))
-            if rid == 3:
-                # 精英征召: buys AFTER this point spawn at level+1 (doc order)
-                if ctx.supply < BLUEPRINT_COSTS[3]:
-                    return _receipt(i, kind.value, False,
-                                    errors.INSUFFICIENT_SUPPLY,
-                                    detail="blueprint %s needs %d" % (
-                                        rid, BLUEPRINT_COSTS[3]))
-                ctx.supply -= BLUEPRINT_COSTS[3]
-                ctx.ledger.add("blueprint:%s" % rid, -BLUEPRINT_COSTS[3],
-                               action_index=i)
-                ctx.buy_level_bonus += 1
-                ctx.blueprints.append(3)
-                ctx.blueprints_round.append(3)
-                return _receipt(i, kind.value, True, errors.OK,
-                                resource_delta=-BLUEPRINT_COSTS[3],
-                                changed_paths=("players[%d].supply" % side,
-                                               "players[%d].blueprints" % side))
+                                               "players[%d].blueprints"
+                                               % side))
             officer = BLUEPRINT_OFFICERS.get(rid)
             cost = BLUEPRINT_COSTS.get(rid if rid is not None else -1, 0)
             if officer:
@@ -702,33 +816,10 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
                                 "players[%d].tower_strengthen" % side,
                                 "players[%d].supply" % side))
         if rt == "ActiveEnergyTowerSkill":
-            # 能量塔技能 (round buffs, stacking): 5 强化瞄准 = 全体远程
-            # 射程 +15 (cost 100), 6 高速移动 = 全体移速 +3 (cost 50) — the
-            # step3 §3 frozen fees (single source TOWER_SKILL_COSTS, shared
-            # with GameView); battle adapter applies via b.tower_mods; ids
-            # 1/3/4 have no modeled effect and stay unsupported
-            sid = _raw_get(args, "SkillID")
-            if sid in TOWER_SKILL_COSTS:
-                cost = TOWER_SKILL_COSTS[int(sid)]
-                if ctx.supply < cost:
-                    return _receipt(i, kind.value, False,
-                                    errors.INSUFFICIENT_SUPPLY,
-                                    detail="tower skill %d needs %d"
-                                           % (sid, cost))
-                ctx.supply -= cost
-                ctx.ledger.add("tower_skill:%d" % int(sid), -cost,
-                               action_index=i)
-                ctx.tower_mods.append(int(sid))
-                return _receipt(i, kind.value, True, errors.OK,
-                                resource_delta=-cost,
-                                detail="tower skill %d (%s)" % (
-                                    sid, "强化瞄准+15射程" if sid == 5
-                                    else "高速移动+3移速"),
-                                changed_paths=(
-                                    "players[%d].supply" % side,
-                                    "players[%d].tower_mods_raw" % side))
-            return _receipt(i, kind.value, False, errors.UNSUPPORTED_ACTION,
-                            detail="tower skill %s not executed in v0" % sid)
+            # legacy raw form (old fixtures/shards): forward to the SAME
+            # typed handler (step4 任务书 §2.3 — one rule source)
+            return _activate_tower_skill(
+                ctx, side, i, kind.value, _raw_get(args, "SkillID"))
         if rt == "ReleaseCommanderSkill":
             # legacy raw form: resolve explicit ID vs SkillIndex, then share
             # the typed release path (one rule source with the normalizer's
@@ -880,11 +971,16 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
             return _receipt(i, kind.value, False,
                             errors.POSITION_OUT_OF_DEPLOY_ZONE,
                             detail=_zone_detail(side))
-        limit = BASE_BUY_LIMIT + ctx.buy_limit_bonus
-        if ctx.buy_count >= limit:
+        # step4 任务书 §1.1: one buy-limit rule source (rules.buy_limit_quote
+        # semantics over the live working view)
+        quote = _ctx_buy_limit_quote(ctx)
+        if quote.remaining <= 0:
             return _receipt(i, kind.value, False, errors.BUY_LIMIT_REACHED,
-                            detail="buy %d/%d this round"
-                                   % (ctx.buy_count, limit))
+                            detail="buy %d/%d this round (base %d + 批量征召 "
+                                   "%d + 额外部署位 %d)"
+                                   % (quote.used, quote.limit, quote.base,
+                                      quote.blueprint_bonus,
+                                      quote.officer_bonus))
         if ctx.supply < price:
             return _receipt(i, kind.value, False, errors.INSUFFICIENT_SUPPLY,
                             detail="need %d have %d" % (price, ctx.supply))
@@ -1004,14 +1100,26 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
             return _receipt(i, kind.value, False, errors.UNKNOWN_ENTITY)
         if not _in_bounds(args.x, args.y):
             return _receipt(i, kind.value, False, errors.POSITION_OUT_OF_BOUNDS)
+        # step4 任务书 §1.2: units that fought last round are locked unless
+        # new this round / 部署模块 / 高速引擎 / 再部署. Evaluated against the
+        # live working view, so a module binding or tech buy earlier in this
+        # round unlocks the very next move. Rejected moves change nothing
+        # (position AND orientation stay).
+        reasons = _ctx_movement_reasons(ctx, u)
+        if not reasons:
+            return _receipt(i, kind.value, False,
+                            errors.UNIT_NOT_MOVABLE_THIS_ROUND,
+                            detail="unit %s fought last round; movable only "
+                                   "via new/module/tech/redeploy"
+                                   % (u.replay_index,))
         # corpus truth (step2 G2 audit): moves may reposition anywhere on the
         # map (7/258 sample moves cross the midline — R3+ flank pushes), so
         # only NEW buys are restricted to the acting player's half
         rot = u.is_rotate if args.is_rotate is None else args.is_rotate
-        rot = u.is_rotate if args.is_rotate is None else args.is_rotate
         ctx.units[j] = UnitCard(**{**u.__dict__, "x": args.x, "y": args.y,
                                    "is_rotate": rot})
         return _receipt(i, kind.value, True, errors.OK,
+                        detail="move via %s" % "+".join(reasons),
                         changed_paths=("players[%d].units[entity=%d].pos" % (
                             side, u.entity_id),))
 
@@ -1044,6 +1152,12 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
             skill_index=args.skill_index, skill_id=args.skill_id,
             positions=args.positions, unit_ref=args.unit_ref,
             construction_index=args.construction_index)
+
+    if kind is ActionKind.ACTIVATE_ENERGY_TOWER_SKILL:
+        # step4 任务书 §2.3: typed 能量塔技能 (browser/normalizer/canonicalizer
+        # all land here; the raw ActiveEnergyTowerSkill adapter forwards to
+        # this same handler)
+        return _activate_tower_skill(ctx, side, i, kind.value, args.skill_id)
 
     if kind is ActionKind.USE_EQUIPMENT:
         from .equipment import EQUIPMENT_DEFS, equipment_target_ok
@@ -1129,6 +1243,29 @@ def _raw_positions(args):
 
 def ctx_officers(ctx):
     return getattr(ctx, "commander_skills", ()) or ()
+
+
+def _ctx_buy_limit_quote(ctx) -> BuyLimitQuote:
+    """Live buy-limit quote over the deploy working view (能量塔技能3
+    批量征召 purchases and 10004 officers held mid-round count immediately)."""
+    bp = sum(1 for b in (ctx.blueprints_round or [])
+             if int(b) == TOWER_MASS_SENTINEL)
+    off = (sum(1 for o in ctx.officers if int(o) == EXTRA_DEPLOY_OFFICER)
+           if FEATURES["extra_deploy_slots"] else 0)
+    used = int(ctx.buy_count)
+    limit = BASE_BUY_LIMIT + bp + off
+    return BuyLimitQuote(base=BASE_BUY_LIMIT, blueprint_bonus=bp,
+                         officer_bonus=off, used=used, limit=limit,
+                         remaining=max(0, limit - used))
+
+
+def _ctx_movement_reasons(ctx, unit):
+    """Movement permission inside the deploy working view: reads the live
+    spawned/redeployed sets and tech map so mid-round activations (部署模块
+    binding, 高速引擎 buy) apply to the very next move — same core predicate
+    as rules.movement_permission (one rule source)."""
+    return movement_reasons(unit, ctx.spawned_ids, ctx.redeployed_ids,
+                            ctx.tech_bought)
 
 
 def _in_bounds(x, y) -> bool:

@@ -183,6 +183,9 @@ def player_state_from_package(pkg, start_entity_id=1, eco=None,
         blueprints=tuple(int(b) for b in pkg.get("blueprints", [])),
         commander_skills_raw=cs,
         equipment_inventory=equipment,
+        # step4 任务书 §1.2/QA#1: round-1 opening units have not fought a
+        # battle yet -> every one of them is movable in round 1
+        spawned_this_round=tuple(sorted(u.entity_id for u in units)),
         tower_strengthen=(0, 0), constructions_raw=cons), next_id
 
 
