@@ -51,17 +51,16 @@ def _skills_state(cs_raw) -> list[dict]:
     return sorted(out, key=lambda s: s["slot"])
 
 
-def _side_public(p: PlayerState, side: int, include_private: bool) -> dict:
+def _side_public(p: PlayerState, flip: bool, include_private: bool) -> dict:
     """Public board of one side in the EGO frame (own half y<0).
 
-    Mirroring depends on the SIDE, not on who is ego: side 1's geometry
-    (y>0 own half) is always flipped into the lower half and its rotation
-    flips with it. include_private=False (opponent view) keeps the minimal
-    public field set (task §4.2)."""
+    The ego transform is ONE rigid mirror of the whole board applied when
+    the ego side is 1: every y negates (own half y>0 -> y<0, and the
+    opponent's half lands in y>0) and every rotation flips with it."""
     units = []
     for u in p.units:
-        y = float(u.y) if side == 0 else mirror_y(u.y)
-        units.append(unit_record_with_rot(u, y, side == 0))
+        y = float(u.y) if not flip else mirror_y(u.y)
+        units.append(unit_record_with_rot(u, y, not flip))
     units.sort(key=canonical_sort_key)
     d = {
         "hp": int(p.hp), "max_hp": int(p.max_hp),
@@ -75,12 +74,12 @@ def _side_public(p: PlayerState, side: int, include_private: bool) -> dict:
                              getattr(p, "tower_mods_raw", ()) or ()),
         "devices": sorted(
             ({"id": int(c[0]), "x": float(c[1]),
-              "y": float(c[2]) if side == 0 else mirror_y(c[2])}
+              "y": float(c[2]) if not flip else mirror_y(c[2])}
              for c in getattr(p, "devices_raw", ()) or ()),
             key=lambda c: (c["y"], c["x"], c["id"])),
         "skill_events": sorted(
             ({"id": int(s[0]), "x": float(s[1]),
-              "y": float(s[2]) if side == 0 else mirror_y(s[2])}
+              "y": float(s[2]) if not flip else mirror_y(s[2])}
              for s in getattr(p, "skill_events_raw", ()) or ()),
             key=lambda s: (s["y"], s["x"], s["id"])),
     }
@@ -130,10 +129,11 @@ def battle_observation(state: EnvironmentState, ego: int) -> BattleObservationV1
         raise ValueError("battle_observation needs PRE_BATTLE, got %s"
                          % state.phase.value)
     p, o = state.players[ego], state.players[1 - ego]
+    flip = (ego == 1)
     return BattleObservationV1(round=int(state.round), ego=int(ego),
-                               self_side=_side_public(p, ego,
+                               self_side=_side_public(p, flip,
                                                       include_private=False),
-                               opp_side=_side_public(o, 1 - ego,
+                               opp_side=_side_public(o, flip,
                                                       include_private=False))
 
 
@@ -250,7 +250,7 @@ def policy_observation(state: EnvironmentState, ego: int,
     for pos in range(len(p.units)):
         u = p.units[pos]
         y = float(u.y) if ego == 0 else mirror_y(u.y)
-        units.append(unit_record_with_rot(u, y, ego == 0))
+        units.append(unit_record_with_rot(u, y, ego == 0))   # own side only
         perm = movement_permission(p, u)
         move_ok.append(bool(perm.allowed))
         move_reasons.append(list(perm.reasons))
@@ -259,7 +259,7 @@ def policy_observation(state: EnvironmentState, ego: int,
     units = [units[i] for i in order]
     move_ok = [move_ok[i] for i in order]
     move_reasons = [move_reasons[i] for i in order]
-    opp = _side_public(o, 1 - ego, include_private=False)
+    opp = _side_public(o, ego == 1, include_private=False)
     return PolicyObservationV1(
         round=int(state.round), ego=int(ego), hp=int(p.hp), max_hp=int(p.max_hp),
         supply=int(p.supply), buy_remaining=int(buy_remaining),

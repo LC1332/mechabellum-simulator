@@ -162,13 +162,19 @@ def test_mirror_twice_is_identity(root):
 
 
 def test_side_swap_swaps_observations(root):
+    """The ego transform is one rigid board mirror: viewing the mirrored
+    state from side 0 is EXACTLY the original state viewed from side 1."""
     s = _mirror_board_state(root)
-    o_self = battle_observation(s, 0)
-    o_swapped = battle_observation(ego_mirror_state(s), 0)
-    # after mirror, ego=0 sees the OTHER side's board (mirrored)
-    assert o_self.self_side["units"] == o_swapped.opp_side["units"]
-    assert o_self.opp_side["units"] == o_swapped.self_side["units"]
-    assert o_self.self_side["hp"] == o_swapped.opp_side["hp"]
+    o_via_mirror = battle_observation(ego_mirror_state(s), 0)
+    o_side1 = battle_observation(s, 1)
+    assert o_via_mirror.self_side == o_side1.self_side
+    assert o_via_mirror.opp_side == o_side1.opp_side
+    o0 = battle_observation(s, 0)
+    # and geometry: ego sees own half y<0, enemy y>0, rotations flipped once
+    assert all(u["y"] < 0 for u in o_side1.self_side["units"])
+    assert all(u["y"] > 0 for u in o_side1.opp_side["units"])
+    assert all(u["y"] < 0 for u in o0.self_side["units"])
+    assert all(u["y"] > 0 for u in o0.opp_side["units"])
 
 
 def test_unit_permutation_invariance(root):

@@ -328,6 +328,76 @@ def process_chunk(chunk):
                         stats["skip_no_label"] += 1
                 else:
                     stats["skip_joint_board"] += 1
+
+            # ---- counterfactual candidates (task §5.4): random-legal and
+            # heuristic plans replacing side 0's deploy on the SAME root,
+            # opponent = human side 1. The driver keeps candidates only for
+            # train-split groups.
+            if len(walks) == 2 and all(
+                    w.end_reason == "human_end" for w in walks.values()):
+                from pysim.rl.policies import (RandomLegalPolicy,
+                                               HeuristicPolicy)
+                from pysim.rl.prefix_env import PrefixEnv
+                from pysim.transition.state_tools import state_digest
+                from pysim.transition.model import CanonicalActionPlan
+                from pysim.transition.deploy import deploy_transition
+                from pysim.transition.env import TransitionEnv
+                for cand_name, pol in (
+                        ("random", RandomLegalPolicy(
+                            seed=int(stable_digest(
+                                "%s|%d" % (replay_hash, rnd)), 16) % 2**31)),
+                        ("heuristic", HeuristicPolicy(eco=eco))):
+                    try:
+                        cenv = PrefixEnv(root, 0, eco, gd)
+                        acts = pol.plan(cenv, max_steps=24)
+                        if acts[-1].verb != "END_DEPLOY" or \
+                                not cenv.state.finished_deploy[0]:
+                            stats["cf_%s_skip" % cand_name] += 1
+                            continue
+                        joint = TransitionEnv(gd, eco=eco)
+                        joint.reset(root)
+                        dep = deploy_transition(
+                            joint.state,
+                            (CanonicalActionPlan(player=0,
+                                                 actions=cenv.engine_log),),
+                            eco)
+                        joint._state = dep.state
+                        dep1 = deploy_transition(
+                            joint.state,
+                            (CanonicalActionPlan(
+                                player=1,
+                                actions=walks[1].engine_actions),),
+                            eco)
+                        joint._state = dep1.state
+                        if joint.state.phase.value != "pre_battle" or \
+                                not all(r.accepted for r in dep.receipts[0]):
+                            stats["cf_%s_skip" % cand_name] += 1
+                            continue
+                        bo = battle_observation(joint.state, 0)
+                        plan_digest = state_digest(joint.state)
+                        rows_state.append({
+                            "sample_id": sample_id(replay_hash, rnd,
+                                                   "cf", cand_name),
+                            "replay_hash": replay_hash,
+                            "match_id_hash": fp,
+                            "round": rnd, "corpus": corpus,
+                            "game_version": version,
+                            "split": "__SPLIT__", "duplicate_group": fp,
+                            "tier": "gold",
+                            "candidate_group_id": fp,
+                            "state_source": "counterfactual_" + cand_name,
+                            "observation": bo.to_dict(),
+                            "observation_digest": bo.digest(),
+                            "n_units": (len(joint.state.players[0].units),
+                                        len(joint.state.players[1].units)),
+                            "seeds": [],
+                            "label_version": SIM_LABEL_VERSION,
+                            "plan_digest": plan_digest,
+                        })
+                        stats["cf_%s" % cand_name] += 1
+                    except Exception:
+                        stats["cf_%s_error" % cand_name] += 1
+
             stats["rounds_seen"] += 1
     return {"chunk": chunk["chunk_id"], "corpus": corpus,
             "rows_policy": rows_policy, "rows_battle": rows_battle,
