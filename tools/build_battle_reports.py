@@ -368,6 +368,50 @@ def write_report(args, games, namer, ck):
                 add("- (空 plan)")
             add("")
 
+    # -------- 诊断 (模式检测)
+    add("## 诊断 (pattern 检测)")
+    add("")
+    dup_buy = 0; unlock_spam = 0; short_plan = 0; cycles = 0; no_tech = 0
+    n_all = 0
+    for g in games:
+        for tag, s2 in g["seats"].items():
+            n_all += 1
+            acts = s2["plan"]["actions_dict"]
+            buys = [(round(a.get("x", 0)), round(a.get("y", 0)))
+                    for a in acts if a.get("verb") == "BUY_UNIT"]
+            if len(buys) != len(set(buys)):
+                dup_buy += 1
+            unlocks = sum(1 for a in acts
+                          if a.get("verb") == "UNLOCK_UNIT")
+            bought = sum(1 for a in acts if a.get("verb") == "BUY_UNIT")
+            if unlocks >= 3 and bought <= unlocks:
+                unlock_spam += 1
+            if s2["plan"]["stop_reason"] == "cycle_stop":
+                cycles += 1
+            human_steps = len(s2["human_plan"]["engine_actions"])
+            if human_steps >= 10 and s2["plan"]["steps"] <= 4:
+                short_plan += 1
+            if not any(a.get("verb") == "BUY_TECH" for a in acts) and \
+                    any(a.get("verb") == "BUY_TECH"
+                        for act in s2["human_plan"]["engine_actions"]
+                        if getattr(act, "kind", None) is not None and False):
+                no_tech += 1
+    add("| 模式 | 场次 (/ %d) | 说明 |" % n_all)
+    add("|---|---|---|")
+    add("| 重复同点购买 | %d | 同一坐标多次 BUY_UNIT → overlap/exploit |" %
+        dup_buy)
+    add("| 解锁刷子 | %d | 连续 UNLOCK≥3 且不落地购买 → 白白花钱 |" %
+        unlock_spam)
+    add("| plan 过短 | %d | 人类 ≥10 步时 policy ≤4 步结束 → 部署不足 |" %
+        short_plan)
+    add("| 循环保护停止 | %d | cycle_stop: 同签名动作重复 3 次 |" % cycles)
+    add("")
+    add("**下一步建议** (按预期收益排序): ① scheduled-sampling/DAgger 恢复数据 "
+        "压制 free-running 漂移 (cycle_stop/回退的根因); ② 训练时把 UNLOCK 的 "
+        "无意义连发当作负样本降权; ③ 更多 epoch + Medium 档; ④ 复用第一周期 "
+        "checkpoint 做 best-of-N + TValue 预筛。")
+    add("")
+
     out = os.path.join(args.out, "战报_%s.md" % time.strftime("%Y%m%d_%H%M%S"))
     with open(out, "w", encoding="utf8") as f:
         f.write("\n".join(lines) + "\n")

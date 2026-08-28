@@ -384,19 +384,17 @@ class TPolicyBC(nn.Module):
                     self.field_emb["none"](torch.zeros(b, dtype=torch.long,
                                                        device=dev)
                                            ).unsqueeze(1))
-                # points & pointer requirements are now determined
+                # points & pointer requirements are decided BY THE VERB
+                # (§5): 位置参数只属于 BUY/MOVE/CONTRAPTION 和按 registry
+                # arity 的技能释放; UNLOCK/TECH/EQUIP/TOWER/BP 等 0 点
                 n_points_of = torch.where(
-                    need_obj, arities.gather(1, o[:, None]).squeeze(1),
+                    verb == VERB_INDEX["RELEASE_COMMANDER_SKILL"],
+                    arities.gather(1, o[:, None]).squeeze(1),
                     torch.zeros_like(o)).long()
-                n_points_of = torch.where(
-                    verb == VERB_INDEX["MOVE_UNIT"],
-                    torch.ones_like(n_points_of), n_points_of)
-                n_points_of = torch.where(
-                    verb == VERB_INDEX["RELEASE_CONTRAPTION"],
-                    torch.ones_like(n_points_of), n_points_of)
-                n_points_of = torch.where(
-                    verb == VERB_INDEX["BUY_UNIT"],
-                    torch.ones_like(n_points_of), n_points_of)
+                for v_need in ("BUY_UNIT", "MOVE_UNIT", "RELEASE_CONTRAPTION"):
+                    n_points_of = torch.where(
+                        verb == VERB_INDEX[v_need],
+                        torch.ones_like(n_points_of), n_points_of)
                 use_ori = torch.isin(
                     verb, torch.as_tensor([VERB_INDEX["MOVE_UNIT"],
                                            VERB_INDEX["BUY_UNIT"]],
