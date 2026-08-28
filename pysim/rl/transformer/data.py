@@ -196,7 +196,8 @@ class TokenCacheWriter:
 
 
 class TokenCacheReader:
-    def __init__(self, cache_dir: str, contract: dict | None = None):
+    def __init__(self, cache_dir: str, contract: dict | None = None,
+                 index_rows: bool = False):
         self.cache_dir = cache_dir
         with open(os.path.join(cache_dir, "manifest.json"),
                   encoding="utf8") as f:
@@ -205,37 +206,55 @@ class TokenCacheReader:
             bad = check_cache_manifest(self.manifest, contract)
             if bad:
                 raise ContractError("token cache 不兼容: " + "; ".join(bad))
-        self._by_split: dict[str, list] = {}
-        for path in sorted(p for p in os.listdir(cache_dir)
-                           if p.endswith(".npz")):
-            z = np.load(os.path.join(cache_dir, path), allow_pickle=True)
-            for i, (sid, split) in enumerate(zip(z["sample_id"],
-                                                 z["split"])):
-                self._by_split.setdefault(str(split), []).append(
-                    (str(sid), i, path))
-        for rows in self._by_split.values():
-            rows.sort(key=lambda r: r[0])       # deterministic order
+        self._by_split: dict[str, int] = {}
+        if index_rows:
+            # full per-row index (used by tests/small caches only)
+            self._by_split: dict[str, list] = {}
+            for path in sorted(p for p in os.listdir(cache_dir)
+                               if p.endswith(".npz")):
+                z = np.load(os.path.join(cache_dir, path),
+                            allow_pickle=True)
+                for i, (sid, split) in enumerate(zip(z["sample_id"],
+                                                     z["split"])):
+                    self._by_split.setdefault(str(split), []).append(
+                        (str(sid), i, path))
+            for rows in self._by_split.values():
+                rows.sort(key=lambda r: r[0])
+        else:
+            for path in sorted(p for p in os.listdir(cache_dir)
+                               if p.endswith(".npz")):
+                z = np.load(os.path.join(cache_dir, path),
+                            allow_pickle=True)
+                for split in set(str(x) for x in z["split"]):
+                    self._by_split[split] = self._by_split.get(split, 0) +                         int((z["split"] == split).sum())
 
     def sample_ids(self, split: str) -> list[str]:
-        return [r[0] for r in self._by_split.get(split, [])]
+        rows = self._by_split.get(split, [])
+        return [r[0] for r in rows] if rows and isinstance(rows[0], tuple)             else []
 
     def __len__(self):
-        return sum(len(v) for v in self._by_split.values())
+        return sum(v if isinstance(v, int) else len(v)
+                   for v in self._by_split.values())
 
     def iter_split(self, split: str):
-        cache: dict[str, dict] = {}
-        for sid, ri, path in self._by_split.get(split, []):
-            if path not in cache:
-                cache = {path: np.load(os.path.join(self.cache_dir, path),
-                                       allow_pickle=True)}
-            z = cache[path]
-            row = {}
-            for k in z.files:
-                if k in ("sample_id", "split"):
-                    continue
-                row[k] = z[k][ri]
-            row["sample_id"] = sid
-            yield sid, row
+        """Shard-major iteration: each npz member is decompressed ONCE per
+        shard, then rows are yielded in stored (deterministic) order. Do
+        NOT index z[k][i] per row — every access re-decompresses the whole
+        member and turns a 450k-row load into hours."""
+        for path in sorted(p for p in os.listdir(self.cache_dir)
+                           if p.endswith(".npz")):
+            z = np.load(os.path.join(self.cache_dir, path),
+                        allow_pickle=True)
+            splits = z["split"]
+            idxs = np.nonzero(splits == split)[0]
+            if idxs.size == 0:
+                continue
+            sids = z["sample_id"][idxs]
+            data = {k: z[k][idxs] for k in z.files
+                    if k not in ("sample_id", "split")}
+            for j in range(idxs.size):
+                row = {k: v[j] for k, v in data.items()}
+                yield str(sids[j]), row
 
 
 # ------------------------------------------------------- row -> tensors

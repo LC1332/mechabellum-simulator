@@ -102,10 +102,13 @@ def stage_train(run_dir, st, epochs):
         env = {"CUDA_VISIBLE_DEVICES": str(gpu)}
         log = os.path.join(logdir, "policy_seed%d.log" % seed)
         print(">> seed %d on GPU %d -> %s" % (seed, gpu, log), flush=True)
+        # stagger starts: each trainer holds ~20GB while loading the
+        # cache; simultaneous loads tripped the node OOM killer (rc=-9)
         proc = subprocess.Popen(cmd, env={**os.environ, **env},
                                 stdout=open(log, "a"),
                                 stderr=subprocess.STDOUT, cwd=ROOT)
         running.append((seed, proc, done_mark))
+        time.sleep(90)
     # value model (real+sim domains; sim 标签 provisional 已知)
     vgpu = VALUE_GPUS[0]
     vck = os.path.join(ck_dir, "tvalue_seed0.pt")

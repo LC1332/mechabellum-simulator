@@ -111,9 +111,19 @@ def main():
 
         def load_split(split):
             rows = []
+            nx_ny = tok_cfg.grid_nx * tok_cfg.grid_ny
             for sid, row in reader.iter_split(split):
                 if "fields" not in row:
                     continue          # value-domain shard rows
+                f = row["fields"]
+                # §4.5-style counted exclusion: targets unrepresentable at
+                # the frozen head widths (corpus quirks: >64-unit spaces)
+                if (f[0] >= 13 or f[1] >= model_cfg.max_obj_cands
+                        or (f[2] >= 0 and f[2] >= model_cfg.max_ptr_cands)
+                        or any(f[i] >= nx_ny for i in (3, 6, 9) if f[i] >= 0)
+                        or f[12] >= 3):
+                    st_row = (sid, int(f[0]), int(f[1]), int(f[2]))
+                    continue
                 if args.limit and len(rows) >= args.limit:
                     break
                 row["sample_id"] = sid
