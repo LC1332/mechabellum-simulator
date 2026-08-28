@@ -76,10 +76,10 @@ COMMANDER_SKILLS = {
              "conf": "step4 P1: 15x2500 (user table); spread pattern cal "
                      "(sunflower, deterministic); friendly fire per QA#6"},
     300004: {"kind": "strike", "name": "核弹",
-             "damage": 70000.0, "splash": 40.0, "t": 15.0,
+             "damage": 70000.0, "splash": 100.0, "t": 15.0,
              "ff": True,
-             "conf": "step4 P1: 70000 at t=15s (user table); splash 40 cal; "
-                     "friendly fire per QA#6"},
+             "conf": "step4 P1: 70000 at t=15s (user table); step5 QA-2 "
+                     "user-frozen radius 100 (was cal 40); ff per QA#6"},
     300007: {"kind": "strike", "name": "轨道标枪",
              "damage": 70000.0, "splash": 30.0,
              "bypass": True,
@@ -119,22 +119,103 @@ COMMANDER_SKILLS = {
     1200005: {"kind": "summon", "name": "天降火神",
               "mech": 3, "count": 1, "level": 1,
               "conf": "step4 P1: airdrop 1 火神 (mech 3, user table)"},
+    # ---- step5 任务书 §2.1 frozen rules + §12 QA answers (user, 2026-08-28).
+    # Geometry law shared by the swept skills: from the first point's r=30
+    # circle to the second point's r=30 circle = capsule(A, B, 30). A live
+    # barrier covering the ground at drop time clips generation permanently
+    # (盾后消失不补生成). Numbers marked cal stay provisional until the
+    # Windows oracle A/B lands - they NEVER claim verified.
+    400002: {"kind": "oil", "name": "黏油弹",
+             "radius": 30.0, "slow_mult": 0.45, "ttl_rounds": 2,
+             "shield_block": True, "layers": "ground",
+             "conf": "step5§2.1: capsule r30, enemy ground speed x0.45, "
+                     "unlit oil lasts 2 battles, ignite->flame (gone at "
+                     "fight end); 鬼鳐/火神 tech oils do NOT persist"},
+    600002: {"kind": "smoke", "name": "烟雾弹",
+             "radius": 30.0, "range_mult": 0.65, "shield_block": True,
+             "conf": "step5 QA-2 user-frozen: capsule r30, enemy range "
+                     "x0.65; duration/air/stacking cal (whole-battle v1)"},
+    500002: {"kind": "acid", "name": "酸液弹",
+             "radius": 30.0, "pct_dps": 0.03, "vuln_mult": 2.5,
+             "shield_block": True,
+             "conf": "step5 QA-2 user-frozen: 3% maxHP/s + damage taken "
+                     "x2.5 while inside; tick/duration/air cal"},
+    200001: {"kind": "emp", "name": "电磁冲击",
+             "radius": 60.0, "shield_damage": 20000.0, "duration": 25.0,
+             "slow_mult": 0.60,
+             "conf": "step5§2.1 user-frozen: r60, 20000 to shields, "
+                     "unprotected units tech-disable + speed x0.60 for 25s; "
+                     "shield-covered ground units immune"},
+    200002: {"kind": "emp", "name": "巨型电磁冲击",
+             "radius": 130.0, "shield_damage": 20000.0, "duration": 25.0,
+             "slow_mult": 0.60,
+             "conf": "step5 QA-2 user-frozen: r130 (only radius differs "
+                     "from 200001; same effect spec)"},
+    200003: {"kind": "photon", "name": "光子投射",
+             "radius": 30.0, "duration": 20.0, "dmg_taken_mult": 0.70,
+             "conf": "step5§2.1+QA-4 user-frozen: friendly 20s photon, "
+                     "damage taken x0.70, immune+clears EMP/引燃/酸液/退化"
+                     "光束; shape assumed capsule r30 (cal)"},
+    300005: {"kind": "storm", "name": "闪电风暴",
+             "radius": 130.0, "duration": 12.0, "interval": 0.8,
+             "damage": 800.0, "splash": 8.0, "slow_mult": 0.60,
+             "slow_duration": 1.0,
+             "conf": "step5 QA-2 user-frozen r130 ONLY; provisional v1 = "
+                     "seeded random enemy unit inside the circle per strike "
+                     "(duration/damage/slow cal; strict-effect stays blocked "
+                     "until the storm oracle)"},
+    300006: {"kind": "ion", "name": "离子轰炸",
+             "radius": 20.0, "speed": 25.0, "dps": 600.0,
+             "conf": "step5§2.1 user-frozen: moving circle r20 swept A->B; "
+                     "speed/dps/tick/ff cal"},
+    1500001: {"kind": "beacon", "name": "移动信标",
+              "radius": 40.0,
+              "conf": "step5§2.1+QA-2 user-frozen: 3 ordered points (A "
+                      "select r40 / B / C), member-level offsets, stop-to-"
+                      "attack; walls+cannon buildings unaffected, both ids "
+                      "identical"},
+    1500002: {"kind": "beacon", "name": "移动信标",
+              "radius": 40.0,
+              "conf": "step5 QA-2 user ruling: same effect as 1500001 "
+                      "(增援卡 variant)"},
     # deliberately NOT mapped (real effect unimplemented — precise blockers,
     # never a wrong approximation):
-    #   200001/200002 EMP 电磁冲击 (was wrongly burning ground in step15)
     #   1000001 再部署 redeploy -> TRANSITION_SKILLS (transition-only)
-    #   400002 黏油弹 (oil, r7+), 1200006+ 移动信标 variants,
-    #   15000xx WayPoint, 900001 supply family, 300005/300006 (P2 areas),
-    #   200003 光子投射, 500002 酸液弹, 600002 烟雾弹, 1500002 移动信标
+    #   1200006+ 移动信标 variants, 900001 supply family (900001 unit/建设
+    #   recycle both route through typed sell/release paths)
+    # step5 residual blockers: contraption 30001 (identity unknown — QA-7
+    # "不太清楚", stays a precise blocker) and unresolved ID=0 releases
+    # (QA-2: commander skill 0 identity unknown — slot table decides, never
+    # a global SkillIndex=0 guess).
 }
+
+# step5 任务书 §3 T0: ordered-position count per multi-point release. One
+# release with the wrong count rejects precisely (deploy receipt) instead of
+# silently re-shaping the skill geometry.
+RELEASE_POINT_COUNTS = {400002: 2, 500002: 2, 600002: 2,
+                        1500001: 3, 1500002: 3}
+
+# swept-capsule battlefield skills (shape shared with the burn migration)
+CAPSULE_SKILLS = frozenset(RELEASE_POINT_COUNTS) - {1500001, 1500002}
+
+
+def persistent_area_release(sid: int) -> bool:
+    """step5 任务书 §6/T6: releases whose ground area OUTLIVES the battle.
+    Only 黏油 400002 carries across rounds (ttl=2 battles); the tech oils
+    (鬼鳐/火神) are not commander releases and never enter this path."""
+    return int(sid) == 400002
 
 # transition-layer commander skills (no battle event): 1100001 强化训练
 # jumps the target unit's exp to its next upgrade threshold (deploy.py);
 # 1000001 再部署 unlocks one locked unit's move this round (step4 任务书
-# §1.3 — per-slot once per round, cd=1, next round usable again).
+# §1.3 — per-slot once per round, cd=1, next round usable again);
+# 900001 战地回收 is transition-only too — UNIT targets are the typed sell
+# path, CONSTRUCTION targets refund through deploy._recycle_construction
+# (step5 任务书 §5 T2: wall 50 / cannons 100, user-frozen 2026-08-28).
 TRANSITION_SKILLS = {
     1100001: {"name": "强化训练", "target_kind": "unit"},
     1000001: {"name": "再部署", "target_kind": "unit"},
+    900001: {"name": "战地回收", "target_kind": "construction_or_unit"},
 }
 
 
@@ -224,6 +305,15 @@ def events_from_skill_actions(actions):
                 continue
             ps = a.get("positions") or []
             spots = [(float(p[0]), float(p[1])) for p in ps] or [_first_pos(a)]
+            if sid in RELEASE_POINT_COUNTS:
+                # step5 T0: multi-point releases stay ONE event with the
+                # ordered points (beacon 3 / capsule 2) — never expanded
+                ev = {"kind": d["kind"], "x": spots[0][0], "y": spots[0][1],
+                      "name": d["name"], "id": sid,
+                      "points": [(x, y) for (x, y) in spots]}
+                ev.update(_area_effect_params(sid, d))
+                out.append(ev)
+                continue
             for x, y in spots:
                 if d["kind"] == "strike":
                     # multi-strike ids expand deterministically (step4 §7.1)
@@ -243,6 +333,40 @@ def events_from_skill_actions(actions):
                     ev["radius"] = d["radius"]
                 out.append(ev)
     return out
+
+
+def _area_effect_params(sid: int, d) -> dict:
+    """step5 area/status skills -> engine event params (single source with
+    the battlefield compile; numbers carry their provenance in skills.py)."""
+    ev = {"radius": float(d["radius"])}
+    k = d["kind"]
+    if k == "oil":
+        ev["slow_mult"] = float(d["slow_mult"])
+        ev["ttl_rounds"] = int(d.get("ttl_rounds", 2))
+    elif k == "smoke":
+        ev["range_mult"] = float(d["range_mult"])
+    elif k == "acid":
+        ev["pct_dps"] = float(d["pct_dps"])
+        ev["vuln_mult"] = float(d["vuln_mult"])
+    elif k == "emp":
+        ev["shield_damage"] = float(d["shield_damage"])
+        ev["duration"] = float(d["duration"])
+        ev["slow_mult"] = float(d["slow_mult"])
+    elif k == "photon":
+        ev["duration"] = float(d["duration"])
+        ev["dmg_taken_mult"] = float(d["dmg_taken_mult"])
+    elif k == "storm":
+        for f in ("duration", "interval", "damage", "splash", "slow_mult",
+                  "slow_duration"):
+            ev[f] = float(d[f])
+    elif k == "ion":
+        ev["speed"] = float(d["speed"])
+        ev["dps"] = float(d["dps"])
+    elif k == "beacon":
+        pass                    # radius IS the selection radius
+    if d.get("shield_block"):
+        ev["shield_block"] = True
+    return ev
 
 
 def battle_skill_catalog():
@@ -270,5 +394,10 @@ def battle_skill_catalog():
         elif d["kind"] == "summon":
             ev["params"] = {"mech": d["mech"], "count": d["count"],
                             "level": d["level"]}
+        elif d["kind"] == "burn":
+            ev["params"] = {"dps": d["dps"], "radius": d["radius"]}
+        elif sid in RELEASE_POINT_COUNTS:
+            ev["points"] = RELEASE_POINT_COUNTS[sid]
+            ev["params"] = _area_effect_params(sid, d)
         out.append(ev)
     return out

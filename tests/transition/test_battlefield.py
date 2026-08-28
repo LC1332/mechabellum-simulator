@@ -90,7 +90,7 @@ def test_battle_input_contract_and_digest():
                  equip0=(13030001,))
     res = equip_unit0(st, 13030001)
     bi = compile_battle_input(pre_battle(res.state), battle_seed=7)
-    assert bi.contract_version == "battlefield-input-v1"
+    assert bi.contract_version == "battlefield-input-v2"
     assert len(bi.units) == 2
     u0 = next(u for u in bi.units if u.side == 0)
     assert u0.equipment_id == 13030001     # E1b: equipment rides the input

@@ -29,6 +29,9 @@ def legacy_battle(bi: BattleInput, gd, opts=None, with_trace: bool = False):
     if opts:
         b.opts.update(opts)
     b.trace_enabled = bool(with_trace)
+    # seed BEFORE finalize: seeded battlefield mechanics (闪电风暴's strike
+    # distribution) must be pure functions of the BattleInput seed
+    b._battle_seed = bi.seed
     b.officer_ids[0] = tuple(bi.officers[0])
     b.officer_ids[1] = tuple(bi.officers[1])
     entity_map, card_map = {}, {}
@@ -90,6 +93,23 @@ def legacy_battle(bi: BattleInput, gd, opts=None, with_trace: bool = False):
         elif ev.kind == "burn":
             out["dps"] = params.get("dps", d["dps"])
             out["radius"] = params.get("radius", d["radius"])
+        elif ev.kind in ("oil", "smoke", "acid", "emp", "photon", "storm",
+                         "ion", "beacon"):
+            # step5 area/status skills: the compiled params pass straight
+            # through (numbers froze in skills.py; ref rides for outcome
+            # reporting - ignition writeback matches on it)
+            out["ref"] = ev.ref
+            if ev.points:
+                out["points"] = [[float(p[0]), float(p[1])]
+                                 for p in ev.points]
+            for k in ("radius", "slow_mult", "ttl_rounds", "range_mult",
+                      "pct_dps", "vuln_mult", "shield_damage", "duration",
+                      "dmg_taken_mult", "interval", "damage", "splash",
+                      "slow_duration", "speed", "dps"):
+                if k in params:
+                    out[k] = float(params[k])
+            if params.get("shield_block"):
+                out["shield_block"] = True
         b.add_skill_event(ev.side, out)
     for sm in bi.side_mods:
         b.tower_mods[sm.side] = {"range": sm.range_add, "speed": sm.speed_add}

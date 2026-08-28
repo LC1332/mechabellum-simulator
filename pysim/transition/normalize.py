@@ -297,6 +297,16 @@ class Normalizer:
                     ei = emit({"t": "sell", "unit": gi, "refund": None,
                                "skill_index": sidx, "raw": [k]})
                     push("release", k, [ei])
+                elif self._resolves_construction_sell(a, skills_live):
+                    # step5 任务书 §5 T2: 900001 targeting a construction =
+                    # 战地回收 (typed release with the construction index)
+                    cidx = _int(a.get("ConstructionIndex"))
+                    ei = emit({"t": "release", "skill": 900001,
+                               "skill_index": sidx,
+                               "positions": _positions_of(a),
+                               "unit": None, "construction": cidx,
+                               "raw": [k]})
+                    push("release", k, [ei])
                 elif (_release_skill_id(a, skills_live)
                         in _mapped_release_ids()):
                     sid = _release_skill_id(a, skills_live)
@@ -527,6 +537,30 @@ class Normalizer:
         # are NOT sells (the unit survives to the next snapshot) -> default
         # to a passthrough skill release, not a sell
         return False
+
+    @staticmethod
+    def _resolves_construction_sell(raw: dict, skills_raw) -> bool:
+        """step5 任务书 §5 T2: ReleaseCommanderSkill with a ConstructionIndex
+        target = 战地回收 when the resolved id is 900001 (explicit ID wins;
+        SkillIndex resolves through the live slot snapshot).
+
+        Corpus ruling (2026-08-28, 1106-game probe): ID=0 is a PLACEHOLDER —
+        the record omitted the skill id. With a construction target the only
+        possible mechanic IS the recycle (no other skill targets
+        constructions), so ID=0 + slot lookup MISSING + ConstructionIndex
+        still resolves to 900001 (94% of those constructions vanish by the
+        next snapshot; the residue is cancel/battle-destruction noise). This
+        is target-TYPE resolution, not the forbidden shape guessing."""
+        if _int(raw.get("ConstructionIndex"), -1) < 0:
+            return False
+        rid = _int(raw.get("ID"), 0)
+        if rid == 900001:
+            return True
+        if rid != 0:
+            return False
+        # ID=0: slot table decides; a MISSING slot still means recycle
+        # because the construction target type is definitional for 900001
+        return True
 
     @staticmethod
     def _passthrough(a: dict, k: int) -> dict:

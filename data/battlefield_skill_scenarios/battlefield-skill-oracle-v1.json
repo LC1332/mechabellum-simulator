@@ -1,0 +1,1664 @@
+{
+ "schema": "battlefield-skill-oracle-v1",
+ "cases": [
+  {
+   "case_id": "c400002_axial",
+   "skill_id": 400002,
+   "desc": "轴向 capsule A(0,60)->(60,60)",
+   "dimensions": [
+    "shape:轴向"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ],
+    [
+     60.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c400002_diag",
+   "skill_id": 400002,
+   "desc": "斜向 capsule A(0,60)->(50,110)",
+   "dimensions": [
+    "shape:斜向"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ],
+    [
+     50.0,
+     110.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c400002_edge_in",
+   "skill_id": 400002,
+   "desc": "单位恰在边界内 (dist=29)",
+   "dimensions": [
+    "shape:边界内"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c400002_edge_out",
+   "skill_id": 400002,
+   "desc": "单位恰在边界外 (dist=31)",
+   "dimensions": [
+    "shape:边界外"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c400002_shield",
+   "skill_id": 400002,
+   "desc": "满盾护盾装置覆盖落点",
+   "dimensions": [
+    "护盾:满盾"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": [],
+    "devices": [
+     {
+      "cid": 20001,
+      "x": 15.0,
+      "y": 60.0
+     }
+    ]
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ],
+    [
+     60.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c400002_air",
+   "skill_id": 400002,
+   "desc": "空军横穿油面",
+   "dimensions": [
+    "空地:单独空军"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     },
+     {
+      "id": 90,
+      "mech": 6,
+      "level": 1,
+      "x": 20.0,
+      "y": 60.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ],
+    [
+     60.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c400002_stack",
+   "skill_id": 400002,
+   "desc": "两条黏油重叠",
+   "dimensions": [
+    "叠加:同ID重叠"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ],
+    [
+     60.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c600002_axial",
+   "skill_id": 600002,
+   "desc": "轴向 capsule",
+   "dimensions": [
+    "shape:轴向"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ],
+    [
+     60.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c600002_shield",
+   "skill_id": 600002,
+   "desc": "护盾阻挡生成",
+   "dimensions": [
+    "护盾:满盾"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": [],
+    "devices": [
+     {
+      "cid": 20001,
+      "x": 15.0,
+      "y": 60.0
+     }
+    ]
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ],
+    [
+     60.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c600002_air",
+   "skill_id": 600002,
+   "desc": "空军与烟雾",
+   "dimensions": [
+    "空地:单独空军"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     },
+     {
+      "id": 90,
+      "mech": 6,
+      "level": 1,
+      "x": 20.0,
+      "y": 60.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ],
+    [
+     60.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c500002_axial",
+   "skill_id": 500002,
+   "desc": "轴向 capsule",
+   "dimensions": [
+    "shape:轴向"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ],
+    [
+     60.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c500002_photon",
+   "skill_id": 500002,
+   "desc": "光子单位站酸液内",
+   "dimensions": [
+    "免疫:光子vs酸液"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": [],
+    "skill_pre": [
+     {
+      "skill_id": 200003,
+      "positions": [
+       [
+        0.0,
+        60.0
+       ],
+       [
+        40.0,
+        60.0
+       ]
+      ]
+     }
+    ]
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ],
+    [
+     60.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c500002_shield",
+   "skill_id": 500002,
+   "desc": "护盾覆盖落点",
+   "dimensions": [
+    "护盾:满盾"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": [],
+    "devices": [
+     {
+      "cid": 20001,
+      "x": 15.0,
+      "y": 60.0
+     }
+    ]
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ],
+    [
+     60.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c200001_center",
+   "skill_id": 200001,
+   "desc": "圆心命中",
+   "dimensions": [
+    "shape:边界内"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c200001_edge",
+   "skill_id": 200001,
+   "desc": "半径边缘单位 (dist=59/61)",
+   "dimensions": [
+    "shape:边界内外"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c200001_shield",
+   "skill_id": 200001,
+   "desc": "护盾装置承伤+被保护单位",
+   "dimensions": [
+    "护盾:满盾+覆盖"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": [],
+    "devices": [
+     {
+      "cid": 20001,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ]
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ],
+    [
+     60.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c200001_photon",
+   "skill_id": 200001,
+   "desc": "光子单位免疫 EMP",
+   "dimensions": [
+    "免疫:光子vsEMP"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     },
+     {
+      "id": 1,
+      "mech": 28,
+      "level": 1,
+      "x": 10.0,
+      "y": 60.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": [],
+    "skill_pre": [
+     {
+      "skill_id": 200003,
+      "positions": [
+       [
+        0.0,
+        60.0
+       ],
+       [
+        40.0,
+        60.0
+       ]
+      ]
+     }
+    ]
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ],
+    [
+     60.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c200002_far",
+   "skill_id": 200002,
+   "desc": "r130 远端单位 (dist=120)",
+   "dimensions": [
+    "shape:边界内"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c200003_friendly",
+   "skill_id": 200003,
+   "desc": "友军获得光子",
+   "dimensions": [
+    "阵营:友军"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c200003_enemy",
+   "skill_id": 200003,
+   "desc": "敌军不受益",
+   "dimensions": [
+    "阵营:敌军"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 45.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c200003_clears",
+   "skill_id": 200003,
+   "desc": "先中 EMP 再获得光子",
+   "dimensions": [
+    "免疫:清除既有"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c300005_seed_a",
+   "skill_id": 300005,
+   "desc": "固定 seed 重跑 3 次",
+   "dimensions": [
+    "时间:同seed复跑"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c300005_moving",
+   "skill_id": 300005,
+   "desc": "移动靶穿过风暴区",
+   "dimensions": [
+    "移动:穿过区域"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c300006_axial",
+   "skill_id": 300006,
+   "desc": "轴向扫掠 A->B",
+   "dimensions": [
+    "shape:轴向"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ],
+    [
+     60.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c300006_diag",
+   "skill_id": 300006,
+   "desc": "斜向短距 A->B",
+   "dimensions": [
+    "shape:斜向/短距"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ],
+    [
+     50.0,
+     110.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c1500001_full_card",
+   "skill_id": 1500001,
+   "desc": "整卡入选",
+   "dimensions": [
+    "多模组:全组入选"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     20.0
+    ],
+    [
+     0.0,
+     -30.0
+    ],
+    [
+     0.0,
+     -80.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c1500001_partial",
+   "skill_id": 1500001,
+   "desc": "部分成员入选 (阵型跨边界)",
+   "dimensions": [
+    "多模组:部分入选"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 20.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     20.0
+    ],
+    [
+     0.0,
+     -30.0
+    ],
+    [
+     0.0,
+     -80.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c1500001_air",
+   "skill_id": 1500001,
+   "desc": "空军入选",
+   "dimensions": [
+    "空地:单独空军"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     },
+     {
+      "id": 90,
+      "mech": 6,
+      "level": 1,
+      "x": 20.0,
+      "y": 60.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     20.0,
+     60.0
+    ],
+    [
+     20.0,
+     20.0
+    ],
+    [
+     20.0,
+     -20.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c1500001_enemy",
+   "skill_id": 1500001,
+   "desc": "途中遇敌停下攻击",
+   "dimensions": [
+    "移动:途中遇敌"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 45.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     20.0
+    ],
+    [
+     0.0,
+     -30.0
+    ],
+    [
+     0.0,
+     -80.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c1500002_same",
+   "skill_id": 1500002,
+   "desc": "与 1500001 同场景",
+   "dimensions": [
+    "同效果验证"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     20.0
+    ],
+    [
+     0.0,
+     -30.0
+    ],
+    [
+     0.0,
+     -80.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c300004_t15",
+   "skill_id": 300004,
+   "desc": "t=15s 到达",
+   "dimensions": [
+    "时间:到期前后"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  },
+  {
+   "case_id": "c300004_radius",
+   "skill_id": 300004,
+   "desc": "r100 边界单位 (dist=99/101)",
+   "dimensions": [
+    "shape:边界内外"
+   ],
+   "map": "normal_1v1",
+   "round": 5,
+   "p0": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 2,
+      "level": 1,
+      "x": 0.0,
+      "y": -100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "p1": {
+    "units": [
+     {
+      "id": 0,
+      "mech": 10,
+      "level": 1,
+      "x": 0.0,
+      "y": 100.0
+     }
+    ],
+    "techs": {},
+    "buildings": [],
+    "officers": []
+   },
+   "release_side": 0,
+   "positions": [
+    [
+     0.0,
+     60.0
+    ]
+   ],
+   "control": "no_skill"
+  }
+ ],
+ "notes": "inputs only; oracle telemetry lands in data/battlefield_skill_oracle/<build>/ with the same case ids; raw telemetry is never overwritten"
+}

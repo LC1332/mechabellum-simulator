@@ -107,7 +107,8 @@ def run_battle(state: EnvironmentState, gd, battle_seed: int = 0,
         score_by_team=(int(s0), int(s1)), damage_to_player=dmg,
         cards=tuple(cards), end_time=float(b.end_tick) * 0.01,
         engine_version=ENGINE_VERSION,
-        fidelity_warnings=_equipment_warnings(state))
+        fidelity_warnings=_equipment_warnings(state),
+        area_results=getattr(b, "area_results", lambda: ())())
     if not with_trace:
         return outcome
     # audit contract (B0 characterization): the versioned V2 outcome and the

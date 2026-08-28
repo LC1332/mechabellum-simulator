@@ -29,7 +29,7 @@ def _digest(obj) -> str:
     return hashlib.sha256(blob.encode("utf-8")).hexdigest()[:16]
 
 
-BATTLEFIELD_INPUT_VERSION = "battlefield-input-v1"
+BATTLEFIELD_INPUT_VERSION = "battlefield-input-v2"
 
 # pipeline stage names for compiled modifiers (重构计划 §5 B1 effect order)
 MODIFIER_STAGES = ("base", "level", "technology", "officer", "blueprint",
@@ -111,13 +111,17 @@ class TimedEvent:
     """Pre-fight battlefield skill release compiled to one timed event.
 
     All corpus releases land at battle t=0 (tools/step8_probe6), so `at`
-    stays 0.0 until mid-fight scheduling exists."""
+    stays 0.0 until mid-fight scheduling exists. step5 任务书 §3 T0/T4:
+    multi-point releases (beacon 3 ordered points, swept capsule 2) carry
+    the FULL ordered point list in `points` — one event per release, never
+    expanded per position."""
     __slots__ = ("kind", "side", "ref", "skill_id", "position", "at",
-                 "params", "source")
+                 "params", "source", "points")
 
     def __init__(self, kind, side, ref, skill_id, position=(0.0, 0.0),
-                 at=0.0, params=(), source=""):
-        self.kind = str(kind)          # strike | burn | barrier | summon
+                 at=0.0, params=(), source="", points=()):
+        self.kind = str(kind)          # strike|burn|barrier|summon|oil|smoke|
+                                       # acid|emp|photon|storm|ion|beacon
         self.side = int(side)
         self.ref = str(ref)
         self.skill_id = int(skill_id)
@@ -125,12 +129,15 @@ class TimedEvent:
         self.at = float(at)
         self.params = tuple((str(k), float(v)) for (k, v) in params)
         self.source = str(source)
+        # ordered release points (multi-point shapes); empty for point kinds
+        self.points = tuple((float(p[0]), float(p[1])) for p in (points or ()))
 
     def as_dict(self):
         return {"kind": self.kind, "side": self.side, "ref": self.ref,
                 "skill_id": self.skill_id, "position": list(self.position),
                 "at": self.at, "params": [[k, v] for k, v in self.params],
-                "source": self.source}
+                "source": self.source,
+                "points": [list(p) for p in self.points]}
 
 
 class SideMods:

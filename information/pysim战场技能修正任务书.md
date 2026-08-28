@@ -12,18 +12,21 @@
 
 | 项目 | 待填写 |
 |---|---|
-| Windows oracle 仓库根目录 | `________________________________________` |
-| Windows oracle 入口脚本/工程 | `________________________________________` |
-| oracle 启动、注入或附加命令 | `________________________________________` |
-| oracle 场景输入目录 | `________________________________________` |
-| oracle 遥测输出目录 | `________________________________________` |
-| 游戏本体根目录 | `________________________________________` |
-| 游戏可执行文件 | `________________________________________` |
-| 游戏版本 / build / 区服 | `________________________________________` |
-| 本仓库在 Windows 上的位置 | `________________________________________` |
-| Python/虚拟环境及依赖安装命令 | `________________________________________` |
-| oracle 与本仓库之间的文件同步方式 | `________________________________________` |
-| 本轮操作者、日期、目标 commit | `________________________________________` |
+
+oracle 相关都在
+
+C:\Users\chengli\Documents\mech中
+
+应该主要是
+
+C:\Users\chengli\Documents\mech\RouteC\tools
+
+游戏本体在
+
+
+E:\SteamLibrary\steamapps\common\Mechabellum
+
+如果你发现游戏更新了导致入口对不上 我允许你重新拆包进行研究
 
 补全后还要记录以下可复现信息：oracle commit、游戏文件版本或 hash、注入模块版本、场景
 seed、地图 ID、帧率/tick、坐标系和一次完整采集命令。仅写“本机测过”不能作为证据。
@@ -143,8 +146,10 @@ sim 标签重新锚定（`sim_label_version` 升级）。
 
 ### 2.1 已冻结为实现口径
 
-1. **建筑回收 `900001`**：卖建筑为高频动作；墙返还 `50`，炮返还 `100`。具体
-   construction cid 到“墙/炮”的映射必须从游戏/oracle 确认，不能按外观或价格猜。
+1. **建筑回收 `900001`**：卖建筑为高频动作；墙返还 `50`，炮返还 `100`，
+   磁力路障返还 `50`（2026-08-28 用户裁决，语料 270 条回收佐证）。
+   具体construction cid 到“墙/炮”的映射已从 gamedata.json 落地：
+   cid1=防御墙 / cid2=反装甲炮 / cid3=速射炮 / cid4=磁力路障。
 2. **快速补给**：立即获得 `200` 补给，下一回合收入减少 `300`。
 3. **移动信标**：第一个位置定义半径 `40m` 的选区；选中的单位保持相对选区中心的
    offset，先走向第二位置对应的中心，再走向第三位置对应的中心。多模组单位按实际成员
@@ -577,17 +582,158 @@ commander的0 skill我还不清楚是什么
 
 ### 13.1 环境与版本
 
-> 待填写 Windows oracle commit、游戏 build、pysim commit、采集日期和完整命令。
+> 2026-08-28 第一批实施（S1-S7 代码侧）由编码 agent 完成，基于本任务书
+> §2.1 冻结规则与 §12 QA 答复。pysim `SCHEMA_VERSION=transition-v0.7`、
+> `ENGINE_VERSION=pysim-step31`、battlefield 契约 `battlefield-input-v2`。
+> 复现命令：
+> ```text
+> python -m pytest tests --ignore=tests/rl      # 193 passed（161 旧 + 32 新）
+> python tools/battlefield_report.py            # determinism_failures = 0
+> python benchmarks/run.py --lib all            # 八库对拍（见 13.3）
+> python tools/build_battlefield_skill_cases.py # 32 cases, 0 errors
+> python benchmarks/run_skills.py               # pysim 侧重算摘要
+> ```
+> Windows oracle 遥测（§4 T1 采集）**尚未执行**——采集脚手架已就绪
+> （`battlefield-skill-oracle-v1` schema + `benchmarks/run_skills.py
+> --oracle <build>` 对拍入口），等待在游戏机上跑真实采集后逐技能填
+> §9.2 的 Gate 表。
 
 ### 13.2 实际完成项
 
-> 待填写代码文件、schema 迁移、逐技能实现与未实现项。
+**S1 typed release 契约（§3 T0）**：`transition/model.py` 新增
+`CommanderSkillRelease`（release_ref/skill_id/skill_index/side/
+ordered_positions/unit_ref/construction_ref/source_raw_index）；
+`PlayerState.skill_releases` round-scoped 字段 + `skill_events_raw` 保留为
+派生平铺视图；SCHEMA bump v0.7；`state_tools` 旧 state 只读迁移（平铺
+(sid,x,y)→单点 release，不伪造缺失点）；`settlement.advance_round` 重置；
+多点技能错误点数 → 带 skill_id/positions 的精确 receipt；一次 release
+只消费一个槽；digest 含完整有序点列（同 seed 双跑稳定）。
+
+**S2 建筑回收（§5 T2）**：normalize 新增 `_resolves_construction_sell`
+（显式 ID=900001 或 SkillIndex 解析为 900001 + ConstructionIndex → typed
+release）；`deploy._recycle_construction`：cid1 防御墙 +50 / cid2 反装甲炮
++100 / cid3 速射炮 +100（QA-2 冻结）；cid4 磁力路障与未知 cid 精确拒绝
+（UNSUPPORTED_ACTION + detail 带 cid）；未知 index → UNKNOWN_ENTITY；
+退款走 ledger（`sell_construction:<idx>:cid<n>`）；回收后对象从
+constructions_raw 原子移除 → 不进入本回合 BattleInput；900001 进入
+TRANSITION_SKILLS（target_kind=construction_or_unit）→ scanner/
+classify_raw 同步放行。
+
+**S3/S4/S5 战场区域与状态框架（§6 T4/T5）+ 分技能（§7 T6-T12）**：
+- `battlefield/effects/areas.py`：统一几何（circle/capsule(A,B,r)/
+  moving_circle；边界含单位半径、含等号、1e-9 容差）+ 护盾裁剪采样
+  （capsule_spine，释放瞬间永久裁剪）。
+- `battlefield/model.py`：`TimedEvent.points`（多点有序点列），
+  battlefield-input-v2。
+- compiler/legacy_engine：typed releases → 多点单事件（不展开），
+  持久 ground_areas 带 ref 重编译进下一回合；`legacy_battle` 把
+  `_battle_seed` 前置到 finalize 之前（风暴种子确定性）。
+- engine 新事件 kind：oil/smoke/acid/emp/photon/storm/ion/beacon；
+  新通道：`photon_until`、`_storm_slow_until`、`_area_fac`、`_acid_on`、
+  `_smoke_on`（边沿触发 range 原位缩放）、waypoint 数组
+  （`_wp_active/_wp_stage/_wp_x0y0/_wp_x1y1`）。
+- 冻结值接线：EMP r60/r130 + 护盾 20000 + 25s + 速度×0.60（复用引擎
+  EMP 通道：科技失效+减速）+ 护盾内地面单位免疫；光子 20s + 受伤×0.70
+  + 免疫 EMP/引燃/酸液/退化光束 + 获得时清除既有（QA-4）；黏油
+  capsule r30 ×0.45 减速 + 未点燃 2 回合 + 引燃转火焰（继承点火源
+  dps）+ 护盾阻挡生成；烟雾 -35% 射程（QA-2）+ 护盾阻挡；酸液
+  3%maxHP/s + 受击×2.5（仅攻击事件放大，自身 DoT 不放大）；
+  离子 moving_circle r20（速度/DPS cal）；闪电风暴 r130（QA-2 冻结，
+  分布 provisional=种子驱动随机选取区域内敌方单位落雷）；
+  核弹 splash 40→100（QA-2 冻结）；移动信标 member 级选区
+  （中心距≤40、多模组按成员、墙/炮建筑排除、空军入选）+ 相对 offset
+  两段 waypoint + 停下攻击（engagement policy 冻结口径）。
+- trace：area_create/area_blocked/area_expire(ignite)/status_apply/
+  status_blocked/shield_damage/storm/strike/waypoint/ion 事件。
+
+**S6 持久化与写回**：`PlayerState.ground_areas_raw`
+（(ref,sid,ax,ay,bx,by,ttl)）；`run_battle` outcome 携带
+`area_results=(ref, ignited)`；`settle_transition` 丢弃被引燃油 +
+本回合未点燃黏油转持久（ttl=2）；`advance_round` ttl 递减、归零移除。
+save/load 往返覆盖（tests）。
+
+**S7 registry**：`_SKILL_CONFIDENCE` 新增 200001/200002/200003/400002/
+500002/600002/300005/300006/1500001/1500002（全部 provisional——冻结值
++ cal 残留，evidence 引用 step5§2.1/QA）与 900001（verified：退款表
+完全冻结 + corpus cd=0）。capability/scanner 经 COMMANDER_SKILLS/
+TRANSITION_SKILLS 自动放行；200004 等未知 id 与 contraption 30001 仍是
+精确 blocker；`ReleaseCommanderSkill ID=0 SkillIndex=0` 维持阻塞
+（QA-2：commander skill 0 身份未知，不污染通用槽表）。
+
+**测试**：`tests/transition/test_step5_skills.py`（13 用例：typed
+release/回收/持久化/save-load/registry）+ `tests/test_battlefield_skills.py`
+（19 用例：几何/EMP/油/烟/酸/光子/风暴/离子/信标含 partial 选区与
+stop-to-attack）。旧测试中三处"200001 未映射"断言更新为 200004。
 
 ### 13.3 测试与指标
 
-> 待填写 pytest、八库、专项 oracle、blocker occurrence、runtime/strict prefix、
-> scanner/runtime 一致性结果。
+- `python -m pytest tests --ignore=tests/rl`：**193 passed**（含 RL 外
+  全部旧测试无退化）。
+- `python tools/battlefield_report.py`：determinism_failures=0；
+  registry 重生成（verified 15 / provisional 28）。
+- 八库全量对拍（`python benchmarks/run.py --lib all`，2026-08-28 完成，
+  总 1793/2349 = 76.3%，**逐库与冻结基线
+  `data/calib/step29/bench_ver.json` 完全一致，零回归**）：
+  s24 271/320、s25 140/186、s26 284/450、s27 124/140、s28 803/1004、
+  s29p 39/57、s29cal 20/42、s29c 112/150。技能改动只在新事件存在时
+  激活（空区域列表整段跳过），八库场景不含技能事件 → 逐 case 不变。
+- 回放库 deploy 对拍（`tools/transition_replay_check.py`，sequential，
+  1106 局 12,960 回合；含 ID=0 建筑回收解析 + 宽容槽路径 + cid4=50
+  三项修正后的最终值）：unit-set exact **11,056/12,960 = 85.31%**（step5
+  改动前 10,332；旧基线 trc_full 11,053 —— 已反超），clean 回合
+  **10,097**（旧基线 9,749），clean 口径 unit-set exact
+  **9,973/10,097 = 98.77%**（旧基线 9,654），supply exact 9,839
+  （75.92%；旧基线 4,742），被拒核心动作 3,211（旧基线）→ **2,863**，
+  canon/deploy 错误 0。
+- 回放库 settlement 逐回合写回（oracle 模式，13,104 回合）：
+  **hp 100.00% / fight-result 100.00% / exp-set 100.00%**。
+- `benchmarks/run_skills.py`：32 个 §4.1 矩阵场景全部跑通（pysim 侧
+  摘要落 local_data/skill_bench/summary.json；oracle 对拍入口
+  `--oracle <build>` 在采集后可用，无 oracle 时明确标注不冒充对拍）。
+- Step5 §3.1 blocker occurrence 重生成：需在语料上重跑
+  `tools/transition_replay_check.py`/scanner 管线（本轮未执行，见 13.4）。
 
 ### 13.4 与任务书的偏差及遗留问题
 
-> 待填写。所有偏差必须说明证据和对 fidelity/confidence 的影响。
+1. **oracle 未采集（最大缺口）**：§4 T1 的 Windows 遥测、§9.2 的逐技能
+   Gate 表、verified 升级全部待采集。所有新技能 confidence=provisional，
+   strict-effect 口径不变。采集脚手架（schema/校验/对拍 runner）已就绪。
+2. **provisional 数值**（明示 cal，不冒充 exact）：离子速度 25/DPS 600；
+   闪电风暴分布（随机选敌落雷）、持续 12s/间隔 0.8/单次 800/减速
+   0.60×1s；光子形状假设 capsule r30；烟雾/酸液持续整场；油仅地面/
+   只减速敌方。全部标注在 skills.py conf 与 registry evidence。
+3. **ID=0 快速补给（T3）**：按 QA-2 答复（commander 0 号技能身份未知）
+   维持阻塞；能量塔通道 SkillID=1 的 +200/-300 既有实现未动。
+   blocker 报告的 resolved_from/slot history 增强未做。
+
+   **2026-08-28 语料裁决（1106 局全量 probe，tools 侧临时脚本，结论如下）**：
+   `ReleaseCommanderSkill ID=0` 共 11,955 条 raw 记录 —— ID=0 是**占位**
+   （客户端未写 ID），身份由 SkillIndex+当回合槽表决定，不是单一技能：
+   - unit 目标 5,436 条：槽=900001 → 2,308 单位下快照消失（卖出）+ 149
+     未消失；槽=1000001 再部署 362 / 1100001 强化训练 342 → 单位保留
+     （与技能语义完全吻合）；槽 MISSING 267 不消失 + 42 消失。
+   - construction 目标 2,601 条：**94%（2,425 条）建筑下快照消失 →
+     战地回收拆建筑**。按 cid：cid2 反装甲炮 919 / cid3 速射炮 911 /
+     cid1 防御墙 325 消失（与退款表吻合），**cid4 磁力路障消失 270 条**
+     —— 磁力路障可被回收。**用户裁决（2026-08-28）：磁力路障退款 50**，
+     已进 `CONSTRUCTION_RECYCLE_SUPPLY`（cid4: 50）并放开精确拒绝。
+   - position 目标 5,918 条：3 点 = 移动信标 1500001/1500002（槽表证实
+     1,132 条，MISSING 另有 488 条，**0 反例**）；2 点 = capsule 系
+     （槽表 400002 121 / 100002 63，MISSING 919 条因黏油/烟雾/酸液歧义
+     不可按形状猜）；1 点 = 300001/800001/200001/召唤等（MISSING 1,859
+     条完全不可解析）。
+   - 已实施：normalize `_resolves_construction_sell` 放宽 —— ID=0 +
+     ConstructionIndex 一律按 900001 回收解析（目标类型是 900001 的
+     定义性特征，非形状猜测）；deploy 回收的槽解析改为与 SELL_UNIT
+     相同的宽容 ID 路径（历史回放普遍无槽可消费时照常执行）。
+   - 维持阻塞：ID=0 + 1/2 点位置 + 槽 MISSING（歧义不可猜）。
+4. **装置 30001（T13）**：QA-7 答复"不太清楚"→ 维持精确 blocker。
+5. **移动信标边缘**：途中碰撞/分离沿用引擎既有 separation（offset 可
+   能受挤压）；转向/越中线/多信标并发已由 waypoint 通道天然支持但未做
+   专项 A/B；120s 超时依赖引擎既有 simulate 上限，无 hang。
+6. **Step5 occurrence 报告与 `/game` scanner-runtime 一致性回归**未在本
+   轮执行（需要语料管线全量重跑）；八库全量对拍结果以基准输出为准。
+7. **前端**：battle_skill_catalog 自动包含新技能（sandbox 可放置）；
+   GameView 的 blocker detail/`battle_approximate` 徽标沿用 registry
+   驱动的既有机制，未做新 UI。
+
