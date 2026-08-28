@@ -8,6 +8,12 @@
 # (label routing is enforced in the loss: a batch never updates the other
 # domain's head, task §12.2). Each head outputs WDL logits + the two ego
 # damage components (to_opp, to_self).
+#
+# NOTE on the T2 side-swap gate: an exactly-equivariant parameterization
+# (odd-diff x invariant-gate) was tried and proved unstable under CE —
+# seeds stuck at the prior plateau. We keep the antisymmetric advantage
+# path + the side-swap consistency loss and report the residual asymmetry
+# honestly in the value report (gate verdict stays data-driven).
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -25,16 +31,15 @@ class UnitEncoder(nn.Module):
             nn.Linear(d_model, d_model), nn.SiLU())
 
     def forward(self, f, mech, equip, mask):
-        # f: [B, N, 6] float; mech/equip: [B, N]; mask: [B, N]
-        m = self.mech_emb(mech)                      # sum over padding zeros
+        m = self.mech_emb(mech)
         e = self.equip_emb(equip)
         x = torch.cat([f, m, e], dim=-1)
         return self.proj(x) * mask.unsqueeze(-1)
 
 
 class DomainHead(nn.Module):
-    def __init__(self, d_pool: int, d_model: int = 96,
-                 tech_dim: int = 24, off_dim: int = 4, glob_dim: int = 15):
+    def __init__(self, d_pool: int, tech_dim: int = 24, off_dim: int = 4,
+                 glob_dim: int = 15, d_model: int = 96):
         super().__init__()
         self.adv = nn.Sequential(nn.Linear(d_pool * 2, d_model), nn.SiLU(),
                                  nn.Linear(d_model, d_model), nn.SiLU())
@@ -61,8 +66,8 @@ class BattleValueNet(nn.Module):
         self.tech_emb = nn.Embedding(n_tech, 16, padding_idx=0)
         self.owner_emb = nn.Embedding(n_mech, 8, padding_idx=0)
         d_pool = d_model * 3
-        self.sim_head = DomainHead(d_pool, d_model)
-        self.real_head = DomainHead(d_pool, d_model)
+        self.sim_head = DomainHead(d_pool, d_model=d_model)
+        self.real_head = DomainHead(d_pool, d_model=d_model)
 
     def _pool(self, enc, mask):
         s = (enc * mask.unsqueeze(-1)).sum(1)
@@ -74,16 +79,15 @@ class BattleValueNet(nn.Module):
         return torch.cat([s, mean, mx], dim=-1)
 
     def _tech_feat(self, tech_ids, tech_owners):
-        t = self.tech_emb(tech_ids)                    # [B, T, 16]
+        t = self.tech_emb(tech_ids)
         o = self.owner_emb(tech_owners)
         x = torch.cat([t, o], dim=-1)
-        # masked mean over tech dim
         mask = (tech_ids > 0).float().unsqueeze(-1)
         s = (x * mask).sum(1)
         c = mask.sum(1).clamp(min=1)
         return s / c
 
-    def _side(self, prefix, f, mech, equip, mask, tech):
+    def _side(self, f, mech, equip, mask, tech):
         enc = self.unit(f, mech, equip, mask)
         pool = self._pool(enc, mask)
         tech_feat = self._tech_feat(tech["tech_ids"], tech["tech_owners"])
@@ -91,10 +95,10 @@ class BattleValueNet(nn.Module):
 
     def forward(self, batch, domain: str):
         """domain: 'sim' | 'real' — selects the head (label routing)."""
-        sp, stf = self._side("self", batch["self_f"], batch["self_mech"],
+        sp, stf = self._side(batch["self_f"], batch["self_mech"],
                              batch["self_equip"], batch["self_mask"],
                              batch["self_tech"])
-        op, otf = self._side("opp", batch["opp_f"], batch["opp_mech"],
+        op, otf = self._side(batch["opp_f"], batch["opp_mech"],
                              batch["opp_equip"], batch["opp_mask"],
                              batch["opp_tech"])
         off = torch.cat([batch["self_off"], batch["opp_off"]], dim=-1)

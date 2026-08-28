@@ -24,10 +24,11 @@ class RandomLegalPolicy:
         allowed = [v for v, ok in zip(space.verbs, space.verb_mask) if ok]
         if not allowed:
             return RLAction("END_DEPLOY")
-        if rng.random() < self.end_prob or "END_DEPLOY" not in allowed:
-            return RLAction("END_DEPLOY")
-        v = rng.choice([a for a in allowed if a != "END_DEPLOY"])
-        return self._instantiate(v, obs, space, rng)
+        others = [a for a in allowed if a != "END_DEPLOY"]
+        if rng.random() >= self.end_prob and others:
+            return self._instantiate(self.rng.choice(others), obs, space,
+                                     rng)
+        return RLAction("END_DEPLOY")
 
     def _instantiate(self, v, obs, space, rng):
         a = RLAction(v)

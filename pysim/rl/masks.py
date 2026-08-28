@@ -23,9 +23,11 @@ from ..transition.model import (EnvironmentState, PlayerState, Phase,
 from .contracts import PROFILE_VERBS
 from .observation import PolicyObservationV1, HandleMap, BOARD_X, BOARD_Y
 
-BOARD_X_MIN, BOARD_X_MAX = -BOARD_X, BOARD_X
-BOARD_Y_MIN, BOARD_Y_MAX = -BOARD_Y, BOARD_Y
-BUY_Y_MAX = 0.0              # ego own-half strict upper bound for buys
+# emission margins: the engine's bounds/own-half checks are strict, so the
+# sampled/decoded coordinates keep a small distance from the board edges
+BOARD_X_MIN, BOARD_X_MAX = -347.0, 347.0
+BOARD_Y_MIN, BOARD_Y_MAX = -297.0, 297.0
+BUY_Y_MAX = -3.0             # ego own-half STRICT upper bound for buys
 
 # orientation encodings: MOVE 0=keep 1=rotate 2=standard; BUY 0/1 boolean
 ORIENTATION_MOVE = ("KEEP", "ROTATE", "STANDARD")
@@ -194,12 +196,16 @@ def build_action_space(state: EnvironmentState, ego: int,
             ok = sent is not None and sent not in sentinels
         tower_mask.append(ok and sp >= TOWER_SKILL_COSTS[sid])
 
-    # blueprint research/officers: affordable; OWNED ids stay candidates —
-    # deploy accepts re-research with no charge (already-researched noop)
+    # blueprint research/officers: skill-research ids (1/2/3) accept an
+    # owned re-research with no charge; OFFICER ids (4/5/401/501) CHARGE on
+    # every purchase, so owned officer ids are not re-emittable
     bp_owned = {int(b) for b in p.blueprints}
+    from ..transition.deploy import BLUEPRINT_SKILLS
     blueprint_cands = sorted(BLUEPRINT_COSTS)
-    blueprint_mask = [sp >= BLUEPRINT_COSTS[b] or b in bp_owned
-                      for b in blueprint_cands]
+    blueprint_mask = [
+        (sp >= BLUEPRINT_COSTS[b])
+        or (b in bp_owned and b in BLUEPRINT_SKILLS)
+        for b in blueprint_cands]
 
     contraption_cands = sorted(int(c) for c in CONTRAPTION_COSTS)
     contraption_mask = [sp >= CONTRAPTION_COSTS[str(c)]

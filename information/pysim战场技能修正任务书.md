@@ -79,6 +79,64 @@ seed、地图 ID、帧率/tick、坐标系和一次完整采集命令。仅写�
 - 不用 pysim 自己生成的结果充当真实游戏 oracle；
 - 不在 `COMMANDER_SKILLS` 中先填一组猜测数字再宣称机制完成。
 
+### 1.3 与 RL Phase 1 并行开发的文件边界（2026-08-28 划定）
+
+RL Phase 1（`information/第一阶段强化学习任务书-2026-08-27.md`）与本专项
+同时施工。git 层面只要两侧文件集合不重叠就没有冲突；RL 侧训好的模型/数据
+因战斗语义变化而失效是**可接受的**（重新生成即可），不构成本专项的约束。
+边界如下：
+
+**本专项（战斗引擎侧）可以自由修改**：
+
+```text
+pysim/engine.py                       # 战斗引擎本体
+pysim/skills.py                       # 技能效果表/释放语义
+pysim/battlefield/**                  # compiler / effects / registry /
+                                      # legacy_engine / model / outcome
+pysim/transition/deploy.py            # 释放/回收/塔技能执行路径
+pysim/transition/normalize.py         # typed release 语义（T0）
+pysim/transition/canonicalize.py
+pysim/transition/capability.py        # 支持度判定
+pysim/transition/economy.py           # 价格/退款（如建筑回收退款）
+local_data/battlefield_registry.json  # 支持度事实源（工具再生成）
+data/calib/**、data/battlefield_skill_scenarios/**
+data/battlefield_skill_oracle/**
+tools/build_battlefield_skill_cases.py、benchmarks/run_skills.py
+tests/transition/test_step5_skills.py、tests/transition/test_battlefield_skills.py
+information/pysim战场技能修正任务书.md（本文件）
+```
+
+**RL 侧拥有，本专项不要动**：
+
+```text
+pysim/rl/**                           # RL 契约/观测/mask/模型/arena 全部
+tests/rl/**                           # RL 测试
+tools/build_rl_phase1_dataset.py      # 数据集构建
+tools/build_sim_labels.py             # pysim 标签生成
+tools/train_battle_value.py、tools/train_policy_bc.py
+tools/run_rl_phase1_arena.py、tools/run_rl_phase1_baselines.py
+tools/build_rl_phase1_report.py、tools/build_fidelity_report.py
+data/rl_phase1_contract.json          # RL 契约（生成物）
+information/第一阶段强化学习任务书-2026-08-27.md（RL 任务书，含 §17 总结）
+requirements-rl.txt、.venv-rl/
+local_data/rl_phase1/**               # RL 运行产物（数据集/检查点/报告）
+```
+
+**共享耦合区（可改，但改动后请知会一声，RL 侧负责同步重跑）**：
+
+| 文件 | 耦合点 | 改动后果（RL 侧动作） |
+|---|---|---|
+| `pysim/transition/replay_adapter.py` | RL 已改过两处（unlock 前缀正确性、军官 round-1 装备授予）；快照→状态语义 | 合并时注意这两处保留；改完 RL 重跑数据集 |
+| `pysim/transition/model.py` | 版本常量（SCHEMA/RULESET/ENGINE_VERSION）+ typed action 定义 | 版本 bump 会让 `check_contract` 报不匹配 → RL 重新生成 contract + 数据集 |
+| `pysim/transition/rules.py` | buy limit / 移动权限单一规则源 | `pysim/rl/masks.py` 镜像同源规则，需同步 |
+| 技能实现升级（如 200001 EMP 从 noop 变真实效果） | `pysim/rl/masks.py::mapped_skill_target_kind` / `NOOP_REASON_CODES` | 通知 RL：从 NOOP 名单移除该 id、更新 target kind、重训 |
+
+**运行期注意**：正在运行的 RL 进程（arena/训练）已把旧 pysim 载入内存，
+本专项在其运行期间编辑文件**不影响**在跑实例；只有 RL 侧"新启动"的数据/
+训练进程才会拾取新战斗语义。RL 侧会在战斗语义变化后重跑
+`build_rl_phase1_dataset` + `build_sim_labels` + 训练，使数据集与
+sim 标签重新锚定（`sim_label_version` 升级）。
+
 ## 2. 已冻结规则与仍待标定项
 
 本节只把用户已经给出的规则作为实现输入。没有数字或交互结论的字段继续标为 `待 oracle`。
@@ -466,21 +524,54 @@ movement 或 status 管线导致八库变化，必须提交逐 case diff 和原�
 
 答复：
 
-> 待填写。
+1、我理解是可以
+2、 如果你愿意去反向和注入我觉得也可以
+3、我觉得这个不是很有必要 你看看能不能直接反向到闪电风暴的代码
+4、这是不行的下一回合所有单位都会满血renew得
 
 ### QA-2：尚未冻结的游戏规则
 
 1. construction cid 中哪些是墙、炮，哪些可被 `900001` 回收？
+
+就是有个5模组的墙是50元
+反装甲炮和清杂炮都是100
+
 2. `ReleaseCommanderSkill ID=0 SkillIndex=0` 与快速补给究竟是否同一通道/版本编码？
+
+和版本无关 因为之前有一阵子开发不当心把蓝图以为是快速补给了 照理说快速补给应该是skill index = 0
+commander的0 skill我还不清楚是什么
+
+
 3. 巨型 EMP 半径是多少；EMP 是否影响空军、建筑和装置？
+
+大约130m
+
+核弹的半径大约100m
+
+核弹技能也记得实现 15秒后到达战场 造成70000点伤害
+
+闪电风暴的半径大约130m
+
 4. 光子“印染免疫”是否指引燃；先有负面 status 后获得光子是否清除它？
+
+是引燃 会清除 光子状态阶段就完全不受到这些
+
 5. 烟雾的射程降低数值、酸液的百分比基数与易伤倍率是否为 §7 的 provisional 口径？
+
+烟雾弹射程减少 35%
+酸液单中的单位每秒收到3%生命影响 被攻击时受到250%伤害
+
 6. 移动信标两个 ID 是否完全同效果，能否影响空军和静态单位？
+
+是的
+
+墙和炮建筑是不影响的 其他单位都会影响
+
 7. `30001` 的游戏内身份是什么？
 
 答复：
 
-> 待填写。
+这个我不太清楚
 
 ## 13. 后续实施记录（施工完成后追加）
 
