@@ -24,6 +24,7 @@ from .token_contract import (OBSERVATION_VERSION, MAX_ENTITY_TOKENS_HARD,
                              MAX_ACTION_HISTORY, stable_digest,
                              assert_observation_clean)
 from . import relative_bias as rb
+from .policy_arity import (VERBS_13, VERB_INDEX, VERB_SEM, release_arity)
 
 # ---------------------------------------------------------------- token types
 TOKEN_TYPES = (
@@ -115,13 +116,11 @@ class SemanticVocab:
 
     def __init__(self, known: dict | None = None):
         # kind -> {raw_id: compact_id}; compact ids start at 1, 0 = OOV/PAD
-        self.tables: dict[str, dict[int, int]] = {
-            k: {} for k in self.KINDS}
+        self.tables: dict[str, dict[int, int]] = {k: {} for k in self.KINDS}
         for kind, items in (known or {}).items():
             if kind not in self.KINDS:
                 raise TokenizerError("unknown vocab kind %s" % kind)
-            for rank, raw in enumerate(sorted(int(v) for v in items)):
-                self.tables[kind][raw] = rank + 1
+            self.register(kind, items)
 
     # -- build from gamedata (train-only fitting, §11)
     @classmethod
@@ -130,27 +129,23 @@ class SemanticVocab:
         v.register("mech", [int(m) for m in gd.mechs])
         v.register("tech", [int(t) for t in gd.techs])
         cards = getattr(gd, "cards", {}) or {}
-        equips, skills, towers, bps, cons = set(), set(), set(), set(), set()
-        for c in cards.values():
-            if getattr(c, "equipment_id", 0):
-                equips.add(int(c.equipment_id))
+        equips = {int(c.equipment_id) for c in cards.values()
+                  if getattr(c, "equipment_id", 0)}
+        v.register("equip", equips)
         try:
             from ...skills import (COMMANDER_SKILLS, TOWER_SKILL_COSTS,
                                    BLUEPRINT_COSTS, CONTRAPTION_COSTS)
-            skills |= set(int(s) for s in COMMANDER_SKILLS)
-            towers |= set(int(t) for t in TOWER_SKILL_COSTS)
-            bps |= set(int(b) for b in BLUEPRINT_COSTS)
-            cons |= set(int(c) for c in CONTRAPTION_COSTS)
+            v.register("skill", COMMANDER_SKILLS)
+            v.register("tower", TOWER_SKILL_COSTS)
+            v.register("blueprint", BLUEPRINT_COSTS)
+            v.register("contraption", CONTRAPTION_COSTS)
         except ImportError:
             pass
-        v.register("equip", equips)
-        v.register("skill", skills)
-        v.register("tower", towers)
-        v.register("blueprint", bps)
-        v.register("contraption", cons)
         return v
 
     def register(self, kind: str, raw_ids) -> None:
+        if kind not in self.KINDS:
+            raise TokenizerError("unknown vocab kind %s" % kind)
         tab = self.tables[kind]
         for raw in sorted(int(v) for v in raw_ids):
             if raw not in tab:
@@ -189,43 +184,33 @@ def battle_token_obs_from_v1(v1: dict) -> dict:
     The post-T0 v2 dataset builder replaces the heuristic fields."""
     assert_observation_clean(v1)
 
-    def units(side: dict, side_id: int) -> list:
-        out = []
-        for u in side.get("units") or []:
-            out.append({
-                "kind": "self_unit" if side_id == 0 else "opp_unit",
-                "mech": int(u["mech"]), "level": int(u["level"]),
-                "exp": int(u["exp"]), "x": float(u["x"]), "y": float(u["y"]),
-                "rot": bool(u["rot"]), "equip": int(u.get("equip", 0) or 0),
-                "air": 0, "value": 0.0, "status": "known", "fidelity": 1.0,
-            })
-        return out
+    def units(side: dict, kind: str) -> list:
+        return [{
+            "kind": kind, "mech": int(u["mech"]), "level": int(u["level"]),
+            "exp": int(u["exp"]), "x": float(u["x"]), "y": float(u["y"]),
+            "rot": bool(u["rot"]), "equip": int(u.get("equip", 0) or 0),
+            "air": 0, "value": 0.0, "status": "known", "fidelity": 1.0,
+        } for u in side.get("units") or []]
 
-    def techs(side: dict, side_id: int) -> list:
-        out = []
-        for m_str, ts in sorted((side.get("techs") or {}).items()):
-            for t in ts:
-                out.append({"kind": "self_tech" if side_id == 0 else "opp_tech",
-                            "mech": int(m_str), "tech": int(t)})
-        return out
+    def techs(side: dict, kind: str) -> list:
+        return [{"kind": kind, "mech": int(m_str), "tech": int(t)}
+                for m_str, ts in sorted((side.get("techs") or {}).items())
+                for t in ts]
 
-    def flat(side: dict, kind: str) -> list:
-        out = []
-        for d in side.get(kind) or []:
-            out.append({"kind": kind, "id": int(d["id"]),
-                        "x": float(d["x"]), "y": float(d["y"]),
-                        "shape": "unknown", "radius": 0.0,
-                        "confidence": 0.5, "unknown_mechanism": True})
-        return out
+    def flat(side: dict, key: str, kind: str) -> list:
+        return [{"kind": kind, "id": int(d["id"]), "x": float(d["x"]),
+                 "y": float(d["y"]), "shape": "unknown", "radius": 0.0,
+                 "confidence": 0.5, "unknown_mechanism": True}
+                for d in side.get(key) or []]
 
-    ents = (units(v1["self"], 0) + units(v1["opp"], 1)
-            + techs(v1["self"], 0) + techs(v1["opp"], 1)
+    ents = (units(v1["self"], "self_unit") + units(v1["opp"], "opp_unit")
+            + techs(v1["self"], "self_tech") + techs(v1["opp"], "opp_tech")
             + [{"kind": "self_tower", "x": 0.0, "y": -295.0},
                {"kind": "opp_tower", "x": 0.0, "y": 295.0}]
-            + flat(v1["self"], "devices") + flat(v1["opp"], "devices")
-            + flat(v1["self"], "skill_events")
-            + flat(v1["opp"], "skill_events"))
-    # ground areas: v1 has none; v2 rows carry ordered points + ttl
+            + flat(v1["self"], "devices", "device")
+            + flat(v1["opp"], "devices", "device")
+            + flat(v1["self"], "skill_events", "skill_release")
+            + flat(v1["opp"], "skill_events", "skill_release"))
     obs = {
         "version": OBSERVATION_VERSION,
         "round": int(v1["round"]), "ego": int(v1["ego"]),
@@ -280,9 +265,9 @@ def policy_token_obs_from_live(obs_v1, space_dict: dict,
         for t in ts:
             ents.append({"kind": "opp_tech", "mech": int(m_str),
                          "tech": int(t)})
-    for c in (obs_v1.opp or {}).get("devices") or []:
-        ents.append({"kind": "device", "id": int(c["id"]),
-                     "x": float(c["x"]), "y": float(c["y"]),
+    for d in (obs_v1.opp or {}).get("devices") or []:
+        ents.append({"kind": "device", "id": int(d["id"]),
+                     "x": float(d["x"]), "y": float(d["y"]),
                      "shape": "unknown", "radius": 0.0, "confidence": 0.5,
                      "unknown_mechanism": True})
     for s in (obs_v1.opp or {}).get("skill_events") or []:
@@ -297,8 +282,7 @@ def policy_token_obs_from_live(obs_v1, space_dict: dict,
             "self_hp": int(obs_v1.hp), "self_max_hp": int(obs_v1.max_hp),
             "opp_hp": int(obs_v1.opp["hp"]),
             "opp_max_hp": int(obs_v1.opp["max_hp"]),
-            "self_tower_strengthen": [0, 0],
-            "opp_tower_strengthen": [0, 0],
+            "self_tower_strengthen": [0, 0], "opp_tower_strengthen": [0, 0],
             "supply": int(obs_v1.supply),
             "buy_remaining": int(obs_v1.buy_remaining),
             "budget_left": int(obs_v1.budget_left),
@@ -329,56 +313,48 @@ def mirror_battle_obs(obs: dict) -> dict:
         u = dict(u)
         u["y"] = -float(u["y"])
         u["rot"] = not bool(u.get("rot"))
-        u["kind"] = ("self_unit" if u["kind"] == "opp_unit" else "opp_unit")
+        u["kind"] = "self_unit" if u["kind"] == "opp_unit" else "opp_unit"
         return u
+
+    def flip_tech(t: dict) -> dict:
+        t = dict(t)                      # techs are non-spatial: kind only
+        t["kind"] = "self_tech" if t["kind"] == "opp_tech" else "opp_tech"
+        return t
 
     def flip_plain(e: dict) -> dict:
         e = dict(e)
-        e["y"] = -float(e.get("y", 0.0))
+        if "y" in e:
+            e["y"] = -float(e["y"])
         return e
 
-    def flip_points(e: dict) -> dict:
-        e = flip_plain(e)
-        e["points"] = [(float(px), -float(py))
-                       for (px, py) in (e.get("points") or [])]
-        return e
+    def flip_points(a: dict) -> dict:
+        a = dict(a)
+        a["points"] = [(float(px), -float(py))
+                       for (px, py) in (a.get("points") or [])]
+        return a
 
-    def side_entities(side_key_for, kinds) -> list:
-        return [e for e in obs["entities"] if e["kind"] in kinds]
-
-    self_kinds = ("self_unit", "self_tech")
-    opp_kinds = ("opp_unit", "opp_tech")
+    unit_kinds = ("self_unit", "opp_unit")
+    tech_kinds = ("self_tech", "opp_tech")
     ents = []
-    ents += [flip_unit(e) for e in side_entities(None, opp_kinds)]
-    ents += [flip_unit(e) for e in side_entities(None, self_kinds)]
     for e in obs["entities"]:
         k = e["kind"]
-        if k in self_kinds or k in opp_kinds:
-            continue
-        if k == "self_tower":
-            e2 = flip_plain(e); e2["kind"] = "opp_tower"
+        if k in unit_kinds:
+            ents.append(flip_unit(e))
+        elif k in tech_kinds:
+            ents.append(flip_tech(e))
+        elif k == "self_tower":
+            e2 = flip_plain(e); e2["kind"] = "opp_tower"; ents.append(e2)
         elif k == "opp_tower":
-            e2 = flip_plain(e); e2["kind"] = "self_tower"
-        elif k == "GROUND_AREA" or k == "ground_area":
-            e2 = flip_points(e)
-        elif k in ("ground_areas",):
-            continue
+            e2 = flip_plain(e); e2["kind"] = "self_tower"; ents.append(e2)
         else:
-            e2 = flip_plain(e)
-        ents.append(e2)
+            ents.append(flip_plain(e))
     g = dict(obs["global"])
-    swaps = (("self_hp", "opp_hp"), ("self_max_hp", "opp_max_hp"),
-             ("self_officers", "opp_officers"),
-             ("self_blueprints", "opp_blueprints"))
-    for a, b in swaps:
+    for a, b in (("self_hp", "opp_hp"), ("self_max_hp", "opp_max_hp"),
+                 ("self_officers", "opp_officers"),
+                 ("self_blueprints", "opp_blueprints"),
+                 ("self_tower_strengthen", "opp_tower_strengthen")):
         if a in g or b in g:
-            g[a], g[b] = g.get(b, g.get(a)), g.get(a, g.get(b))
-    for k in ("self_tower_strengthen", "opp_tower_strengthen"):
-        if k in g:
-            g[k] = list(g[k])
-    g["self_tower_strengthen"], g["opp_tower_strengthen"] = \
-        g.get("opp_tower_strengthen", [0, 0]), g.get("self_tower_strengthen",
-                                                     [0, 0])
+            g[a], g[b] = g.get(b), g.get(a)
     out = dict(obs)
     out["global"] = g
     out["entities"] = ents
@@ -420,15 +396,15 @@ class TokenArrays:
 def _area_of(x: float, y: float, areas: list) -> int:
     for ai, a in enumerate(areas):
         pts = a.get("points") or []
-        if len(pts) >= 2:
+        if a.get("radius"):
+            r = float(a["radius"])
+            cx, cy = (float(pts[0][0]), float(pts[0][1])) if pts else (0.0, 0.0)
+            if (x - cx) ** 2 + (y - cy) ** 2 <= r * r:
+                return ai
+        elif len(pts) >= 2:
             (ax, ay), (bx, by) = pts[0], pts[1]
             if min(ax, bx) <= x <= max(ax, bx) and \
                     min(ay, by) <= y <= max(ay, by):
-                return ai
-        elif a.get("radius"):
-            r = float(a["radius"])
-            if (x - float(pts[0][0])) ** 2 + (y - float(pts[0][1])) ** 2 \
-                    <= r * r:
                 return ai
     return -1
 
@@ -448,8 +424,20 @@ def _unit_feats(e: dict, side: int) -> tuple:
     return f, float(e.get("x", 0.0)), float(e.get("y", 0.0)), side, 0
 
 
-def _t(type_name: str):
-    return TT[type_name]
+class _TokenSink:
+    def __init__(self):
+        self.types, self.sems, self.feats = [], [], []
+        self.xs, self.ys, self.sides, self.airs = [], [], [], []
+
+    def push(self, tname, sem_id, feat, x=0.0, y=0.0,
+             side=SIDE_NEUTRAL, air=-1):
+        self.types.append(TT[tname])
+        self.sems.append(int(sem_id))
+        self.feats.append(np.asarray(feat, dtype=np.float32))
+        self.xs.append(float(x))
+        self.ys.append(float(y))
+        self.sides.append(side)
+        self.airs.append(air)
 
 
 def encode_battle_tokens(obs: dict, vocab: SemanticVocab,
@@ -462,14 +450,7 @@ def encode_battle_tokens(obs: dict, vocab: SemanticVocab,
                              (obs.get("version"), OBSERVATION_VERSION))
     assert_observation_clean(obs)
     g = obs["global"]
-    types, sems, feats, xs, ys, sides, airs = [], [], [], [], [], [], []
-
-    def push(tname, sem_id, feat, x=0.0, y=0.0, side=SIDE_NEUTRAL, air=-1):
-        types.append(_t(tname)); sems.append(int(sem_id))
-        feats.append(feat); xs.append(float(x)); ys.append(float(y))
-        sides.append(side); airs.append(air)
-
-    push("VALUE_CLS", 0, np.zeros(N_FEAT, dtype=np.float32))
+    sink = _TokenSink()
     gf = np.zeros(N_FEAT, dtype=np.float32)
     gf[FEAT_SLICES["hp"]] = g["self_hp"] / max(1, g["self_max_hp"])
     gf[FEAT_SLICES["flag"]] = g["opp_hp"] / max(1, g["opp_max_hp"])
@@ -477,42 +458,48 @@ def encode_battle_tokens(obs: dict, vocab: SemanticVocab,
     gf[FEAT_SLICES["value"]] = sum(g.get("self_tower_strengthen",
                                          (0, 0))) / 18.0
     gf[FEAT_SLICES["cd"]] = sum(g.get("opp_tower_strengthen", (0, 0))) / 18.0
-    push("GLOBAL", 0, gf)
+    sink.push("VALUE_CLS", 0, np.zeros(N_FEAT, dtype=np.float32))
+    sink.push("GLOBAL", 0, gf)
     areas = obs.get("ground_areas") or []
 
     for e in obs["entities"]:
         k = e["kind"]
         if k in ("self_unit", "opp_unit"):
             side = SIDE_SELF if k == "self_unit" else SIDE_OPP
-            f, x, y, s, a = _unit_feats(e, side)
-            push(k, vocab.id("mech", e["mech"]), f, x, y, s, int(e.get("air", 0)))
+            f, x, y, s, _ = _unit_feats(e, side)
+            sink.push("SELF_UNIT" if k == "self_unit" else "OPP_UNIT",
+                      vocab.id("mech", e["mech"]), f, x, y, s,
+                      int(e.get("air", 0)))
         elif k in ("self_tech", "opp_tech"):
             side = SIDE_SELF if k == "self_tech" else SIDE_OPP
             f = np.zeros(N_FEAT, dtype=np.float32)
             f[FEAT_SLICES["side"]] = float(side)
-            push(k, vocab.id("tech", e["tech"]), f, side=side)
+            sink.push("SELF_TECH" if k == "self_tech" else "OPP_TECH",
+                      vocab.id("tech", e["tech"]), f, side=side)
         elif k in ("self_tower", "opp_tower"):
             side = SIDE_SELF if k == "self_tower" else SIDE_OPP
             f = np.zeros(N_FEAT, dtype=np.float32)
             f[FEAT_SLICES["side"]] = float(side)
-            push(k, 0, f, float(e.get("x", 0.0)), float(e.get("y", 0.0)),
-                 side)
+            sink.push("SELF_TOWER" if k == "self_tower" else "OPP_TOWER",
+                      0, f, float(e.get("x", 0.0)),
+                      float(e.get("y", 0.0)), side)
         elif k in ("construction", "device"):
             f = np.zeros(N_FEAT, dtype=np.float32)
-            push(k, vocab.id("construction" if k == "construction"
-                             else "contraption", e["id"]), f,
-                 float(e["x"]), float(e["y"]))
-        elif k in ("skill_release",):
+            sink.push("CONSTRUCTION" if k == "construction" else "DEVICE",
+                      vocab.id("construction" if k == "construction"
+                               else "contraption", e["id"]), f,
+                      float(e["x"]), float(e["y"]))
+        elif k == "skill_release":
             f = np.zeros(N_FEAT, dtype=np.float32)
             f[FEAT_SLICES["radius"]] = float(e.get("radius", 0.0)) / 100.0
             f[FEAT_SLICES["flag"]] = float(e.get("confidence", 0.5))
             f[FEAT_SLICES["npoints"]] = float(len(e.get("points") or ()))
-            push(k, vocab.id("skill", e["id"]), f, float(e["x"]),
-                 float(e["y"]))
+            sink.push("SKILL_RELEASE", vocab.id("skill", e["id"]), f,
+                      float(e["x"]), float(e["y"]))
         else:
             raise TokenizerError("unknown entity kind %r" % k)
 
-    for ai, a in enumerate(areas):
+    for a in areas:
         f = np.zeros(N_FEAT, dtype=np.float32)
         pts = a.get("points") or []
         f[FEAT_SLICES["radius"]] = float(a.get("radius", 0.0)) / 100.0
@@ -521,39 +508,37 @@ def encode_battle_tokens(obs: dict, vocab: SemanticVocab,
         f[FEAT_SLICES["flag"]] = float(a.get("confidence", 0.5))
         x0 = float(pts[0][0]) if pts else 0.0
         y0 = float(pts[0][1]) if pts else 0.0
-        push("GROUND_AREA", vocab.id("skill", a.get("skill", 0)), f, x0, y0)
+        sink.push("GROUND_AREA", vocab.id("skill", a.get("skill", 0)), f,
+                  x0, y0)
 
     area_ids = np.asarray(
-        [_area_of(x, y, areas) if types[i] in (
-            _t("SELF_UNIT"), _t("OPP_UNIT"), _t("CONSTRUCTION"),
-            _t("DEVICE")) else -1
-         for i, (x, y) in enumerate(zip(xs, ys))], dtype=np.int64)
-
-    return _finalize(types, sems, feats, xs, ys, sides, airs, area_ids, cfg,
-                     index={})
+        [_area_of(x, y, areas)
+         if sink.types[i] in (TT["SELF_UNIT"], TT["OPP_UNIT"],
+                              TT["CONSTRUCTION"], TT["DEVICE"]) else -1
+         for i, (x, y) in enumerate(zip(sink.xs, sink.ys))], dtype=np.int64)
+    return _finalize(sink, area_ids, cfg, index={})
 
 
-def _finalize(types, sems, feats, xs, ys, sides, airs, area_ids, cfg,
-              index) -> TokenArrays:
-    n = len(types)
+def _finalize(sink: _TokenSink, area_ids, cfg: TokenizerConfig,
+              index: dict) -> TokenArrays:
+    n = len(sink.types)
     if n > min(cfg.max_entity_tokens, MAX_ENTITY_TOKENS_HARD):
         raise TokenizerError(
             "%d tokens > max_entity_tokens=%d (§4.5: 超限必须精确报错,"
             "不得静默截断)" % (n, cfg.max_entity_tokens))
-    ta = TokenArrays(
-        type=np.asarray(types, dtype=np.int64),
-        sem=np.asarray(sems, dtype=np.int64),
-        feat=np.asarray(feats, dtype=np.float32).reshape(n, N_FEAT),
-        x=np.asarray(xs, dtype=np.float32),
-        y=np.asarray(ys, dtype=np.float32),
-        side=np.asarray(sides, dtype=np.int64),
-        group=np.asarray([GROUP_INDEX[TOKEN_TYPES[t]] for t in types],
-                         dtype=np.int64),
-        air=np.asarray(airs, dtype=np.int64),
+    return TokenArrays(
+        type=np.asarray(sink.types, dtype=np.int64),
+        sem=np.asarray(sink.sems, dtype=np.int64),
+        feat=np.asarray(sink.feats, dtype=np.float32).reshape(n, N_FEAT),
+        x=np.asarray(sink.xs, dtype=np.float32),
+        y=np.asarray(sink.ys, dtype=np.float32),
+        side=np.asarray(sink.sides, dtype=np.int64),
+        group=np.asarray([GROUP_INDEX[TYPE_GROUP[TOKEN_TYPES[t]]]
+                          for t in sink.types], dtype=np.int64),
+        air=np.asarray(sink.airs, dtype=np.int64),
         area=np.asarray(area_ids, dtype=np.int64),
         mask=np.ones(n, dtype=np.float32),
         index=index, n_tokens=n)
-    return ta
 
 
 # ------------------------------------------- policy: candidate tables
@@ -562,104 +547,80 @@ def build_candidate_tables(space: dict, cfg: TokenizerConfig) -> dict:
     per-verb legality masks (§5.1). Object = PRIMARY_OBJECT; pointer =
     observation token (own units). Arity per skill object comes from the
     registry the tokenizer shares with the engine (§5.3)."""
-    from ...skills import RELEASE_POINT_COUNTS
-    from .policy_arity import release_arity
-    verbs = list(space["verbs"])
+    verbs = list(space.get("verbs") or VERBS_13)
     verb_ix = {v: i for i, v in enumerate(verbs)}
-    obj_entries, obj_mask_rows = [], []
+    obj_entries: list[dict] = []
+    columns: list[tuple[int, dict]] = []
 
     def add_pool(pool, entries, mask_by_verb):
-        start = len(obj_entries)
-        obj_entries.extend({"pool": pool, "value": v} for v in entries)
-        for v in verbs:
-            m = mask_by_verb.get(v)
-            if m is None:
-                obj_mask_rows.extend([False] * len(entries))
-        # per-verb mask columns appended below
-
-    def add_pool2(pool, entries, mask_by_verb):
         start = len(obj_entries)
         obj_entries.extend({"pool": pool, "value": v} for v in entries)
         col = {}
         for v in verbs:
             m = mask_by_verb.get(v)
-            col[v] = [bool(x) for x in m] if m is not None \
-                else [False] * len(entries)
-        return start, col
+            col[v] = ([bool(x) for x in m] if m is not None
+                      else [False] * len(entries))
+        columns.append((start, col))
+        return start
 
-    columns = []
-    mech = space.get("mech_cands") or []
-    columns.append(add_pool2("mech", mech, {
-        "BUY_UNIT": space.get("mech_mask", {}).get("BUY_UNIT"),
-        "UNLOCK_UNIT": space.get("mech_mask", {}).get("UNLOCK_UNIT")}))
-    tech = [tuple(t) for t in space.get("tech_cands") or []]
-    columns.append(add_pool2("tech", tech, {
-        "BUY_TECH": space.get("tech_mask")}))
-    equip = space.get("equip_cands") or []
-    columns.append(add_pool2("equip", equip, {"USE_EQUIPMENT":
-                                              space.get("equip_mask")}))
+    add_pool("mech", space.get("mech_cands") or [], {
+        "BUY_UNIT": (space.get("mech_mask") or {}).get("BUY_UNIT"),
+        "UNLOCK_UNIT": (space.get("mech_mask") or {}).get("UNLOCK_UNIT")})
+    add_pool("tech", [tuple(t) for t in space.get("tech_cands") or []], {
+        "BUY_TECH": space.get("tech_mask")})
+    add_pool("equip", space.get("equip_cands") or [], {
+        "USE_EQUIPMENT": space.get("equip_mask")})
     skill = [tuple(s) for s in space.get("skill_cands") or []]
     skill_mask = {}
     if skill:
         sm = space.get("skill_mask") or [True] * len(skill)
         kinds = space.get("skill_target") or ["none"] * len(skill)
-        skill_mask["RELEASE_COMMANDER_SKILL"] = [
-            bool(sm[i]) and kinds[i] in ("position", "unit", "none")
-            for i in range(len(skill))]
-    columns.append(add_pool2("skill", skill, skill_mask))
-    tower = space.get("tower_cands") or []
-    columns.append(add_pool2("tower", tower, {
-        "ACTIVATE_ENERGY_TOWER_SKILL": space.get("tower_mask")}))
-    bp = space.get("blueprint_cands") or []
-    columns.append(add_pool2("blueprint", bp, {
-        "ACTIVE_BLUEPRINT": space.get("blueprint_mask")}))
-    contr = space.get("contraption_cands") or []
-    columns.append(add_pool2("contraption", contr, {
-        "RELEASE_CONTRAPTION": space.get("contraption_mask")}))
-    columns.append(add_pool2("strengthen", [0, 1], {
-        "STRENGTHEN_TOWER": space.get("strengthen_mask")}))
+        skill_mask["RELEASE_COMMANDER_SKILL"] = [bool(sm[i]) for i in
+                                                 range(len(skill))]
+    add_pool("skill", skill, skill_mask)
+    add_pool("tower", space.get("tower_cands") or [], {
+        "ACTIVATE_ENERGY_TOWER_SKILL": space.get("tower_mask")})
+    add_pool("blueprint", space.get("blueprint_cands") or [], {
+        "ACTIVE_BLUEPRINT": space.get("blueprint_mask")})
+    add_pool("contraption", space.get("contraption_cands") or [], {
+        "RELEASE_CONTRAPTION": space.get("contraption_mask")})
+    add_pool("strengthen", [0, 1], {
+        "STRENGTHEN_TOWER": space.get("strengthen_mask")})
 
-    obj_mask = np.zeros((len(verbs), 0), dtype=bool)
-    cols = []
-    for start, col in columns:
-        cols.append((start, col))
     n_obj = len(obj_entries)
     obj_mask = np.zeros((len(verbs), n_obj), dtype=bool)
-    for (start, col) in cols:
+    for start, col in columns:
         for v, m in col.items():
-            if m is not None:
+            if v in verb_ix:
                 obj_mask[verb_ix[v], start:start + len(m)] = m
 
     # pointer candidates: own units in handle order == token order (the
     # policy encoder emits self units first, canonical order, §4.3)
-    n_units = sum(1 for u in ((space.get("_n_own_units"),)) for _ in range(u)) \
-        if space.get("_n_own_units") else None
-    ptr_mask = np.zeros((len(verbs), 1), dtype=bool)
     um = space.get("unit_mask") or {}
-    n_pool = max([len(v) for v in um.values()] or [0])
-    ptr_mask = np.zeros((len(verbs), n_pool), dtype=bool)
+    n_ptr = max([len(m) for m in um.values()] or [0])
+    ptr_mask = np.zeros((len(verbs), max(n_ptr, 1)), dtype=bool)
     for v, m in um.items():
         if v in verb_ix:
             ptr_mask[verb_ix[v], :len(m)] = [bool(x) for x in m]
     if "USE_EQUIPMENT" in verb_ix:
-        ptr_mask[verb_ix["USE_EQUIPMENT"], :n_pool] = True
-    if "RELEASE_COMMANDER_SKILL" in verb_ix:
-        unit_target = [kinds[i] == "unit" for i in range(len(skill))] \
-            if skill else []
-        ptr_mask[verb_ix["RELEASE_COMMANDER_SKILL"], :len(unit_target)] = \
-            unit_target
+        ptr_mask[verb_ix["USE_EQUIPMENT"], :n_ptr] = True
+    if "RELEASE_COMMANDER_SKILL" in verb_ix and skill:
+        # a unit-target skill may point at ANY own unit; whether THIS
+        # release needs the pointer is decided at decode time by the
+        # chosen skill's registry arity (§5.1/§5.3)
+        kinds = space.get("skill_target") or []
+        ptr_mask[verb_ix["RELEASE_COMMANDER_SKILL"], :n_ptr] = \
+            any(k == "unit" for k in kinds)
 
     # per-verb coarse xy legality (§5.2: bounds from the rule layer)
     nx, ny = cfg.grid_nx, cfg.grid_ny
     xy_legal = np.zeros((len(verbs), nx * ny), dtype=bool)
+    cw, ch = 700.0 / nx, 600.0 / ny
     for v in verbs:
-        lo_x, hi_x, lo_y, hi_y = (347.0, -347.0, -3.0, -297.0) \
-            if v == "BUY_UNIT" else (347.0, -347.0, 297.0, -297.0)
-        lo_x, hi_x = -min(347.0, abs(lo_x)), min(347.0, abs(hi_x))
-        lo_y, hi_y = -min(297.0, abs(lo_y)), min(297.0, abs(hi_y))
         if v == "BUY_UNIT":
-            lo_y, hi_y = -297.0, -3.0
-        cw, ch = 700.0 / nx, 600.0 / ny
+            lo_x, hi_x, lo_y, hi_y = -347.0, 347.0, -297.0, -3.0
+        else:
+            lo_x, hi_x, lo_y, hi_y = -347.0, 347.0, -297.0, 297.0
         for gy in range(ny):
             y0 = -300.0 + gy * ch
             if y0 > hi_y or y0 + ch < lo_y:
@@ -674,17 +635,14 @@ def build_candidate_tables(space: dict, cfg: TokenizerConfig) -> dict:
     arities = np.zeros(n_obj, dtype=np.int64)
     for i, e in enumerate(obj_entries):
         if e["pool"] == "skill":
-            sid = e["value"][1]
-            arities[i] = release_arity(sid)
+            arities[i] = release_arity(e["value"][1])
         elif e["pool"] in ("mech", "contraption"):
             arities[i] = 1
     return {
-        "verbs": verbs,
-        "obj_entries": obj_entries, "obj_mask": obj_mask,
-        "n_ptr": n_pool, "ptr_mask": ptr_mask,
+        "verbs": verbs, "obj_entries": obj_entries, "obj_mask": obj_mask,
+        "n_ptr": max(n_ptr, 1), "ptr_mask": ptr_mask,
         "xy_legal": xy_legal, "arities": arities,
-        "grid": {"nx": nx, "ny": ny,
-                 "residual_bins": cfg.residual_bins},
+        "grid": {"nx": nx, "ny": ny, "residual_bins": cfg.residual_bins},
     }
 
 
@@ -697,85 +655,64 @@ def encode_policy_tokens(obs: dict, vocab: SemanticVocab,
         {k: obs[k] for k in ("version", "round", "ego", "global",
                              "entities", "ground_areas")},
         vocab, cfg)
-    types, sems, feats, xs, ys, sides, airs = (
-        [ta.type.tolist()], [ta.sem.tolist()], [ta.feat.tolist()],
-        [ta.x.tolist()], [ta.y.tolist()], [ta.side.tolist()],
-        [ta.air.tolist()])
+    sink = _TokenSink()
+    sink.types = ta.type.tolist(); sink.sems = ta.sem.tolist()
+    sink.feats = list(ta.feat); sink.xs = ta.x.tolist(); sink.ys = ta.y.tolist()
+    sink.sides = ta.side.tolist(); sink.airs = ta.air.tolist()
+    area_ids = ta.area.tolist()
+
     index = dict(ta.index)
-    area_ids = [ta.area.tolist()]
-
-    def push(tname, sem_id, feat, x=0.0, y=0.0, side=SIDE_NEUTRAL, air=-1,
-             area=-1):
-        types[0].append(_t(tname)); sems[0].append(int(sem_id))
-        feats[0].append(list(feat)); xs[0].append(float(x))
-        ys[0].append(float(y)); sides[0].append(side); airs[0].append(air)
-        area_ids[0].append(area)
-
-    # own-unit token index metadata (pointer candidates point here, §5.1)
-    own_unit_pos = [i for i, t in enumerate(types[0])
-                    if t == _t("SELF_UNIT")]
-    index["self_unit"] = np.asarray(own_unit_pos, dtype=np.int64)
+    index["self_unit"] = np.asarray(
+        [i for i, t in enumerate(sink.types) if t == TT["SELF_UNIT"]],
+        dtype=np.int64)
     index["self_tech"] = np.asarray(
-        [i for i, t in enumerate(types[0]) if t == _t("SELF_TECH")],
+        [i for i, t in enumerate(sink.types) if t == TT["SELF_TECH"]],
         dtype=np.int64)
 
-    g = obs["global"]
-    invf = np.zeros(N_FEAT, dtype=np.float32)
-    invf[FEAT_SLICES["value"]] = g.get("supply", 0.0) / 3000.0
-    for m in base.get("unlocked_mechs") or []:
-        push("INV_TECH" if False else "INV_EQUIP", 0, invf)  # placeholder
-    # (unlocked mechs are implicit in own units + inventory tokens below)
-    types[0] = types[0][:ta.n_tokens]
-    sems[0] = sems[0][:ta.n_tokens]
-    feats[0] = feats[0][:ta.n_tokens]
-    xs[0] = xs[0][:ta.n_tokens]
-    ys[0] = ys[0][:ta.n_tokens]
-    sides[0] = sides[0][:ta.n_tokens]
-    airs[0] = airs[0][:ta.n_tokens]
-    area_ids[0] = area_ids[0][:ta.n_tokens]
+    n_base = len(sink.types)
+    area_ids.extend([-1] * (n_base - len(area_ids)))  # safety alignment
 
     for t in base.get("skills") or []:
         if not t.get("active", True):
             continue
         f = np.zeros(N_FEAT, dtype=np.float32)
         f[FEAT_SLICES["cd"]] = float(t.get("cd", 0)) / 8.0
-        push("INV_SKILL", vocab.id("skill", t["skill"]), f)
-    for t in base.get("equipment_inventory") or []:
-        push("INV_EQUIP", vocab.id("equip", t), np.zeros(
-            N_FEAT, dtype=np.float32))
-    for e in base.get("history") or []:
-        pass  # history appended below through the same push path
-
+        sink.push("INV_SKILL", vocab.id("skill", t["skill"]), f)
+    for e in base.get("equipment_inventory") or []:
+        sink.push("INV_EQUIP", vocab.id("equip", e),
+                  np.zeros(N_FEAT, dtype=np.float32))
+    for m in base.get("unlocked_mechs") or []:
+        sink.push("INV_TECH", vocab.id("mech", m),
+                  np.zeros(N_FEAT, dtype=np.float32))
     hist = (base.get("history") or [])[-cfg.max_history:]
     for i, h in enumerate(hist):
-        from .policy_arity import VERB_SEM
         f = np.zeros(N_FEAT, dtype=np.float32)
         f[FEAT_SLICES["x"]] = float(h.get("x", 0.0)) / BOARD_X
         f[FEAT_SLICES["y"]] = float(h.get("y", 0.0)) / BOARD_Y
         f[FEAT_SLICES["flag"]] = 1.0 if h.get("receipt_ok", True) else 0.0
         f[FEAT_SLICES["npoints"]] = float(len(h.get("points") or ()))
         f[FEAT_SLICES["level"]] = i / float(cfg.max_history)
-        push("HISTORY", VERB_SEM.get(str(h.get("verb", "")), 0), f)
+        sink.push("HISTORY", VERB_SEM.get(str(h.get("verb", "")), 0), f)
 
-    ta2 = _finalize(types[0], sems[0], feats[0], xs[0], ys[0], sides[0],
-                    airs[0], area_ids[0], cfg, index)
+    area_ids.extend([-1] * (len(sink.types) - len(area_ids)))
+
+    ta2 = _finalize(sink, area_ids, cfg, index)
     tables = build_candidate_tables(obs.get("space") or {}, cfg)
     # pointer candidate p -> encoder token position (own unit p == handle p)
-    tables["ptr_token_pos"] = index["self_unit"]
+    pos = index["self_unit"]
+    tables["ptr_token_pos"] = pos if len(pos) else np.zeros(0, dtype=np.int64)
     return ta2, tables
 
 
 # ------------------------------------------------ structured action codec
-VERBS_13 = ("END_DEPLOY", "BUY_UNIT", "UNLOCK_UNIT", "UPGRADE_UNIT",
-            "BUY_TECH", "MOVE_UNIT", "SELL_UNIT", "USE_EQUIPMENT",
-            "RELEASE_COMMANDER_SKILL", "ACTIVATE_ENERGY_TOWER_SKILL",
-            "STRENGTHEN_TOWER", "ACTIVE_BLUEPRINT", "RELEASE_CONTRAPTION")
-VERB_INDEX = {v: i for i, v in enumerate(VERBS_13)}
 MAX_POINTS = 3
-# decoder slot sequence (§5): one structured chain per atomic action
+# decoder slot sequence (§5): [ACTION_BOS] -> VERB -> PRIMARY_OBJECT ->
+# TARGET_POINTER -> POSITION_1..3 (ordered, coarse+residual each) ->
+# ORIENTATION -> [COMMIT]
 DECODE_SLOTS = ("BOS", "VERB", "OBJ", "PTR", "P1C", "P1X", "P1Y",
-                "P2C", "P2X", "P2Y", "P3C", "P3X", "P3Y", "ORI")
+                "P2C", "P2X", "P2Y", "P3C", "P3X", "P3Y", "ORI", "COMMIT")
 SLOT_INDEX = {s: i for i, s in enumerate(DECODE_SLOTS)}
+N_SLOTS = len(DECODE_SLOTS)
 
 
 def grid_encode(x: float, y: float, cfg: TokenizerConfig) -> tuple:
@@ -829,20 +766,37 @@ class ActionFields:
 
 
 def find_obj_index(tables: dict, pool: str, value) -> int:
-    for i, e in enumerate(tables["obj_entries"]):
+    for i, e in enumerate(obj_entries(tables)):
         if e["pool"] != pool:
             continue
         v = e["value"]
-        if pool == "tech" and tuple(v) == tuple(value):
-            return i
-        if pool == "skill" and tuple(v) == tuple(value):
-            return i
-        if pool not in ("tech", "skill") and v == value:
+        if pool in ("tech", "skill"):
+            if tuple(v) == tuple(value):
+                return i
+        elif v == value:
             return i
     return -1
 
 
-def action_to_fields(a: dict, tables: dict, cfg: TokenizerConfig) -> ActionFields:
+POOL_NAMES = ("mech", "tech", "equip", "skill", "tower", "blueprint",
+              "contraption", "strengthen")
+POOL_INDEX = {p: i for i, p in enumerate(POOL_NAMES)}
+
+
+def obj_entries(tables: dict) -> list:
+    """(pool, value) pairs from either the live dict form or the cache's
+    parallel arrays (obj_pool ints + obj_value objects)."""
+    if "obj_entries" in tables:
+        return tables["obj_entries"]
+    out = []
+    for p_i, v in zip(tables["obj_pool"], tables["obj_value"]):
+        out.append({"pool": POOL_NAMES[int(p_i)] if int(p_i) >= 0 else None,
+                    "value": v.item() if hasattr(v, "item") else v})
+    return out
+
+
+def action_to_fields(a: dict, tables: dict,
+                     cfg: TokenizerConfig) -> ActionFields:
     """Target action dict (RLAction.to_dict + optional 'points') ->
     structured fields. Raises TokenizerError when the target is not in the
     current legal tables (teacher forcing demands 100% in-mask, §13.2)."""
@@ -850,66 +804,62 @@ def action_to_fields(a: dict, tables: dict, cfg: TokenizerConfig) -> ActionField
     if verb not in VERB_INDEX:
         raise TokenizerError("unknown verb %r" % verb)
     f = ActionFields(verb=VERB_INDEX[verb])
-    points = [tuple(p) for p in (a.get("points") or [])]
-    if points and a.get("y") is not None and not points:
-        points = [(a["x"], a["y"])]
     if a.get("mech") is not None:
         f.obj = _require(find_obj_index(tables, "mech", a["mech"]),
-                         "mech %s" % a["mech"], tables)
+                         "mech %s" % a["mech"])
     elif a.get("tech") is not None:
         f.obj = _require(find_obj_index(tables, "tech", tuple(a["tech"])),
-                         "tech %s" % (a["tech"],), tables)
+                         "tech %s" % (a["tech"],))
     elif a.get("equip") is not None:
         f.obj = _require(find_obj_index(tables, "equip", a["equip"]),
-                         "equip %s" % a["equip"], tables)
+                         "equip %s" % a["equip"])
     elif a.get("skill_slot") is not None or a.get("skill_id") is not None:
         f.obj = _require(
             find_obj_index(tables, "skill",
                            (a.get("skill_slot"), a.get("skill_id"))),
-            "skill %s" % (a.get("skill_slot"), a.get("skill_id")), tables)
+            "skill %s/%s" % (a.get("skill_slot"), a.get("skill_id")))
     elif a.get("tower") is not None:
         f.obj = _require(find_obj_index(tables, "tower", a["tower"]),
-                         "tower %s" % a["tower"], tables)
+                         "tower %s" % a["tower"])
     elif a.get("blueprint") is not None:
         f.obj = _require(find_obj_index(tables, "blueprint", a["blueprint"]),
-                         "blueprint %s" % a["blueprint"], tables)
+                         "blueprint %s" % a["blueprint"])
     elif a.get("contraption") is not None:
         f.obj = _require(find_obj_index(tables, "contraption",
                                         a["contraption"]),
-                         "contraption %s" % a["contraption"], tables)
+                         "contraption %s" % a["contraption"])
     elif a.get("tower_index") is not None:
         f.obj = _require(find_obj_index(tables, "strengthen",
                                         int(a["tower_index"])),
-                         "strengthen %s" % a["tower_index"], tables)
+                         "strengthen %s" % a["tower_index"])
     if a.get("handle") is not None:
         f.ptr = int(a["handle"])
         if f.ptr >= tables["n_ptr"]:
             raise TokenizerError("handle %d outside pointer pool" % f.ptr)
-        verb_name = VERBS_13[f.verb]
-        if not tables["ptr_mask"][VERB_INDEX[verb_name], f.ptr]:
+        if not tables["ptr_mask"][f.verb, f.ptr]:
             raise TokenizerError("target handle %d not in %s mask"
-                                 % (f.ptr, verb_name))
+                                 % (f.ptr, VERBS_13[f.verb]))
+    points = [tuple(p) for p in (a.get("points") or [])]
+    if not points and a.get("y") is not None:
+        points = [(a["x"], a["y"])]
     if points:
-        if verb == "RELEASE_COMMANDER_SKILL":
-            arity = int(tables["arities"][f.obj]) if f.obj >= 0 else len(points)
+        if verb == "RELEASE_COMMANDER_SKILL" and f.obj >= 0:
+            arity = int(tables["arities"][f.obj])
             if len(points) != arity:
                 raise TokenizerError(
                     "点数不符: target %d points != registry arity %d (§5.3)"
                     % (len(points), arity))
         for p in points[:MAX_POINTS]:
             f.points = f.points + (grid_encode(p[0], p[1], cfg),)
-    elif a.get("y") is not None:
-        f.points = (grid_encode(a["x"], a["y"], cfg),)
     if a.get("rot") is not None:
         f.orient = int(a["rot"])
-    # legality spot-checks on the object column
     if f.obj >= 0 and not tables["obj_mask"][f.verb, f.obj]:
         raise TokenizerError("object %d not in %s mask" %
                              (f.obj, VERBS_13[f.verb]))
     return f
 
 
-def _require(idx: int, what: str, tables) -> int:
+def _require(idx: int, what: str) -> int:
     if idx < 0:
         raise TokenizerError("target %s 不在候选表 (target-in-mask 必须 100%%)"
                              % what)
@@ -922,8 +872,8 @@ def fields_to_action(f: ActionFields, tables: dict,
     §5.3). Pointer stays an observation-local handle."""
     verb = VERBS_13[f.verb]
     a = {"verb": verb}
-    if f.obj >= 0:
-        e = tables["obj_entries"][f.obj]
+    if 0 <= f.obj < len(obj_entries(tables)):
+        e = obj_entries(tables)[f.obj]
         pool, v = e["pool"], e["value"]
         if pool == "mech":
             a["mech"] = int(v)
@@ -968,11 +918,122 @@ def token_length_stats(observations: list, vocab: SemanticVocab,
         except TokenizerError:
             lens.append(-1)          # counted as over-limit, never truncated
     arr = np.asarray([l for l in lens if l > 0], dtype=np.float64)
-    n_over = int(sum(1 for l in lens if l < 0))
     return {
-        "n": len(lens), "n_over_limit": n_over,
+        "n": len(lens),
+        "n_over_limit": int(sum(1 for l in lens if l < 0)),
         "p50": float(np.percentile(arr, 50)) if len(arr) else 0.0,
         "p95": float(np.percentile(arr, 95)) if len(arr) else 0.0,
         "p99": float(np.percentile(arr, 99)) if len(arr) else 0.0,
         "max": float(arr.max()) if len(arr) else 0.0,
     }
+
+
+# ------------------------------------------------- token-level side swap
+_SWAP_TYPE = {
+    TT["SELF_UNIT"]: TT["OPP_UNIT"], TT["OPP_UNIT"]: TT["SELF_UNIT"],
+    TT["SELF_TECH"]: TT["OPP_TECH"], TT["OPP_TECH"]: TT["SELF_TECH"],
+    TT["SELF_TOWER"]: TT["OPP_TOWER"], TT["OPP_TOWER"]: TT["SELF_TOWER"],
+}
+
+
+def swap_token_arrays(ta: TokenArrays) -> TokenArrays:
+    """Token-level mirror of mirror_battle_obs (§6.1): sides exchange,
+    y negates, rotation flips; GLOBAL self/opp feature slots swap. Exact
+    inverse of itself — used by the value side-swap loss and the
+    symmetrized inference 0.5*(f(s) + inv_swap(f(swap(s))))."""
+    t2 = np.asarray([_SWAP_TYPE.get(int(t), int(t)) for t in ta.type],
+                    dtype=np.int64)
+    f2 = ta.feat.copy()
+    f2[:, FEAT_SLICES["y"]] = -f2[:, FEAT_SLICES["y"]]
+    unitish = np.isin(ta.type, [TT["SELF_UNIT"], TT["OPP_UNIT"]])
+    f2[unitish, FEAT_SLICES["rot"]] = \
+        1.0 - f2[unitish, FEAT_SLICES["rot"]]
+    sided = np.isin(ta.type, [TT["SELF_UNIT"], TT["OPP_UNIT"],
+                              TT["SELF_TECH"], TT["OPP_TECH"],
+                              TT["SELF_TOWER"], TT["OPP_TOWER"]])
+    f2[sided, FEAT_SLICES["side"]] = \
+        1.0 - f2[sided, FEAT_SLICES["side"]]
+    cls_glob = np.isin(ta.type, [TT["GLOBAL"]])
+    f2[cls_glob, FEAT_SLICES["hp"]] = ta.feat[cls_glob, FEAT_SLICES["flag"]]
+    f2[cls_glob, FEAT_SLICES["flag"]] = ta.feat[cls_glob, FEAT_SLICES["hp"]]
+    f2[cls_glob, FEAT_SLICES["value"]] = ta.feat[cls_glob, FEAT_SLICES["cd"]]
+    f2[cls_glob, FEAT_SLICES["cd"]] = ta.feat[cls_glob, FEAT_SLICES["value"]]
+    s2 = ta.side.copy()
+    m = s2 >= 0
+    s2[m] = 1 - s2[m]
+    return TokenArrays(
+        type=t2, sem=ta.sem.copy(), feat=f2,
+        x=ta.x.copy(), y=-ta.y, side=s2, group=ta.group.copy(),
+        air=ta.air.copy(), area=ta.area.copy(), mask=ta.mask.copy(),
+        index=dict(ta.index), n_tokens=ta.n_tokens)
+
+
+def bias_components(ta: TokenArrays, cfg: TokenizerConfig) -> np.ndarray:
+    """Vectorized [7,T,T] relative-bias component indices for one token
+    array (torch trainer path; the numpy reference lives in
+    relative_bias.relative_bias_components_numpy)."""
+    t = ta.n_tokens
+    dx = ta.x[:t, None] - ta.x[None, :t]
+    dy = ta.y[:t, None] - ta.y[None, :t]
+    side = ta.side[:t]
+    air = ta.air[:t]
+    area = ta.area[:t]
+    grp = ta.group[:t]
+    comp = np.stack([
+        np.searchsorted(cfg.dx_edges, dx, side="right"),
+        np.searchsorted(cfg.dy_edges, dy, side="right"),
+        np.searchsorted(cfg.dist_edges, np.hypot(dx, dy), side="right"),
+        (side[None, :] != side[:, None]).astype(np.int64)
+        * ((side[:, None] >= 0) & (side[None, :] >= 0)),
+        grp[:, None] * len(rb.TYPE_GROUPS) + grp[None, :],
+        (air[None, :] != air[:, None]).astype(np.int64) * 2
+        + ((air[:, None] == air[None, :]) & (air[:, None] == 1)).astype(np.int64),
+        ((area[:, None] >= 0) & (area[None, :] >= 0)).astype(np.int64)
+        * (1 + (area[:, None] != area[None, :])),
+    ], axis=0).astype(np.int64)
+    # neutral sentinels must land in fixed buckets (pad-independent bias)
+    neutral = (side < 0)
+    zero_dx = np.searchsorted(cfg.dx_edges, 0.0, side="right")
+    zero_dy = np.searchsorted(cfg.dy_edges, 0.0, side="right")
+    zero_d = np.searchsorted(cfg.dist_edges, 0.0, side="right")
+    comp[0, :, neutral] = zero_dx
+    comp[1, :, neutral] = zero_dy
+    comp[2, :, neutral] = zero_d
+    comp[3] = np.where((side[:, None] < 0) | (side[None, :] < 0), 2, comp[3])
+    comp[5] = np.where((air[:, None] < 0) | (air[None, :] < 0), 2, comp[5])
+    comp[6] = np.where((area[:, None] < 0) | (area[None, :] < 0), 2, comp[6])
+    return comp
+
+
+def collate_tokens(arrays: list, device=None) -> dict:
+    """Pad a list of TokenArrays to one batch (§4.5: padding tokens carry
+    mask 0 and never attend/pool/score)."""
+    b = len(arrays)
+    t = max(a.n_tokens for a in arrays)
+    out = {
+        "type": np.zeros((b, t), dtype=np.int64),
+        "sem": np.zeros((b, t), dtype=np.int64),
+        "feat": np.zeros((b, t, N_FEAT), dtype=np.float32),
+        "x": np.zeros((b, t), dtype=np.float32),
+        "y": np.zeros((b, t), dtype=np.float32),
+        "side": np.full((b, t), -1, dtype=np.int64),
+        "group": np.full((b, t), GROUP_INDEX["pad"], dtype=np.int64),
+        "air": np.full((b, t), -1, dtype=np.int64),
+        "area": np.full((b, t), -1, dtype=np.int64),
+        "pad_mask": np.zeros((b, t), dtype=np.float32),
+        "n_tokens": np.asarray([a.n_tokens for a in arrays], dtype=np.int64),
+    }
+    for i, a in enumerate(arrays):
+        n = a.n_tokens
+        out["type"][i, :n] = a.type[:n]
+        out["sem"][i, :n] = a.sem[:n]
+        out["feat"][i, :n] = a.feat[:n]
+        out["x"][i, :n] = a.x[:n]
+        out["y"][i, :n] = a.y[:n]
+        out["side"][i, :n] = a.side[:n]
+        out["group"][i, :n] = a.group[:n]
+        out["air"][i, :n] = a.air[:n]
+        out["area"][i, :n] = a.area[:n]
+        out["pad_mask"][i, :n] = 1.0
+    return out
+

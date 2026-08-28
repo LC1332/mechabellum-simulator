@@ -1,0 +1,45 @@
+{
+ "comment": "TValue tiny (§6.3 档位): 单测/32-128 样本 overfit/CPU smoke。正式值以 run 冻结 config 为准。",
+ "contract": {
+  "contract_version": "rl_transformer_contract_v1",
+  "observation_version": "transformer_obs_v2",
+  "action_version": "transformer_act_v2",
+  "tokenizer_version": "structured_token_v1",
+  "data_version": "transformer_data_v2"
+ },
+ "formal": false,
+ "model": {
+  "d_model": 96,
+  "n_layers": 4,
+  "n_heads": 4,
+  "d_ff": 256,
+  "dropout": 0.0,
+  "use_relbias": true,
+  "shared_backbone": true,
+  "use_ranking_loss": true,
+  "use_swap_loss": true,
+  "lambda_damage": 1.0,
+  "lambda_rank": 0.5,
+  "lambda_sym": 0.05,
+  "lambda_cal": 0.0,
+  "uncertainty": true,
+  "tokenizer": {"max_entity_tokens": 320, "max_history": 64,
+   "xy_grid": {"nx": 28, "ny": 24, "residual_bins": 8}}
+ },
+ "train": {
+  "epochs": 8,
+  "batch_size": 64,
+  "lr": 2e-3,
+  "weight_decay": 0.01,
+  "warmup_steps": 200,
+  "grad_clip": 5.0,
+  "seeds": [0, 1, 2],
+  "amp_bf16": false,
+  "tf32": true,
+  "shuffle_labels": false
+ },
+ "gpu": {
+  "allowlist": [1, 2, 3, 4, 5, 6, 7],
+  "reserved": [0]
+ }
+}

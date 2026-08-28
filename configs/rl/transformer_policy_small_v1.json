@@ -1,0 +1,65 @@
+{
+ "comment": "TPolicy-BC small: 主 ablation (history/END aux 开关 §6.4-4/5)。",
+ "contract": {
+  "action_version": "transformer_act_v2",
+  "contract_version": "rl_transformer_contract_v1",
+  "data_version": "transformer_data_v2",
+  "observation_version": "transformer_obs_v2",
+  "tokenizer_version": "structured_token_v1"
+ },
+ "formal": false,
+ "gpu": {
+  "allowlist": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  "reserved": [
+   0
+  ]
+ },
+ "model": {
+  "d_ff": 1536,
+  "d_model": 384,
+  "dropout": 0.1,
+  "lambda_end": 0.25,
+  "max_obj_cands": 512,
+  "max_ptr_cands": 64,
+  "n_heads": 6,
+  "n_layers_dec": 3,
+  "n_layers_enc": 8,
+  "n_rem_buckets": 9,
+  "tokenizer": {
+   "max_entity_tokens": 320,
+   "max_history": 64,
+   "xy_grid": {
+    "nx": 28,
+    "ny": 24,
+    "residual_bins": 8
+   }
+  },
+  "use_end_aux": true,
+  "use_history": true,
+  "use_relbias": true
+ },
+ "train": {
+  "amp_bf16": true,
+  "batch_size": 128,
+  "epochs": 24,
+  "grad_clip": 5.0,
+  "lr": 0.001,
+  "seeds": [
+   0,
+   1,
+   2
+  ],
+  "shuffle_labels": false,
+  "tf32": true,
+  "warmup_steps": 1000,
+  "weight_decay": 0.01
+ }
+}

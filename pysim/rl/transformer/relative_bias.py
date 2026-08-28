@@ -50,10 +50,13 @@ def dy_bucket(dy: float, edges: tuple = DEFAULT_DY_EDGES) -> int:
 
 
 def mirror_dy_bucket(b: int, edges: tuple = DEFAULT_DY_EDGES) -> int:
-    """dy' = -dy reflects bucket b to (n - b) when edges are symmetric
-    around 0 — checked numerically by tests/rl_transformer."""
+    """dy' = -dy reflects bucket b to (n-1-b) for symmetric edges — valid
+    for dy values strictly inside a bucket; boundary values (dy on an
+    edge, incl. 0) sit on shared edges, and the swap path RE-DERIVES
+    components from the mirrored geometry instead of reflecting indices
+    (exactness is checked by tests/rl_transformer)."""
     n = len(edges) + 1
-    return n - b
+    return (n - 1) - b
 
 
 def dist_bucket(dx: float, dy: float, edges: tuple = DEFAULT_DIST_EDGES) -> int:

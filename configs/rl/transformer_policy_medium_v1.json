@@ -1,0 +1,65 @@
+{
+ "comment": "TPolicy-BC medium: 正式候选, 7 卡 DDP (物理 GPU 1-7)。",
+ "contract": {
+  "action_version": "transformer_act_v2",
+  "contract_version": "rl_transformer_contract_v1",
+  "data_version": "transformer_data_v2",
+  "observation_version": "transformer_obs_v2",
+  "tokenizer_version": "structured_token_v1"
+ },
+ "formal": true,
+ "gpu": {
+  "allowlist": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  "reserved": [
+   0
+  ]
+ },
+ "model": {
+  "d_ff": 3072,
+  "d_model": 768,
+  "dropout": 0.1,
+  "lambda_end": 0.25,
+  "max_obj_cands": 512,
+  "max_ptr_cands": 64,
+  "n_heads": 12,
+  "n_layers_dec": 3,
+  "n_layers_enc": 12,
+  "n_rem_buckets": 9,
+  "tokenizer": {
+   "max_entity_tokens": 320,
+   "max_history": 64,
+   "xy_grid": {
+    "nx": 28,
+    "ny": 24,
+    "residual_bins": 8
+   }
+  },
+  "use_end_aux": true,
+  "use_history": true,
+  "use_relbias": true
+ },
+ "train": {
+  "amp_bf16": true,
+  "batch_size": 256,
+  "epochs": 32,
+  "grad_clip": 5.0,
+  "lr": 0.0006,
+  "seeds": [
+   0,
+   1,
+   2
+  ],
+  "shuffle_labels": false,
+  "tf32": true,
+  "warmup_steps": 2000,
+  "weight_decay": 0.01
+ }
+}

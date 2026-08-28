@@ -1,0 +1,73 @@
+{
+ "comment": "必做架构 ablation (§6.4): validation + 预注册 development seed 0; 正式配置冻结后再跑 3 seed。",
+ "development_seed": 0,
+ "policy": [
+  {
+   "config": "configs/rl/transformer_policy_small_v1.json",
+   "name": "tpolicy_nohistory",
+   "overrides": {
+    "use_history": false
+   }
+  },
+  {
+   "config": "configs/rl/transformer_policy_small_v1.json",
+   "name": "tpolicy_history_endaux",
+   "overrides": {}
+  },
+  {
+   "config": "configs/rl/transformer_policy_small_v1.json",
+   "name": "tpolicy_noendaux",
+   "overrides": {
+    "lambda_end": 0.0,
+    "use_end_aux": false
+   }
+  }
+ ],
+ "symmetry": [
+  {
+   "automatic": true,
+   "name": "raw_vs_symmetrized",
+   "note": "TValue 报告同时给出 f(s) 原始不对称性与对称化后残差 (§6.1)"
+  }
+ ],
+ "value": [
+  {
+   "name": "deepsets_v2",
+   "note": "同数据/同预算 DeepSets 复跑 (tools/train_battle_value.py, baseline)",
+   "use": "phase1_tool"
+  },
+  {
+   "config": "configs/rl/transformer_value_small_v1.json",
+   "name": "tvalue_nobias",
+   "overrides": {
+    "use_relbias": false
+   }
+  },
+  {
+   "config": "configs/rl/transformer_value_small_v1.json",
+   "name": "tvalue_bias",
+   "overrides": {}
+  },
+  {
+   "config": "configs/rl/transformer_value_small_v1.json",
+   "name": "tvalue_split_backbone",
+   "overrides": {
+    "shared_backbone": false
+   }
+  },
+  {
+   "config": "configs/rl/transformer_value_small_v1.json",
+   "name": "tvalue_norank",
+   "overrides": {
+    "use_ranking_loss": false
+   }
+  },
+  {
+   "config": "configs/rl/transformer_value_small_v1.json",
+   "name": "tvalue_noswap_loss",
+   "overrides": {
+    "use_swap_loss": false
+   }
+  }
+ ]
+}

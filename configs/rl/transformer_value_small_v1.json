@@ -1,0 +1,66 @@
+{
+ "comment": "TValue small (15-30M 档): 主 ablation / 3 seed / 单卡高吞吐 (§6.3)。",
+ "contract": {
+  "action_version": "transformer_act_v2",
+  "contract_version": "rl_transformer_contract_v1",
+  "data_version": "transformer_data_v2",
+  "observation_version": "transformer_obs_v2",
+  "tokenizer_version": "structured_token_v1"
+ },
+ "formal": false,
+ "gpu": {
+  "allowlist": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  "reserved": [
+   0
+  ]
+ },
+ "model": {
+  "d_ff": 1536,
+  "d_model": 384,
+  "dropout": 0.1,
+  "lambda_cal": 0.0,
+  "lambda_damage": 1.0,
+  "lambda_rank": 0.5,
+  "lambda_sym": 0.05,
+  "n_heads": 6,
+  "n_layers": 8,
+  "shared_backbone": true,
+  "tokenizer": {
+   "max_entity_tokens": 320,
+   "max_history": 64,
+   "xy_grid": {
+    "nx": 28,
+    "ny": 24,
+    "residual_bins": 8
+   }
+  },
+  "uncertainty": true,
+  "use_ranking_loss": true,
+  "use_relbias": true,
+  "use_swap_loss": true
+ },
+ "train": {
+  "amp_bf16": true,
+  "batch_size": 128,
+  "epochs": 24,
+  "grad_clip": 5.0,
+  "lr": 0.001,
+  "seeds": [
+   0,
+   1,
+   2
+  ],
+  "shuffle_labels": false,
+  "tf32": true,
+  "warmup_steps": 1000,
+  "weight_decay": 0.01
+ }
+}

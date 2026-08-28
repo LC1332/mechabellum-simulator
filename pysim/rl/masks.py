@@ -264,11 +264,16 @@ class RLAction:
     x: float | None = None
     y: float | None = None
     rot: int | None = None        # MOVE 0=keep/1=rotate/2=standard; BUY 0/1
+    # v2 (Transformer基线任务书 §5.3): ordered multi-point releases
+    # (capsule 2 / beacon 3) stay ONE action; empty on v1 paths
+    points: tuple = ()
 
     def to_dict(self) -> dict:
         d = {k: v for k, v in self.__dict__.items() if v is not None}
         if isinstance(d.get("tech"), tuple):
             d["tech"] = list(d["tech"])
+        if isinstance(d.get("points"), tuple):
+            d["points"] = [list(p) for p in d["points"]]
         return d
 
     @staticmethod
@@ -276,6 +281,8 @@ class RLAction:
         d = dict(d)
         if isinstance(d.get("tech"), list):
             d["tech"] = tuple(d["tech"])
+        if isinstance(d.get("points"), list):
+            d["points"] = tuple(tuple(p) for p in d["points"])
         return RLAction(**d)
 
 
@@ -322,14 +329,21 @@ def to_engine_action(a: RLAction, ego: int, hm: HandleMap) -> CanonicalAction:
             equipment_id=int(a.equip),
             unit_ref=EntityRef(handle=hm.resolve(int(a.handle)))))
     if v == "RELEASE_COMMANDER_SKILL":
-        pos = ((float(a.x), ey(a.y)) if a.y is not None else None)
+        # §5.3: ordered multi-point releases are ONE release (one slot);
+        # empty `points` keeps the exact v1 single-point behaviour
+        if getattr(a, "points", ()):
+            pos = tuple((float(px), ey(float(py)))
+                        for (px, py) in a.points)
+        else:
+            single = ((float(a.x), ey(a.y)) if a.y is not None else None)
+            pos = (single,) if single is not None else ()
         return CanonicalAction(ActionKind.RELEASE_COMMANDER_SKILL,
                                ReleaseCommanderSkillArgs(
                                    skill_index=(None if a.skill_slot is None
                                                 else int(a.skill_slot)),
                                    skill_id=(None if a.skill_id is None
                                              else int(a.skill_id)),
-                                   positions=(pos,) if pos is not None else (),
+                                   positions=pos,
                                    unit_ref=(None if a.handle is None else
                                              EntityRef(handle=hm.resolve(
                                                  int(a.handle))))))

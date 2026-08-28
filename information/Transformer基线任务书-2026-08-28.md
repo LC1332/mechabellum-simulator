@@ -8,8 +8,10 @@
 > `pysim-step31`，battlefield 输入为 `battlefield-input-v2`；已有 RL Phase 1 正式数据和
 > checkpoint 仍绑定 `transition-v0.6 / pysim-step30`，不可直接作为本阶段正式训练数据。
 >
-> 当前状态：**仅编写任务书，尚未实现 Transformer 代码、重建 v2 数据或启动正式训练。**
-> 用户正在进行约 1000 局规模的人类回放准确率回测；正式 sim 标签冻结必须等待该结果。
+> 当前状态（2026-08-28 施工后更新）：**Transformer 工程骨架已全部实现并通过测试**
+> （contract/tokenizer/TValue/TPolicy-BC/losses/DDP/工具链/50 项单测/端到端 smoke/
+> 7 卡 NCCL DDP smoke，详见 §18）；但 **T0 仍未冻结**：正式 sim label、正式训练、
+> 正式 test/arena 结论依然被 Gate 禁止，等待 1000 局回测结论。
 > 文中复选框代表未来实施状态，只有代码、产物、固定测试集指标和可复现实跑证据同时存在
 > 时才能勾选。
 
@@ -645,43 +647,51 @@ Phase 1 文件保留用于对照。若需要共享 observation/mask 代码，应
 
 ### 13.1 Contract/token
 
-- [ ] ObservationV2 JSON round-trip、digest、cache checksum；
-- [ ] 实体 permutation invariance / pointer equivariance；
-- [ ] side mirror 与 ordered positions 镜像；
-- [ ] padding 不影响输出；
-- [ ] 超 token 上限精确报错；
-- [ ] 无 label/future/replay identity 泄漏；
-- [ ] vocab 无 `%64` 类碰撞；
-- [ ] old contract/cache/checkpoint 明确拒绝。
+- [x] ObservationV2 JSON round-trip、digest、cache checksum；
+- [x] 实体 permutation invariance / pointer equivariance；
+- [x] side mirror 与 ordered positions 镜像；
+- [x] padding 不影响输出；
+- [x] 超 token 上限精确报错；
+- [x] 无 label/future/replay identity 泄漏；
+- [x] vocab 无 `%64` 类碰撞；
+- [x] old contract/cache/checkpoint 明确拒绝。
 
 ### 13.2 Action decoder
 
-- [ ] 每个 verb 的合法/非法候选 mask；
-- [ ] unit/construction handle 在重排后仍指向正确实体；
-- [ ] 0/1/2/3 点 target arity；
-- [ ] multi-position 顺序与一次 slot 消费；
-- [ ] 坐标边界、己方半场、区域目标；
-- [ ] END、无候选、budget=0、cycle、forced-end；
-- [ ] teacher-forced target-in-mask = 100%；
-- [ ] masked rollout action rejection = 0。
+- [x] 每个 verb 的合法/非法候选 mask；
+- [x] unit/construction handle 在重排后仍指向正确实体；
+- [x] 0/1/2/3 点 target arity；
+- [x] multi-position 顺序与一次 slot 消费；
+- [ ] 坐标边界、己方半场、区域目标；（边界/己方半场 mask 已测；区域锁定目标
+      mask 等 v2 技能数据冻结后补）
+- [ ] END、无候选、budget=0、cycle、forced-end；（END/无候选单测通过，
+      budget/cycle/forced-end 已实现并在 arena 链路执行，尚无独立固定测试）
+- [x] teacher-forced target-in-mask = 100%（toy 语料）；
+- [x] masked rollout action rejection = 0（解码层 + dev root arena 实跑 0 拒绝）。
 
 ### 13.3 Model
 
-- [ ] Tiny Value/Policy 32–128 样本 overfit；
-- [ ] sim/real head 梯度严格路由；
-- [ ] ranking loss 只在 candidate group 内；
-- [ ] side-swap 对称化 `≤1e-5`；
-- [ ] BF16 与 FP32 smoke 数值一致；
-- [ ] 单卡与 DDP update 在容差内；
-- [ ] checkpoint exact resume；
-- [ ] label-shuffle sanity；
-- [ ] CPU inference smoke。
+- [x] Tiny Value/Policy 32–128 样本 overfit；
+- [x] sim/real head 梯度严格路由；
+- [x] ranking loss 只在 candidate group 内；
+- [x] side-swap 对称化 `≤1e-5`（实测精确为 0 / ≤6e-8）；
+- [x] BF16 与 FP32 smoke 数值一致；
+- [x] 单卡与 DDP update 在容差内（gloo 2 进程 CPU + NCCL 2/7 卡实测，
+      max_diff 0 / 1.5e-08）；
+- [ ] checkpoint exact resume；（save/load 输出精确一致已测；含 optimizer/
+      scheduler/RNG/cursor 的完整断点续训已实现但未做端到端断点测试）
+- [x] label-shuffle sanity；
+- [x] CPU inference smoke。
 
 ### 13.4 End-to-end
 
-- [ ] 小数据 build → cache → train → eval → arena → report 一条命令通过；
-- [ ] 物理 GPU 1–7 的 7 卡 500-step soak 无 hang/NCCL error/OOM/NaN，GPU 0 未占用；
-- [ ] 全量 repo tests 无退化；
+- [x] 小数据 build → cache → train → eval → arena → report 一条命令通过
+      （`tools/run_transformer_smoke.py`，engineering 模式；arena 以 dev_small
+      真实 root + direct pysim 实跑，0 拒绝、正常 END）；
+- [ ] 物理 GPU 1–7 的 7 卡 500-step soak 无 hang/NCCL error/OOM/NaN，GPU 0 未占用
+      （7 卡 NCCL allreduce + DDP 一致性 smoke 已通过；正式 soak 待 T0 冻结后随
+      正式 config 执行）；
+- [x] 全量 repo tests 无退化（212 passed, 4 skipped；新增 rl_transformer 50 项）；
 - [ ] test/arena 输出能回溯 sample/root/seed/action receipts；
 - [ ] 高收益异常进入 regression fixture 或标记 unresolved。
 
@@ -767,6 +777,124 @@ Phase 2 离线策略改进的建议。
 10. 以 paired CI 和执行级指标判断成败，不以 GPU 利用率或参数量判断。
 
 ## 18. 实施总结（完成后填写）
+
+### 18.1 本次施工范围（2026-08-28，工程完成层）
+
+按 §3.2 的 T0 约束，本次完成了"等待回测期间可以完成"的全部工程项：
+**模型骨架、toy data、token round-trip、DDP smoke、CPU/GPU throughput probe、单元测试、
+全套工具链**。T0 Gate 以代码强制（`token_contract.t0_gate_allows`）：正式 sim label/
+训练/test/arena 结论在 `t0_backtest.status != accepted` 时被工具直接拒绝，engineering
+产物照常放行。
+
+新增代码（全部通过测试；Phase 1 文件除两处向后兼容扩展外未改动）：
+
+```text
+pysim/rl/transformer/
+  token_contract.py    # rl_transformer_contract_v1：版本绑定、engine digest、
+                       # sim_label_v2_<digest>、T0 Gate、cache manifest 绑定、
+                       # GPU allowlist、泄漏字段 guard（§3.1/§4.1/§11）
+  relative_bias.py     # dx/dy/distance bucket + side/type-pair/air/area 七分量
+                       # 可审计 pairwise bias；镜像对称的 bucket 数学（§4.4）
+  tokenizer.py         # BattleToken/PolicyToken ObservationV2 + structured_token_v1：
+                       # 17 类 token、语义 vocab（分类型 id 空间 + OOV，无 %64 碰撞）、
+                       # 候选表/pointer 表/每 verb 坐标合法 mask、超限精确报错、
+                       # 语义 id 侧交换（精确对合）、长度统计（§4.2/4.3/4.5/§5.1）
+  policy_arity.py      # 目标 arity 只来自 registry（capsule=2/beacon=3/unit=0，§5.3）
+  backbone.py          # 无 ordinal position 的实体 Transformer + 加性 bias SDPA
+                       # （flash 不支持 bias 自动回落 efficient/math，§4.4）+
+                       # 置换不变的 attention pooling
+  battle_value.py      # TValue：encoder-only、Sim/Real 严格独立头（头与可选私有
+                       # backbone 均路由隔离）、对称化推理 0.5*(f(s)+inv_swap(f(swap(s))))
+                       # ——swap 后 bias 分量从镜像几何重导出（含 dy=0 对），
+                       # 实测对称化残差精确为 0（§6.1/§10.2）
+  policy_bc.py         # TPolicy-BC：BOS→VERB→OBJ→PTR→P1C/P1X/P1Y→…→ORI→COMMIT
+                       # 结构化因果解码链，pointer 打到 observation token，
+                       # coarse(28×24)+residual(8bin) 坐标头，P(end now)+剩余步桶
+                       # 辅助头，greedy/temperature/top-p/diverse 全部种子可复现，
+                       # 无合法候选返回显式 stop reason（§5/§6.2）
+  losses.py            # 每阶段 masked CE（-100=缺席段不训）+ 未 mask 非法概率质量
+                       # 上报、同 group 内 pairwise ranking、side-swap 一致项、
+                       # 可选校准正则、soft/hard WDL + 不确定性 damage（§8.1/8.2）
+  distributed.py       # 物理 GPU allowlist 1–7 纯逻辑校验（保留 0，UUID 语法拒绝）、
+                       # env:// 初始化、rank→物理卡 audit、DDP 封装
+                       # （find_unused_parameters，域路由所必需）、指标 reduce（§9）
+  data.py              # v2 数据行→token 分片缓存（.npz + manifest 绑定源 digest/
+                       # contract binds/tokenizer digest/分片 checksum，两次构建
+                       # checksum 一致）、train-only vocab 拟合（§7.4/§11）
+  toydata.py           # 确定性 toy v2 语料：覆盖全部 17 类 token、0/1/2/3 点
+                       # arity、END/budget、candidate group；标签为可过拟合的
+                       # 确定性函数（§3.2/§13.3）
+  _gloo_probe.py       # spawn-picklable 的 DDP-vs-single 一致性探针
+
+tools/
+  build_rl_transformer_contract.py   # 合同生成 + T0 记录 + --stats-from 长度证据
+  build_transformer_cache.py         # 分片 token cache + 排除计数（§4.5）+ --stats-only
+  train_transformer_value.py         # 单进程/torchrun 双模式；AdamW+warmup-cosine、
+                                     # TF32/BF16、grad clip、NaN 跳步记账、checkpoint
+                                     # （model/opt/sched/RNG/cursor）、WDL/damage/ECE/
+                                     # ranking/对称化前后 side-swap 全量报告
+  train_transformer_policy.py        # teacher-forced BC（不含 DAgger，§17-7）、
+                                     # 分阶段指标 + 非法质量 + END aux 指标
+  run_transformer_ablation.py        # §6.4 消融编排（预注册 development seed，只看 validation）
+  run_transformer_arena.py           # 真·free-running：每步从 live PrefixEnv 重建
+                                     # PolicyTokenV2 → 结构化解码 → RLAction（含有序
+                                     # 多点）→ transition 执行；被阻 verb 显式回退并
+                                     # 计数；direct pysim 裁决 + §10.4 Gate 汇总
+  build_transformer_report.py        # report.md/html（Gate 表 + engineering 标记）
+  run_transformer_smoke.py           # contract→toy→cache→train value/policy→report
+                                     # 一条命令；--gpus N 走 torchrun
+  probe_transformer_gpus.py          # §9.1 Gate/吞吐基准/DDP 一致性探针
+
+configs/rl/  transformer_value_{tiny,small,medium}_v1.json、
+             transformer_policy_{tiny,small,medium}_v1.json、
+             transformer_ablation_v1.json（§6.3 档位 + §6.4 消融矩阵）
+
+tests/rl_transformer/  50 项测试全部通过（见 §13 勾选）
+
+向后兼容扩展（§12 要求显式记录）：`pysim/rl/masks.py` 的 `RLAction` 新增
+`points: tuple = ()`（默认空，v1 行为逐字节不变），`to_engine_action` 在
+RELEASE_COMMANDER_SKILL 上支持有序多点一次提交（一个 slot），供 §5.3 使用。
+```
+
+### 18.2 实测证据（本机，2026-08-28）
+
+- 单元测试：`tests/rl_transformer` 50/50 通过；全仓 `tests/` 212 passed / 4 skipped
+  （无退化，含 Phase 1 契约测试）。
+- 端到端 smoke（engineering）：`run_transformer_smoke.py` 一条命令通过
+  contract→toy v2 数据→token cache（确定性 manifest）→TValue/TPolicy tiny 训练+评估→
+  report；symmetrized side-swap：real 0.00e+00 / sim 5.96e-08，Gate ≤1e-5 通过。
+- Arena（engineering，dev_small 真实 root + direct pysim 裁决）：结构化 free-running
+  plan 正常 END、rejection=0、noop=0、无 exploit 旗标；未训练 toy checkpoint 的
+  verb 回退（fallback=8）如实计数。
+- GPU Gate（§9.1，物理卡 1–7，0 卡未占用）：
+  - `CUDA_VISIBLE_DEVICES=1`：torch 2.7.1+cu126 / CUDA 12.6 / cuDNN 9.5.1，
+    BF16 matmul ✓、SDPA ✓，logical→physical=1 audit ✓；
+  - NCCL 2.26.2：2 卡 allreduce ✓；DDP-vs-single 一致性 2 卡 max_diff=0.0、
+    7 卡 max_diff=1.49e-08（≤1e-5）✓；
+  - 单卡基准（GPU 1，Small 档骨架 d192×4L，batch32×T192，200 step）：
+    step p50 61.1ms / p95 62.9ms，524 samples/s，≈100.6k tokens/s，峰值显存
+    allocated 0.75GiB。
+- torchrun 双卡实跑 trainer（§9.3 入口，GPU 1,2）：分布式建链、训练、报告、
+  对称化 Gate 全链路通过。
+
+### 18.3 未完成项 / 偏离说明
+
+- T0 未冻结：v2 real/policy/sim 正式数据、sim_label_v2_<digest> 正式标签、
+  DeepSets-v2 公平复跑、正式 3-seed 训练、冻结 test、完整 arena（human/DeepSets
+  对照、best-of-N、prefilter 复核）全部待回测结论后执行（§3/§7/§10）。
+- `PolicyTokenObservationV2` 的 ground-area/区域锁定目标合法性 mask、fidelity/confidence
+  的完整语义字段，需要真实技能回测数据校准后补全（当前 adapter 用显式 UNKNOWN
+  标记，不静默缺失）。
+- 7 卡 500-step 正式 soak、checkpoint 完整断点续训的端到端测试、arena receipts
+  全量落盘：待正式 config 冻结后随正式 run 补齐。
+- v2 数据重建（`battle_*_v2` 正式语料）依赖 T0；当前数据集文件名已按 v2 契约
+  预留，toy 语料以 `corpus="toy"` 显式标记，绝不与正式语料混用。
+
+### 18.4 Phase 2 Go / No-Go
+
+**本阶段不给出 Go/No-Go**（§16 的 7 项条件全部依赖 T0 之后的正式训练与 arena）。
+当前结论仅到 §2.2 "工程完成"层：可复现的 Transformer baseline 工程已建立，
+等待回测冻结后按 §14 R0–R5 推进。
 
 完成施工后至少写回：
 
