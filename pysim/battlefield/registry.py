@@ -94,37 +94,46 @@ def _unmodeled(ident, mechanism) -> MechanicSupport:
 # (统御核心 round income +50 / death-wipe, 部署模块 redeploy rights, 生产线
 # periodic summons, 深渊信标) report on the settlement stage - they never
 # block runtime playability (step3 E6: known equipment stays playable).
+# step32: 生产线 periodic summons ARE modeled now (EquipmentRuntimeSpec
+# summon schedule; battle-transient, no cross-round state -> settlement
+# complete). 统御核心/部署模块/深渊信标 keep their cross-round gaps.
 _EQ_CROSS_ROUND = {
     13030010: "统御核心 round income +50 / death-wipe unmodeled (E5)",
     13040001: "部署模块 per-round redeploy rights unmodeled (E5)",
-    1306001: "生产线 periodic summons unmodeled (E4)",
-    1306002: "生产线 periodic summons unmodeled (E4)",
-    1306003: "生产线 periodic summons unmodeled (E4)",
     1306004: "深渊信标 unmodeled (E4)",
 }
 
 
 def _equipment_support(equipment_id: int) -> MechanicSupport:
-    from .effects.equipment import (EQUIPMENT_DEFS, EQUIPMENT_BATTLE_SPECS)
+    from .effects.equipment import (EQUIPMENT_DEFS, EQUIPMENT_BATTLE_SPECS,
+                                    EQUIPMENT_RUNTIME_SPECS,
+                                    EQUIPMENT_RUNTIME_VERSION)
     eid = int(equipment_id)
     d = EQUIPMENT_DEFS.get(eid)
     if d is None:
         return _unmodeled(eid, "equipment")
     spec = EQUIPMENT_BATTLE_SPECS.get(eid)
+    rt = EQUIPMENT_RUNTIME_SPECS.get(eid)
     # battle numbers carry the survey description + stacking assumption:
-    # provisional until the equipment oracle library lands (E6)
-    conf = "provisional" if spec is not None else "unsupported"
+    # provisional until the per-id oracle A/B lands (任务书 §4/§8.5)
+    conf = "provisional" \
+        if (spec is not None or rt is not None) else "unsupported"
     ev = ["step3:transition chain (charge/stock/bind/persist)"]
     if spec is not None:
         ev += list(spec.evidence)
-    else:
+    if rt is not None:
+        ev.append("runtime:" + EQUIPMENT_RUNTIME_VERSION +
+                  ":" + rt.digest())
+        ev += list(rt.evidence)
+    if spec is None and rt is None:
         note = _EQ_CROSS_ROUND.get(eid)
         ev.append("battle effect not implemented (battle_approximate)"
                   + ("; " + note if note else ""))
     settlement = _PARTIAL if eid in _EQ_CROSS_ROUND else _COMPLETE
     return MechanicSupport("equipment", eid, _COMPLETE, _COMPLETE,
                            _COMPLETE, _COMPLETE,
-                           _COMPLETE if spec is not None else _MISSING,
+                           _COMPLETE if (spec is not None or rt is not None)
+                           else _MISSING,
                            settlement, conf, tuple(ev))
 
 
@@ -370,10 +379,12 @@ def skill_cooldown_rounds(skill_id: int) -> int:
 
 def equipment_battle_warning(equipment_id: int) -> str | None:
     """Per-id approximation warning for battle outcomes; None when the id
-    has a battle spec (no longer approximate)."""
-    from .effects.equipment import EQUIPMENT_BATTLE_SPECS
+    has a battle spec or a runtime spec (no longer approximate)."""
+    from .effects.equipment import (EQUIPMENT_BATTLE_SPECS,
+                                    EQUIPMENT_RUNTIME_SPECS)
     eid = int(equipment_id)
-    if eid and eid not in EQUIPMENT_BATTLE_SPECS:
+    if eid and eid not in EQUIPMENT_BATTLE_SPECS \
+            and eid not in EQUIPMENT_RUNTIME_SPECS:
         return ("equipment:%d battle effect not simulated "
                 "(battle_approximate)" % eid)
     return None
@@ -381,7 +392,8 @@ def equipment_battle_warning(equipment_id: int) -> str | None:
 
 def registry_dump() -> dict:
     """Full registry view for reports/metrics regeneration (single source)."""
-    from .effects.equipment import EQUIPMENT_DEFS
+    from .effects.equipment import (EQUIPMENT_DEFS, EQUIPMENT_RUNTIME_SPECS,
+                                    EQUIPMENT_RUNTIME_VERSION)
     from ..skills import COMMANDER_SKILLS, TRANSITION_SKILLS, CONTRAPTIONS
     out = {"registry_version": REGISTRY_VERSION,
            "equipment": [], "commander_skill": [], "contraption": [],
@@ -390,6 +402,12 @@ def registry_dump() -> dict:
         s = mechanism_support("equipment", eid)
         d = s.as_dict()
         d["name"] = EQUIPMENT_DEFS[eid].name
+        # step32: runtime spec params ride the dump (digest-stable view)
+        rt = EQUIPMENT_RUNTIME_SPECS.get(eid)
+        if rt is not None:
+            d["runtime_version"] = EQUIPMENT_RUNTIME_VERSION
+            d["runtime"] = rt.params()
+            d["runtime_digest"] = rt.digest()
         out["equipment"].append(d)
     for sid in sorted(set(COMMANDER_SKILLS) | set(TRANSITION_SKILLS)):
         d = mechanism_support("commander_skill", sid).as_dict()
@@ -413,6 +431,9 @@ def registry_dump() -> dict:
         "equipment_total": len(out["equipment"]),
         "equipment_battle_implemented": sum(
             1 for e in out["equipment"] if e["battle"] == _COMPLETE),
+        "equipment_runtime_version": EQUIPMENT_RUNTIME_VERSION,
+        "equipment_runtime_implemented": sum(
+            1 for e in out["equipment"] if e.get("runtime")),
         "equipment_selection_coverage_top4": "1168/2318 = 50.4%",
         "verified_mechanisms": sum(
             1 for grp in ("commander_skill", "contraption", "tower_skill",

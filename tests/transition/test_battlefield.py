@@ -591,7 +591,10 @@ def test_registry_six_stage_closure():
 def test_registry_dump_metrics():
     d = registry.registry_dump()
     assert d["summary"]["equipment_total"] == 25
-    assert d["summary"]["equipment_battle_implemented"] == 7
+    # step32: 7 static E2 specs + 11 runtime specs (任务书 selected IDs,
+    # 次级增幅核心 rides the runtime table's static block)
+    assert d["summary"]["equipment_battle_implemented"] == 18
+    assert d["summary"]["equipment_runtime_implemented"] == 11
     names = {e["ident"] for e in d["equipment"]}
     assert {13030001, 13030002, 13030003, 13030005, 13030004, 13030006,
             13030007} <= names

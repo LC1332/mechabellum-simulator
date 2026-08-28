@@ -58,3 +58,11 @@ python benchmarks/run.py --lib all --regen-exp
   （`step29_provenance.json` 为 step29 烘焙口径的权威来源）
 - `data/calib/<N>/`（数字目录）—— 早期逐轮校准覆写历史
 - web 播放器 `http://127.0.0.1:8300/bench` 可以逐场回放对拍差异
+
+## 动态装备场景包（step32）
+
+- `run_equipment.py` —— 静态 E2 装备 9 场景 A/B（`data/equipment_scenarios.json`）
+- `run_equipment_runtime.py` —— step32 动态装备 12 场景 control/treatment 双臂
+  （`data/equipment_runtime_scenarios/equipment-runtime-v1.json`），校验机制方向
+  expect（数值 provisional）；oracle 记录落 `data/equipment_oracle/` 后才能升级
+  confidence（见该目录 README）。

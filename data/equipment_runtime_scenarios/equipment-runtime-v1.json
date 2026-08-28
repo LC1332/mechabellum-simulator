@@ -1,0 +1,808 @@
+{
+ "scenarios_version": "equipment-runtime-v1",
+ "task": "pysim动态装备与伤害管线修正任务书-2026-08-28",
+ "note": "expect 只记录机制方向/任务书文案值, 数值 confidence 全部 provisional; oracle 对拍见 data/equipment_oracle/",
+ "seed": 20220822,
+ "scenarios": [
+  {
+   "name": "eq_secondary_core_dps",
+   "equipment_id": 13030009,
+   "carrier_mech": 7,
+   "level": 1,
+   "note": "次级增幅核心 攻击+22%/生命+22% (任务书用户注记, oracle 待证)",
+   "expect": {
+    "direction": "survival_gain",
+    "hp_mult": 0.22,
+    "dmg_mult": 0.22
+   },
+   "arms": [
+    {
+     "name": "eq_secondary_core_dps_ctrl",
+     "equipment_id": 0,
+     "units0": [
+      {
+       "mech": 7,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 10,
+       "level": 1,
+       "x": 100.0,
+       "y": 80.0
+      }
+     ],
+     "skills0": null,
+     "skills1": null,
+     "techs0": null
+    },
+    {
+     "name": "eq_secondary_core_dps_treat",
+     "equipment_id": 13030009,
+     "units0": [
+      {
+       "mech": 7,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 10,
+       "level": 1,
+       "x": 100.0,
+       "y": 80.0
+      }
+     ],
+     "skills0": null,
+     "skills1": null,
+     "techs0": null
+    }
+   ]
+  },
+  {
+   "name": "eq_photon_coating_emp_early",
+   "equipment_id": 1305003,
+   "carrier_mech": 1,
+   "level": 1,
+   "note": "开战30s内 EMP 被涂层拦截",
+   "expect": {
+    "emp_blocked": true
+   },
+   "arms": [
+    {
+     "name": "eq_photon_coating_emp_early_ctrl",
+     "equipment_id": 0,
+     "units0": [
+      {
+       "mech": 1,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 9,
+       "level": 1,
+       "x": 100.0,
+       "y": 80.0
+      }
+     ],
+     "skills0": null,
+     "skills1": [
+      {
+       "kind": "emp",
+       "x": -100.0,
+       "y": -80.0,
+       "radius": 200.0,
+       "t": 5.0,
+       "shield_damage": 10
+      }
+     ],
+     "techs0": null
+    },
+    {
+     "name": "eq_photon_coating_emp_early_treat",
+     "equipment_id": 1305003,
+     "units0": [
+      {
+       "mech": 1,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 9,
+       "level": 1,
+       "x": 100.0,
+       "y": 80.0
+      }
+     ],
+     "skills0": null,
+     "skills1": [
+      {
+       "kind": "emp",
+       "x": -100.0,
+       "y": -80.0,
+       "radius": 200.0,
+       "t": 5.0,
+       "shield_damage": 10
+      }
+     ],
+     "techs0": null
+    }
+   ]
+  },
+  {
+   "name": "eq_photon_coating_emp_late",
+   "equipment_id": 1305003,
+   "carrier_mech": 1,
+   "level": 1,
+   "note": "30s 窗口外 EMP 生效 (边界 oracle 待证)",
+   "expect": {
+    "emp_blocked": false
+   },
+   "arms": [
+    {
+     "name": "eq_photon_coating_emp_late_ctrl",
+     "equipment_id": 0,
+     "units0": [
+      {
+       "mech": 1,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 9,
+       "level": 1,
+       "x": 100.0,
+       "y": 80.0
+      }
+     ],
+     "skills0": null,
+     "skills1": [
+      {
+       "kind": "emp",
+       "x": -100.0,
+       "y": -80.0,
+       "radius": 200.0,
+       "t": 30.1,
+       "shield_damage": 10
+      }
+     ],
+     "techs0": null
+    },
+    {
+     "name": "eq_photon_coating_emp_late_treat",
+     "equipment_id": 1305003,
+     "units0": [
+      {
+       "mech": 1,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 9,
+       "level": 1,
+       "x": 100.0,
+       "y": 80.0
+      }
+     ],
+     "skills0": null,
+     "skills1": [
+      {
+       "kind": "emp",
+       "x": -100.0,
+       "y": -80.0,
+       "radius": 200.0,
+       "t": 30.1,
+       "shield_damage": 10
+      }
+     ],
+     "techs0": null
+    }
+   ]
+  },
+  {
+   "name": "eq_anti_jam_emp",
+   "equipment_id": 1308001,
+   "carrier_mech": 7,
+   "level": 1,
+   "note": "抗干扰: EMP disable+slow 整包免疫",
+   "expect": {
+    "emp_blocked": true
+   },
+   "arms": [
+    {
+     "name": "eq_anti_jam_emp_ctrl",
+     "equipment_id": 0,
+     "units0": [
+      {
+       "mech": 7,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 9,
+       "level": 1,
+       "x": 100.0,
+       "y": 80.0
+      }
+     ],
+     "skills0": null,
+     "skills1": [
+      {
+       "kind": "emp",
+       "x": -100.0,
+       "y": -80.0,
+       "radius": 200.0,
+       "t": 0.0
+      }
+     ],
+     "techs0": null
+    },
+    {
+     "name": "eq_anti_jam_emp_treat",
+     "equipment_id": 1308001,
+     "units0": [
+      {
+       "mech": 7,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 9,
+       "level": 1,
+       "x": 100.0,
+       "y": 80.0
+      }
+     ],
+     "skills0": null,
+     "skills1": [
+      {
+       "kind": "emp",
+       "x": -100.0,
+       "y": -80.0,
+       "radius": 200.0,
+       "t": 0.0
+      }
+     ],
+     "techs0": null
+    }
+   ]
+  },
+  {
+   "name": "eq_portable_shield_soak",
+   "equipment_id": 13010001,
+   "carrier_mech": 7,
+   "level": 1,
+   "note": "便携式护盾: 盾值=装备后 maxHP (至少挡一次语义 oracle Q2 待证)",
+   "expect": {
+    "shield": "max_hp",
+    "survive_longer": true
+   },
+   "arms": [
+    {
+     "name": "eq_portable_shield_soak_ctrl",
+     "equipment_id": 0,
+     "units0": [
+      {
+       "mech": 7,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 9,
+       "level": 1,
+       "x": 100.0,
+       "y": 80.0
+      }
+     ],
+     "skills0": null,
+     "skills1": null,
+     "techs0": null
+    },
+    {
+     "name": "eq_portable_shield_soak_treat",
+     "equipment_id": 13010001,
+     "units0": [
+      {
+       "mech": 7,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 9,
+       "level": 1,
+       "x": 100.0,
+       "y": 80.0
+      }
+     ],
+     "skills0": null,
+     "skills1": null,
+     "techs0": null
+    }
+   ]
+  },
+  {
+   "name": "eq_protective_barrier",
+   "equipment_id": 1307001,
+   "carrier_mech": 3,
+   "level": 1,
+   "note": "保护屏障 60000 跟随屏障 (半径30 cal; 覆盖语义 oracle Q3 待证)",
+   "expect": {
+    "barrier_hp": 60000.0,
+    "barrier_radius": 30.0
+   },
+   "arms": [
+    {
+     "name": "eq_protective_barrier_ctrl",
+     "equipment_id": 0,
+     "units0": [
+      {
+       "mech": 3,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 9,
+       "level": 1,
+       "x": 100.0,
+       "y": 80.0
+      }
+     ],
+     "skills0": null,
+     "skills1": [
+      {
+       "kind": "strike",
+       "x": -100.0,
+       "y": -80.0,
+       "damage": 8000.0,
+       "splash": 15.0,
+       "t": 2.0
+      }
+     ],
+     "techs0": null
+    },
+    {
+     "name": "eq_protective_barrier_treat",
+     "equipment_id": 1307001,
+     "units0": [
+      {
+       "mech": 3,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 9,
+       "level": 1,
+       "x": 100.0,
+       "y": 80.0
+      }
+     ],
+     "skills0": null,
+     "skills1": [
+      {
+       "kind": "strike",
+       "x": -100.0,
+       "y": -80.0,
+       "damage": 8000.0,
+       "splash": 15.0,
+       "t": 2.0
+      }
+     ],
+     "techs0": null
+    }
+   ]
+  },
+  {
+   "name": "eq_super_barrier",
+   "equipment_id": 1307002,
+   "carrier_mech": 3,
+   "level": 1,
+   "note": "超级屏障 180000 跟随屏障",
+   "expect": {
+    "barrier_hp": 180000.0,
+    "barrier_radius": 30.0
+   },
+   "arms": [
+    {
+     "name": "eq_super_barrier_ctrl",
+     "equipment_id": 0,
+     "units0": [
+      {
+       "mech": 3,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 9,
+       "level": 1,
+       "x": 100.0,
+       "y": 80.0
+      }
+     ],
+     "skills0": null,
+     "skills1": [
+      {
+       "kind": "strike",
+       "x": -100.0,
+       "y": -80.0,
+       "damage": 8000.0,
+       "splash": 15.0,
+       "t": 2.0
+      }
+     ],
+     "techs0": null
+    },
+    {
+     "name": "eq_super_barrier_treat",
+     "equipment_id": 1307002,
+     "units0": [
+      {
+       "mech": 3,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 9,
+       "level": 1,
+       "x": 100.0,
+       "y": 80.0
+      }
+     ],
+     "skills0": null,
+     "skills1": [
+      {
+       "kind": "strike",
+       "x": -100.0,
+       "y": -80.0,
+       "damage": 8000.0,
+       "splash": 15.0,
+       "t": 2.0
+      }
+     ],
+     "techs0": null
+    }
+   ]
+  },
+  {
+   "name": "eq_siphon_sustain",
+   "equipment_id": 1309001,
+   "carrier_mech": 1,
+   "level": 1,
+   "note": "汲取: HP+30% + 90% 吸血 (基数=实际伤害, receipt 化待 oracle)",
+   "expect": {
+    "hp_mult": 0.3,
+    "lifesteal": 0.9
+   },
+   "arms": [
+    {
+     "name": "eq_siphon_sustain_ctrl",
+     "equipment_id": 0,
+     "units0": [
+      {
+       "mech": 1,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 9,
+       "level": 1,
+       "x": 100.0,
+       "y": 80.0
+      }
+     ],
+     "skills0": null,
+     "skills1": null,
+     "techs0": null
+    },
+    {
+     "name": "eq_siphon_sustain_treat",
+     "equipment_id": 1309001,
+     "units0": [
+      {
+       "mech": 1,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 9,
+       "level": 1,
+       "x": 100.0,
+       "y": 80.0
+      }
+     ],
+     "skills0": null,
+     "skills1": null,
+     "techs0": null
+    }
+   ]
+  },
+  {
+   "name": "eq_nano_repair_sustain",
+   "equipment_id": 13020001,
+   "carrier_mech": 1,
+   "level": 1,
+   "note": "纳米维修 4.5% maxHP/s, 覆盖战地维修 (酸液禁疗 oracle Q5 待证)",
+   "expect": {
+    "regen_frac": 0.045,
+    "replaces_field_repair": true
+   },
+   "arms": [
+    {
+     "name": "eq_nano_repair_sustain_ctrl",
+     "equipment_id": 0,
+     "units0": [
+      {
+       "mech": 1,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 9,
+       "level": 1,
+       "x": 100.0,
+       "y": 80.0
+      }
+     ],
+     "skills0": null,
+     "skills1": null,
+     "techs0": null
+    },
+    {
+     "name": "eq_nano_repair_sustain_treat",
+     "equipment_id": 13020001,
+     "units0": [
+      {
+       "mech": 1,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 9,
+       "level": 1,
+       "x": 100.0,
+       "y": 80.0
+      }
+     ],
+     "skills0": null,
+     "skills1": null,
+     "techs0": null
+    }
+   ]
+  },
+  {
+   "name": "eq_tank_line",
+   "equipment_id": 1306001,
+   "carrier_mech": 4,
+   "level": 1,
+   "note": "坦克生产线: 13s x 2 铁锤 x 7 批 (首批时刻/继承 oracle Q6 待证)",
+   "expect": {
+    "summon_mech": 13,
+    "period": 13.0,
+    "count": 2,
+    "batches": 7
+   },
+   "arms": [
+    {
+     "name": "eq_tank_line_ctrl",
+     "equipment_id": 0,
+     "units0": [
+      {
+       "mech": 4,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 10,
+       "level": 1,
+       "x": 150.0,
+       "y": 100.0
+      }
+     ],
+     "skills0": null,
+     "skills1": null,
+     "techs0": null
+    },
+    {
+     "name": "eq_tank_line_treat",
+     "equipment_id": 1306001,
+     "units0": [
+      {
+       "mech": 4,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 10,
+       "level": 1,
+       "x": 150.0,
+       "y": 100.0
+      }
+     ],
+     "skills0": null,
+     "skills1": null,
+     "techs0": null
+    }
+   ]
+  },
+  {
+   "name": "eq_mustang_line",
+   "equipment_id": 1306002,
+   "carrier_mech": 4,
+   "level": 1,
+   "note": "野马生产线: 11s x 4 野马 x 8 批",
+   "expect": {
+    "summon_mech": 7,
+    "period": 11.0,
+    "count": 4,
+    "batches": 8
+   },
+   "arms": [
+    {
+     "name": "eq_mustang_line_ctrl",
+     "equipment_id": 0,
+     "units0": [
+      {
+       "mech": 4,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 10,
+       "level": 1,
+       "x": 150.0,
+       "y": 100.0
+      }
+     ],
+     "skills0": null,
+     "skills1": null,
+     "techs0": null
+    },
+    {
+     "name": "eq_mustang_line_treat",
+     "equipment_id": 1306002,
+     "units0": [
+      {
+       "mech": 4,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 10,
+       "level": 1,
+       "x": 150.0,
+       "y": 100.0
+      }
+     ],
+     "skills0": null,
+     "skills1": null,
+     "techs0": null
+    }
+   ]
+  },
+  {
+   "name": "eq_steelball_line",
+   "equipment_id": 1306003,
+   "carrier_mech": 4,
+   "level": 1,
+   "note": "钢球生产线: 16s x 2 钢球 x 6 批",
+   "expect": {
+    "summon_mech": 8,
+    "period": 16.0,
+    "count": 2,
+    "batches": 6
+   },
+   "arms": [
+    {
+     "name": "eq_steelball_line_ctrl",
+     "equipment_id": 0,
+     "units0": [
+      {
+       "mech": 4,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 10,
+       "level": 1,
+       "x": 150.0,
+       "y": 100.0
+      }
+     ],
+     "skills0": null,
+     "skills1": null,
+     "techs0": null
+    },
+    {
+     "name": "eq_steelball_line_treat",
+     "equipment_id": 1306003,
+     "units0": [
+      {
+       "mech": 4,
+       "level": 1,
+       "x": -100.0,
+       "y": -80.0
+      }
+     ],
+     "units1": [
+      {
+       "mech": 10,
+       "level": 1,
+       "x": 150.0,
+       "y": 100.0
+      }
+     ],
+     "skills0": null,
+     "skills1": null,
+     "techs0": null
+    }
+   ]
+  }
+ ]
+}

@@ -33,6 +33,14 @@ from .deploy import (formation_positions, MAP_X, MAP_Y,
 # battlefield E2 equipment table (single source; battlefield.effects imports
 # nothing from the engine so this cannot cycle)
 from .battlefield.effects.equipment import EQUIPMENT_BATTLE_SPECS as _EQ_SPECS
+# step32 动态装备 runtime table (任务书 T1/T2): composite runtime specs +
+# unified StatusKind bits; equipment_static_spec keeps the E2 static stage
+# semantics (legacy 7 ids byte-identical) while runtime-only static blocks
+# (次级增幅核心/汲取模块) ride the same stage.
+from .battlefield.effects.equipment import (
+    EQUIPMENT_RUNTIME_SPECS as _EQ_RUNTIME,
+    STATUS_BITS as _STATUS_BITS,
+    equipment_static_spec as _eq_static_spec)
 
 DT = 0.01                 # 100 Hz
 FIGHT_TIME = 120.0
@@ -56,6 +64,24 @@ def load_calib():
         except Exception:
             _CALIB_CACHE = {}
     return _CALIB_CACHE
+
+
+def _parse_id_set(val):
+    """step32 equipment flag parser: "" / None -> empty; "1305003;1308001"
+    (or comma form) -> {1305003, 1308001}; also accepts a real set/tuple."""
+    if not val:
+        return set()
+    if isinstance(val, (set, frozenset)):
+        return {int(x) for x in val}
+    if isinstance(val, (tuple, list)):
+        return {int(x) for x in val}
+    out = set()
+    for tok in str(val).replace(";", ",").split(","):
+        tok = tok.strip()
+        if tok:
+            out.add(int(float(tok)))
+    return out
+
 # step9 flank (sneak) teleport: units deployed in the enemy half materialize
 # over FLANK_DELAY seconds (quick-teleport officer 10009 halves it). During
 # teleport the unit IS targetable, cannot attack or move, and its HP grows
@@ -324,7 +350,18 @@ class Battle:
                      "chaff_xsep": 0, "sep_tan": 0.0,
                      #   wc_set: 逐兵种 weaponCount 覆写 "mid:n" (泰山 2 案)
                      "wc_set": "",
-                     "bld_term": 0}
+                     "bld_term": 0,
+                     # ---- step32 动态装备 runtime flags (任务书 T0/T1;
+                     # 逐机制 feature flag, A/B 一次只切一个 ID) ----
+                     #   eq_runtime: master 开关 (静态 E2 四数值不受它管,
+                     #     A/B 的 OFF 臂由 runner 直接清 equipmentId)
+                     #   eq_off / eq_only: 分号分隔的装备 ID 集合 —— eq_off
+                     #     停用这些 ID 的 runtime 行为, eq_only 只保留集合内
+                     #     的 (单机制隔离)
+                     #   eq_ledger: DamageReceipt 记账 (0=关, 1=auto 场上有
+                     #     runtime 装备才记, 2=强制)
+                     "eq_runtime": 1, "eq_off": "", "eq_only": "",
+                     "eq_ledger": 1}
         self.tower_mods = {}        # team -> {"range": +m (ranged only), "speed": +m}
         self._pending = []          # (team, mech_id, level, x, y, is_rotate)
         self._towers = []           # (team, x, y, strengthen)
@@ -355,6 +392,14 @@ class Battle:
         self.end_tick = 0
         self.kills = []             # {t, killer, victim, kmech, vmech, kteam}
         self.total_damage = 0.0
+        # step32 T2: actual-damage ledger. Each settled event appends one
+        # DamageReceipt dict (see _apply_damage); filled only when a runtime
+        # equipment is on the field (opts.eq_ledger, 0=off/1=auto/2=force).
+        self.damage_receipts = []
+        self._receipt_seq = 0
+        # step32 T3: auditable status channel events
+        # (status_apply/blocked/clear/expire as dicts).
+        self.status_events = []
         # step22 T4: per-card credited damage (card_idx -> float), 与
         # total_damage 同口径 (超杀截断); killerless (splash share/strike
         # 二次事件) 不记账
@@ -532,6 +577,10 @@ class Battle:
             for px, py in formation_positions(gd, mech_id, x, y, is_rotate,
                                               scale=self.opts["form_scale"]):
                 pos_list.append((team, mech_id, max(1, level), px, py, c, spawn_at))
+        # step32 T1: per-card runtime equipment resolution (feature-flag
+        # gated). Static E2 modifiers are NOT gated here (legacy semantics);
+        # the A/B runner zeroes equipmentId for OFF arms instead.
+        self._eq_runtime = self._eq_runtime_map()
         for team, tx, ty, stg in self._towers:
             pos_list.append((team, TOWER_MECH, 1, tx, ty, -1, 0.0))
         # step19 tech_split (机械分裂 1308): pre-allocate DEAD ghost crawler
@@ -672,6 +721,46 @@ class Battle:
                     "cnt": int(ex.get("createCountPerTime", 1) or 1),
                     "delay": float(ex.get("productTime", 1.0) or 1.0),
                     "offs": ex.get("positions") or [[0.0, 35.0]]}
+        # step32 T6/T12: 装备生产线 —— 与 tech_summon 同一套 ghost-pool 模式
+        # (预分配死行 + 定时激活), schedule 来自 runtime spec (首批
+        # t=period, 每批 count 个, 共 batches 批; 召唤行 card_idx=-1 不属于
+        # 任何卡, 死亡经验走无主通道)。三类生产线只是数据项, 无逐 ID 分支。
+        self._eq_pool = []
+        if self._eq_runtime:
+            for c, spec in self._eq_runtime.items():
+                su = spec.summon
+                if su is None:
+                    continue
+                rows = []
+                px, py = self.cards[c].get("_pos", (0.0, 0.0))
+                for _ in range(int(su.count) * int(su.batches)):
+                    pos_list.append((self.cards[c]["team"], int(su.mech_id),
+                                     1, px, py, -1, 0.0))
+                    rows.append(len(pos_list) - 1)
+                if rows:
+                    self._eq_pool.append({
+                        "card": c, "rows": list(rows),
+                        "nxt": float(su.resolved_first_at()),
+                        "cnt": int(su.count), "period": float(su.period),
+                        "batches": int(su.batches), "done": 0})
+        # step32 T4/T10: 装备跟随屏障 —— 每张 carrier 卡一个 DEVICE_BARRIER
+        # 装置 (多模组共享一个, oracle Q3 待证), 覆盖/吸收/EMP 打盾全部走
+        # 现有 barrier 装置管线; step() 里每 tick 跟随 carrier 首个存活成员。
+        self._eq_bar_devs = []      # (device index k, card_idx)
+        if self._eq_runtime:
+            for c, spec in self._eq_runtime.items():
+                b = spec.barrier
+                if b is None:
+                    continue
+                rows = [p for p in pos_list if p[5] == c]
+                if not rows:
+                    continue
+                self._devices.append((self.cards[c]["team"], "barrier",
+                                      float(rows[0][3]), float(rows[0][4]),
+                                      {"hp": float(b.hp),
+                                       "radius": float(b.radius),
+                                       "eq_card": c}))
+                self._eq_bar_devs.append((len(self._devices) - 1, c))
         # step12: construction placements expand into module rows (wall = 5
         # modules sharing one group, magnet = 10); rows land BEFORE devices so
         # the `i >= n - ndev` device indexing in the closures stays valid
@@ -830,6 +919,9 @@ class Battle:
         # step24 转化重建用 (骇客): 保留层攻击能力数组
         self._can_air_rows = can_air.copy()
         self._can_gnd_rows = can_gnd.copy()
+        # step32 T4: 装备屏障的行索引 (device rows 是 pos_list 末段)
+        self._eq_follow_bars = [(self.n - ndev + k, c)
+                                for k, c in self._eq_bar_devs]
 
         # per-unit skill params (vectorized state machine)
         skill_idx = []
@@ -1197,6 +1289,10 @@ class Battle:
         for ent in getattr(self, "_swsummon_pool", {}).values():
             self.dead[ent["rows"]] = True
             self.hp[ent["rows"]] = 0.0
+        # step32 生产线召唤行出生即死 (step() 定时激活)
+        for ent in getattr(self, "_eq_pool", []):
+            self.dead[ent["rows"]] = True
+            self.hp[ent["rows"]] = 0.0
         for c in range(len(self.cards)):
             self._bake_card_mods(c, preserve_hp=False)
         # step9: teleporting units start at 0 HP and grow linearly to maxHP
@@ -1294,6 +1390,40 @@ class Battle:
         self.paralyse_until = {0: -1.0, 1: -1.0}
         self.towers_down = {0: 0, 1: 0}
         self.bld_groups_down = {0: 0, 1: 0}
+        # step32 T3/T8: equipment status-immunity channels. Permanent mask
+        # (抗干扰) + timed mask with its own expiry (光子涂层 30s window,
+        # riding the existing photon damage-taken channel).
+        self._eq_immune_perm = np.zeros(n, dtype=np.int64)
+        self._eq_immune_temp = np.zeros(n, dtype=np.int64)
+        self._eq_immune_until = np.full(n, -1.0)
+        if self._eq_runtime:
+            for _rc, _rspec in self._eq_runtime.items():
+                _rm = np.where((self.card_idx == _rc) & (~self.dead))[0]
+                if not len(_rm):
+                    continue
+                for _tm in _rspec.timed:
+                    if _tm.kind != "photon":
+                        continue
+                    self.photon_until[_rm] = np.maximum(
+                        self.photon_until[_rm], float(_tm.duration))
+                    self._eq_immune_temp[_rm] |= _tm.immunity_mask
+                    self._eq_immune_until[_rm] = np.maximum(
+                        self._eq_immune_until[_rm], float(_tm.duration))
+                    if _tm.dmg_taken_mult != 1.0:
+                        self._photon_taken = float(_tm.dmg_taken_mult)
+                    if self.trace_enabled:
+                        for _u in _rm:
+                            self.trace.append(
+                                "E|0.00|status_apply|%d|photon_eq|%.0f"
+                                % (int(self.uid[_u]), float(_tm.duration)))
+                if _rspec.immunity:
+                    self._eq_immune_perm[_rm] |= _rspec.immunity_mask
+                    if self.trace_enabled:
+                        for _u in _rm:
+                            self.trace.append(
+                                "E|0.00|status_apply|%d|eq_immune|%s"
+                                % (int(self.uid[_u]),
+                                   "+".join(_rspec.immunity)))
 
         # projectiles
         self._p_cap = _PROJ_CAP0
@@ -1354,6 +1484,47 @@ class Battle:
         return float(self.opts.get("tower_hp", TOWER_HP_BASE))
 
     # ---------- helpers ----------
+    # ---------- step32 equipment runtime (任务书 T1/T3) ----------
+    def _eq_runtime_map(self):
+        """card_idx -> EquipmentRuntimeSpec for cards whose equipment has an
+        active runtime spec (opts.eq_runtime master + eq_off/eq_only per-ID
+        feature flags; 一次只切一个机制的 A/B 由这两个集合表达)."""
+        if not self.opts.get("eq_runtime", 1):
+            return {}
+        off = _parse_id_set(self.opts.get("eq_off", ""))
+        only = _parse_id_set(self.opts.get("eq_only", ""))
+        out = {}
+        for c, card in enumerate(self.cards):
+            eid = int(card.get("equipment") or 0)
+            if not eid or eid in off or (only and eid not in only):
+                continue
+            rt = _EQ_RUNTIME.get(eid)
+            if rt is not None:
+                out[c] = rt
+        return out
+
+    def _status_immune(self, row, kind):
+        """任务书 T3: unified status-immunity check at the apply entry point.
+        Permanent mask (抗干扰) always active; the timed mask (光子涂层) only
+        inside its window. Fast path: zero masks -> False (no-equipment
+        battles never pay for this)."""
+        bit = _STATUS_BITS.get(kind)
+        if bit is None:
+            return False
+        row = int(row)
+        if self._eq_immune_perm[row] & bit:
+            return True
+        return bool(self._eq_immune_temp[row] & bit) \
+            and self._eq_immune_until[row] > self.time
+
+    def _status_block_note(self, row, kind, source="equipment"):
+        """Trace helper: auditable status_blocked event (no-op unless a
+        runtime equipment is on the field)."""
+        if self._eq_runtime:
+            self.status_events.append({
+                "t": round(self.time, 2), "victim": int(self.uid[row]),
+                "kind": kind, "action": "status_blocked", "source": source})
+
     def _bake_card_mods(self, c, preserve_hp=False):
         # apply this card's technologies to all member units at the card's
         # current level; recomputed from defs, so idempotent (also used on
@@ -1406,7 +1577,9 @@ class Battle:
             # battlefield E2 equipment stage (equipment_stage_v1): hp/dmg
             # MULTIPLY the post-tech+officer value, speed adds flat. Zero
             # for equipment_id 0, so non-equipment battles are unchanged.
-            eq = _EQ_SPECS.get(int(card.get("equipment") or 0))
+            # step32: runtime spec static blocks (次级增幅核心/汲取模块)
+            # resolve through the same accessor - legacy 7 ids unchanged.
+            eq = _eq_static_spec(card.get("equipment") or 0)
             if eq is not None:
                 new_max = new_max * (1.0 + eq.hp_mult)
                 new_dmg = new_dmg * (1.0 + eq.dmg_mult)
@@ -1434,6 +1607,21 @@ class Battle:
         # "只锁定 1 个单位, 上弹 +12%"; thunder3/dual_set 的 intrinsic
         # multi 不属于此类)
         self.inc_multi[members] = agg["multi"] > 0.5
+        # step32 T4/T5: equipment runtime effects applied AFTER the tech
+        # aggregate above (which owns regen/lifesteal) so the equipment
+        # overrides survive; re-derived on every bake (level-up re-bakes
+        # included, mirroring the tech eshield full-reset). shield = final
+        # baked maxHP (base for 便携式护盾); regen REPLACES tech 战地维修
+        # (任务书: 纳米维修包覆盖战地维修); lifesteal ADDS (汲取模块).
+        _rt = self._eq_runtime.get(c) if self._eq_runtime else None
+        if _rt is not None:
+            if _rt.shield_self == "max_hp":
+                self.shield[members] = np.maximum(self.shield[members],
+                                                  self.max_hp[members])
+            if _rt.regen_frac is not None:
+                self.regen[members] = float(_rt.regen_frac)
+            if _rt.lifesteal_frac is not None:
+                self.lifesteal[members] += float(_rt.lifesteal_frac)
         # step27 4127 电离 (additionalDamageTechDatas): 每击额外造成被击
         # 目标当前生命值 add_tgt_hp 比例伤害 (dmg_rate -0.7 走常规通道)
         self.add_hp[members] = 0.0
@@ -1879,6 +2067,11 @@ class Battle:
                 if t >= 0 and not self.dead[t] and self.target[i] != i \
                         and not (self.is_tower[t] or self.is_bld[t]
                                  or self.is_device[t]):
+                    # step32 T8: 抗干扰模块 blocks the whole hacker control
+                    # package (beam control + conversion + 1814 disable)
+                    if self._status_immune(int(t), "hacker"):
+                        self._status_block_note(int(t), "hacker")
+                        continue
                     self.hacked[t] = True
                     self.beaming[i] = True
                     self.hack_progress[t] += rate * RETARGET_TICKS * DT
@@ -2560,15 +2753,21 @@ class Battle:
             # step19 on-hit rider effects (direct hits only, not splash):
             # 电磁弹 disable, 引燃 pct-burn, fireIntensify ground fire
             # step5 T8: photon immunizes EMP + 引燃 (QA-4 user ruling)
+            # step32 T3/T8: equipment immunity (光子涂层/抗干扰) blocks the
+            # same way at the apply entry point; photon keeps precedence.
             if src >= 0:
-                if self.photon_until[tgt] > self.time:
-                    pass
-                else:
-                    if self.emp_dur[src] > 0:
-                        self.emp_until[tgt] = self.time + self.emp_dur[src]
-                    if self.ignite_atk[src] > 0:
-                        self.burn_pct_until[tgt] = self.time + 2.0
-                        self.burn_pct_rate[tgt] = self.ignite_atk[src]
+                _ph = self.photon_until[tgt] > self.time
+                _eq_emp = (not _ph) and self._status_immune(int(tgt), "emp")
+                _eq_burn = (not _ph) and self._status_immune(int(tgt), "burn")
+                if _eq_emp:
+                    self._status_block_note(int(tgt), "emp")
+                if _eq_burn:
+                    self._status_block_note(int(tgt), "burn")
+                if not _ph and not _eq_emp and self.emp_dur[src] > 0:
+                    self.emp_until[tgt] = self.time + self.emp_dur[src]
+                if not _ph and not _eq_burn and self.ignite_atk[src] > 0:
+                    self.burn_pct_until[tgt] = self.time + 2.0
+                    self.burn_pct_rate[tgt] = self.ignite_atk[src]
                 fa = self.fire_atk[src]
                 if fa is not None:
                     dps, rad, life = fa
@@ -2702,6 +2901,15 @@ class Battle:
             return
         v = np.array(self._ev_victim, dtype=np.int64)
         dm = np.array(self._ev_dmg) * self._amp_fac[v]
+        # step32 T2: actual-damage ledger. When armed, dm0 keeps the
+        # post-amp pre-mitigation raw per event and bar_take tracks the
+        # barrier-redirect absorption; receipts are appended at the credit
+        # stage below (shield/barrier/HP/overkill/prevented per event).
+        _ledger = self.opts.get("eq_ledger", 1) == 2 or (
+            self.opts.get("eq_ledger", 1) == 1
+            and bool(self._eq_runtime))
+        dm0 = dm.copy() if _ledger else None
+        bar_take = np.zeros(len(v)) if _ledger else None
         # step5 任务书 §5 T5: photon (damage taken x0.70, ALL channels) and
         # acid vulnerability (x2.5 on ATTACK damage only — killerless DoT /
         # area ticks never re-amplify their own source). Photon dominates:
@@ -2747,6 +2955,8 @@ class Battle:
                         take = min(self.hp[bi], dm[k])
                         self.hp[bi] -= take
                         dm[k] -= take
+                        if bar_take is not None:
+                            bar_take[k] += take
                         if self.hp[bi] <= 0:
                             self._on_barrier_down(bi, int(self._ev_killer[k]) if k < len(self._ev_killer) else -1)
                         if dm[k] <= 0:
@@ -2797,6 +3007,10 @@ class Battle:
             if extra_v:
                 v = np.concatenate([v, np.array(extra_v, dtype=np.int64)])
                 dm = np.concatenate([dm, np.array(extra_d)])
+                if dm0 is not None:
+                    dm0 = np.concatenate([dm0, np.array(extra_d)])
+                    bar_take = np.concatenate(
+                        [bar_take, np.zeros(len(extra_v))])
                 # keep the event lists aligned (shared events carry no
                 # killer; last_k/participants read them by index)
                 self._ev_victim.extend(extra_v)
@@ -2898,6 +3112,44 @@ class Battle:
                     c = min(d_eff, max(rem, 0.0))
                     credited[k] = c
                     rem -= c
+                    # step32 T2: DamageReceipt — same actual-damage figure
+                    # feeds lifesteal/damage reports/trace (任务书: 不再用
+                    # 发射前理论伤害). source_kind v1: attack vs environment
+                    # (killerless DoT/area/strike); tags keep the auditable
+                    # modifiers visible.
+                    if _ledger:
+                        _ki = int(self._ev_killer[k]) \
+                            if k < len(self._ev_killer) else -1
+                        _raw = float(dm0[k]) if dm0 is not None else d_eff
+                        _sh = float(stake[k]) if stake is not None else 0.0
+                        _bar = float(bar_take[k]) if bar_take is not None \
+                            else 0.0
+                        _bx = float(bextra[k]) if bextra is not None else 0.0
+                        _tags = []
+                        if _ki < 0:
+                            _tags.append("killerless")
+                        if _bx > 0:
+                            _tags.append("anti_shield")
+                        if k in bypass_idx:
+                            _tags.append("bypass")
+                        self._receipt_seq += 1
+                        self.damage_receipts.append({
+                            "ref": self._receipt_seq,
+                            "t": round(self.time, 4),
+                            "source_row": _ki,
+                            "source_card": int(self.card_idx[_ki])
+                            if _ki >= 0 else -1,
+                            "source_kind": "attack" if _ki >= 0
+                            else "environment",
+                            "victim_row": int(v[k]),
+                            "raw_damage": round(_raw, 3),
+                            "shield_absorbed": round(_sh, 3),
+                            "barrier_absorbed": round(_bar, 3),
+                            "hp_damage": round(max(0.0, c - _sh - _bar), 3),
+                            "overkill": round(max(0.0, d_eff - c), 3),
+                            "prevented": round(max(0.0, _raw - d_eff), 3),
+                            "killed": bool(rem <= 1e-9),
+                            "tags": _tags})
             self.total_damage += float(np.sum(credited))
             # step22 T4: per-card 记账 (同 total_damage 口径逐事件累加);
             # step24 骇客转化: 同时记 per-row (转化单位的伤害按转化后阵营计)
@@ -3088,9 +3340,20 @@ class Battle:
             # strength while the owner team is disabled)
             members = (~self.dead) & (self.team == team) & (~self.is_tower) \
                 & (~self.is_bld)
-            self._dmg_fac[members] = PARALYSE_DMG
-            self._spd_fac[members] = PARALYSE_SPEED
-            self._amp_fac[members] = PARALYSE_AMPLIFY
+            # step32 T8: 抗干扰模块 rows keep their factors at 1.0 (per-row
+            # paralysis immunity; vectorized path stays when no mask is set)
+            if np.any(self._eq_immune_perm) or np.any(self._eq_immune_temp):
+                for u2 in np.where(members)[0]:
+                    if self._status_immune(int(u2), "paralysis"):
+                        self._status_block_note(int(u2), "paralysis")
+                        continue
+                    self._dmg_fac[u2] = PARALYSE_DMG
+                    self._spd_fac[u2] = PARALYSE_SPEED
+                    self._amp_fac[u2] = PARALYSE_AMPLIFY
+            else:
+                self._dmg_fac[members] = PARALYSE_DMG
+                self._spd_fac[members] = PARALYSE_SPEED
+                self._amp_fac[members] = PARALYSE_AMPLIFY
             if self.trace_enabled:
                 self.trace.append("E|%.2f|paralyse|%d|%.2f" % (self.time, team, until))
 
@@ -3759,6 +4022,13 @@ class Battle:
                     math.hypot(self.x[u] - bx, self.y[u] - by) <= br
                     for _, bx, by, br in live_bars):
                 continue     # barrier-covered ground unit: fully immune
+            # step32 T8: 抗干扰/光子涂层 equipment immunity blocks the whole
+            # EMP package (disable + slow; 分量断言见 test_equipment_runtime).
+            # Checked before the photon branch so the blocked note carries
+            # the equipment source (photon keeps the same block outcome).
+            if self._status_immune(u, "emp"):
+                self._status_block_note(u, "emp")
+                continue
             if self.photon_until[u] > self.time:
                 if self.trace_enabled:
                     self.trace.append("E|%.2f|status_blocked|%d|photon|emp"
@@ -3842,7 +4112,9 @@ class Battle:
                 smoke_on[inside] = True
             elif a["kind"] == "acid":
                 # photon immunity blocks the acid status entirely (T8)
+                # step32 T8: equipment immunity (光子涂层/抗干扰) likewise
                 keep = np.array([self.photon_until[u] <= t
+                                 and not self._status_immune(int(u), "acid")
                                  for u in inside], dtype=bool)
                 inside = inside[keep]
                 acid_on[inside] = True
@@ -4147,6 +4419,46 @@ class Battle:
                                 self.time, int(self.team[g]), int(self.uid[g]),
                                 int(self.mech_id[g])))
                     ent["nxt"] += ent["period"]
+        # step32 T6/T12: 装备生产线激活 — 每period一批 count 个, 共 batches
+        # 批; carrier 死亡取消剩余队列 (任务书 T12 默认, oracle 待证);
+        # 召唤行不受 summon_row_cap/summon_max_batch 管 (文案批次数即上限,
+        # 池容量按文案理论最大值预分配, 不静默截断)。
+        if self._eq_pool:
+            for ent in self._eq_pool:
+                while ent["done"] < ent["batches"] and ent["nxt"] <= self.time \
+                        and ent["rows"]:
+                    members = np.where((self.card_idx == ent["card"])
+                                       & (~self.dead))[0]
+                    if not len(members):
+                        ent["rows"] = []
+                        if self.trace_enabled:
+                            self.trace.append(
+                                "E|%.2f|eq_summon_cancel|%d|%.2f"
+                                % (self.time, ent["card"], self.time))
+                        break
+                    take = min(ent["cnt"], len(ent["rows"]))
+                    anch = int(members[0])
+                    for j in range(take):
+                        g = ent["rows"].pop(0)
+                        _ang = 2.0 * math.pi * j / max(1, ent["cnt"])
+                        self.dead[g] = False
+                        self.hp[g] = self.max_hp[g]
+                        self.x[g] = self.x[anch] + math.cos(_ang) * 8.0
+                        self.y[g] = self.y[anch] + math.sin(_ang) * 8.0
+                        self.target[g] = -1
+                        self.state[g] = IDLE
+                        self.state_t[g] = 0.0
+                        self.first_attack[g] = True
+                        self.mv_target[g] = -1
+                        if self.trace_enabled:
+                            self.trace.append("E|%.2f|eq_summon|%d|%d|%d" % (
+                                self.time, int(self.team[g]),
+                                int(self.uid[g]), int(self.mech_id[g])))
+                    ent["done"] += 1
+                    ent["nxt"] += ent["period"]
+                    if self.trace_enabled:
+                        self.trace.append("E|%.2f|eq_summon_batch|%d|%d|%d" % (
+                            self.time, ent["card"], ent["done"], take))
         # step29 蜘蛛雷: 周期召唤 + 接敌自爆。雷行是预分配的死行, 每
         # period 在持有者身前 (y 镜像向敌) ±20,40 布 cnt 枚; 雷行走向最近
         # 敌 (mech 1002 速 24), 边缘接触 (<=2m) 即爆: 全额伤害 12m 溅射,
@@ -4550,6 +4862,17 @@ class Battle:
             self._px[:] = self.x
             self._py[:] = self.y
         self._update_projectiles()
+        # step32 T4/T10: 装备跟随屏障 — 在本 tick 移动/开火结算前贴到 carrier
+        # 卡首个存活成员的位置 (同 tick 跟随); carrier 死亡后原地冻结
+        # (oracle Q3 待证: 圆心更新频率/归属规则)。
+        if self._eq_follow_bars:
+            for _bi, _bc in self._eq_follow_bars:
+                if self.dead[_bi]:
+                    continue
+                _mem = np.where((self.card_idx == _bc) & (~self.dead))[0]
+                if len(_mem):
+                    self.x[_bi] = self.x[_mem[0]]
+                    self.y[_bi] = self.y[_mem[0]]
         self._apply_damage(tick)
         self._check_paralyse_expiry()
 
