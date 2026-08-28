@@ -12,6 +12,7 @@ import time
 from collections import Counter
 
 import numpy as np
+import torch
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -230,6 +231,37 @@ def main():
         A("| %s | %s |" % (g, c))
     A("")
 
+    # ---------------- T3/T4 free-running metrics from arena matches
+    am_path = os.path.join(rd, "arena_matches.jsonl.gz")
+    if os.path.exists(am_path):
+        rows_a = []
+        with gzip.open(am_path, "rt") as f:
+            for line in f:
+                rows_a.append(json.loads(line))
+        legs = [r for r in rows_a if r.get("matchup") != "best_of_n"]
+        n_leg = max(len(legs), 1)
+        forced = sum(1 for r in legs if r.get("forced_a")) + \
+            sum(1 for r in legs if r.get("forced_b"))
+        n_plans = 2 * n_leg
+        steps = [r.get("plan_a_steps", 0) for r in legs] + \
+            [r.get("plan_b_steps", 0) for r in legs]
+        noops = sum(r.get("plan_noops", 0) for r in legs)
+        A("### T3/T4 free-running 执行指标")
+        A("")
+        A("- 计划数 %d:正常 END 比例 %.4f(gate ≥ 0.99),forced-end %.4f"
+          "(gate < 0.01)" % (
+              n_plans, 1 - forced / n_plans, forced / n_plans))
+        A("- 动作数 mean %.1f / max %d;noop(执行无效果)动作 %d" % (
+              float(np.mean(steps)) if steps else 0,
+              max(steps) if steps else 0, noops))
+        exp_flags = Counter()
+        for r in rows_a:
+            for fl in r.get("exploits_a", []) + r.get("exploits_b", []):
+                exp_flags[fl] += 1
+        if exp_flags:
+            A("- exploit 信号:%s" % dict(exp_flags))
+        A("")
+
     # ---------------- run manifest (task §10)
     import glob as _glob
     try:
@@ -250,7 +282,7 @@ def main():
         "torch": _torch.__version__,
         "cuda_available": _torch.cuda.is_available(),
         "gpu": [_torch.cuda.get_device_name(i)
-                for i in range(_torch.cuda.is_count())]
+                for i in range(_torch.cuda.device_count())]
         if _torch.cuda.is_available() else [],
         "artifacts": sorted(os.path.basename(p) for p in
                             _glob.glob(os.path.join(rd, "*.json"))),
@@ -264,6 +296,103 @@ def main():
     }
     with open(os.path.join(rd, "run_manifest.json"), "w") as f:
         json.dump(manifest, f, indent=1, default=str)
+
+    # ---------------- predictions.jsonl.gz (task §10, value test rows)
+    try:
+        vck_p = os.path.join(rd, "checkpoints", "value_seed0.pt")
+        ds_p = os.path.join(rd, "datasets")
+        if os.path.exists(vck_p) and os.path.exists(
+                os.path.join(ds_p, "battle_real_v1.jsonl.gz")):
+            sys.path.insert(0, ROOT)
+            from pysim.rl.baselines import load_rows
+            from pysim.rl.features import Vocab as _V
+            from pysim.gamedata import GameData as _GD
+            from tools.train_battle_value import make_batch
+            from pysim.rl.models.battle_value import BattleValueNet
+            _gd2 = _GD(os.path.join(ROOT, "data", "gamedata.json"))
+            _v = _V.from_dict(torch.load(vck_p, map_location="cpu",
+                                         weights_only=False)["vocab"])
+            _m = BattleValueNet(_v.n_mech, _v.n_equip, n_tech=_v.n_tech)
+            _m.load_state_dict(torch.load(vck_p, map_location="cpu",
+                                          weights_only=False)["model"])
+            _m.eval()
+            te_rows = load_rows(os.path.join(ds_p,
+                                             "battle_real_v1.jsonl.gz"),
+                                split="test")
+            preds = []
+            with torch.no_grad():
+                for i in range(0, len(te_rows), 512):
+                    chunk = te_rows[i:i + 512]
+                    bb = make_batch(chunk, _v, "cpu")
+                    wl, dm = _m(bb, "real")
+                    import torch.nn.functional as _F
+                    pp = _F.softmax(wl, -1).cpu().numpy()
+                    for j, r in enumerate(chunk):
+                        preds.append({
+                            "sample_id": r["sample_id"], "split": "test",
+                            "y_wdl": r["y_wdl"],
+                            "p": [round(float(x), 5) for x in pp[j]],
+                            "dmg_pred": [round(float(dm[j, 0]), 5),
+                                         round(float(dm[j, 1]), 5)],
+                            "dmg_true": [r["y_damage_to_opp"],
+                                         r["y_damage_to_self"]]})
+            with gzip.open(os.path.join(rd, "predictions.jsonl.gz"),
+                           "wt") as f:
+                for r in preds:
+                    f.write(json.dumps(r) + "\n")
+    except Exception as e:
+        print("predictions dump skipped:", e)
+
+    # ---------------- plots/ (calibration + best-of-N curve)
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        plot_dir = os.path.join(rd, "plots")
+        os.makedirs(plot_dir, exist_ok=True)
+        if os.path.exists(os.path.join(rd, "predictions.jsonl.gz")):
+            rows_p = []
+            with gzip.open(os.path.join(rd, "predictions.jsonl.gz"),
+                           "rt") as f:
+                for line in f:
+                    rows_p = json.loads(line) and rows_p
+                    rows_p.append(json.loads(line))
+            conf = np.asarray([max(r["p"]) for r in rows_p])
+            pred = np.asarray([int(np.argmax(r["p"])) for r in rows_p])
+            corr = (pred == np.asarray([r["y_wdl"]
+                                        for r in rows_p])).astype(float)
+            bins = np.linspace(0.3, 1.0, 12)
+            xs, ys = [], []
+            for i in range(len(bins) - 1):
+                m = (conf > bins[i]) & (conf <= bins[i + 1])
+                if m.sum() >= 5:
+                    xs.append(conf[m].mean())
+                    ys.append(corr[m].mean())
+            fig, ax = plt.subplots(figsize=(4, 4))
+            ax.plot([0.3, 1], [0.3, 1], "k--", lw=0.8)
+            ax.plot(xs, ys, "o-")
+            ax.set_xlabel("confidence"); ax.set_ylabel("accuracy")
+            ax.set_title("V_real test reliability")
+            fig.tight_layout()
+            fig.savefig(os.path.join(plot_dir, "calibration.png"), dpi=90)
+            plt.close(fig)
+        if os.path.exists(am_path):
+            gains = [r.get("best_of_n_gain") for r in rows_a
+                     if r.get("matchup") == "best_of_n"]
+            if gains:
+                order = np.argsort(gains)
+                fig, ax = plt.subplots(figsize=(5, 3.5))
+                ax.plot(np.sort(np.asarray(gains)), marker="o", ms=3)
+                ax.axhline(0, color="k", lw=0.6)
+                ax.set_xlabel("roots (sorted)")
+                ax.set_ylabel("best-of-N gain")
+                ax.set_title("paired best-of-N improvement")
+                fig.tight_layout()
+                fig.savefig(os.path.join(plot_dir, "best_of_n.png"),
+                            dpi=90)
+                plt.close(fig)
+    except Exception as e:
+        print("plots skipped:", e)
 
     md = "\n".join(L)
     with open(os.path.join(rd, "report.md"), "w") as f:

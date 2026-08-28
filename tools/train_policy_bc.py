@@ -127,7 +127,7 @@ def collate(rows_feats, vocab, device, max_units=64):
     return B
 
 
-END_CLASS_WEIGHT = 5.0      # END is ~1/plan-len of samples; the T3 gate
+END_CLASS_WEIGHT = 8.0      # END is ~1/plan-len of samples; the T3 gate
                             # (正常 END >= 99%) needs the model to stop
 
 
@@ -318,7 +318,7 @@ def load_split(path, splits, vocab, gd, limit=0):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--run-dir", required=True)
-    ap.add_argument("--epochs", type=int, default=3)
+    ap.add_argument("--epochs", type=int, default=4)
     ap.add_argument("--batch-size", type=int, default=512)
     ap.add_argument("--lr", type=float, default=1e-3)
     ap.add_argument("--seed", type=int, default=0)

@@ -191,10 +191,12 @@ def main():
                 continue
             human = {0: {"actions": [], "engine_actions": w0.engine_actions,
                          "noops": w0.noops, "forced_end": False,
+                         "stop_reason": "end",
                          "steps": w0.n_exogenous + len(w0.samples),
                          "latency_s": 0.0, "final_state": w0.final_state},
                      1: {"actions": [], "engine_actions": w1.engine_actions,
                          "noops": w1.noops, "forced_end": False,
+                         "stop_reason": "end",
                          "steps": w1.n_exogenous + len(w1.samples),
                          "latency_s": 0.0, "final_state": w1.final_state}}
             done_rounds += 1
@@ -269,6 +271,8 @@ def main():
                         "plan_b_steps": pb["steps"],
                         "forced_a": pa["forced_end"],
                         "forced_b": pb["forced_end"],
+                        "stop_a": pa.get("stop_reason", ""),
+                        "stop_b": pb.get("stop_reason", ""),
                         "latency_a": pa["latency_s"],
                         "exploits_a": detect_exploits(pa, root),
                         "exploits_b": detect_exploits(pb, root),

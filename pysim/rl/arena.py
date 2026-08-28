@@ -6,6 +6,7 @@
 # are computed per replay group.
 from __future__ import annotations
 
+import json
 import time
 
 import numpy as np
@@ -201,7 +202,9 @@ class BCPolicy:
                     a.contraption = val
                 elif head == "equip":
                     a.equip = val
-        # skill releases with a position target need coordinates
+        # skill releases: position targets need coordinates, unit targets
+        # need a handle from the masked unit pointer (engine rejects
+        # 1100001/1000001 without a valid target)
         if v == "RELEASE_COMMANDER_SKILL":
             kinds = space.skill_target
             for i, (slot, sid) in enumerate(space.skill_cands):
@@ -210,6 +213,24 @@ class BCPolicy:
                         if a.x is None:
                             a.x = 0.0
                             a.y = -150.0
+                    elif kinds[i] == "unit":
+                        legal = [h for h, ok in zip(
+                            space.unit_cands,
+                            space.unit_mask.get("MOVE_UNIT",
+                                                [True] * len(
+                                                    space.unit_cands)))
+                            if ok]
+                        if not legal:
+                            return None
+                        scores = out["unit_scores"][0]
+                        if self.mode == "greedy":
+                            a.handle = legal[int(
+                                scores[legal].argmax().item())]
+                        else:
+                            probs = F.softmax(
+                                scores[legal] / self.temperature, -1)
+                            a.handle = legal[int(
+                                torch.multinomial(probs, 1).item())]
                     break
         return a
 
@@ -221,24 +242,43 @@ def space_to_dict(space):
 
 # ---------------------------------------------------------------- match
 def generate_plan(root, ego, policy, eco, gd, budget=MAX_PLAN_ACTIONS):
-    """Free-run one side's deploy plan from the root (independent shadow)."""
+    """Free-run one side's deploy plan from the root (independent shadow).
+
+    Stop reasons (task §8.2): end (model END_DEPLOY), cycle_stop (the same
+    action signature 3x in a row), no_op_stop (state digest unchanged 3
+    steps), budget (safety valve -> forced_end)."""
+    from ..transition.state_tools import state_digest
     env = PrefixEnv(root, ego, eco, gd, budget=budget)
     t0 = time.time()
     actions = []
-    forced = False
+    sig_run, last_sig = 0, None
+    noop_run, last_digest = 0, state_digest(env.state)
+    stop = "budget"
     while env.steps < budget:
         obs, space = env.observation()
         a = policy.act(obs, space)
         actions.append(a)
         env.apply(a)
         if a.verb == "END_DEPLOY":
+            stop = "end"
             break
-    else:
-        forced = True
+        sig = json.dumps(a.to_dict(), sort_keys=True, default=str)
+        sig_run = sig_run + 1 if sig == last_sig else 1
+        last_sig = sig
+        digest = state_digest(env.state)
+        noop_run = noop_run + 1 if digest == last_digest else 0
+        last_digest = digest
+        if sig_run >= 3:
+            stop = "cycle_stop"
+            break
+        if noop_run >= 3:
+            stop = "no_op_stop"
+            break
+    forced = stop == "budget"
     return {"actions": actions, "engine_actions": tuple(env.engine_log),
             "noops": list(env.noop_flags), "forced_end": forced,
-            "steps": env.steps, "latency_s": time.time() - t0,
-            "final_state": env.state}
+            "stop_reason": stop, "steps": env.steps,
+            "latency_s": time.time() - t0, "final_state": env.state}
 
 
 def play_joint(root, plan0, plan1, eco, gd, battle_seed):
