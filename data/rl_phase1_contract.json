@@ -1,0 +1,46 @@
+{
+ "action_profile": "rl_phase1_core_v1",
+ "action_version": "act_v1",
+ "contract_version": "rl_phase1_contract_v1",
+ "data_version": "data_v1",
+ "engine_version": "pysim-step30",
+ "exogenous_verbs": [
+  "gift",
+  "reinforce"
+ ],
+ "feature_profile": "min_public_v1",
+ "git_commit": "e83c26be8f1814449b08b5d94274b6494a2bf444",
+ "git_dirty": true,
+ "label_target_version": "wdl_damage_diff_v1",
+ "max_plan_actions": 64,
+ "max_units_pad": 64,
+ "noop_reason_codes": [
+  "EQUIPMENT_RESTRICTION_MISMATCH",
+  "EQUIPMENT_TARGET_NOT_ALLOWED",
+  "MISSING_RULE_DATA",
+  "UNSUPPORTED_ACTION",
+  "UNSUPPORTED_ACTION_FIELD"
+ ],
+ "notes": [
+  "未实现指挥官技能按'执行但无效果'处理(NOOP_REASON_CODES + fidelity flag)",
+  "V_sim/V_real 标签严格路由到各自的 domain head"
+ ],
+ "observation_version": "obs_v1",
+ "profile_verbs": [
+  "END_DEPLOY",
+  "BUY_UNIT",
+  "UNLOCK_UNIT",
+  "UPGRADE_UNIT",
+  "BUY_TECH",
+  "MOVE_UNIT",
+  "SELL_UNIT",
+  "USE_EQUIPMENT",
+  "RELEASE_COMMANDER_SKILL",
+  "ACTIVATE_ENERGY_TOWER_SKILL",
+  "STRENGTHEN_TOWER"
+ ],
+ "rl_code_version": "rl_phase1_v1",
+ "ruleset_version": "normal_1v1_replay_v0",
+ "schema_version": "transition-v0.6",
+ "sim_label_version": "sim_label_v1"
+}

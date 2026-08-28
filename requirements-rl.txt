@@ -1,0 +1,22 @@
+# RL Phase 1 训练依赖(pysim 本体只需 requirements.txt 的最小集)。
+# 本项目不直接安装整个文件;推荐做法是以带 CUDA torch 的现有环境为基底
+# 创建 overlay venv,再补齐以下依赖,避免重复下载 2GB+ 的 torch 轮子:
+#
+#   uv venv .venv-rl --python <带torch的python> --system-site-packages
+#   echo <基底site-packages路径> > .venv-rl/lib/python3.11/site-packages/_base.pth
+#   uv pip install --python .venv-rl/bin/python -r requirements-rl.txt
+#
+# 固定版本 = 本阶段 contract 的 dependency profile。
+
+# ---- 核心训练栈(基底 venv 应已提供,版本下限对齐 openpi-rbm)----
+# torch>=2.6,<2.8        # cu124/cu126 均可;基底 openpi-rbm = 2.7.1+cu126
+# numpy>=1.26,<2.3       # 基底 = 1.26.4
+
+# ---- 本阶段新增 ----
+scikit-learn>=1.5        # logistic / HistGradientBoosting baseline
+matplotlib>=3.9          # 报告图(calibration、热力图、best-of-N 曲线)
+
+# ---- 工具链 ----
+pytest>=8.3              # tests/rl/
+fastapi>=0.110           # 全量测试(tests/test_game_api.py)需要
+httpx>=0.27              # game api 测试客户端

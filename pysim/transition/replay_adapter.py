@@ -147,11 +147,16 @@ class ReplayAdapter:
         # (authoritative). Fallback for old corpora: snapshot presence +
         # UnlockUnit actions + every mech bought/granted anywhere in the
         # game (ChooseAdvanceTeam grants carry no UnlockUnit action).
+        # Prefix correctness (RL teacher forcing): only rounds BEFORE the
+        # snapshot round may pre-apply — the snapshot is pre-deploy, so the
+        # current round's own unlock/buy actions must stay executable.
         if round_rec.get("unlocked_units") is not None:
             unlocked = {int(u) for u in round_rec["unlocked_units"]}
         else:
             unlocked = {u.mech_id for u in units}
             for r in player_rec["rounds"]:
+                if int(r["round"]) >= int(before_round):
+                    continue
                 for a in r.get("actions") or []:
                     if a.get("type") == "UnlockUnit":
                         unlocked.add(int(a.get("UID", 0)))
@@ -181,6 +186,18 @@ class ReplayAdapter:
         twr = tuple(_as_int(x) for x in
                     (round_rec.get("towerStrengthen_raw") or (0, 0))[:2])
         max_hp = self._max_hp(round_rec, player_rec)
+        # Round-start officer equipment grants (增幅专家 10013 → 3×13030009
+        # at round 1): the replay snapshot carries no equipment-inventory
+        # field, so the adapter applies the same top-up advance_round uses.
+        # Explicit round-rec inventory (newer corpora) wins when present.
+        from .equipment import round_officer_equipment
+        if round_rec.get("equipment_inventory") is not None:
+            equipment = tuple(sorted(int(e) for e in
+                                     round_rec["equipment_inventory"]))
+        else:
+            equipment = tuple(sorted(round_officer_equipment(
+                tuple(int(o) for o in round_rec.get("officers") or ()),
+                int(before_round))))
         # step4 任务书 §1.2/QA#1: round-1 snapshot units are the OPENING
         # units — they have not fought a battle yet, so every one of them is
         # movable. Later rounds start with NO spawned rights: the round's own
@@ -200,6 +217,7 @@ class ReplayAdapter:
             commander_skills_raw=cs,
             tower_strengthen=twr,
             constructions_raw=cons,
+            equipment_inventory=equipment,
             spawned_this_round=spawned,
             bought_this_round=0)
 

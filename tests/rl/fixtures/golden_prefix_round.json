@@ -1,0 +1,135 @@
+{
+ "state_spec": {
+  "round": 1,
+  "supply": 0,
+  "income_inject": 300,
+  "max_hp": 5000,
+  "hp": 5000,
+  "officers": [
+   20005
+  ],
+  "unlocked_mechs": [
+   15,
+   21
+  ],
+  "units": [
+   {
+    "mech": 15,
+    "level": 1,
+    "exp": 0,
+    "x": -60.0,
+    "y": -80.0,
+    "index": 0
+   },
+   {
+    "mech": 15,
+    "level": 1,
+    "exp": 0,
+    "x": -130.0,
+    "y": -80.0,
+    "index": 1
+   },
+   {
+    "mech": 15,
+    "level": 1,
+    "exp": 0,
+    "x": -200.0,
+    "y": -70.0,
+    "index": 2
+   },
+   {
+    "mech": 21,
+    "level": 1,
+    "exp": 0,
+    "x": -95.0,
+    "y": -75.0,
+    "index": 3
+   },
+   {
+    "mech": 21,
+    "level": 1,
+    "exp": 0,
+    "x": -165.0,
+    "y": -75.0,
+    "index": 4
+   }
+  ],
+  "side1_units": [
+   {
+    "mech": 24,
+    "level": 1,
+    "exp": 0,
+    "x": 60.0,
+    "y": 80.0,
+    "index": 0
+   }
+  ]
+ },
+ "norm_entries": [
+  {
+   "t": "move",
+   "unit": 4,
+   "uid": 21,
+   "x": -95.0,
+   "y": -65.0,
+   "rot": false
+  },
+  {
+   "t": "move",
+   "unit": 0,
+   "uid": 15,
+   "x": -165.0,
+   "y": -65.0,
+   "rot": false
+  },
+  {
+   "t": "passthrough",
+   "raw_type": "ActiveBlueprint",
+   "raw_rec": {
+    "ID": 2
+   }
+  },
+  {
+   "t": "passthrough",
+   "raw_type": "ReleaseCommanderSkill",
+   "raw_rec": {
+    "ID": 0,
+    "SkillIndex": 0,
+    "ConstructionIndex": 2
+   },
+   "skill_index": 0
+  },
+  {
+   "t": "unlock",
+   "uid": 10,
+   "cost": 0
+  },
+  {
+   "t": "buy",
+   "uid": 10,
+   "x": 5.0,
+   "y": -160.0,
+   "game_index": 5,
+   "cost": 100
+  },
+  {
+   "t": "buy",
+   "uid": 10,
+   "x": 5.0,
+   "y": -180.0,
+   "game_index": 6,
+   "cost": 100
+  },
+  {
+   "t": "finish"
+  }
+ ],
+ "expected": {
+  "end_reason": "human_end",
+  "n_samples": 7,
+  "n_skipped": 1,
+  "final_supply": 0,
+  "n_units_after": 7
+ },
+ "_comment": "Derived from humen_rounds.json game 1 round 1 side 0 (blueprint-research + construction-recycle + unlock->buy) with a synthetic root state; norm entries use the normalizer's output shape."
+}
