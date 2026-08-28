@@ -54,7 +54,7 @@ def test_tiny_value_overfit(vocab, tok_cfg, tiny_value_cfg, big_toy_rows):
         i0 = (it * 16) % 32
         chunk = enc[i0:i0 + 16]
         tgt = {k: v[i0:i0 + 16] for k, v in targets.items()}
-        batch, comps = collate_value(chunk)
+        batch, comps = collate_value(chunk, tok_cfg=tok_cfg)
         loss, _ = value_loss(model, batch, comps["comp"], tgt,
                              tiny_value_cfg, tok_cfg, "real")
         opt.zero_grad(); loss.backward(); opt.step()
@@ -78,7 +78,7 @@ def test_tiny_policy_overfit(vocab, tok_cfg, tiny_policy_cfg, toy_rows):
     first = last = None
     for it in range(200):
         i0 = (it * 16) % 32
-        pb = collate_policy(enc[i0:i0 + 16])
+        pb = collate_policy(enc[i0:i0 + 16], tok_cfg=tok_cfg)
         logits = model(pb["batch"], pb["components"], pb["tables"],
                        pb["fields"])
         sm = build_stage_masks(pb["fields"], pb["tables"],
@@ -96,7 +96,7 @@ def test_tiny_policy_overfit(vocab, tok_cfg, tiny_policy_cfg, toy_rows):
     hit = 0
     with torch.no_grad():
         for i in range(0, len(enc), 16):
-            pb = collate_policy(enc[i:i + 16])
+            pb = collate_policy(enc[i:i + 16], tok_cfg=tok_cfg)
             logits = model(pb["batch"], pb["components"], pb["tables"],
                            pb["fields"])
             act = pb["fields"][:, 0] != -100
@@ -115,7 +115,7 @@ def test_domain_head_gradient_routing(vocab, tok_cfg, tiny_value_cfg,
     model = TValue(vocab, tiny_value_cfg, tok_cfg)
     targets = _value_targets(rows, 8)
 
-    batch, comps = collate_value(enc)
+    batch, comps = collate_value(enc, tok_cfg=tok_cfg)
     loss, _ = value_loss(model, batch, comps["comp"], targets,
                          tiny_value_cfg, tok_cfg, "sim")
     model.zero_grad()
@@ -144,7 +144,7 @@ def test_split_backbone_ablation_isolation(vocab, tok_cfg, tiny_value_cfg,
     enc = _value_batches(vocab, tok_cfg, rows, 8)
     model = TValue(vocab, tiny_value_cfg, tok_cfg)
     targets = _value_targets(rows, 8)
-    batch, comps = collate_value(enc)
+    batch, comps = collate_value(enc, tok_cfg=tok_cfg)
     loss, _ = value_loss(model, batch, comps["comp"], targets,
                          tiny_value_cfg, tok_cfg, "sim")
     model.zero_grad()
@@ -180,7 +180,7 @@ def test_side_swap_symmetrized_gate(vocab, tok_cfg, tiny_value_cfg,
     rows = toy_rows["real"][:16]
     enc = _value_batches(vocab, tok_cfg, rows, 16)
     model = TValue(vocab, tiny_value_cfg, tok_cfg).eval()
-    batch, comps = collate_value(enc)
+    batch, comps = collate_value(enc, tok_cfg=tok_cfg)
     with torch.no_grad():
         p0, d0 = model.predict_symmetric(batch, comps["comp"], "real")
         swb, swc = swapped_inputs(batch, comps["comp"], tok_cfg)
@@ -199,7 +199,7 @@ def test_bf16_fp32_smoke(vocab, tok_cfg, tiny_value_cfg, toy_rows):
     rows = toy_rows["real"][:8]
     enc = _value_batches(vocab, tok_cfg, rows, 8)
     model = TValue(vocab, tiny_value_cfg, tok_cfg).eval()
-    batch, comps = collate_value(enc)
+    batch, comps = collate_value(enc, tok_cfg=tok_cfg)
     with torch.no_grad():
         w32, d32, _ = model(batch, comps["comp"], "real")
         with torch.autocast("cpu", dtype=torch.bfloat16):
@@ -213,7 +213,7 @@ def test_checkpoint_exact_resume(vocab, tok_cfg, tiny_value_cfg, toy_rows):
     rows = toy_rows["real"][:4]
     enc = _value_batches(vocab, tok_cfg, rows, 4)
     model = TValue(vocab, tiny_value_cfg, tok_cfg).eval()
-    batch, comps = collate_value(enc)
+    batch, comps = collate_value(enc, tok_cfg=tok_cfg)
     with torch.no_grad():
         ref = model(batch, comps["comp"], "real")[0]
     import io
@@ -253,13 +253,13 @@ def test_label_shuffle_sanity(vocab, tok_cfg, tiny_value_cfg,
     targets = _value_targets(rows, 48)
     for it in range(120):
         i0 = (it * 16) % 32
-        batch, comps = collate_value(enc[i0:i0 + 16])
+        batch, comps = collate_value(enc[i0:i0 + 16], tok_cfg=tok_cfg)
         tgt = {k: v[i0:i0 + 16] for k, v in targets.items()}
         loss, _ = value_loss(model, batch, comps["comp"], tgt,
                              tiny_value_cfg, tok_cfg, "real")
         opt.zero_grad(); loss.backward(); opt.step()
     model.eval()
-    batch, comps = collate_value(enc[:24])
+    batch, comps = collate_value(enc[:24], tok_cfg=tok_cfg)
     tgt = {k: v[:24] for k, v in targets.items()}
     with torch.no_grad():
         p = torch.softmax(model(batch, comps["comp"], "real")[0], -1)
@@ -274,7 +274,7 @@ def test_cpu_inference_smoke(vocab, tok_cfg, tiny_value_cfg, tiny_policy_cfg,
     vrows = toy_rows["real"][:4]
     enc = _value_batches(vocab, tok_cfg, vrows, 4)
     vmodel = TValue(vocab, tiny_value_cfg, tok_cfg).eval()
-    batch, comps = collate_value(enc)
+    batch, comps = collate_value(enc, tok_cfg=tok_cfg)
     with torch.no_grad():
         p, d = vmodel.predict_symmetric(batch, comps["comp"], "sim")
     assert p.shape == (4, 3) and d.shape == (4, 2)
@@ -286,7 +286,7 @@ def test_cpu_inference_smoke(vocab, tok_cfg, tiny_value_cfg, tiny_policy_cfg,
                               tiny_policy_cfg.max_ptr_cands)
             for r in prows]
     pmodel = TPolicyBC(vocab, tiny_policy_cfg, tok_cfg).eval()
-    pb = collate_policy(penc)
+    pb = collate_policy(penc, tok_cfg=tok_cfg)
     fields, stop = pmodel.decode(pb["batch"], pb["components"],
                                  pb["tables"], mode="greedy")
     assert fields.shape[0] == 4

@@ -120,7 +120,8 @@ def main():
     torch.backends.cuda.matmul.allow_tf32 = bool(tr.get("tf32", True))
     use_bf16 = bool(tr.get("amp_bf16", False)) and device.type == "cuda"
 
-    # ---- data (cache if present, else direct encode)
+    # ---- data (token cache if present, else direct encode; labels always
+    # come from the v2 datasets keyed by sample_id)
     ds_dir = os.path.join(args.run_dir, "datasets")
     cache_dir = os.path.join(args.run_dir, "token_cache")
     gd = GameData(os.path.join(ROOT, "data", "gamedata.json"))
@@ -128,7 +129,12 @@ def main():
                          limit=args.limit)
     real_rows = load_rows(os.path.join(ds_dir, "battle_real_v2.jsonl.gz"),
                           limit=args.limit)
-    vocab = fit_vocab([r for r in real_rows if r["split"] == "train"], gd)
+    vpath = os.path.join(args.run_dir, "vocab.json")
+    if os.path.exists(vpath):
+        vocab = SemanticVocab.from_dict(json.load(open(vpath)))
+    else:
+        vocab = fit_vocab([r for r in real_rows
+                           if r["split"] == "train"], gd)
     if args.shuffle_labels:
         rng = random.Random(seed)
         groups = {}
@@ -140,13 +146,27 @@ def main():
             for r, y in zip(g, ys):
                 r["y_wdl"] = y
 
+    tokens_by_split = {}
+    if os.path.exists(os.path.join(cache_dir, "manifest.json")):
+        from pysim.rl.transformer.data import TokenCacheReader
+        reader = TokenCacheReader(cache_dir, contract)
+        for split in ("train", "validation", "test"):
+            tokens_by_split[split] = {
+                sid: row for sid, row in reader.iter_split(split)}
+        if info["rank"] == 0:
+            print("token cache:", reader.manifest["manifest_digest"],
+                  "| rows:", len(reader))
+
     def enc(rows):
         out = []
         for r in rows:
-            try:
-                out.append((r, encode_value_row(r, vocab, tok_cfg)))
-            except Exception:
-                continue            # excluded: counted in the data card
+            tok = tokens_by_split.get(r["split"], {}).get(r["sample_id"])
+            if tok is None:
+                try:
+                    tok = encode_value_row(r, vocab, tok_cfg)
+                except Exception:
+                    continue        # excluded: counted in the data card
+            out.append((r, tok))
         return out
 
     tr_sim = enc([r for r in sim_rows if r["split"] == "train"])
@@ -202,8 +222,8 @@ def main():
         agg, n = {}, 0
         for chunk in batches(rows):
             rws = [r for r, _ in chunk]
-            batch, comps = collate_value(
-                [e for _, e in chunk], device=device)
+            batch, comps = collate_value([e for _, e in chunk],
+                                         device=device, tok_cfg=tok_cfg)
             comp = comps["comp"]
             targets = {"group_id": torch.as_tensor(
                 [-1 if r.get("candidate_group_id") is None
@@ -253,7 +273,7 @@ def main():
         for i in range(0, len(enc_rows), 256):
             chunk = enc_rows[i:i + 256]
             batch, comps = collate_value([e for _, e in chunk],
-                                         device=device)
+                                         device=device, tok_cfg=tok_cfg)
             p, d = D.unwrap(model).predict_symmetric(
                 batch, comps["comp"], domain)
             probas.append(p.float().cpu().numpy())
@@ -291,7 +311,8 @@ def main():
             m["nll_ci95"] = [lo, hi]
             # raw side-swap asymmetry on a subset (§6.1: reported honestly)
             sub = rows[:min(64, len(rows))]
-            b0, c0 = collate_value([e for _, e in sub], device=device)
+            b0, c0 = collate_value([e for _, e in sub], device=device,
+                                   tok_cfg=tok_cfg)
             with torch.no_grad():
                 w0, d0, _ = D.unwrap(model)(b0, c0["comp"], domain)
                 swb, swc = swapped_inputs(b0, c0["comp"], tok_cfg)
@@ -393,7 +414,8 @@ def main():
             if not rows:
                 continue
             sub = rows[:min(128, len(rows))]
-            b0, c0 = collate_value([e for _, e in sub], device=device)
+            b0, c0 = collate_value([e for _, e in sub], device=device,
+                                   tok_cfg=tok_cfg)
             p0, d0 = D.unwrap(model).predict_symmetric(b0, c0["comp"],
                                                        domain)
             swb, swc = swapped_inputs(b0, c0["comp"], tok_cfg)

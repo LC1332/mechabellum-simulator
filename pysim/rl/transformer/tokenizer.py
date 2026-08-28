@@ -1037,3 +1037,78 @@ def collate_tokens(arrays: list, device=None) -> dict:
         out["pad_mask"][i, :n] = 1.0
     return out
 
+
+def policy_token_obs_from_v1_dict(obs_v1: dict, space_dict: dict,
+                                  history: list[dict] | None = None) -> dict:
+    """Dict-form PolicyObservationV1 (dataset rows) -> PolicyTokenObservationV2.
+    Same schema as policy_token_obs_from_live; history entries are the
+    executed prefix of THIS round only (no human future, §11)."""
+    assert_observation_clean(obs_v1)
+    history = (history or [])[-MAX_ACTION_HISTORY:]
+    opp = obs_v1.get("opp") or {}
+    ents = []
+    for h, u in enumerate(obs_v1.get("units") or []):
+        ents.append({
+            "kind": "self_unit", "mech": int(u["mech"]),
+            "level": int(u["level"]), "exp": int(u["exp"]),
+            "x": float(u["x"]), "y": float(u["y"]),
+            "rot": bool(u["rot"]), "equip": int(u.get("equip", 0) or 0),
+            "air": 0, "value": 0.0, "status": "known", "fidelity": 1.0,
+            "move_ok": bool((obs_v1.get("unit_move_ok") or [True] * len(
+                obs_v1.get("units") or []))[h])})
+    ents.append({"kind": "self_tower", "x": 0.0, "y": -295.0})
+    for d in opp.get("units") or []:
+        ents.append({
+            "kind": "opp_unit", "mech": int(d["mech"]),
+            "level": int(d["level"]), "exp": int(d["exp"]),
+            "x": float(d["x"]), "y": float(d["y"]), "rot": bool(d["rot"]),
+            "equip": int(d.get("equip", 0) or 0), "air": 0, "value": 0.0,
+            "status": "known", "fidelity": 1.0})
+    ents.append({"kind": "opp_tower", "x": 0.0, "y": 295.0})
+    for m_str, ts in sorted((obs_v1.get("techs") or {}).items()):
+        for t in ts:
+            ents.append({"kind": "self_tech", "mech": int(m_str),
+                         "tech": int(t)})
+    for m_str, ts in sorted((opp.get("techs") or {}).items()):
+        for t in ts:
+            ents.append({"kind": "opp_tech", "mech": int(m_str),
+                         "tech": int(t)})
+    for d in opp.get("devices") or []:
+        ents.append({"kind": "device", "id": int(d["id"]),
+                     "x": float(d["x"]), "y": float(d["y"]),
+                     "shape": "unknown", "radius": 0.0, "confidence": 0.5,
+                     "unknown_mechanism": True})
+    for ev in opp.get("skill_events") or []:
+        ents.append({"kind": "skill_release", "id": int(ev["id"]),
+                     "x": float(ev["x"]), "y": float(ev["y"]),
+                     "shape": "unknown", "radius": 0.0, "confidence": 0.5,
+                     "unknown_mechanism": True})
+    obs = {
+        "version": OBSERVATION_VERSION,
+        "round": int(obs_v1["round"]), "ego": int(obs_v1["ego"]),
+        "global": {
+            "self_hp": int(obs_v1["hp"]), "self_max_hp": int(obs_v1["max_hp"]),
+            "opp_hp": int(opp.get("hp", 1)),
+            "opp_max_hp": int(opp.get("max_hp", 1)),
+            "self_tower_strengthen": [0, 0], "opp_tower_strengthen": [0, 0],
+            "supply": int(obs_v1.get("supply", 0)),
+            "buy_remaining": int(obs_v1.get("buy_remaining", 0)),
+            "budget_left": int(obs_v1.get("budget_left", MAX_ACTION_HISTORY)),
+            "prefix_len": int(obs_v1.get("prefix_len", 0)),
+            "finished_deploy": bool(obs_v1.get("finished_deploy", False)),
+        },
+        "entities": ents, "ground_areas": [],
+        "policy": {
+            "unlocked_mechs": [int(m) for m in
+                               obs_v1.get("unlocked_mechs") or []],
+            "skills": [{"slot": int(s["slot"]), "skill": int(s["skill"]),
+                        "active": bool(s["active"]), "cd": int(s["cd"])}
+                       for s in obs_v1.get("skills") or []],
+            "equipment_inventory": [int(e) for e in
+                                    obs_v1.get("equipment_inventory") or []],
+            "history": [dict(h) for h in history],
+        },
+        "space": space_dict,
+    }
+    assert_observation_clean(obs)
+    return obs

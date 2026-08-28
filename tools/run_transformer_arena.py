@@ -266,6 +266,11 @@ def main():
     ap.add_argument("--top-p", type=float, default=1.0)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--baselines", default="end_only,random")
+    ap.add_argument("--opponent", default="baselines",
+                    choices=["baselines", "human_replay"],
+                    help="human_replay: 先双人类 plan 复盘定出'回放赢家', "
+                         "再让 TPolicy 挑战该赢家的 plan (目标: 超过回放赢家)")
+    ap.add_argument("--limit-rows", type=int, default=0)
     ap.add_argument("--max-games", type=int, default=4)
     args = ap.parse_args()
 
@@ -278,6 +283,40 @@ def main():
     chunks = sorted(os.path.join(chunk_dir, f) for f in os.listdir(chunk_dir)
                     if f.endswith(".json") and f != "chunks.json")
     make_root = build_root_factory(chunks, eco)
+
+    human_plans = {}
+    if args.opponent == "human_replay":
+        from pysim.transition.replay_adapter import ReplayAdapter
+        from pysim.rl.prefix_env import teacher_force_walk
+
+        def human_plan(chunk_path, gi, rnd, seat):
+            key = (chunk_path, gi, rnd, seat)
+            if key in human_plans:
+                return human_plans[key]
+            gs = json.load(open(chunk_path))
+            adapter = ReplayAdapter(gs)
+            adapter._games = gs
+            adapter._warned_raw = True
+            try:
+                entries = adapter.norm_actions(gs[gi], seat, rnd)[0]
+                root0 = make_root(chunk_path, gi, rnd)
+                if root0 is None:
+                    return None
+                w = teacher_force_walk(root0, seat, entries, eco, gd)
+            except Exception:
+                human_plans[key] = None
+                return None
+            if w.end_reason != "human_end":
+                human_plans[key] = None
+                return None
+            plan = {"actions": [], "engine_actions": w.engine_actions,
+                    "noops": w.noops, "forced_end": False,
+                    "stop_reason": "end",
+                    "steps": w.n_exogenous + len(w.samples),
+                    "latency_s": 0.0, "final_state": w.final_state,
+                    "rejections": [], "fallbacks": 0}
+            human_plans[key] = plan
+            return plan
 
     actuator = TPolicyActuator(model, vocab, cfg, tok_cfg, device,
                                mode=args.mode,
@@ -327,6 +366,61 @@ def main():
                            "latency_s": round(plan0["latency_s"], 3),
                            "exploits": detect_exploits(plan0, root)},
                        }
+                if args.opponent == "human_replay":
+                    # reproduced winner: replay BOTH human plans once on
+                    # the same root (common seed) — the winner of that
+                    # replay is "回放赢家" (§10.5 arena, human 对手)
+                    h_plans = {0: human_plan(cp, gi, rnd, 0),
+                               1: human_plan(cp, gi, rnd, 1)}
+                    if h_plans[0] is None or h_plans[1] is None:
+                        continue
+                    seed_h = derive_seed("treplay|%s|%d|%d" %
+                                         (os.path.basename(cp), gi, rnd), 0)
+                    rep = play_joint(root, h_plans[0], h_plans[1],
+                                     eco, gd, seed_h)
+                    w_seat = int(rep["winner"])
+
+                    def seat_matchup(pol_seat, hum_plan, tag):
+                        pol_plan = plan_with_actuator(root, pol_seat,
+                                                      eco, gd, actuator)
+                        seed_m = derive_seed(
+                            "tvs|hu|%s|%d|%d|%s" %
+                            (os.path.basename(cp), gi, rnd, tag), 0)
+                        if pol_seat == 0:
+                            res = play_joint(root, pol_plan, hum_plan,
+                                             eco, gd, seed_m)
+                            pol_win = int(res["winner"] == 0)
+                        else:
+                            res = play_joint(root, hum_plan, pol_plan,
+                                             eco, gd, seed_m)
+                            pol_win = int(res["winner"] == 1)
+                        return {
+                            "policy_seat": pol_seat, "policy_win": pol_win,
+                            "winner": res["winner"],
+                            "damage_diff": int(
+                                res["damage_to_player"][1] -
+                                res["damage_to_player"][0]),
+                            "rejections": len(res["rejections"]),
+                            "forced_ends": res["forced_ends"],
+                            "policy": {"stop": pol_plan["stop_reason"],
+                                       "steps": pol_plan["steps"],
+                                       "fallbacks": pol_plan["fallbacks"]},
+                            "exploits": detect_exploits(pol_plan, root)}
+
+                    row["replayed_winner_seat"] = w_seat
+                    row["vs_human_winner"] = {
+                        # 挑战者位: policy 从输家位挑战回放赢家 (核心指标)
+                        "loser_seat": seat_matchup(1 - w_seat,
+                                                   h_plans[w_seat],
+                                                   "loser"),
+                        # 卫冕位: policy 站赢家位对人类输家 plan
+                        "winner_seat": seat_matchup(w_seat,
+                                                    h_plans[1 - w_seat],
+                                                    "winner")}
+                    matchups.append(row)
+                    n_played += 1
+                    print(json.dumps(row, ensure_ascii=False))
+                    continue
                 if "end_only" in args.baselines:
                     p_end = gen(end_act, 1)
                     res = play_joint(root, plan0, p_end, eco, gd, seed)
@@ -372,6 +466,30 @@ def main():
         "exploit_roots": sum(len(m["tpolicy"]["exploits"]) for m in matchups),
         "checkpoint_engineering_only": bool(ck.get("engineering_only")),
     }
+    # ------------------------------------------------- §10.5 human arena
+    if args.opponent == "human_replay" and matchups:
+        for tag in ("loser_seat", "winner_seat"):
+            wins = [m["vs_human_winner"][tag]["policy_win"]
+                    for m in matchups]
+            dds = [m["vs_human_winner"][tag]["damage_diff"]
+                   for m in matchups]
+            summary["vs_human_%s" % tag] = {
+                "policy_win_rate": float(np.mean(wins)) if wins else None,
+                "n": len(wins),
+                "mean_damage_diff": float(np.mean(dds)) if dds else None}
+        # bootstrap CI over roots for the challenge seat
+        wins = [m["vs_human_winner"]["loser_seat"]["policy_win"]
+                for m in matchups]
+        if wins:
+            rng = np.random.RandomState(0)
+            means = [float(np.mean([wins[rng.randint(len(wins))]
+                                    for _ in range(len(wins))]))
+                     for _ in range(2000)]
+            summary["vs_human_loser_seat"]["ci95"] = [
+                float(np.quantile(means, 0.025)),
+                float(np.quantile(means, 0.975))]
+
+
     out = {"summary": summary, "matchups": matchups,
            "gate_10_4": {
                "action_rejection_eq_0": summary["rejection_rate"] == 0.0,

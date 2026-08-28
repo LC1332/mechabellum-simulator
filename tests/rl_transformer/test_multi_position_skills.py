@@ -77,7 +77,7 @@ def test_point_order_changes_fields_and_loss(vocab, tok_cfg, tiny_policy_cfg,
     e2 = encode_policy_row({**row, "target": rev}, vocab, tok_cfg,
                            tiny_policy_cfg.max_obj_cands,
                            tiny_policy_cfg.max_ptr_cands)
-    pb = collate_policy([e1, e2])
+    pb = collate_policy([e1, e2], tok_cfg=tok_cfg)
     logits = model(pb["batch"], pb["components"], pb["tables"],
                    pb["fields"])
     sm = build_stage_masks(pb["fields"], pb["tables"],

@@ -42,8 +42,8 @@ def test_value_permutation_invariance(vocab, tok_cfg, tiny_value_cfg,
     torch.manual_seed(0)
     model = TValue(vocab, tiny_value_cfg, tok_cfg).eval()
     from pysim.rl.transformer.data import collate_value
-    b1, c1 = collate_value([_pack(ta1)])
-    b2, c2 = collate_value([_pack(ta2)])
+    b1, c1 = collate_value([_pack(ta1)], tok_cfg=tok_cfg)
+    b2, c2 = collate_value([_pack(ta2)], tok_cfg=tok_cfg)
     with torch.no_grad():
         w1, d1, _ = model(b1, c1["comp"], "real")
         w2, d2, _ = model(b2, c2["comp"], "real")
@@ -144,10 +144,10 @@ def test_padding_does_not_change_outputs(vocab, tok_cfg, tiny_value_cfg,
     # a batch padded to a longer row must give the same output
     obs2 = toy_rows["real"][1]["observation"]
     ta2 = encode_battle_tokens(obs2, vocab, tok_cfg)
-    b_single, c_single = collate_value([row1, _pack(ta2)])
+    b_single, c_single = collate_value([row1, _pack(ta2)], tok_cfg=tok_cfg)
     with torch.no_grad():
         w_pad, d_pad, _ = model(b_single, c_single["comp"], "real")
-    b_alone, c_alone = collate_value([row1])
+    b_alone, c_alone = collate_value([row1], tok_cfg=tok_cfg)
     with torch.no_grad():
         w_alone, d_alone, _ = model(b_alone, c_alone["comp"], "real")
     assert torch.allclose(w_pad[:1], w_alone[0][None], atol=1e-5)
@@ -160,7 +160,7 @@ def test_swap_is_involutive_and_components_exact(vocab, tok_cfg,
     from pysim.rl.transformer.battle_value import swapped_inputs
     rows = [encode_value_row(r, vocab, tok_cfg)
             for r in toy_rows["real"][:3]]
-    batch, comps = collate_value(rows)
+    batch, comps = collate_value(rows, tok_cfg=tok_cfg)
     swb1, swc1 = swapped_inputs(batch, comps["comp"], tok_cfg)
     swb2, swc2 = swapped_inputs(swb1, swc1, tok_cfg)
     real = batch["pad_mask"] > 0
@@ -199,7 +199,7 @@ def test_torch_and_numpy_component_paths_agree(vocab, tok_cfg, toy_rows):
     from pysim.rl.transformer.battle_value import batch_components
     rows = [encode_value_row(r, vocab, tok_cfg)
             for r in toy_rows["real"][:2]]
-    batch, comps = collate_value(rows)
+    batch, comps = collate_value(rows, tok_cfg=tok_cfg)
     for i in range(len(rows)):
         t = int(rows[i]["n_tokens"])
         comp_t = batch_components(

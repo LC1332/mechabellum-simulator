@@ -10,8 +10,11 @@
 >
 > 当前状态（2026-08-28 施工后更新）：**Transformer 工程骨架已全部实现并通过测试**
 > （contract/tokenizer/TValue/TPolicy-BC/losses/DDP/工具链/50 项单测/端到端 smoke/
-> 7 卡 NCCL DDP smoke，详见 §18）；但 **T0 仍未冻结**：正式 sim label、正式训练、
-> 正式 test/arena 结论依然被 Gate 禁止，等待 1000 局回测结论。
+> 7 卡 NCCL DDP smoke，详见 §18）。**T0 Gate 已由用户解除**：用户 2026-08-28 确认
+> 1000 局回测结果良好，正式 test/arena 结论不再被禁止；contract `t0_backtest.status
+> = accepted` 已落盘（commit `27859dd` 后，replay-set hash 与详细分桶指标待回测
+> 报告归档后补充）。本阶段目标（用户指示）：**训练出能在 direct-pysim arena 中
+> 超过回放赢家的 policy**。
 > 文中复选框代表未来实施状态，只有代码、产物、固定测试集指标和可复现实跑证据同时存在
 > 时才能勾选。
 

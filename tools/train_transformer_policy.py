@@ -63,8 +63,9 @@ def main():
     ap.add_argument("--allow-engineering", action="store_true")
     args = ap.parse_args()
 
-    if args.device is None and not os.environ.get("CUDA_VISIBLE_DEVICES"):
-        args.device = "cpu"
+    if args.device == "cpu" or (args.device is None and
+                                 not os.environ.get("CUDA_VISIBLE_DEVICES")):
+        args.device = args.device or "cpu"
         os.environ["TRANSFORMER_ALLOW_CPU"] = "1"
     physical = D.enforce_env()
     info = D.setup_distributed()
@@ -99,25 +100,53 @@ def main():
 
     ds_dir = os.path.join(args.run_dir, "datasets")
     gd = GameData(os.path.join(ROOT, "data", "gamedata.json"))
-    rows = load_rows(os.path.join(ds_dir, "policy_prefix_real_v2.jsonl.gz"),
-                     limit=args.limit)
-    vocab = fit_vocab([r for r in rows if r["split"] == "train"], gd)
+    cache_dir = os.path.join(args.run_dir, "token_cache")
+    use_cache = os.path.exists(os.path.join(cache_dir, "manifest.json"))
+    if use_cache:
+        from pysim.rl.transformer.data import TokenCacheReader
+        reader = TokenCacheReader(cache_dir, contract)
+        if info["rank"] == 0:
+            print("token cache manifest:", reader.manifest[
+                "manifest_digest"], "| rows:", len(reader))
 
-    def enc(rs):
-        out = []
-        for r in rs:
-            try:
-                out.append((r, encode_policy_row(
-                    r, vocab, tok_cfg, model_cfg.max_obj_cands,
-                    model_cfg.max_ptr_cands)))
-            except Exception as e:
-                if info["rank"] == 0 and out == []:
-                    print("encode excluded:", e)
-        return out
+        def load_split(split):
+            rows = []
+            for sid, row in reader.iter_split(split):
+                if "fields" not in row:
+                    continue          # value-domain shard rows
+                if args.limit and len(rows) >= args.limit:
+                    break
+                row["sample_id"] = sid
+                rows.append(row)
+            return rows
 
-    tr_rows = enc([r for r in rows if r["split"] == "train"])
-    va_rows = enc([r for r in rows if r["split"] == "validation"])
-    te_rows = enc([r for r in rows if r["split"] == "test"])
+        vpath = os.path.join(args.run_dir, "vocab.json")
+        vocab = SemanticVocab.from_dict(
+            json.load(open(vpath)) if os.path.exists(vpath)
+            else SemanticVocab().to_dict())
+        tr_rows = load_split("train")
+        va_rows = load_split("validation")
+        te_rows = load_split("test")
+    else:
+        rows = load_rows(os.path.join(
+            ds_dir, "policy_prefix_real_v2.jsonl.gz"), limit=args.limit)
+        vocab = fit_vocab([r for r in rows if r["split"] == "train"], gd)
+
+        def enc(rs):
+            out = []
+            for r in rs:
+                try:
+                    out.append(encode_policy_row(
+                        r, vocab, tok_cfg, model_cfg.max_obj_cands,
+                        model_cfg.max_ptr_cands))
+                except Exception as e:
+                    if info["rank"] == 0 and not out:
+                        print("encode excluded:", e)
+            return out
+
+        tr_rows = enc([r for r in rows if r["split"] == "train"])
+        va_rows = enc([r for r in rows if r["split"] == "validation"])
+        te_rows = enc([r for r in rows if r["split"] == "test"])
     if info["rank"] == 0:
         print("policy tr/va/te %d/%d/%d" % (len(tr_rows), len(va_rows),
                                             len(te_rows)))
@@ -158,7 +187,7 @@ def main():
             chunk = [rows[j] for j in order[i:i + bs]]
             if len(chunk) < 2:
                 continue
-            pb = collate_policy([e for _, e in chunk], device=device)
+            pb = collate_policy(chunk, device=device, tok_cfg=tok_cfg)
             with torch.autocast("cuda", dtype=torch.bfloat16,
                                 enabled=use_bf16):
                 logits = D.unwrap(model)(pb["batch"], pb["components"],
@@ -198,7 +227,7 @@ def main():
         in_mask = 0
         for i in range(0, len(rows), 128):
             chunk = rows[i:i + 128]
-            pb = collate_policy([e for _, e in chunk], device=device)
+            pb = collate_policy(chunk, device=device, tok_cfg=tok_cfg)
             logits = D.unwrap(model)(pb["batch"], pb["components"],
                                      pb["tables"], pb["fields"])
             sm = build_stage_masks(pb["fields"], pb["tables"], device)

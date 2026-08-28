@@ -241,23 +241,21 @@ class TokenCacheReader:
 # ------------------------------------------------------- row -> tensors
 def encode_value_row(row: dict, vocab: SemanticVocab,
                      tok_cfg: TokenizerConfig) -> dict:
-    """battle row -> token arrays + components + mirrored copy arrays
-    (the whole side-swap path is precomputed, no JSON in the loop)."""
+    """battle row -> token arrays ONLY. The O(T^2) bias components are
+    computed per BATCH on-device (battle_value.batch_components) —
+    precomputing them per row would cost ~1MB x 450k rows."""
     if "policy" in row["observation"]:
         raise ValueError("value rows must carry battle observations")
     ta = encode_battle_tokens(row["observation"], vocab, tok_cfg)
-    comp = bias_components(ta, tok_cfg)
-    sw = swap_token_arrays(ta)
-    comp_sw = bias_components(sw, tok_cfg)
+    return _token_row(ta)
+
+
+def _token_row(ta) -> dict:
     return {
         "type": ta.type, "sem": ta.sem, "feat": ta.feat,
         "x": ta.x, "y": ta.y, "side": ta.side, "group": ta.group,
         "air": ta.air, "area": ta.area, "pad_mask": ta.mask,
-        "comp": comp, "n_tokens": np.int64(ta.n_tokens),
-        "type_sw": sw.type, "sem_sw": sw.sem, "feat_sw": sw.feat,
-        "x_sw": sw.x, "y_sw": sw.y, "side_sw": sw.side,
-        "group_sw": sw.group, "air_sw": sw.air, "area_sw": sw.area,
-        "pad_mask_sw": sw.mask, "comp_sw": comp_sw,
+        "n_tokens": np.int64(ta.n_tokens),
     }
 
 
@@ -279,7 +277,6 @@ def encode_policy_row(row: dict, vocab: SemanticVocab,
         "type": ta.type, "sem": ta.sem, "feat": ta.feat,
         "x": ta.x, "y": ta.y, "side": ta.side, "group": ta.group,
         "air": ta.air, "area": ta.area, "pad_mask": ta.mask,
-        "comp": bias_components(ta, tok_cfg),
         "n_tokens": np.int64(ta.n_tokens),
         "obj_mask": _pad2d(tables["obj_mask"], max_obj),
         "ptr_mask": _pad2d(tables["ptr_mask"], max_ptr),
@@ -315,28 +312,28 @@ def _pad1d(v: np.ndarray, width: int, pad: int = 0) -> np.ndarray:
     return np.concatenate([v, np.full(width - len(v), pad, dtype=v.dtype)])
 
 
-def collate_value(rows: list[dict], device=None) -> tuple[dict, dict]:
+def collate_value(rows: list[dict], device=None,
+                  tok_cfg: TokenizerConfig | None = None) -> tuple[dict, dict]:
+    """Token collate + ON-DEVICE bias components (original and swapped).
+    `tok_cfg` is required for the component path; when omitted only the
+    token batch is returned (comps {})."""
     base = [{k: r[k] for k in ("type", "sem", "feat", "x", "y", "side",
                                "group", "air", "area", "pad_mask",
                                "n_tokens")}
             for r in rows]
     batch = collate_tokens_base(base)
     batch = {k: torch_as_tensor(v) for k, v in batch.items()}
-    comps = [r["comp"] for r in rows]
-    comps_sw = [r["comp_sw"] for r in rows]
-    t = max(c.shape[-1] for c in comps)
-    b = len(rows)
-    comp = np.zeros((b, 7, t, t), dtype=np.int64)
-    comp_sw = np.zeros((b, 7, t, t), dtype=np.int64)
-    for i, (c, cs) in enumerate(zip(comps, comps_sw)):
-        n = c.shape[-1]
-        comp[i, :, :n, :n] = c
-        comp_sw[i, :, :n, :n] = cs
-    comps_t = {"comp": torch_as_tensor(comp),
-               "comp_sw": torch_as_tensor(comp_sw)}
+    comps_t = {}
+    if tok_cfg is not None:
+        from .battle_value import batch_components, swapped_inputs
+        comps_t["comp"] = batch_components(batch, tok_cfg)
+        swb, swc = swapped_inputs(batch, comps_t["comp"], tok_cfg)
+        comps_t["comp_sw"] = swc
+        comps_t["swapped_batch"] = swb
     if device is not None:
         batch = {k: v.to(device) for k, v in batch.items()}
-        comps_t = {k: v.to(device) for k, v in comps_t.items()}
+        comps_t = {k: (v.to(device) if hasattr(v, "to") else v)
+                   for k, v in comps_t.items()}
     return batch, comps_t
 
 
@@ -359,19 +356,18 @@ class TokenArraysView:
         self.index = {}
 
 
-def collate_policy(rows: list[dict], device=None) -> dict:
+def collate_policy(rows: list[dict], device=None,
+                   tok_cfg: TokenizerConfig | None = None) -> dict:
     base = [{k: r[k] for k in ("type", "sem", "feat", "x", "y", "side",
                                "group", "air", "area", "pad_mask",
                                "n_tokens")}
             for r in rows]
     batch = collate_tokens_base(base)
     batch = {k: torch_as_tensor(v) for k, v in batch.items()}
-    comps = [r["comp"] for r in rows]
-    t = max(c.shape[-1] for c in comps)
-    comp = np.zeros((len(rows), 7, t, t), dtype=np.int64)
-    for i, c in enumerate(comps):
-        n = c.shape[-1]
-        comp[i, :, :n, :n] = c
+    comp = None
+    if tok_cfg is not None:
+        from .battle_value import batch_components
+        comp = batch_components(batch, tok_cfg)
     tables = {
         "verb_mask": torch_as_tensor(np.stack([r["verb_mask"] for r in rows])),
         "obj_mask": torch_as_tensor(np.stack([r["obj_mask"] for r in rows])),
@@ -380,7 +376,9 @@ def collate_policy(rows: list[dict], device=None) -> dict:
         "arities": torch_as_tensor(np.stack([r["arities"] for r in rows])),
     }
     out = {
-        "batch": batch, "components": torch_as_tensor(comp),
+        "batch": batch,
+        "components": comp if comp is not None else torch_as_tensor(
+            np.zeros((len(rows), 7, 1, 1), dtype=np.int64)),
         "tables": tables,
         "fields": torch_as_tensor(np.stack([r["fields"] for r in rows])),
         "end": torch_as_tensor(np.asarray([r["end"] for r in rows],
@@ -394,6 +392,8 @@ def collate_policy(rows: list[dict], device=None) -> dict:
         import torch
         out["batch"] = {k: v.to(device) for k, v in out["batch"].items()}
         out["components"] = out["components"].to(device)
+        if comp is not None:
+            pass
         out["tables"] = {k: v.to(device) for k, v in out["tables"].items()}
         for k in ("fields", "end", "rem_bucket"):
             out[k] = out[k].to(device)

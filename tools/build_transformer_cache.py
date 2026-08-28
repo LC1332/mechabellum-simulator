@@ -87,6 +87,9 @@ def main():
 
     train_rows = load_rows(paths["real"], split="train", limit=20000)
     vocab = fit_vocab(train_rows, gd)
+    with open(os.path.join(args.run_dir, "vocab.json"), "w",
+              encoding="utf8") as f:
+        json.dump(vocab.to_dict(), f)
     print("vocab sizes:", json.dumps(vocab.sizes()))
 
     all_rows = []

@@ -73,7 +73,7 @@ def enforce_env(world_size: int | None = None) -> list[int]:
 
     A CPU-only run (no CUDA requested) may skip the allowlist — pass
     require=False when the process will never touch torch.cuda."""
-    env_value = os.environ.get(DEFAULT_ENV)
+    env_value = os.environ.get(DEFAULT_ENV) or None   # "" == unset
     if env_value is None and os.environ.get("TRANSFORMER_ALLOW_CPU") == "1":
         return []
     physical = assert_visible_against_allowlist(env_value)

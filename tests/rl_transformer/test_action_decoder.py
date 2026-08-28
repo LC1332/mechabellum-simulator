@@ -147,7 +147,7 @@ def test_decode_respects_masks_and_never_rejects(vocab, tok_cfg,
     enc = [encode_policy_row(r, vocab, tok_cfg,
                              tiny_policy_cfg.max_obj_cands,
                              tiny_policy_cfg.max_ptr_cands) for r in rows]
-    pb = collate_policy(enc)
+    pb = collate_policy(enc, tok_cfg=tok_cfg)
     for mode in ("greedy", "sample"):
         fields, stop = model.decode(pb["batch"], pb["components"],
                                     pb["tables"], mode=mode, seed=11)
@@ -180,7 +180,7 @@ def test_decode_seed_reproducible(vocab, tok_cfg, tiny_policy_cfg,
                              tiny_policy_cfg.max_obj_cands,
                              tiny_policy_cfg.max_ptr_cands)
            for r in toy_rows["policy"][:5]]
-    pb = collate_policy(enc)
+    pb = collate_policy(enc, tok_cfg=tok_cfg)
     f1, s1 = model.decode(pb["batch"], pb["components"], pb["tables"],
                           mode="sample", seed=99)
     f2, s2 = model.decode(pb["batch"], pb["components"], pb["tables"],
