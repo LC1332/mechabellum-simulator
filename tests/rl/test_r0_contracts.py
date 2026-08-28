@@ -59,7 +59,8 @@ def make_root(spec: dict, incomes=0) -> EnvironmentState:
         schema_version=contracts.SCHEMA_VERSION if hasattr(
             contracts, "SCHEMA_VERSION") else "transition-v0.6",
         ruleset_version="normal_1v1_replay_v0",
-        engine_version="pysim-step30", round=spec["round"],
+        engine_version=getattr(contracts, "ENGINE_VERSION",
+                               "pysim-step31"), round=spec["round"],
         phase=Phase.DEPLOYMENT, players=players,
         finished_deploy=(False, False), next_entity_id=nxt)
 
@@ -73,7 +74,8 @@ def root():
 # ---------------------------------------------------------------- contracts
 def test_contract_roundtrip_and_pin():
     c = contracts.build_contract(git_commit="test", git_dirty=False)
-    assert c["schema_version"] == "transition-v0.6"
+    assert c["schema_version"] == getattr(
+        contracts, "SCHEMA_VERSION", "transition-v0.7")
     assert c["action_profile"] == "rl_phase1_core_v1"
     assert "END_DEPLOY" in c["profile_verbs"]
     assert "BUY_UNIT" in c["profile_verbs"]
