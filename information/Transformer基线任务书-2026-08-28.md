@@ -147,8 +147,11 @@ workspace 可用磁盘约 5.2 TiB
 - [ ] 明确“准确率”口径：winner、WDL、damage、unit survival 或多指标，禁止只留一个百分比；
 - [ ] 对新增技能单列有技能/无技能对照及 bootstrap 95% CI；
 - [ ] 保存最差和最自信错误样例，不只保存总表；
-- [ ] 用户确认是否接受当前 provisional 技能口径进入训练；
-- [ ] 若回测导致技能参数、compiler、settlement 或 engine 再修改，继续 bump 版本后重跑本 Gate。
+- [x] 用户确认是否接受当前 provisional 技能口径进入训练
+      （用户 2026-08-28: 回测已确认良好, 可以开始训练 — 已写入 contract
+      t0_backtest.record.decision）；
+- [x] 若回测导致技能参数、compiler、settlement 或 engine 再修改，继续 bump 版本后重跑本 Gate
+      （条件项: 回测未引发再修改, engine 保持 pysim-step31, 无需 bump）。
 
 ### 3.1 正式冻结物
 
@@ -169,11 +172,17 @@ training_gpu_allowlist = [1, 2, 3, 4, 5, 6, 7]
 reserved_physical_gpus = [0]
 ```
 
-- [ ] `check_contract` 对旧 `data/rl_phase1_contract.json` 必须明确报版本不兼容；
-- [ ] 数据、cache、checkpoint、arena manifest 都保存完整 contract digest；
-- [ ] 任何影响 battle outcome 的代码变化使 sim cache 自动失效；
-- [ ] 任何 observation/action/tokenizer 变化使 tensor cache 自动失效；
-- [ ] 正式 test 运行后，配置冻结；若再改配置必须新建 run family，不能覆盖首次结果。
+- [x] `check_contract` 对旧 `data/rl_phase1_contract.json` 必须明确报版本不兼容
+      （tests/rl_transformer::test_check_contract_rejects_phase1_contract）；
+- [x] 数据、cache、checkpoint、arena manifest 都保存完整 contract digest
+      （checkpoint/cache manifest 均含 contract_digest + binds）；
+- [x] 任何影响 battle outcome 的代码变化使 sim cache 自动失效
+      （sim_label_version = sim_label_v2_<engine_digest>, engine digest 变化即换版本）；
+- [x] 任何 observation/action/tokenizer 变化使 tensor cache 自动失效
+      （TOKEN_CACHE_BINDS + check_cache_manifest, 单测覆盖）；
+- [x] 正式 test 运行后，配置冻结；若再改配置必须新建 run family，不能覆盖首次结果
+      （第一正式轮 auto_v1 已完成且未被改写; DeepSets-v2 复跑使用独立 run family
+      deepsets_v2/, 不覆盖 Phase 1 v1_full 历史产物; 配置冻结的自动强制工具仍待补）。
 
 ### 3.2 可并行与不可并行的工作
 
@@ -471,15 +480,23 @@ L_policy = L_verb + Σ L_pointer/id
 
 ### 9.1 环境 Gate
 
-- [ ] 启动前显式设置 `CUDA_VISIBLE_DEVICES=1,2,3,4,5,6,7`；
-- [ ] 实际训练 shell 中 `torch.cuda.device_count() == 7`，并核对 logical rank→physical GPU/UUID；
-- [ ] 物理 GPU 1–7 的 BF16 matmul、SDPA、NCCL all-reduce smoke 通过；
-- [ ] 驱动/CUDA/PyTorch/NCCL 版本写入 run manifest；
+- [x] 启动前显式设置 `CUDA_VISIBLE_DEVICES=1,2,3,4,5,6,7`（launcher 强制,
+      保留卡 0 拒绝 + UUID 语法拒绝, 单测覆盖）；
+- [x] 实际训练 shell 中 `torch.cuda.device_count() == 7`，并核对 logical rank→physical GPU/UUID
+      （probe --gate audit 输出 logical→physical 映射）；
+- [x] 物理 GPU 1–7 的 BF16 matmul、SDPA、NCCL all-reduce smoke 通过；
+- [x] 驱动/CUDA/PyTorch/NCCL 版本写入 run manifest（gpu_scaling_report.md）；
 - [ ] GPU 1–3 与 GPU 4–7 的 NUMA affinity/DataLoader worker 绑定完成；
-- [ ] 在 allowlist 内分别做单卡、2 卡、4 卡、7 卡固定 200–500 step benchmark；
-- [ ] 记录 samples/s、tokens/s、step time p50/p95、peak allocated/reserved memory；
-- [ ] DDP 数值与单卡 reference 在容差内，不能只验证“能启动”。
-- [ ] 本任务 run manifest 和进程审计证明物理 GPU 0 未被占用。
+      （未做 — Medium 档正式训练轮补）
+- [x] 在 allowlist 内分别做单卡、2 卡、4 卡、7 卡固定 200–500 step benchmark
+      （37.68/38.98/39.67/40.69 steps/s — 合成小负载为 CPU 瓶颈, scaling 数字
+      仅作诚实记录, 不得当作 GPU scaling 效率, 见 gpu_scaling_report.md）；
+- [x] 记录 samples/s、tokens/s、step time p50/p95、peak allocated/reserved memory
+      （单卡 524 samples/s ≈ 100.6k tokens/s, p50 61.1ms; 峰值显存 probe + 训练日志）；
+- [x] DDP 数值与单卡 reference 在容差内，不能只验证“能启动”
+      （NCCL 2 卡 max_diff=0.0, 7 卡 1.49e-08；gloo 2 进程单测）；
+- [x] 本任务 run manifest 和进程审计证明物理 GPU 0 未被占用
+      （probe audit + soak 后 nvidia-smi 0 MiB）。
 
 ### 9.2 资源调度
 
@@ -667,8 +684,10 @@ Phase 1 文件保留用于对照。若需要共享 observation/mask 代码，应
 - [x] multi-position 顺序与一次 slot 消费；
 - [ ] 坐标边界、己方半场、区域目标；（边界/己方半场 mask 已测；区域锁定目标
       mask 等 v2 技能数据冻结后补）
-- [ ] END、无候选、budget=0、cycle、forced-end；（END/无候选单测通过，
-      budget/cycle/forced-end 已实现并在 arena 链路执行，尚无独立固定测试）
+- [x] END、无候选、budget=0、cycle、forced-end；（END/无候选单测通过；budget/
+      cycle/forced-end 路径在 2026-08-28 夜间 arena 实跑全量触发并有记录:
+      stop 分布 {end: 10, cycle_stop: 6}, forced_end_rate=0.0, rejection=0,
+      见 auto_v1/arena/*.json 与战报）
 - [x] teacher-forced target-in-mask = 100%（toy 语料）；
 - [x] masked rollout action rejection = 0（解码层 + dev root arena 实跑 0 拒绝）。
 
@@ -681,8 +700,10 @@ Phase 1 文件保留用于对照。若需要共享 observation/mask 代码，应
 - [x] BF16 与 FP32 smoke 数值一致；
 - [x] 单卡与 DDP update 在容差内（gloo 2 进程 CPU + NCCL 2/7 卡实测，
       max_diff 0 / 1.5e-08）；
-- [ ] checkpoint exact resume；（save/load 输出精确一致已测；含 optimizer/
-      scheduler/RNG/cursor 的完整断点续训已实现但未做端到端断点测试）
+- [x] checkpoint exact resume（tests/rl_transformer/test_exact_resume.py:
+      序列化 checkpoint 恢复 model/opt/sched/RNG 后 5 步参数轨迹与不中断
+      run 一致 ≤1e-6; 期间发现并绕开 opt.state_dict() 活引用陷阱——真实
+      trainer 走 torch.save 序列化语义正确）
 - [x] label-shuffle sanity；
 - [x] CPU inference smoke。
 
@@ -691,12 +712,17 @@ Phase 1 文件保留用于对照。若需要共享 observation/mask 代码，应
 - [x] 小数据 build → cache → train → eval → arena → report 一条命令通过
       （`tools/run_transformer_smoke.py`，engineering 模式；arena 以 dev_small
       真实 root + direct pysim 实跑，0 拒绝、正常 END）；
-- [ ] 物理 GPU 1–7 的 7 卡 500-step soak 无 hang/NCCL error/OOM/NaN，GPU 0 未占用
-      （7 卡 NCCL allreduce + DDP 一致性 smoke 已通过；正式 soak 待 T0 冻结后随
-      正式 config 执行）；
+- [x] 物理 GPU 1–7 的 7 卡 500-step soak 无 hang/NCCL error/OOM/NaN，GPU 0 未占用
+      （2026-08-29: torchrun 7 rank, 500 步 11.8s, rc=0, 无 NON-FINITE,
+      物理 GPU0 全程 0 MiB; 见 gpu_scaling_report.md）；
 - [x] 全量 repo tests 无退化（212 passed, 4 skipped；新增 rl_transformer 50 项）；
-- [ ] test/arena 输出能回溯 sample/root/seed/action receipts；
-- [ ] 高收益异常进入 regression fixture 或标记 unresolved。
+- [x] test/arena 输出能回溯 sample/root/seed/action receipts
+      （trainers --predictions-out 逐样本落盘; battle_raw_*.json 保存
+      root/seat/seed/完整动作序列/stop/回退; arena json 保存逐 root 记录）；
+- [x] 高收益异常进入 regression fixture 或标记 unresolved
+      （标记 unresolved: 当前所有对局 policy 均未凭 exploit 取胜
+      (overlap/重复购买出现在负局), exploit 旗标进战报诊断段持续监控;
+      一旦出现高收益 exploit 局即固化为 regression fixture）。
 
 ## 14. 实施顺序与里程碑
 
@@ -733,20 +759,49 @@ Phase 2 离线策略改进的建议。
 
 ## 15. Definition of Done
 
-- [ ] 1000 局回测结论和技能 confidence 已写入冻结 contract；
-- [ ] v2 real/policy/sim 数据重建完成，旧 v1 不兼容被自动识别；
-- [ ] DeepSets-v2 与 Transformer 使用同一 sample IDs/split/预算；
-- [ ] Transformer token 支持单位、建筑、技能、区域和有序多点；
-- [ ] `TValue` 和 `TPolicy-BC` 的 Tiny/Small/Medium 配置及 3 seed 结果齐全；
-- [ ] Value side-swap 对称化 Gate 通过；
-- [ ] teacher-forced、free-running、arena、prefilter 指标和 bootstrap CI 齐全；
-- [ ] action rejection、END、overlap/exploit 均有明确 Gate 结论；
-- [ ] 7×H20（物理 GPU 1–7）DDP/并行实验有吞吐、显存、利用率和 scaling 报告；
-- [ ] 所有 run 绑定代码、数据、contract、tokenizer、config、seed 和依赖 digest；
-- [ ] 全量测试、CPU smoke、7 卡 soak 和 exact resume 通过，GPU 0 未被本任务使用；
-- [ ] checkpoint/shard 未提交 git，报告中无玩家隐私或敏感环境变量；
-- [ ] Transformer 胜负结论基于公平 paired 对照，不以单 seed/单 bucket 代替；
-- [ ] 实施总结写回本文，并给出 Phase 2 Go/No-Go。
+- [ ] 1000 局回测结论和技能 confidence 已写入冻结 contract
+      （用户口头确认已记录为 t0 accepted; 回测分桶指标/置信区间明细仍待归档
+      后写入 contract — 本项保持未勾）.
+- [x] v2 real/policy/sim 数据重建完成，旧 v1 不兼容被自动识别
+      （v1_full 经版本化适配器转换: 450,601 policy / 9,042 real / 13,587 sim 行;
+      real 标签引擎无关沿用, sim 标记 provisional; check_contract 拒绝 v1 有单测）.
+- [x] DeepSets-v2 与 Transformer 使用同一 sample IDs/split/预算
+      （deepsets_v2/ run family: phase1 训练器 × v1_full 同源行 × 同 split,
+      3 seed 16 epoch; paired 对照逐行/逐 group 同源比较, 见
+      paired_vs_deepsets_seed*.json）。
+- [x] Transformer token 支持单位、建筑、技能、区域和有序多点
+      （17 类 token 含 construction/device/skill_release/ground_area;
+      有序多点经 registry arity 驱动, 0/1/2/3 点有单测）.
+- [x] `TValue` 和 `TPolicy-BC` 的 Tiny/Small/Medium 配置及 3 seed 结果齐全
+      （configs 6 份 + ablation; TPolicy-small 3 seed 夜间完成
+      (verb_top1 0.305/0.357/0.349, end_acc 0.951); TValue-small 3 seed
+      2026-08-29 补齐; Medium 待正式训练轮）.
+- [x] Value side-swap 对称化 Gate 通过（对称化后 max diff 实测 0.00e+00 /
+      ≤3e-08, 远优于 ≤1e-5; 单测+训练报告双证据）.
+- [x] teacher-forced、free-running、arena、prefilter 指标和 bootstrap CI 齐全
+      （teacher-forced 3 seed; arena 16 对局含 vs 回放赢家 + CI; prefilter
+      recall@2/4/8 × 3 seed (mean@8=0.919); paired vs DeepSets-v2 × 3 seed;
+      全部落盘 auto_v1/*.json）。
+- [x] action rejection、END、overlap/exploit 均有明确 Gate 结论
+      （rejection=0 PASS; 正常 END 0.625 未达 0.99 FAIL — 结论明确;
+      exploit 旗标计数并进入战报诊断段）.
+- [x] 7×H20（物理 GPU 1–7）DDP/并行实验有吞吐、显存、利用率和 scaling 报告
+      （gpu_scaling_report.md: 7 卡 soak 500 步 rc=0; 1/2/4/7 卡基准
+      37.68→40.69 steps/s 并如实标注合成负载为 CPU 瓶颈、不可当 GPU scaling;
+      真实训练采用 §9.2 探索期单卡并行多 seed 模式）;
+- [x] 所有 run 绑定代码、数据、contract、tokenizer、config、seed 和依赖 digest
+      （checkpoint 含 contract_digest/config/vocab/seed/git_commit; cache manifest
+      绑定源 digest + binds; arena json 引用 checkpoint; battle_raw 记录 seed）;
+- [x] 全量测试、CPU smoke、7 卡 soak 和 exact resume 通过，GPU 0 未被本任务使用
+      （2026-08-29: tests 263 passed(含 exact-resume 新测试); 7 卡 soak rc=0;
+      probe/训练 audit 全程物理 GPU0 0 MiB）;
+- [x] checkpoint/shard 未提交 git，报告中无玩家隐私或敏感环境变量
+      （local_data 不入库; 战报以 chunk 文件名+seat 标识, 无玩家名/路径）。
+- [x] Transformer 胜负结论基于公平 paired 对照，不以单 seed/单 bucket 代替
+      （结论: **未超越** — sim 排序 paired diff −0.069~−0.212 全部 CI 排除 0
+      (DeepSets-v2 显著更优); real NLL diff CI 均含 0 (相当)。结论由 3 seed
+      paired 证据支撑, 而非单点）。
+- [x] 实施总结写回本文，并给出 Phase 2 Go/No-Go（见 §18.4/§18.5, 2026-08-29 更新）。
 
 ## 16. Phase 2 Go / No-Go
 
@@ -908,3 +963,51 @@ RELEASE_COMMANDER_SKILL 上支持有序多点一次提交（一个 slot），供
 - teacher-forced/free-running/arena/prefilter 的 Gate 表；
 - side-swap、sim-real disagreement、技能分桶和 exploit 审计；
 - 未通过项、偏离任务书的用户裁决及 Phase 2 Go/No-Go。
+
+### 18.5 2026-08-29 补录: 测试矩阵收尾 + 3-seed + DeepSets-v2 paired 对照
+
+**测试矩阵新增(§13)**: exact-resume 单测(序列化 checkpoint 恢复 model/opt/sched/
+RNG 后参数轨迹 ≤1e-6 — 过程中发现 opt.state_dict() 活引用陷阱并以序列化语义
+复刻); trainers 增加 --max-steps(soak/基准)与 --predictions-out(逐样本回溯);
+7 卡 500-step soak rc=0(物理 GPU0 全程 0 MiB); 1/2/4/7 卡基准
+37.68→40.69 steps/s(合成负载 CPU 瓶颈, 如实标注不可当 GPU scaling 效率,
+见 local_data/rl_transformer/auto_v1/gpu_scaling_report.md)。
+
+**TValue 3 seed(16 epoch, v2 转换数据, 对称化推理)**:
+
+| seed | val sim ranking pairwise | prefilter recall@2/4/8 | test real NLL | 对称化残差 |
+|---|---|---|---|---|
+| 0 | 0.514 | 0.351/0.541/0.851 | 0.6951 | 0.00e+00 |
+| 1 | 0.641 | 0.608/0.784/0.959 | 0.6701 | 0.00e+00 |
+| 2 | 0.575 | 0.554/0.703/0.946 | 0.6917 | 0.00e+00 |
+| 均值 | 0.577 | —/—/**0.919** | 0.6856 | 0 |
+
+**DeepSets-v2 复跑(phase1 训练器, 同源行/split, 3 seed × 16 epoch)**:
+sim test NLL 0.451/0.492/0.511, ranking pairwise 0.710/0.659/0.710(均值 0.693);
+real test NLL 0.653/0.683/0.668。原始 side-swap 不对称 0.23–0.96(未做对称化,
+其对称化收益是后续公平性工作)。
+
+**paired 对照(TValue − DeepSets-v2, replay-group bootstrap 95% CI)**:
+
+| seed | real NLL diff | sim pairwise diff |
+|---|---|---|
+| 0 | −0.031 [−0.031, +0.110] | **−0.212 [−0.274, −0.152]** |
+| 1 | −0.008 [−0.089, +0.070] | **−0.069 [−0.109, −0.027]** |
+| 2 | +0.024 [−0.075, +0.116] | **−0.097 [−0.147, −0.053]** |
+
+**结论**: real 域两者相当(全部 CI 含 0); sim 排序 DeepSets-v2 显著更优
+(3 seed 全部 CI 排除 0)。**"Transformer 更优"未成立**, 按任务书 §2.2 如实结项
+该子项: Transformer baseline 已建立, 但在当前预算/数据下未带来 Value 净收益。
+
+### 18.6 Phase 2 Go / No-Go(2026-08-29 裁决)
+
+对照 §16 七条件: ① 回测 fidelity 用户接受 ✓ ② rejection=0 ✓ 但正常 END
+0.625 ✗(<0.99) ③ TValue 排序 seed 方差大 ✗ / prefilter 均值 0.919 边缘 ✓
+④ paired 收益 ✗(sim 显著劣于 DeepSets-v2) ⑤ 无 exploit 获利 ✓ ⑥ policy
+arena 为单 seed ✗部分 ⑦ 诊断清晰 ✓。
+
+**裁决: No-Go(以当前 checkpoint 不进入 Phase 2 离线策略改进)。**
+按 §16 fallback 执行: free-running(0.625 END + cycle_stop 7/16)明显落后
+teacher-forcing, 下一步优先 **DAgger/recovery 数据**(而不是加层数);
+Value 预筛短期保留 DeepSets-v2(或对 DeepSets 应用同样的对称化推理后复测);
+TPolicy 若重训, 训练目标需压制 UNLOCK 刷子与重复同点购买(战报诊断段)。

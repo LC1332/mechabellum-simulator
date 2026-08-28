@@ -148,7 +148,11 @@ def run_pair(gd, pair, arm, cfg):
     }
 
 
-def parse_constructions(pdata, bld_cids=None):
+DEFAULT_BLD_CIDS = frozenset({1, 2, 3})   # replay_check 默认: cid4 磁力路障
+                                          # 现网已移除, 不建模 (冻结口径)
+
+
+def parse_constructions(pdata, bld_cids=DEFAULT_BLD_CIDS):
     out = []
     for c in (pdata.get("constructions_raw") or []):
         try:
@@ -287,6 +291,7 @@ def main():
         "sneak": args.sneak, "towers": args.towers,
         "buildings": args.buildings, "officers": args.officers,
         "tower_skills": args.tower_skills, "opts": opts,
+        "bld_cids": sorted(DEFAULT_BLD_CIDS),
         "selected_equipment_ids": sorted(SELECTED_IDS),
         "static_equipment_ids": sorted(STATIC_IDS),
         "deferred_equipment_ids": sorted(DEFERRED_IDS),

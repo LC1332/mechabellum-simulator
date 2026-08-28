@@ -76,6 +76,10 @@ def main():
     ap.add_argument("--batch-size", type=int, default=None)
     ap.add_argument("--device", default=None)
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--max-steps", type=int, default=0,
+                    help="global optimizer-step cap (soak/benchmark 用)")
+    ap.add_argument("--predictions-out", default=None,
+                    help="test split 逐样本预测 jsonl.gz (§13.4 回溯)")
     ap.add_argument("--shuffle-labels", action="store_true",
                     help="§11 label-shuffle sanity probe")
     ap.add_argument("--resume", default=None)
@@ -221,6 +225,9 @@ def main():
         model.train()
         agg, n = {}, 0
         for chunk in batches(rows):
+            if args.max_steps and \
+                    len(global_step_track) >= args.max_steps:
+                break
             rws = [r for r, _ in chunk]
             batch, comps = collate_value([e for _, e in chunk],
                                          device=device, tok_cfg=tok_cfg)
@@ -364,7 +371,10 @@ def main():
     ck_dir = os.path.join(args.run_dir, "checkpoints")
     os.makedirs(ck_dir, exist_ok=True)
     hist = []
+    steps_at_start = len(global_step_track)
     for epoch in range(start_epoch, epochs):
+        if args.max_steps and                 len(global_step_track) >= args.max_steps:
+            break
         stats = {"epoch": epoch}
         for domain, rows in (("real", tr_real), ("sim", tr_sim)):
             if rows:
@@ -392,6 +402,49 @@ def main():
                 "seed": seed, "git_commit": contract.get("git_commit"),
                 "engineering_only": not formal,
             }, ck_path)
+
+    if info["rank"] == 0 and args.max_steps:
+        # benchmark parse anchor (§9.1)
+        n_steps = len(global_step_track) - steps_at_start
+        print("BENCH steps=%d seconds=%.1f steps_per_s=%.2f ranks=%d" % (
+            n_steps, time.time() - t0,
+            n_steps / max(time.time() - t0, 1e-9), info["world_size"]))
+        for lg in range(torch.cuda.device_count()):
+            print("BENCH gpu=%d peak_allocated_gb=%.2f peak_reserved_gb=%.2f"
+                  % (lg, torch.cuda.max_memory_allocated(lg) / 2 ** 30,
+                     torch.cuda.max_memory_reserved(lg) / 2 ** 30))
+
+    # ---------------------------------------------- predictions (§13.4)
+    if args.predictions_out and info["rank"] == 0:
+        import gzip
+        out_rows = []
+        for domain, rows in (("real", te_real), ("sim", te_sim)):
+            if not rows:
+                continue
+            proba, dmg = predict(rows, domain)
+            for i, (r, _e) in enumerate(rows):
+                if "agg" in r:
+                    y = int(np.argmax([r["agg"]["p_loss"],
+                                       r["agg"]["p_draw"],
+                                       r["agg"]["p_win"]]))
+                    d = (r["agg"]["y_damage_to_opp"],
+                         r["agg"]["y_damage_to_self"])
+                else:
+                    y = int(r["y_wdl"])
+                    d = (r["y_damage_to_opp"], r["y_damage_to_self"])
+                out_rows.append({
+                    "sample_id": r["sample_id"], "split": "test",
+                    "domain": domain, "y": y,
+                    "p": [float(x) for x in proba[i]],
+                    "dmg_pred": [float(x) for x in dmg[i]],
+                    "dmg_true": [float(x) for x in d],
+                    "seed": seed,
+                    "checkpoint": os.path.basename(args.resume or
+                                                   "fresh")})
+        with gzip.open(args.predictions_out, "wt", encoding="utf8") as f:
+            for r in out_rows:
+                f.write(json.dumps(r) + "\n")
+        print("predictions:", args.predictions_out, len(out_rows))
 
     # ------------------------------------------------------------- report
     report = {

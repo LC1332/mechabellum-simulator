@@ -60,6 +60,8 @@ def main():
     ap.add_argument("--device", default=None)
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--resume", default=None)
+    ap.add_argument("--predictions-out", default=None,
+                    help="test split 逐样本预测 jsonl.gz (§13.4 回溯)")
     ap.add_argument("--allow-engineering", action="store_true")
     args = ap.parse_args()
 
@@ -303,6 +305,34 @@ def main():
                 "seed": seed, "git_commit": contract.get("git_commit"),
                 "engineering_only": not formal,
             }, os.path.join(ck_dir, "tpolicy_seed%d.pt" % seed))
+
+    # ---------------------------------------------- predictions (§13.4)
+    if args.predictions_out and te_rows and info["rank"] == 0:
+        import gzip
+        from pysim.rl.transformer.losses import STAGES
+        out_rows = []
+        D.unwrap(model).eval()
+        with torch.no_grad():
+            for i in range(0, len(te_rows), 128):
+                chunk = te_rows[i:i + 128]
+                pb = collate_policy(chunk, device=device, tok_cfg=tok_cfg)
+                logits = D.unwrap(model)(pb["batch"], pb["components"],
+                                         pb["tables"], pb["fields"])
+                f = pb["fields"]
+                # per-sample record (verb stage; compact)
+                act = f[:, 0] != -100
+                preds = logits["verb"][act].argmax(-1).tolist()
+                gts = f[:, 0][act].tolist()
+                sids = [c["sample_id"] for c, a in zip(
+                    chunk, (f[:, 0] != -100).tolist()) if a]
+                for sid, pr, gt in zip(sids, preds, gts):
+                    out_rows.append({"sample_id": sid, "split": "test",
+                                     "verb_pred": int(pr),
+                                     "verb_true": int(gt), "seed": seed})
+        with gzip.open(args.predictions_out, "wt", encoding="utf8") as fo:
+            for r in out_rows:
+                fo.write(json.dumps(r) + "\n")
+        print("predictions:", args.predictions_out, len(out_rows))
 
     # ------------------------------------------------------------- report
     if info["rank"] == 0:
