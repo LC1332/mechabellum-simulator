@@ -334,6 +334,15 @@ class Battle:
         self._devices = []          # (team, kind, x, y, params-dict)
         self._strikes = []          # (team, x, y, damage, splash, t)
         self._burns = []            # (team, x, y, dps, radius) step15 fire fields
+        # step5 战场技能 (任务书 §4/§6/§7): ground areas, moving beams, seeded
+        # storms, beacon releases and scheduled bursts. All consumed at
+        # finalize/step; nothing here is numpy row state.
+        self._areas = []            # ground areas (oil/smoke/acid) dicts
+        self._ions = []             # moving-circle beams dicts
+        self._storms = []           # seeded lightning schedules dicts
+        self._beacons = []          # raw beacon releases [(team, pts, radius)]
+        self._bursts = []           # scheduled (t, kind, team, params-dict)
+        self._area_results = []     # (ref, ignited) per reportable area
         # step12 battlefield constructions: player defenses from the replay
         # snapshot (walls / AA cannon / rapid-fire cannon / magnetic barricade).
         # Each placement expands into `count` module rows sharing a group id.
@@ -405,6 +414,84 @@ class Battle:
             # it (radius from cal; patch burns the whole fight)
             self._burns.append((team, x, y, float(ev.get("dps", 0.0)),
                                 float(ev.get("radius", 10.0))))
+        elif kind in ("oil", "smoke", "acid"):
+            # step5 任务书 §6: swept-capsule ground areas. The ordered pair
+            # (A, B) stays ONE area — never two independent circles.
+            pts = ev.get("points") or []
+            if len(pts) >= 2:
+                ax, ay = float(pts[0][0]), float(pts[0][1])
+                bx, by = float(pts[1][0]), float(pts[1][1])
+            else:
+                ax, ay, bx, by = x, y, x, y
+            self._areas.append({
+                "kind": kind, "team": team, "ref": str(ev.get("ref", "")),
+                "ax": ax, "ay": ay, "bx": bx, "by": by,
+                "radius": float(ev.get("radius", 30.0)),
+                "slow_mult": float(ev.get("slow_mult", 0.45)),
+                "range_mult": float(ev.get("range_mult", 0.65)),
+                "pct_dps": float(ev.get("pct_dps", 0.03)),
+                "vuln_mult": float(ev.get("vuln_mult", 2.5)),
+                "shield_block": bool(ev.get("shield_block")),
+                "dead": False, "ignited": False,
+                "report": kind == "oil",   # only oil persists cross-round
+            })
+        elif kind == "emp":
+            # step5 任务书 §7 T7: instant EMP detonation (scheduled by t)
+            self._bursts.append((float(ev.get("t", 0.0)), "emp", team, {
+                "x": x, "y": y, "ref": str(ev.get("ref", "")),
+                "radius": float(ev.get("radius", 60.0)),
+                "shield_damage": float(ev.get("shield_damage", 20000.0)),
+                "duration": float(ev.get("duration", 25.0)),
+                "slow_mult": float(ev.get("slow_mult", 0.60))}))
+        elif kind == "photon":
+            # step5 任务书 §7 T8: friendly photon field, applied at t
+            pts = ev.get("points") or []
+            if len(pts) >= 2:
+                ax, ay = float(pts[0][0]), float(pts[0][1])
+                bx, by = float(pts[1][0]), float(pts[1][1])
+            else:
+                ax, ay, bx, by = x, y, x, y
+            self._bursts.append((float(ev.get("t", 0.0)), "photon", team, {
+                "ax": ax, "ay": ay, "bx": bx, "by": by,
+                "radius": float(ev.get("radius", 30.0)),
+                "duration": float(ev.get("duration", 20.0)),
+                "dmg_taken_mult": float(ev.get("dmg_taken_mult", 0.70))}))
+        elif kind == "storm":
+            # step5 任务书 §7 T11: seeded lightning storm inside circle
+            self._storms.append({
+                "team": team, "ref": str(ev.get("ref", "")),
+                "cx": x, "cy": y,
+                "radius": float(ev.get("radius", 130.0)),
+                "duration": float(ev.get("duration", 12.0)),
+                "interval": float(ev.get("interval", 0.8)),
+                "damage": float(ev.get("damage", 800.0)),
+                "splash": float(ev.get("splash", 8.0)),
+                "slow_mult": float(ev.get("slow_mult", 0.60)),
+                "slow_duration": float(ev.get("slow_duration", 1.0)),
+                "next_t": float(ev.get("interval", 0.8)),
+                "rng": None})       # seeded at finalize (battle seed)
+        elif kind == "ion":
+            # step5 任务书 §7 T10: moving-circle beam A->B (no ground trail)
+            pts = ev.get("points") or []
+            if len(pts) >= 2:
+                ax, ay = float(pts[0][0]), float(pts[0][1])
+                bx, by = float(pts[1][0]), float(pts[1][1])
+            else:
+                ax, ay, bx, by = x, y, x, y
+            self._ions.append({
+                "team": team, "ref": str(ev.get("ref", "")),
+                "ax": ax, "ay": ay, "bx": bx, "by": by,
+                "radius": float(ev.get("radius", 20.0)),
+                "speed": float(ev.get("speed", 25.0)),
+                "dps": float(ev.get("dps", 600.0)), "done": False})
+        elif kind == "beacon":
+            # step5 任务书 §7 T12: move beacon. THREE ordered points: A =
+            # selection centre (r=40), B/C = waypoint centres. Member-level
+            # selection happens at finalize (formation rows must exist).
+            pts = [(float(p[0]), float(p[1])) for p in (ev.get("points") or ())]
+            if len(pts) >= 3:
+                self._beacons.append((team, pts,
+                                      float(ev.get("radius", 40.0))))
 
     def add_building(self, team, cid, x, y, index=None):
         """step12: one player-defense construction placement from the replay
@@ -1192,6 +1279,18 @@ class Battle:
         # step12 magnet slow factor (multiplies _spd_fac; buildings are
         # immune to both paralysis and the slow field - they never move)
         self._magnet_fac = np.ones(n)
+        # step5 任务书 §4/T4-T5: battlefield area/status channels
+        self.photon_until = np.full(n, -1.0)   # 光子投射 expiry per row
+        self._storm_slow_until = np.full(n, -1.0)
+        self._area_fac = np.ones(n)            # oil/storm slow product
+        self._acid_on = np.zeros(n, dtype=bool)
+        self._smoke_on = np.zeros(n, dtype=bool)   # edge-triggered range scaling
+        self._wp_active = np.zeros(n, dtype=bool)  # move-beacon carriers
+        self._wp_stage = np.zeros(n, dtype=np.int8)
+        self._wp_x0 = np.zeros(n); self._wp_y0 = np.zeros(n)
+        self._wp_x1 = np.zeros(n); self._wp_y1 = np.zeros(n)
+        self._photon_taken = 1.0
+        self._acid_vuln = 1.0
         self.paralyse_until = {0: -1.0, 1: -1.0}
         self.towers_down = {0: 0, 1: 0}
         self.bld_groups_down = {0: 0, 1: 0}
@@ -1231,6 +1330,22 @@ class Battle:
             # line like every other skill channel (trace-only, no sim change)
             for team, x, y, dps, radius in self._burns:
                 self.trace.append("E|0.00|skill|%d|burn|%.0f,%.0f" % (team, x, y))
+        # step5 battlefield skills: shield-clip ground areas, seed storms,
+        # select beacon members (all deterministic so the digest holds)
+        self._step5_finalize()
+        if self.trace_enabled:
+            for a in self._areas:
+                if not a["dead"]:
+                    self.trace.append("E|0.00|area_create|%d|%s|%.0f,%.0f->%.0f,%.0f|r%.0f"
+                                      % (a["team"], a["kind"], a["ax"], a["ay"],
+                                         a["bx"], a["by"], a["radius"]))
+            for s in self._storms:
+                self.trace.append("E|0.00|storm|%d|%.0f,%.0f|r%.0f"
+                                  % (s["team"], s["cx"], s["cy"], s["radius"]))
+            for i in self._ions:
+                self.trace.append("E|0.00|ion|%d|%.0f,%.0f->%.0f,%.0f|r%.0f"
+                                  % (i["team"], i["ax"], i["ay"], i["bx"],
+                                     i["by"], i["radius"]))
 
         self._finalized = True
         return self
@@ -2444,12 +2559,16 @@ class Battle:
             self._ev_killer.append(int(src))
             # step19 on-hit rider effects (direct hits only, not splash):
             # 电磁弹 disable, 引燃 pct-burn, fireIntensify ground fire
+            # step5 T8: photon immunizes EMP + 引燃 (QA-4 user ruling)
             if src >= 0:
-                if self.emp_dur[src] > 0:
-                    self.emp_until[tgt] = self.time + self.emp_dur[src]
-                if self.ignite_atk[src] > 0:
-                    self.burn_pct_until[tgt] = self.time + 2.0
-                    self.burn_pct_rate[tgt] = self.ignite_atk[src]
+                if self.photon_until[tgt] > self.time:
+                    pass
+                else:
+                    if self.emp_dur[src] > 0:
+                        self.emp_until[tgt] = self.time + self.emp_dur[src]
+                    if self.ignite_atk[src] > 0:
+                        self.burn_pct_until[tgt] = self.time + 2.0
+                        self.burn_pct_rate[tgt] = self.ignite_atk[src]
                 fa = self.fire_atk[src]
                 if fa is not None:
                     dps, rad, life = fa
@@ -2583,6 +2702,22 @@ class Battle:
             return
         v = np.array(self._ev_victim, dtype=np.int64)
         dm = np.array(self._ev_dmg) * self._amp_fac[v]
+        # step5 任务书 §5 T5: photon (damage taken x0.70, ALL channels) and
+        # acid vulnerability (x2.5 on ATTACK damage only — killerless DoT /
+        # area ticks never re-amplify their own source). Photon dominates:
+        # it immunizes the acid status entirely (QA-4).
+        t_now0 = self.time
+        _ph_on = self.photon_until[v] > t_now0
+        _ac_on = (~_ph_on) & self._acid_on[v]
+        if np.any(_ph_on) or np.any(_ac_on):
+            killer0 = self._ev_killer
+            for k in range(len(v)):
+                if dm[k] <= 0 or self.dead[v[k]]:
+                    continue
+                if _ph_on[k]:
+                    dm[k] *= self._photon_taken
+                elif _ac_on[k] and killer0[k] >= 0:
+                    dm[k] *= self._acid_vuln
         # step8-B: a live shield barrier absorbs damage dealt to covered
         # SAME-TEAM units (splash, projectiles and strikes all funnel through
         # this event queue); the overflow of the shield-breaking hit passes
@@ -3174,8 +3309,51 @@ class Battle:
         return ok
 
     def _move(self):
+        # step5 任务书 §7 T12: move-beacon waypoint override. Selected
+        # members walk their own waypoints (B+off then C+off); engagement
+        # policy frozen as stop-to-attack — hold while the current target
+        # is inside firing range, resume the path once it is not. Beacon
+        # rows leave the normal chase movement entirely.
+        wp = getattr(self, "_wp_active", None)
+        if wp is not None and np.any(wp & (~self.dead)):
+            movers = np.where(wp & (~self.dead) & (~self._spawning))[0]
+            for u in movers:
+                u = int(u)
+                stage = int(self._wp_stage[u])
+                tx = self._wp_x0[u] if stage == 0 else self._wp_x1[u]
+                ty = self._wp_y0[u] if stage == 0 else self._wp_y1[u]
+                # stop-to-attack: an in-range target holds the march
+                mt = int(self.mv_target[u])
+                if mt >= 0 and not self.dead[mt]:
+                    d = math.hypot(self.x[mt] - self.x[u],
+                                   self.y[mt] - self.y[u]) \
+                        - self.radius[mt] - self.radius[u]
+                    if d <= self.range[u]:
+                        continue
+                wx, wy = tx - self.x[u], ty - self.y[u]
+                ln = math.hypot(wx, wy)
+                if ln <= 1e-6:
+                    self._wp_stage[u] = min(stage + 1, 1)
+                    if stage >= 1:
+                        self._wp_active[u] = False
+                    continue
+                emp_fac = 0.60 if self.emp_until[u] > self.time else 1.0
+                spd = self.move_speed[u] * self._spd_fac[u] \
+                    * self._magnet_fac[u] * emp_fac * self._area_fac[u]
+                step_len = spd * DT
+                if ln <= step_len:
+                    self.x[u], self.y[u] = tx, ty
+                    if stage >= 1:
+                        self._wp_active[u] = False
+                    else:
+                        self._wp_stage[u] = 1
+                else:
+                    self.x[u] += wx / ln * step_len
+                    self.y[u] += wy / ln * step_len
+                    if self.rolling[u]:
+                        self.moved[u] += step_len
         movable = (~self.dead) & (self.move_speed > 0) & (self.mv_target >= 0) \
-            & (~self._spawning)
+            & (~self._spawning) & (~self._wp_active)
         if not np.any(movable):
             return
         idx = np.where(movable)[0]
@@ -3225,7 +3403,8 @@ class Battle:
             if self.is_hacker.any() and self.opts.get("hack_pin", 1):
                 emp_fac = np.where(self.is_hacker[w] & self.beaming[w], 0.0,
                                    emp_fac)
-            spd = self.move_speed[w] * self._spd_fac[w] * self._magnet_fac[w] * emp_fac
+            spd = self.move_speed[w] * self._spd_fac[w] * self._magnet_fac[w] \
+                * emp_fac * self._area_fac[w]
             # step29 scorch_spd: 焦土冲锋期间高速飞向目标 (st346 用户口径:
             # 火獾带剩余血量高速飞向目标并自爆, 飞行期间可被打)
             _sspd = float(self.opts.get("scorch_spd", 0) or 0)
@@ -3262,7 +3441,8 @@ class Battle:
             elif kset is not None and not isinstance(kset, (list, tuple)):
                 kset = [kset]      # step28b: CLI --opt 可能传来 int
             can = (~self.is_melee[idx]) & (self.range[idx] >= kmin) & (dist >= 0) \
-                & (dist < kd) & (~self.scorch_on[idx]) & (self.move_speed[idx] > 0)
+                & (dist < kd) & (~self.scorch_on[idx]) & (self.move_speed[idx] > 0) \
+                & (~self._wp_active[idx])
             if kset:
                 in_set = np.isin(self.mech_id[idx], [int(x) for x in kset])
                 can &= in_set
@@ -3275,7 +3455,8 @@ class Battle:
                 ln = np.sqrt(wx * wx + wy * wy)
                 ok = ln > 1e-6
                 emp_fac = np.where(self.emp_until[k] > self.time, 0.6, 1.0)
-                spd = self.move_speed[k] * self._spd_fac[k] * self._magnet_fac[k] * emp_fac
+                spd = self.move_speed[k] * self._spd_fac[k] * self._magnet_fac[k] \
+                    * emp_fac * self._area_fac[k]
                 step_len = np.where(ok, spd * DT, 0.0)
                 self.x[k] = np.where(ok, self.x[k] + wx / np.maximum(ln, 1e-9) * step_len, self.x[k])
                 self.y[k] = np.where(ok, self.y[k] + wy / np.maximum(ln, 1e-9) * step_len, self.y[k])
@@ -3473,6 +3654,335 @@ class Battle:
             out[foes[inside]] = True
         return out
 
+    # ---------- step5 battlefield skills (任务书 §4/§6/§7) ----------
+    def _step5_finalize(self):
+        """Deterministic pre-fight setup: shield-clip ground areas at drop
+        time (permanent - the shield disappearing later never regrows oil),
+        seed the storm RNGs from the battle seed and select beacon members
+        by their own member position (multi-module cards split correctly)."""
+        import random as _random
+        from .battlefield.effects.areas import capsule_spine
+        seed = int(getattr(self, "_battle_seed", 0) or 0)
+        # ground areas: clip generation under live barriers (BOTH teams -
+        # the frozen rule says 护盾覆盖的地面, no team qualifier)
+        bars = np.where((self.mech_id == DEVICE_BARRIER) & (~self.dead))[0]
+        for a in self._areas:
+            if not a.get("shield_block") or not len(bars):
+                continue
+            keep = []
+            for sx, sy in capsule_spine(a["ax"], a["ay"], a["bx"], a["by"],
+                                        a["radius"]):
+                covered = False
+                for bi in bars:
+                    if math.hypot(self.x[bi] - sx, self.y[bi] - sy) \
+                            <= self.radius[bi] + 1e-9:
+                        covered = True
+                        break
+                if not covered:
+                    keep.append((sx, sy))
+            a["samples"] = keep
+            if not keep:
+                a["dead"] = True      # fully shield-covered: nothing lands
+                if self.trace_enabled:
+                    self.trace.append("E|0.00|area_blocked|%d|%s"
+                                      % (a["team"], a["kind"]))
+        # storms: rng = pure function of (battle seed, ref) - same seed
+        # replays identically, different seeds distribute (T11)
+        for s in self._storms:
+            tag = 0
+            for ch in s["ref"]:
+                tag = (tag * 31 + ord(ch)) & 0xFFFFFFFF
+            s["rng"] = _random.Random((seed & 0xFFFFFFF) * 1000003 + tag)
+            s["end"] = s["duration"]
+        # beacons: member-level selection at t=0 (frozen §2.1.3: center
+        # distance <= 40, member's own position; statics never join - QA-6
+        # walls/cannons unaffected; air units DO follow)
+        for team, pts, rad in self._beacons:
+            (ax, ay), (bx, by), (cx, cy) = pts[0], pts[1], pts[2]
+            sel = np.where((~self.dead) & (self.team == team)
+                           & (~self.is_tower) & (~self.is_device)
+                           & (~self.is_bld))[0]
+            for u in sel:
+                u = int(u)
+                if math.hypot(self.x[u] - ax, self.y[u] - ay) > rad + 1e-9:
+                    continue
+                ox, oy = self.x[u] - ax, self.y[u] - ay
+                self._wp_active[u] = True
+                self._wp_stage[u] = 0
+                self._wp_x0[u], self._wp_y0[u] = bx + ox, by + oy
+                self._wp_x1[u], self._wp_y1[u] = cx + ox, cy + oy
+                if self.trace_enabled:
+                    self.trace.append("E|0.00|waypoint|%d|%d|%.0f,%.0f"
+                                      % (team, int(self.uid[u]),
+                                         self._wp_x0[u], self._wp_y0[u]))
+        self._bursts.sort(key=lambda b: b[0])
+
+    def _step5_bursts(self):
+        """Scheduled instant effects (EMP detonation / photon field)."""
+        while self._bursts and self._bursts[0][0] <= self.time:
+            t0, kind, team, prm = self._bursts.pop(0)
+            if kind == "emp":
+                self._step5_emp_burst(team, prm)
+            else:
+                self._step5_photon_burst(team, prm)
+
+    def _step5_emp_burst(self, team, prm):
+        """任务书 §7 T7 (user-frozen §2.1.6): 20000 damage to shields in
+        radius; barrier-covered GROUND units are immune; everyone else gets
+        the tech-disable + speed x slow_mult status for `duration` seconds
+        (the engine EMP channel already carries speed x0.60 + tech-off)."""
+        x, y, radius = prm["x"], prm["y"], prm["radius"]
+        sdur, dur = prm["shield_damage"], prm["duration"]
+        bars = np.where((self.mech_id == DEVICE_BARRIER) & (~self.dead))[0]
+        for bi in bars:
+            bi = int(bi)
+            if math.hypot(self.x[bi] - x, self.y[bi] - y) - self.radius[bi] \
+                    > radius:
+                continue
+            self.hp[bi] -= sdur
+            if self.trace_enabled:
+                self.trace.append("E|%.2f|shield_damage|%d|%.0f|%.0f,%.0f"
+                                  % (self.time, int(self.team[bi]), sdur,
+                                     self.x[bi], self.y[bi]))
+            if self.hp[bi] <= 0:
+                self._on_barrier_down(bi, -1)
+        live_bars = [(int(bi), self.x[bi], self.y[bi], self.radius[bi])
+                     for bi in np.where((self.mech_id == DEVICE_BARRIER)
+                                        & (~self.dead) & (self.hp > 0))[0]]
+        foes = np.where((~self.dead) & (self.team != team))[0]
+        for u in foes:
+            u = int(u)
+            if math.hypot(self.x[u] - x, self.y[u] - y) - self.radius[u] \
+                    > radius:
+                continue
+            if not self.is_fly[u] and any(
+                    math.hypot(self.x[u] - bx, self.y[u] - by) <= br
+                    for _, bx, by, br in live_bars):
+                continue     # barrier-covered ground unit: fully immune
+            if self.photon_until[u] > self.time:
+                if self.trace_enabled:
+                    self.trace.append("E|%.2f|status_blocked|%d|photon|emp"
+                                      % (self.time, int(self.uid[u])))
+                continue
+            if self.shield[u] > 0:
+                take = min(float(self.shield[u]), sdur)
+                self.shield[u] -= take
+                if self.trace_enabled:
+                    self.trace.append("E|%.2f|shield_damage|%d|%.0f|%.0f,%.0f"
+                                      % (self.time, int(self.uid[u]), take,
+                                         self.x[u], self.y[u]))
+                if self.shield[u] > 0:
+                    continue      # the shield ate the burst: no status
+            self.emp_until[u] = max(float(self.emp_until[u]),
+                                    self.time + dur)
+            if self.trace_enabled:
+                self.trace.append("E|%.2f|status_apply|%d|emp|%.0f"
+                                  % (self.time, int(self.uid[u]), dur))
+
+    def _step5_photon_burst(self, team, prm):
+        """任务书 §7 T8 (user-frozen §2.1.9 + QA-4): friendly units inside
+        the swept area gain the photon status for `duration` seconds —
+        damage taken x0.70 and immunity to EMP / 引燃 / 酸液 / 退化光束.
+        Gaining photon CLEARS those existing statuses (QA-4 user ruling)."""
+        from .battlefield.effects.areas import capsule_hit
+        ax, ay, bx, by, radius = (prm["ax"], prm["ay"], prm["bx"], prm["by"],
+                                  prm["radius"])
+        self._photon_taken = prm["dmg_taken_mult"]
+        friends = np.where((~self.dead) & (self.team == team)
+                           & (~self.is_tower) & (~self.is_device)
+                           & (~self.is_bld))[0]
+        for u in friends:
+            u = int(u)
+            if not capsule_hit(self.x[u], self.y[u], ax, ay, bx, by, radius):
+                continue
+            had = (self.emp_until[u] > self.time) or \
+                  (self.burn_pct_until[u] > self.time)
+            self.emp_until[u] = -1.0        # QA-4: photon clears them
+            self.burn_pct_until[u] = -1.0
+            self.photon_until[u] = self.time + prm["duration"]
+            if self.trace_enabled:
+                self.trace.append("E|%.2f|status_apply|%d|photon|%.0f%s"
+                                  % (self.time, int(self.uid[u]),
+                                     prm["duration"],
+                                     "|clears" if had else ""))
+
+    def _step5_areas_tick(self):
+        """Every-frame ground-area pass: membership masks, oil ignition,
+        ion beams, storm strikes. Slow/range/vuln factors are recomputed
+        whole-cloth each tick (no drift)."""
+        from .battlefield.effects.areas import (capsule_hit, circle_hit,
+                                                moving_circle_at,
+                                                capsule_spine)
+        self._ev_victim = getattr(self, "_ev_victim", None) or []
+        self._ev_dmg = getattr(self, "_ev_dmg", None) or []
+        self._ev_killer = getattr(self, "_ev_killer", None) or []
+        t = self.time
+        oil_on = np.zeros(self.n, dtype=bool)
+        smoke_on = np.zeros(self.n, dtype=bool)
+        acid_on = np.zeros(self.n, dtype=bool)
+        for a in self._areas:
+            if a["dead"]:
+                continue
+            foes = np.where((~self.dead) & (self.team != a["team"])
+                            & (~self.is_tower) & (~self.is_device)
+                            & (~self.is_bld))[0]
+            if not len(foes):
+                continue
+            hit = np.array([capsule_hit(self.x[u], self.y[u],
+                                        a["ax"], a["ay"],
+                                        a["bx"], a["by"], a["radius"],
+                                        float(self.radius[u]))
+                            for u in foes])
+            inside = foes[hit]
+            if a["kind"] == "oil":
+                # 黏油 slows GROUND units (oil lies on the ground; air cal)
+                inside = inside[~self.is_fly[inside]]
+                oil_on[inside] = True
+            elif a["kind"] == "smoke":
+                smoke_on[inside] = True
+            elif a["kind"] == "acid":
+                # photon immunity blocks the acid status entirely (T8)
+                keep = np.array([self.photon_until[u] <= t
+                                 for u in inside], dtype=bool)
+                inside = inside[keep]
+                acid_on[inside] = True
+                self._acid_vuln = a["vuln_mult"]
+                if a["pct_dps"] > 0:
+                    for u in inside:
+                        # 3% maxHP/s DoT, killerless (own DoT never
+                        # re-amplified)
+                        self._ev_victim.append(int(u))
+                        self._ev_dmg.append(float(self.max_hp[u])
+                                            * a["pct_dps"] * DT)
+                        self._ev_killer.append(-1)
+        # oil ignition: any live fire touching the oil turns it into flame
+        # circles along its (surviving) spine, carrying the IGNITING fire's
+        # dps; the oil object is GONE afterwards (任务书 §2.1.5/T6)
+        for a in self._areas:
+            if a["dead"] or a["kind"] != "oil" or not self._burns:
+                continue
+            samples = a.get("samples") or capsule_spine(a["ax"], a["ay"],
+                                                        a["bx"], a["by"],
+                                                        a["radius"])
+            lit_dps = None
+            for fire in self._burns:
+                fteam, fx, fy, fdps, frad = fire[:5]
+                if fdps <= 0:
+                    continue
+                if len(fire) > 5 and fire[5] < t:
+                    continue
+                for sx, sy in samples:
+                    if math.hypot(fx - sx, fy - sy) <= frad + a["radius"]:
+                        lit_dps = fdps
+                        break
+                if lit_dps is not None:
+                    break
+            if lit_dps is None:
+                continue
+            for sx, sy in samples:
+                self._burns.append([int(a["team"]), float(sx), float(sy),
+                                    float(lit_dps), float(a["radius"])])
+            a["dead"] = True
+            a["ignited"] = True
+            if self.trace_enabled:
+                self.trace.append("E|%.2f|area_expire|%d|oil|ignite"
+                                  % (t, a["team"]))
+        # smoke: edge-triggered in-place range scaling (the emp_full
+        # pattern - scale on enter, restore on leave)
+        smoke_mult = next((a["range_mult"] for a in self._areas
+                           if a["kind"] == "smoke" and not a["dead"]), None)
+        if smoke_mult is not None:
+            enter = smoke_on & (~self._smoke_on)
+            leave = self._smoke_on & (~smoke_on)
+            if np.any(enter):
+                self.range[enter] *= smoke_mult
+                self.stop_dist[enter] = np.where(
+                    self.range[enter] > 0, self.range[enter], 5.0)
+            if np.any(leave):
+                self.range[leave] /= smoke_mult
+                self.stop_dist[leave] = np.where(
+                    self.range[leave] > 0, self.range[leave], 5.0)
+        self._smoke_on = smoke_on
+        # slow product: oil x slow_mult; storm slow x slow_mult
+        fac = np.ones(self.n)
+        oil_mult = next((a["slow_mult"] for a in self._areas
+                         if a["kind"] == "oil" and not a["dead"]), None)
+        if oil_mult is not None:
+            fac[oil_on] *= oil_mult
+        storm_slow = self._storm_slow_until > t
+        if np.any(storm_slow):
+            fac[storm_slow] *= 0.60
+        self._area_fac = fac
+        self._acid_on = acid_on
+        # ion beams: centre moves A->B at `speed`; enemies in the current
+        # circle take dps*dt (killerless; no ground trail - T10 default)
+        for io in self._ions:
+            if io["done"]:
+                continue
+            cx, cy, arrived = moving_circle_at(io["ax"], io["ay"],
+                                               io["bx"], io["by"],
+                                               io["speed"], t)
+            foes = np.where((~self.dead) & (self.team != io["team"])
+                            & (~self.is_tower) & (~self.is_device)
+                            & (~self.is_bld))[0]
+            for u in foes:
+                u = int(u)
+                if not circle_hit(self.x[u], self.y[u], cx, cy,
+                                  io["radius"], float(self.radius[u])):
+                    continue
+                if self.photon_until[u] > t:
+                    continue
+                self._ev_victim.append(u)
+                self._ev_dmg.append(io["dps"] * DT)
+                self._ev_killer.append(-1)
+            if arrived:
+                io["done"] = True
+                if self.trace_enabled:
+                    self.trace.append("E|%.2f|area_expire|%d|ion"
+                                      % (t, io["team"]))
+        # storm strikes: seeded, provisional distribution (T11): each strike
+        # picks a RANDOM enemy unit currently inside the storm circle and
+        # lands on it (uniform choice; splash still applies around the point).
+        # Same seed replays identically; different seeds give statistics
+        for s in self._storms:
+            while s["next_t"] <= t and s["next_t"] <= s["end"]:
+                foes = np.where((~self.dead) & (self.team != s["team"])
+                                & (~self.is_tower) & (~self.is_device)
+                                & (~self.is_bld))[0]
+                cands = [int(u) for u in foes
+                         if circle_hit(self.x[u], self.y[u], s["cx"], s["cy"],
+                                       s["radius"], float(self.radius[u]))]
+                if cands:
+                    u = cands[int(s["rng"].random() * len(cands))]
+                    px, py = float(self.x[u]), float(self.y[u])
+                    for v2 in foes:
+                        v2 = int(v2)
+                        if not circle_hit(self.x[v2], self.y[v2], px, py,
+                                          s["splash"],
+                                          float(self.radius[v2])):
+                            continue
+                        if self.photon_until[v2] > t:
+                            continue
+                        self._ev_victim.append(v2)
+                        self._ev_dmg.append(s["damage"])
+                        self._ev_killer.append(-1)
+                        self._storm_slow_until[v2] = max(
+                            float(self._storm_slow_until[v2]),
+                            t + s["slow_duration"])
+                else:
+                    px = py = float("nan")     # nobody inside this strike
+                if self.trace_enabled:
+                    self.trace.append("E|%.2f|strike|%d|storm|%.0f,%.0f"
+                                      % (s["next_t"], s["team"], px, py))
+                s["next_t"] += s["interval"]
+
+    def area_results(self):
+        """step5 任务书 §6: (ref, ignited) per reportable ground area —
+        settlement drops ignited oils instead of carrying them on."""
+        return tuple((str(a["ref"]), bool(a["ignited"]))
+                     for a in self._areas if a.get("report")
+                     and a.get("ref"))
+
     # ---------- main loop ----------
     def step(self, tick):
         self.time = (tick + 1) * DT
@@ -3481,6 +3991,10 @@ class Battle:
         self._ev_victim = getattr(self, "_ev_victim", None) or []
         self._ev_dmg = getattr(self, "_ev_dmg", None) or []
         self._ev_killer = getattr(self, "_ev_killer", None) or []
+        # step5: scheduled bursts (EMP detonation / photon field) land
+        # before combat so their statuses gate this tick's fire
+        if self._bursts:
+            self._step5_bursts()
         # step9: teleport growth + gating mask. Growth runs before combat so a
         # unit hit at time t has maxHP * t / delay HP available; the kill scan
         # in _apply_damage only fires on damaged victims, so the 0-HP start
@@ -3799,6 +4313,11 @@ class Battle:
             if len(newly_fb):
                 self._process_deaths(newly_fb, {int(v): -1 for v in newly_fb})
 
+        # step5 任务书 §4/§6: ground areas (oil slow / smoke range / acid
+        # DoT+vuln), oil ignition, ion beams and storm strikes tick right
+        # before the legacy fire fields so a conversion joins this pass
+        if self._areas or self._ions or self._storms:
+            self._step5_areas_tick()
         # step15: burning ground fields tick every frame (killerless DoT,
         # barriers absorb through the same event queue); step19: patches
         # with an end time expire

@@ -653,19 +653,22 @@ def test_tech_view_lists_field_mechs_with_quotes(client):
 
 def test_typed_skill_release_and_fleet_melee_blockers(client):
     """step3 §5: typed release_commander_skill submissions; an unmapped id
-    gets a precise blocker and never a battle event."""
+    gets a precise blocker and never a battle event.
+
+    step5: 200001 EMP is now IMPLEMENTED (accepted release) - the blocker
+    probe switched to a genuinely unmapped id (200004 unknown)."""
     v = open_session(client)
     sid = v["session_id"]
-    # unmapped EMP -> precise rejection, state unchanged
+    # unmapped id -> precise rejection, state unchanged
     digest = v["state_digest"]
     r = cmd(client, sid, v["version"], "APPLY_ACTION", {
         "action": {"kind": "release_commander_skill",
-                   "args": {"skill_id": 200001,
+                   "args": {"skill_id": 200004,
                             "positions": [{"x": 10, "y": 10}]}}})
     v = r.json()
     rr = v["rejected_receipt"]
     assert rr and rr["reason_code"] == "UNSUPPORTED_ACTION"
-    assert "skill_id=200001" in rr["detail"]
+    assert "skill_id=200004" in rr["detail"]
     assert v["state_digest"] == digest
     # no slots -> nothing releasable in this view, or slots carry meta
     for s in v["legal_actions"].get("skill_releases", []):

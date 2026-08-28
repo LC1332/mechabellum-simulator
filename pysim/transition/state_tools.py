@@ -6,7 +6,31 @@ from dataclasses import is_dataclass
 from enum import Enum
 
 from .model import (EnvironmentState, PlayerState, UnitCard, Phase,
-                    SCHEMA_VERSION)
+                    CommanderSkillRelease, SCHEMA_VERSION)
+
+
+def _release(rd):
+    if isinstance(rd, CommanderSkillRelease):
+        return rd
+    return CommanderSkillRelease(
+        **{k: v for k, v in rd.items() if k != "__type__"})
+
+
+def _migrate_flat_releases(flat):
+    """Old (sid, x, y) flat events -> single-point typed releases. The
+    grouping of a multi-point release is unrecoverable from the flat view,
+    so each point becomes its own release (step5 T0: migrate, never
+    fabricate the missing points)."""
+    out = []
+    for n, e in enumerate(flat or ()):
+        try:
+            sid, x, y = int(float(e[0])), float(e[1]), float(e[2])
+        except (TypeError, ValueError, IndexError):
+            continue
+        out.append(CommanderSkillRelease(
+            release_ref=n, skill_id=sid, side=-1,
+            ordered_positions=((x, y),)))
+    return out
 
 
 def _canon(obj):
@@ -138,8 +162,16 @@ def state_from_dict(d: dict) -> EnvironmentState:
                   "commander_skills_raw",
                   "constructions_raw", "tower_mods_raw", "devices_raw",
                   "skill_events_raw", "equipment_inventory",
-                  "spawned_this_round", "redeployed_this_round"):
+                  "spawned_this_round", "redeployed_this_round",
+                  "ground_areas_raw"):
             p[k] = tuple(p.get(k) or ())
+        # step5 T0 migration: old saves predate typed releases; their flat
+        # (sid, x, y) events migrate to single-point releases WITHOUT
+        # fabricating additional points
+        rel = p.get("skill_releases")
+        if rel is None or not rel:
+            rel = _migrate_flat_releases(p.get("skill_events_raw") or ())
+        p["skill_releases"] = tuple(_release(r) for r in rel)
         p["tower_strengthen"] = tuple(p.get("tower_strengthen") or (0, 0))
         p["pre_round_fight_result"] = p.get("pre_round_fight_result")
         return PlayerState(**p)

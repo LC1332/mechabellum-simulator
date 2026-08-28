@@ -23,6 +23,13 @@ _REINFORCE_JSON = os.path.join(_ROOT, "information", "增援卡牌-回放全量�
 
 _LEVEL_PRICES = {1: 0, 2: 50, 3: 100, 4: 200}
 
+# step5 任务书 §5 T2 / QA-2 (user-frozen 2026-08-28): 战地回收 900001 on a
+# construction refunds wall 50 (cid 1 防御墙, 5 modules), cannons 100
+# (cid 2 反装甲炮 / cid 3 速射炮) and the magnet barricade 50 (cid 4
+# 磁力路障, user ruling same day; corpus shows 270 recycled cid4 rows).
+# Unknown cids stay precise rejections — never a guessed refund.
+CONSTRUCTION_RECYCLE_SUPPLY = {1: 50, 2: 100, 3: 100, 4: 50}
+
 
 # ---------------------------------------------------------------- quotes
 # step3 任务书 §2.1: the single price entry. Execution, legality, GameView,

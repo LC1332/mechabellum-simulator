@@ -27,8 +27,40 @@ def settle_transition(state: EnvironmentState, outcome: BattleOutcome,
                                      "settle needs PRE_BATTLE state")
     players = []
     violations = []
+    # step5 任务书 §6/T6: ground-area writeback. Entries are (ref, sid, ax,
+    # ay, bx, by, ttl) with ttl counting REMAINING battles including the one
+    # just fought. Oils the fight ignited (oil -> flame) burn out and never
+    # reach the next round; un-ignited THIS-round oil releases become
+    # persistent with ttl=2 (present this battle + the next one).
+    from ..skills import persistent_area_release
+    ignited_refs = {str(ref) for ref, ign
+                    in (getattr(outcome, "area_results", ()) or ()) if ign}
     for side in (0, 1):
         p = state.players[side]
+        areas = []
+        for a in (getattr(p, "ground_areas_raw", ()) or ()):
+            try:
+                ref, sid = str(a[0]), int(float(a[1]))
+                ax, ay, bx, by = (float(a[2]), float(a[3]),
+                                  float(a[4]), float(a[5]))
+                ttl = int(float(a[6]))
+            except (TypeError, ValueError, IndexError):
+                continue
+            if ref in ignited_refs:
+                continue
+            areas.append((ref, sid, ax, ay, bx, by, ttl))
+        for n, rel in enumerate(getattr(p, "skill_releases", ()) or ()):
+            pts = getattr(rel, "ordered_positions", ()) or ()
+            if not persistent_area_release(int(getattr(rel, "skill_id", 0))):
+                continue
+            if len(pts) < 2:
+                continue
+            ref = "area:%d" % n
+            if ref in ignited_refs:
+                continue
+            areas.append((ref, int(rel.skill_id),
+                          float(pts[0][0]), float(pts[0][1]),
+                          float(pts[1][0]), float(pts[1][1]), 2))
         dmg = int(outcome.damage_to_player[side])
         hp_next = max(0, p.hp - dmg)
         if outcome.winner == -1:
@@ -62,7 +94,8 @@ def settle_transition(state: EnvironmentState, outcome: BattleOutcome,
                 units.append(u)
         players.append(PlayerState(**{**p.__dict__, "hp": hp_next,
                                       "pre_round_fight_result": res,
-                                      "units": tuple(units)}))
+                                      "units": tuple(units),
+                                      "ground_areas_raw": tuple(areas)}))
     done = any(p.hp <= 0 for p in players) or state.round >= max_round
     reason = None
     if done:
@@ -160,6 +193,16 @@ def advance_round(settled: EnvironmentState,
         else:
             inc = 0
         skills = tick_skill_cooldowns(p.commander_skills_raw)
+        # step5 任务书 §4/T4: persistent ground areas tick one round down
+        # (ttl counts remaining battles; 0 drops the area)
+        areas = []
+        for a in (getattr(p, "ground_areas_raw", ()) or ()):
+            try:
+                ttl = int(float(a[6]))
+            except (TypeError, ValueError, IndexError):
+                continue
+            if ttl - 1 > 0:
+                areas.append(tuple(a[:6]) + (ttl - 1,))
         equipment = tuple(p.equipment_inventory or ())
         if gd is not None:
             from .equipment import (round_officer_skills,
@@ -187,6 +230,8 @@ def advance_round(settled: EnvironmentState,
                                       "tower_mods_raw": (),
                                       "devices_raw": (),
                                       "skill_events_raw": (),
+                                      "skill_releases": (),
+                                      "ground_areas_raw": tuple(areas),
                                       "spawned_this_round": (),
                                       "redeployed_this_round": ()}))
     return EnvironmentState(

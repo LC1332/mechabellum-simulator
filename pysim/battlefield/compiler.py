@@ -70,7 +70,11 @@ def _skill_event_params(sid, d) -> tuple:
                 ("level", float(d["level"])))
     if d["kind"] == "burn":
         return (("dps", float(d["dps"])), ("radius", float(d["radius"])))
-    return ()
+    # step5 area/status skills: every def number lands in the digestable
+    # params (任务书 §3: expressiveness must not shrink)
+    from ..skills import _area_effect_params
+    return tuple(sorted((k, float(v)) for k, v in
+                        _area_effect_params(int(sid), d).items()))
 
 
 def compile_battle_input(state, battle_seed: int = 0) -> BattleInput:
@@ -119,20 +123,31 @@ def compile_battle_input(state, battle_seed: int = 0) -> BattleInput:
                                                       and 10007 in officers)
                       else ("/10008" if (cid == 10001 and 10008 in officers)
                             else ""))))
-        # commander battlefield skills released this round; multi-strike ids
-        # (轨道轰炸) expand deterministically here so the full落点 distribution
-        # lands in the digestable BattleInput (step4 任务书 §7.1)
-        for n, rel in enumerate(p.skill_events_raw or ()):
-            try:
-                sid, sx, sy = int(rel[0]), float(rel[1]), float(rel[2])
-            except (TypeError, ValueError, IndexError):
-                continue
+        # commander battlefield skills released this round (step5 T0: the
+        # TYPED releases keep the full ordered points; legacy states fall
+        # back to the flat single-point view). Multi-strike ids (轨道轰炸)
+        # expand deterministically; multi-point area/beacon skills stay ONE
+        # event with the ordered points so the digest sees the true shape
+        from ..skills import RELEASE_POINT_COUNTS
+        rels = list(getattr(p, "skill_releases", ()) or ())
+        if not rels:
+            rels = [(int(r[0]), ((float(r[1]), float(r[2])),))
+                    for r in (p.skill_events_raw or ())]
+        else:
+            rels = [(int(rel.skill_id),
+                     tuple((float(x), float(y))
+                           for (x, y) in (rel.ordered_positions or ())))
+                    for rel in rels]
+        for n, (sid, pts) in enumerate(rels):
             d = COMMANDER_SKILLS.get(sid)
-            if not d:
+            if not d or not pts:
                 continue
+            if sid in RELEASE_POINT_COUNTS \
+                    and len(pts) != RELEASE_POINT_COUNTS[sid]:
+                continue    # deploy already rejected it; never reshape here
             if d["kind"] == "strike" and int(d.get("strikes", 1) or 1) > 1:
                 from ..skills import expand_strike_events
-                for m, sev in enumerate(expand_strike_events(sid, sx, sy)):
+                for m, sev in enumerate(expand_strike_events(sid, *pts[0])):
                     events.append(TimedEvent(
                         sev["kind"], side,
                         "skill:%d:%d:%d" % (sid, n, m), sid,
@@ -140,10 +155,35 @@ def compile_battle_input(state, battle_seed: int = 0) -> BattleInput:
                         params=_skill_event_params(sid, d),
                         source="ReleaseCommanderSkill"))
                 continue
+            if sid in RELEASE_POINT_COUNTS:
+                events.append(TimedEvent(
+                    d["kind"], side, "area:%d" % n, sid, position=pts[0],
+                    points=pts, params=_skill_event_params(sid, d),
+                    source="ReleaseCommanderSkill"))
+                continue
+            for m, (sx, sy) in enumerate(pts):
+                events.append(TimedEvent(
+                    d["kind"], side, "skill:%d:%d:%d" % (sid, n, m), sid,
+                    position=(sx, sy), params=_skill_event_params(sid, d),
+                    source="ReleaseCommanderSkill"))
+        # step5 任务书 §4/T6: persistent ground areas carried from earlier
+        # rounds (un-ignited 黏油, ttl>=1) re-enter this round's input with
+        # their stable ref so the outcome can report ignition per area
+        for a in (getattr(p, "ground_areas_raw", ()) or ()):
+            try:
+                aref, asid = str(a[0]), int(float(a[1]))
+                ax, ay, bx, by = (float(a[2]), float(a[3]),
+                                  float(a[4]), float(a[5]))
+            except (TypeError, ValueError, IndexError):
+                continue
+            d = COMMANDER_SKILLS.get(asid)
+            if not d or d.get("kind") != "oil":
+                continue
             events.append(TimedEvent(
-                d["kind"], side, "skill:%d:%d" % (sid, n), sid,
-                position=(sx, sy), params=_skill_event_params(sid, d),
-                source="ReleaseCommanderSkill"))
+                "oil", side, aref, asid, position=(ax, ay),
+                points=((ax, ay), (bx, by)),
+                params=_skill_event_params(asid, d),
+                source="persistent_ground_area"))
         # units (ALL of them: engine-side drops stay the legacy adapter's
         # job; the BattleInput digest reflects the persistent state truth)
         techs_of = {m: list(t) for m, t in p.tech_map}

@@ -181,6 +181,50 @@ _SKILL_CONFIDENCE = {
     1200002: ("provisional", ("step4 P1: airdrop 1 犀牛 mech 5 (user table)",)),
     1200004: ("provisional", ("step4 P1: airdrop 1 霸主 mech 11 (user table)",)),
     1200005: ("provisional", ("step4 P1: airdrop 1 火神 mech 3 (user table)",)),
+    # ---- step5 任务书 §2.1 frozen rules + §12 QA answers (user 2026-08-28).
+    # Frozen numbers are auditable user rulings; every field still marked
+    # cal keeps the id OUT of verified. The oracle A/B (§4) upgrades these
+    # one by one — never the code path alone.
+    200001: ("provisional", ("step5§2.1 user-frozen: r60, 20000 shield "
+                             "damage, 25s disable, speed x0.60, "
+                             "barrier-covered ground immune",
+                             "air/building/device interaction cal")),
+    200002: ("provisional", ("step5 QA-2 user-frozen: r130, same effect "
+                             "spec as 200001 (radius-only variant)",
+                             "cd/stacking cal")),
+    200003: ("provisional", ("step5§2.1+QA-4 user-frozen: 20s photon, "
+                             "damage taken x0.70, immune+clears EMP/引燃/"
+                             "酸液/退化光束",
+                             "shape assumed capsule r30 (cal)")),
+    400002: ("provisional", ("step5§2.1 user-frozen: capsule(A,B,30), "
+                             "ground speed x0.45, unlit oil 2 battles, "
+                             "ignite->flame, shield-clipped generation",
+                             "air/友伤/tick cal")),
+    500002: ("provisional", ("step5 QA-2 user-frozen: 3% maxHP/s + damage "
+                             "taken x2.5", "tick/duration/air cal")),
+    600002: ("provisional", ("step5 QA-2 user-frozen: enemy range x0.65, "
+                             "capsule r30, shield-clipped generation",
+                             "duration/air/stacking cal")),
+    300005: ("provisional", ("step5 QA-2 user-frozen: r130 ONLY",
+                             "strike distribution/damage/duration cal -> "
+                             "seeded provisional; strict-effect stays "
+                             "blocked until the storm oracle")),
+    300006: ("provisional", ("step5§2.1 user-frozen: moving circle r20 "
+                             "A->B", "speed/dps/tick/ff cal")),
+    1500001: ("provisional", ("step5§2.1+QA-6 user-frozen: 3 ordered "
+                              "points, r40 member selection, relative "
+                              "offsets, stop-to-attack; walls/cannons "
+                              "unaffected",
+                              "collision/转向/midline edges cal")),
+    1500002: ("provisional", ("step5 QA-2/QA-6 user ruling: identical "
+                              "effect to 1500001 (增援卡 variant)")),
+    # 战地回收 900001 (transition-only: unit sell + construction refund):
+    # refund table user-frozen, unit path corpus-verified, cd=0 corpus law
+    900001: ("verified", ("step5 QA-2 user-frozen: wall (cid1) 50, "
+                          "反装甲炮 (cid2) / 速射炮 (cid3) 100, 磁力路障 "
+                          "(cid4) 50 (user ruling 2026-08-28; corpus 270 "
+                          "recycled cid4 rows)",
+                          "corpus:cd=0 2479/2479 releases (unit path)")),
 }
 
 

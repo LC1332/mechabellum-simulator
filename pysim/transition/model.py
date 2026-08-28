@@ -16,9 +16,9 @@ import os
 from dataclasses import dataclass, field
 from enum import Enum
 
-SCHEMA_VERSION = "transition-v0.6"
+SCHEMA_VERSION = "transition-v0.7"
 RULESET_VERSION = "normal_1v1_replay_v0"
-ENGINE_VERSION = "pysim-step30"
+ENGINE_VERSION = "pysim-step31"
 
 
 class Phase(str, Enum):
@@ -41,6 +41,32 @@ class UnitCard:
     sell_supply: int = 0
     round_count: int = 0
     replay_index: int | None = None   # game unit Index, provenance only
+
+
+@dataclass(frozen=True)
+class CommanderSkillRelease:
+    """One typed battlefield-skill release (step5 任务书 §3 T0).
+
+    A single raw ReleaseCommanderSkill record may carry SEVERAL Positions
+    (move beacon = 3 ordered points, 黏油/酸液/烟雾 swept capsule = 2). They
+    are ONE release: ordered_positions preserves the raw order verbatim and
+    the release consumes exactly ONE skill slot. Never expand a release into
+    per-position pseudo-releases — that is the semantic loss this type fixes.
+    """
+    release_ref: int                   # sequence number within the round
+    skill_id: int
+    side: int
+    skill_index: int | None = None     # raw SkillIndex when known
+    ordered_positions: tuple = ()      # ((x, y), ...) raw order, verbatim
+    unit_ref: int | None = None        # game unit Index when unit-targeted
+    construction_ref: int | None = None   # snapshot Construction Index
+    source_raw_index: int = -1         # raw action log position (audit)
+
+    def as_flat_events(self) -> tuple:
+        """Derived flat (sid, x, y) view for the legacy skill_events_raw
+        consumers — one point per position, order preserved."""
+        return tuple((int(self.skill_id), float(p[0]), float(p[1]))
+                     for p in (self.ordered_positions or ()))
 
 
 @dataclass(frozen=True)
@@ -68,7 +94,17 @@ class PlayerState:
     # audit-game v1 round-scoped fields (reset by advance_round):
     tower_mods_raw: tuple = ()       # ActiveEnergyTowerSkill ids this round (5/6)
     devices_raw: tuple = ()          # ReleaseContraption (cid,x,y) this round
-    skill_events_raw: tuple = ()     # ReleaseCommanderSkill (sid,x,y) this round
+    skill_events_raw: tuple = ()     # derived flat (sid,x,y) releases this round
+    # step5 任务书 §3 T0: round-scoped TYPED releases preserving the full
+    # ordered Positions of each release (beacon 3 points / capsule 2 points).
+    # skill_events_raw above stays as the derived flat view (old consumers);
+    # both are written together by deploy and reset together by advance_round
+    skill_releases: tuple = ()       # (CommanderSkillRelease, ...)
+    # step5 任务书 §4/T6: persistent ground areas carried across rounds
+    # (黏油 survives one extra battle). Entry: (ref, sid, ax, ay, bx, by,
+    # ttl) with ttl = remaining battles INCLUDING the one just fought;
+    # advance_round decrements, settlement removes ignited oils earlier
+    ground_areas_raw: tuple = ()
     # battlefield v1 round-scoped field: entity ids bought/granted THIS round
     # (flank.py rule: only new cards standing in the enemy half teleport in
     # over FLANK_DELAY seconds; snapshot-carried units never delay). Reset
@@ -304,6 +340,11 @@ class BattleOutcome:
     # never silently drop the effect (e.g. "equipment:13030007 battle effect
     # not simulated (battle_approximate)")
     fidelity_warnings: tuple = ()
+    # step5 任务书 §6/T6: persistent ground-area results, (ref, ignited)
+    # pairs. Ignited oils converted to flame during the fight and vanish at
+    # its end — settlement drops them instead of carrying them to the next
+    # round. Empty for oracle outcomes ( FightReport carries no area view).
+    area_results: tuple = ()
 
     @classmethod
     def from_fight_report(cls, reports, seed=-1,

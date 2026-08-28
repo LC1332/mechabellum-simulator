@@ -1,0 +1,47 @@
+# Validation driver: simulate all round pairs, compare with replay labels.
+# Metrics: win accuracy (C# baseline 42.6%, step4 pysim 48.7%, step5 53.9%),
+# winner AliveMechCount error (from FightReport), survivors card count, avg sim time.
+# step9 (flank teleports, towers on): full-938 54.2% -> 55.2% with --sneak
+# round (226 affected pairs: 52.7% -> 54.4%; card/round/game all beat off,
+# round matches user Q6 "re-deploy after death doesn't re-eat the wait").
+# step5 switches:
+#   --techs off|def|full   off=no techs, def=default only, full=defaults+rebuilt
+#   --deploy snap|fight    snap=pre-deploy snapshot (step4 behavior),
+#                          fight=+this round's BuyUnit/Move/Upgrade replay
+#   --report PATH          append stage metrics to a json report
+# step11 additions:
+#   --rounds PATH          load an alternative dataset (default data/rounds.json)
+#   --round-filter SPEC    r1 / r1-2 / r3+ / all (bucket filter for quick probes)
+#   per-round-bucket accuracy + per-side signed alive error (N1a diagnostics)
+# step9 additions:
+#   --sneak off|card|round|game   flank teleport delays (pysim/flank.py);
+#                          quick-teleport officers (10009) drop to 5s
+#   --flank-pairs          simulate only pairs where the per-card rule
+#                          assigns >=1 delay (fixed A/B subset)
+# usage: python -m pysim.replay_check [--trace] [--limit N] [--out trace.txt]
+#        [--techs full] [--deploy fight] [--report data/report_step5.json]
+import sys, io, time, json
+try:  # only rewrap real console streams (breaks under pytest/uvicorn capture)
+    if (getattr(sys.stdout, "encoding", "") or "").lower().replace("-", "") != "utf8" \
+            and hasattr(sys.stdout, "buffer"):
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf8",
+                                      errors="replace")
+except Exception:
+    pass
+
+from .gamedata import GameData
+from .engine import battle_from_units
+from .flank import pair_flank_delays, annotate_units, count_delays
+from .skills import events_from_skill_actions
+
+import os
+DATA = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
+
+
+def build_tech_map(gd, player, mode, mechs_present):
+    """Per-mech effective tech list for one player's input.
+    step16 semantics fix: card defaultTechnologies are the shop's pre-filled
+    slots, NOT auto-unlocked (replays show players BUYING their own default
+    techs - 长弓 default 双发 702 purchased 30 sides, 铁锤 default 913 x21 -
+    impossible if they were already active). Effective set = bought only,
+    previousTechID cha

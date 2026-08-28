@@ -312,15 +312,27 @@ def test_env_tech_candidates_follow_field_mechs():
 
 # ================================================================ T4 skills
 def test_skill_id_mapping_frozen():
-    """§5.1 + step4 §7.1: 200001 is EMP (unmapped), 1000001 is redeploy
-    (TRANSITION_SKILLS); 燃烧弹 is 100002; summons are 1200001/1200003 and
-    the step4 P1 set 1200002/1200004/1200005; strikes 300003/300004/300007."""
-    assert set(COMMANDER_SKILLS) == {300001, 300003, 300004, 300007, 800001,
-                                     100002, 1200001, 1200002, 1200003,
-                                     1200004, 1200005}
-    assert 200001 not in COMMANDER_SKILLS
+    """§5.1 + step4 §7.1 + step5 §7: the battlefield-skill mapping table.
+    step5 adds the user-frozen area/status set (400002/500002/600002 oil/
+    acid/smoke, 200001/200002/200003 EMP/photon, 300005/300006 storm/ion,
+    1500001/1500002 beacons). 1000001 stays transition-only (再部署);
+    unknown ids (200004, ...) stay unmapped precise blockers."""
+    assert set(COMMANDER_SKILLS) == {
+        300001, 300003, 300004, 300007, 800001, 100002,
+        1200001, 1200002, 1200003, 1200004, 1200005,
+        400002, 500002, 600002, 200001, 200002, 200003,
+        300005, 300006, 1500001, 1500002}
     assert 1000001 not in COMMANDER_SKILLS
+    assert 200004 not in COMMANDER_SKILLS
     assert COMMANDER_SKILLS[100002]["kind"] == "burn"
+    assert COMMANDER_SKILLS[200001]["kind"] == "emp"
+    assert COMMANDER_SKILLS[200002]["radius"] == 130.0    # step5 QA-2 frozen
+    assert COMMANDER_SKILLS[300004]["splash"] == 100.0   # step5 QA-2 frozen
+    assert COMMANDER_SKILLS[400002]["slow_mult"] == 0.45
+    assert COMMANDER_SKILLS[600002]["range_mult"] == 0.65
+    assert COMMANDER_SKILLS[500002]["vuln_mult"] == 2.5
+    assert COMMANDER_SKILLS[1500001]["kind"] == "beacon"
+    assert COMMANDER_SKILLS[1500002]["kind"] == "beacon"
     assert COMMANDER_SKILLS[1200001]["name"] == "地底威胁"
     assert COMMANDER_SKILLS[1200003]["name"] == "呼叫机群"
     assert COMMANDER_SKILLS[300003]["strikes"] == 15
@@ -410,11 +422,11 @@ def test_unmapped_and_wrong_target_precise_blockers():
     st = sandbox()
     # EMP 200001 must NOT burn
     res = apply0(st, raw_action("ReleaseCommanderSkill",
-                                [("ID", 200001),
+                                [("ID", 200004),
                                  ("Positions", [{"x": 1, "y": 2}])]))
     r = res.receipts[0][0]
     assert not r.accepted and r.reason_code == "UNSUPPORTED_ACTION"
-    assert "skill_id=200001" in r.detail and "target_kind=position" in r.detail
+    assert "skill_id=200004" in r.detail and "target_kind=position" in r.detail
     assert res.state.players[0].skill_events_raw == ()
     # redeploy 1000001 must NOT summon — position-target release is a
     # precise SKILL_TARGET_INVALID (step4 §1.3: unit-target skill), and it
@@ -433,9 +445,12 @@ def test_unmapped_and_wrong_target_precise_blockers():
     assert "target_kind=construction" in r3.detail and "skill_id=300001" \
         in r3.detail
     # scanner agreement: same rule source (1000001 is a mapped transition
-    # skill since step4 — the scanner accepts it, deploy executes it)
+    # skill since step4 — the scanner accepts it, deploy executes it);
+    # step5: 200001 EMP is mapped too — unknown 200004 stays a blocker
     assert capability.classify_raw("ReleaseCommanderSkill",
-                                   {"ID": 200001}) == "UNSUPPORTED_ACTION_FIELD"
+                                   {"ID": 200001}) is None
+    assert capability.classify_raw("ReleaseCommanderSkill",
+                                   {"ID": 200004}) == "UNSUPPORTED_ACTION_FIELD"
     assert capability.classify_raw("ReleaseCommanderSkill",
                                    {"ID": 1000001}) is None
     assert capability.classify_raw("ReleaseCommanderSkill",
@@ -447,8 +462,12 @@ def test_scanner_accepts_typed_release_norm_entries():
     assert capability.classify_norm_entry(
         {"t": "release", "skill": 300001, "skill_index": 0,
          "positions": [(1, 2)]}, rec, ECO, GD) is None
+    # step5: EMP 200001 maps now; unknown ids stay precise blockers
     assert capability.classify_norm_entry(
         {"t": "release", "skill": 200001, "skill_index": 0}, rec,
+        ECO, GD) is None
+    assert capability.classify_norm_entry(
+        {"t": "release", "skill": 200004, "skill_index": 0}, rec,
         ECO, GD) == "UNSUPPORTED_ACTION_FIELD"
 
 
@@ -713,7 +732,13 @@ def test_two_axis_support_matrix():
     # 强化训练: user-frozen rule -> verified and effect-complete
     assert capability.mechanism_support("commander_skill", 1100001)[
         "effect_complete"] is True
+    # step5: EMP 200001 implemented (path exact, numbers stay provisional
+    # until the oracle A/B); unknown ids stay unsupported
     assert capability.mechanism_support("commander_skill", 200001)[
+        "battle_fidelity"] == "exact"
+    assert capability.mechanism_support("commander_skill", 200001)[
+        "confidence"] == "provisional"
+    assert capability.mechanism_support("commander_skill", 200004)[
         "battle_fidelity"] == "unsupported"
     assert capability.mechanism_support("tower_skill", 5)[
         "battle_fidelity"] == "exact"

@@ -11,7 +11,8 @@ from . import errors
 from .canonicalize import FORBIDDEN_RAW_TYPES
 from .model import (ActionKind, CanonicalActionPlan, EnvironmentState,
                     PlayerState, UnitCard, Phase, ActionReceipt, EntityRef,
-                    GiftArgs, ActivateEnergyTowerSkillArgs)
+                    GiftArgs, ActivateEnergyTowerSkillArgs,
+                    CommanderSkillRelease)
 from .rules import (BASE_BUY_LIMIT, EXTRA_DEPLOY_OFFICER,
                     DEPLOYMENT_MODULE_EQUIPMENT, REDEPLOY_SKILL_ID,
                     BuyLimitQuote, buy_limit_quote, movement_reasons,
@@ -118,6 +119,12 @@ class _RoundCtx:
     tower_mods: list = field(default_factory=list)   # ActiveEnergyTowerSkill ids this round
     devices: list = field(default_factory=list)      # (cid,x,y) contraption releases
     skill_events: list = field(default_factory=list)  # (sid,x,y) commander releases
+    # step5 任务书 §3 T0: typed releases with the full ordered Positions (the
+    # flat skill_events list above stays as the derived legacy view)
+    skill_releases: list = field(default_factory=list)
+    # step5 任务书 §5 T2: mutable view of constructions_raw so a 900001
+    # building recycle removes the row atomically within the round
+    constructions: list = field(default_factory=list)
     equipment: list = field(default_factory=list)    # unequipped stock (multiset)
     surrendered: bool = False        # battlefield M1: typed GiveUp terminal
 
@@ -175,6 +182,9 @@ def deploy_transition(state: EnvironmentState,
             tower_mods=list(p.tower_mods_raw or ()),
             devices=list(p.devices_raw or ()),
             skill_events=list(p.skill_events_raw or ()),
+            skill_releases=list(getattr(p, "skill_releases", ()) or ()),
+            constructions=[tuple(str(x) for x in c)
+                           for c in (p.constructions_raw or ())],
             equipment=list(p.equipment_inventory or ()),
             # battlefield M1: buys/grants of EARLIER deploy calls this round
             # stay flank-eligible across per-action invocations
@@ -264,12 +274,16 @@ def _freeze(ctx: _RoundCtx, base: PlayerState) -> PlayerState:
         blueprints_round=tuple(ctx.blueprints_round),
         commander_skills_raw=tuple(tuple(e) for e in ctx.commander_skills),
         tower_strengthen=tuple(ctx.tower_strengthen),
-        constructions_raw=base.constructions_raw,
         bought_this_round=ctx.buy_count,
         equipment_inventory=tuple(sorted(ctx.equipment)),
         tower_mods_raw=tuple(ctx.tower_mods),
         devices_raw=tuple(ctx.devices),
         skill_events_raw=tuple(ctx.skill_events),
+        skill_releases=tuple(ctx.skill_releases),
+        constructions_raw=tuple(ctx.constructions),
+        # deploy never mutates persistent ground areas - carry them through
+        ground_areas_raw=tuple(getattr(base, "ground_areas_raw", ())
+                               or ()),
         spawned_this_round=tuple(sorted(ctx.spawned_ids)),
         redeployed_this_round=tuple(sorted(ctx.redeployed_ids)))
 
@@ -552,6 +566,67 @@ def _activate_tower_skill(ctx, side, i, kind_value, sid):
                                    "players[%d].tower_mods_raw" % side))
 
 
+def _recycle_construction(ctx, side, i, kind_value, sid, skill_index,
+                          construction_index, precise):
+    """step5 任务书 §5 T2: 900001 战地回收 targeting one construction.
+
+    Refund table (user-frozen 2026-08-28, QA-2): cid 1 防御墙 50, cid 2
+    反装甲炮 / cid 3 速射炮 100. The recycled row leaves constructions_raw
+    atomically (it must NOT enter this round's BattleInput), the refund lands
+    through the ledger and the backing slot is consumed once. Unknown /
+    unrecyclable cids (4 磁力路障, ...) reject precisely - state digest
+    unchanged."""
+    from .economy import CONSTRUCTION_RECYCLE_SUPPLY
+    if sid != 900001:
+        return _receipt(i, kind_value, False, errors.UNSUPPORTED_ACTION,
+                        detail="construction-target release with non-recycle "
+                               "skill (%s)" % precise)
+    row, row_k = None, None
+    for k, c in enumerate(ctx.constructions):
+        try:
+            if int(c[0]) == int(construction_index):
+                row, row_k = c, k
+                break
+        except (TypeError, ValueError, IndexError):
+            continue
+    if row is None:
+        return _receipt(i, kind_value, False, errors.UNKNOWN_ENTITY,
+                        detail="construction %s not found on this side (%s)"
+                               % (construction_index, precise))
+    try:
+        cid = int(row[1])
+    except (TypeError, ValueError, IndexError):
+        cid = -1
+    refund = CONSTRUCTION_RECYCLE_SUPPLY.get(cid)
+    if refund is None:
+        return _receipt(i, kind_value, False, errors.UNSUPPORTED_ACTION,
+                        detail="construction cid %s recycle price unknown, "
+                               "rejected precisely (%s)" % (cid, precise))
+    # T3 resolution order: explicit id wins; the slot lookup is the LENIENT
+    # id-only path, mirroring SELL_UNIT — corpus rounds execute 战地回收 with
+    # no backing slot in the snapshot (granted out-of-band), and consuming a
+    # wrong slot would corrupt the slot lifecycle. A present slot is still
+    # consumed exactly once.
+    slot_pos, _slot_err = _find_release_slot(ctx, sid, None) if \
+        FEATURES["skill_slot_lifecycle"] else (None, None)
+    ctx.constructions.pop(row_k)
+    ctx.supply += int(refund)
+    ctx.ledger.add("sell_construction:%d:cid%d" % (construction_index, cid),
+                   int(refund), action_index=i)
+    if slot_pos is not None:
+        _consume_slot(ctx, slot_pos, sid)
+    return _receipt(i, kind_value, True, errors.OK,
+                    resource_delta=int(refund),
+                    detail="战地回收 construction %s (cid %s) +%d%s"
+                           % (construction_index, cid, refund,
+                              (" slot %s consumed" % slot_pos)
+                              if slot_pos is not None else ""),
+                    changed_paths=("players[%d].supply" % side,
+                                   "players[%d].constructions_raw" % side)
+                    + (("players[%d].commander_skills_raw" % side,)
+                       if slot_pos is not None else ()))
+
+
 def _release_commander_skill(ctx, side, i, kind_value, eco,
                              skill_index=None, skill_id=None, positions=(),
                              unit_ref=None, construction_index=None):
@@ -566,7 +641,8 @@ def _release_commander_skill(ctx, side, i, kind_value, eco,
     battlefield M1: a successful release CONSUMES the backing inventory slot
     (isActive=false + corpus-verified cooldown). Rejected releases never
     mutate the slot (digest invariant)."""
-    from ..skills import COMMANDER_SKILLS, TRANSITION_SKILLS
+    from ..skills import COMMANDER_SKILLS, TRANSITION_SKILLS, \
+        RELEASE_POINT_COUNTS
     sid = _resolve_release_id(ctx, skill_id, skill_index)
     target_kind = _release_target_kind(positions, unit_ref, construction_index)
     precise = "skill_id=%s skill_index=%s target_kind=%s" % (
@@ -576,11 +652,11 @@ def _release_commander_skill(ctx, side, i, kind_value, eco,
         return _receipt(i, kind_value, False, errors.UNSUPPORTED_ACTION,
                         detail="unresolvable release (%s)" % precise)
     if construction_index is not None:
-        # building recycles have no v0 effect: precise blocker carrying the
-        # target kind, never a positional approximation (step3 任务书 §5.2)
-        return _receipt(i, kind_value, False, errors.UNSUPPORTED_ACTION,
-                        detail="construction-target release unsupported "
-                               "(%s)" % precise)
+        # step5 任务书 §5 T2: 战地回收 on one of the player's constructions
+        # (wall 50 / cannons 100, user-frozen); everything else stays the
+        # precise blocker - never a positional approximation
+        return _recycle_construction(ctx, side, i, kind_value, sid,
+                                     skill_index, construction_index, precise)
     slot_pos, slot_err = _find_release_slot(ctx, sid, skill_index)
     if slot_err is not None:
         return _receipt(i, kind_value, False, "SKILL_SLOT_UNAVAILABLE",
@@ -638,10 +714,28 @@ def _release_commander_skill(ctx, side, i, kind_value, eco,
         return _receipt(i, kind_value, True, errors.OK,
                         detail="强化训练 (no-op: exp already full or cap)")
     if sid in COMMANDER_SKILLS:
-        spots = [(float(x), float(y)) for (x, y) in (positions or ())] \
-            or [(0.0, 0.0)]
+        spots = tuple((float(x), float(y)) for (x, y) in (positions or ()))
+        if not spots:
+            # step5 任务书 §3 T0: positions can never be fabricated - a
+            # position-less release rejects precisely with a full receipt
+            return _receipt(i, kind_value, False, errors.UNSUPPORTED_ACTION,
+                            detail="release without positions (%s)" % precise)
+        need_pts = RELEASE_POINT_COUNTS.get(int(sid))
+        if need_pts is not None and len(spots) != need_pts:
+            return _receipt(
+                i, kind_value, False, errors.UNSUPPORTED_ACTION,
+                detail="release %s needs %d ordered positions, got %d (%s)"
+                       % (sid, need_pts, len(spots), precise))
         if consumed:
             _consume_slot(ctx, slot_pos, sid)
+        # T0: ONE typed release keeps ALL ordered positions; the flat
+        # skill_events view stays derived for the legacy consumers
+        ctx.skill_releases.append(CommanderSkillRelease(
+            release_ref=len(ctx.skill_releases), skill_id=int(sid),
+            side=int(side),
+            skill_index=(int(skill_index)
+                         if skill_index is not None else None),
+            ordered_positions=spots, source_raw_index=-1))
         for (sx2, sy2) in spots:
             ctx.skill_events.append((int(sid), float(sx2), float(sy2)))
         d = COMMANDER_SKILLS[sid]
@@ -651,6 +745,7 @@ def _release_commander_skill(ctx, side, i, kind_value, eco,
                             (" slot %s consumed" % slot_pos)
                             if consumed else ""),
                         changed_paths=(
+                            "players[%d].skill_releases" % side,
                             "players[%d].skill_events_raw" % side,)
                         + (("players[%d].commander_skills_raw" % side,)
                            if consumed else ()))

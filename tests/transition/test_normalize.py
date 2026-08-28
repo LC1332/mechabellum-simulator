@@ -140,13 +140,14 @@ def test_cancel_removes_release_and_undo_restores():
     assert kinds(r2.actions_norm) == ["release"]
     assert r2.actions_norm[0]["skill"] == 300001
     assert r2.actions_norm[0]["positions"] == [[1.0, 1.0]]
-    # an UNMAPPED skill still degrades to passthrough (precise blocker)
-    skills_emp = [{"index": "2", "id": "200001", "isActive": "true",
+    # an UNMAPPED skill still degrades to passthrough (precise blocker);
+    # step5: 200001 EMP is implemented now, so probe with 200004 (unknown)
+    skills_emp = [{"index": "2", "id": "200004", "isActive": "true",
                    "coolingRound": "0"}]
     r3 = norm.normalize_round(rec(
         commanderSkills_raw=skills_emp,
         actions=[
-            {"type": "ReleaseCommanderSkill", "ID": 200001, "SkillIndex": 2,
+            {"type": "ReleaseCommanderSkill", "ID": 200004, "SkillIndex": 2,
              "Positions": [{"x": 1, "y": 1}], "UnitIndex": -1},
         ]))
     assert kinds(r3.actions_norm) == ["passthrough"]
