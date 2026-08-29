@@ -1,0 +1,83 @@
+{
+ "name": "o0a",
+ "group": "CAL0",
+ "desc": "语义A: 暴雨lv3(minRange70,range180,8弹/6.6s) vs 剑齿虎lv0(range95,2炮/3.2s), 距离110, 双方在射程交互; 手工可算 dmgMax/dmgReal 口径",
+ "seed": 22,
+ "repeat_idx": 0,
+ "sround": 7,
+ "p0": {
+  "units": [
+   {
+    "id": 12,
+    "level": 3,
+    "x": 0,
+    "y": -110,
+    "index": 0
+   }
+  ]
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 21,
+    "level": 0,
+    "x": 0,
+    "y": 0,
+    "index": 100
+   }
+  ]
+ },
+ "towers": null,
+ "constructions": null,
+ "use_construction": null,
+ "oracle": {
+  "job": "s30_o0a_22",
+  "seed": 22,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   200,
+   0
+  ],
+  "alive": [
+   4,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 15440,
+    "dmgReal": 14886,
+    "kills": 1
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   3,
+   0
+  ],
+  "end_t": 2.0,
+  "dmg": {
+   "0:12": 14886.0,
+   "1:21": 4596.0
+  },
+  "kills": {
+   "1:21": 1,
+   "0:12": 1
+  }
+ },
+ "cost_s": 0.5,
+ "ts": "08-29 11:45:44"
+}

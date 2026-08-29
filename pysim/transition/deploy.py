@@ -18,7 +18,9 @@ from .rules import (BASE_BUY_LIMIT, EXTRA_DEPLOY_OFFICER,
                     BuyLimitQuote, buy_limit_quote, movement_reasons,
                     MOVE_REASON_NEW, MOVE_REASON_MODULE, MOVE_REASON_TECH,
                     MOVE_REASON_REDEPLOY, TOWER_LOAN_SENTINEL,
-                    TOWER_MASS_SENTINEL, TOWER_ELITE_SENTINEL)
+                    TOWER_MASS_SENTINEL, TOWER_ELITE_SENTINEL,
+                    BASE_MANUAL_UNLOCK_LIMIT, unlock_limit_quote,
+                    AUTO_UNLOCK_EXPERT_TAG, AUTO_UNLOCK_REINFORCEMENT_TAG)
 from . import rules
 from .state_tools import state_digest, with_player, assert_state_invariants
 from .economy import Economy, LedgerBuilder
@@ -127,6 +129,11 @@ class _RoundCtx:
     constructions: list = field(default_factory=list)
     equipment: list = field(default_factory=list)    # unequipped stock (multiset)
     surrendered: bool = False        # battlefield M1: typed GiveUp terminal
+    # 爬虫动力学任务书 (2026-08-29) T11: successful MANUAL unlocks this round
+    # (limit 1, rules.unlock_limit_quote); auto unlocks never touch it
+    manual_unlocks: int = 0
+    # audit trail of auto unlocks applied during this round (receipt detail)
+    auto_unlock_log: list = field(default_factory=list)
 
 
 def deploy_transition(state: EnvironmentState,
@@ -199,7 +206,9 @@ def deploy_transition(state: EnvironmentState,
                                 if int(b) == rules.TOWER_MASS_SENTINEL),
             buy_level_bonus=sum(1 for b in
                                 (getattr(p, "blueprints_round", ()) or ())
-                                if int(b) in (3, rules.TOWER_ELITE_SENTINEL)))
+                                if int(b) in (3, rules.TOWER_ELITE_SENTINEL)),
+            manual_unlocks=int(getattr(p, "manual_unlocks_this_round", 0)
+                               or 0))
         if FEATURES["extra_deploy_slots"]:
             # 额外部署位 10004: +1 buy limit per held copy (可重复)
             ctx.buy_limit_bonus += sum(1 for o in ctx.officers
@@ -285,12 +294,48 @@ def _freeze(ctx: _RoundCtx, base: PlayerState) -> PlayerState:
         ground_areas_raw=tuple(getattr(base, "ground_areas_raw", ())
                                or ()),
         spawned_this_round=tuple(sorted(ctx.spawned_ids)),
-        redeployed_this_round=tuple(sorted(ctx.redeployed_ids)))
+        redeployed_this_round=tuple(sorted(ctx.redeployed_ids)),
+        manual_unlocks_this_round=int(ctx.manual_unlocks))
 
 
 def _receipt(i, kind, ok, reason, detail="", **kw) -> ActionReceipt:
     return ActionReceipt(action_index=i, kind=kind, accepted=ok,
                          reason_code=reason, detail=detail, **kw)
+
+
+def _auto_unlock(ctx, mech_id: int, tag: str) -> str | None:
+    """Idempotent AUTO unlock of one mech (T11): adds it to unlocked_mechs
+    WITHOUT consuming the manual quota, without refunding anything and
+    without touching the counter when already unlocked. Returns the audit
+    tag string ("" when the mech was already unlocked)."""
+    mech_id = int(mech_id)
+    if mech_id in ctx.unlocked:
+        return None
+    ctx.unlocked.add(mech_id)
+    entry = "%s mech %d" % (tag, mech_id)
+    ctx.auto_unlock_log.append(entry)
+    return entry
+
+
+def _ctx_unlock_limit_quote(ctx):
+    """rules.unlock_limit_quote over the live working view (one rule source:
+    the quote function itself, fed a minimal attribute view)."""
+    from types import SimpleNamespace
+    return unlock_limit_quote(SimpleNamespace(
+        manual_unlocks_this_round=int(ctx.manual_unlocks)))
+
+
+def _expert_officer_of_mech(eco, mech_id: int) -> int | None:
+    """The held-or-known unit expert whose single unitId is this mech (for
+    audit tags; None when the gift source is not a registered expert)."""
+    gd = getattr(eco, "gd", None)
+    if gd is None:
+        return None
+    from .rules import UNIT_EXPERT_OFFICERS
+    for od in gd.officers.values():
+        if int(od.id) in UNIT_EXPERT_OFFICERS and od.unit_ids == {int(mech_id)}:
+            return int(od.id)
+    return None
 
 
 def _find_unit(ctx, ref):
@@ -788,10 +833,17 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
         return _receipt(i, kind.value, False, errors.ACTION_AFTER_END_DEPLOY)
 
     if kind is ActionKind.GIFT_UNIT:
-        # opening-team delayed gift: free spawn at the default deploy line
+        # opening-team delayed gift: free spawn at the default deploy line.
+        # T11.3: delayed gifts of unit experts (长弓/剑齿虎/火獾/犀牛/台风)
+        # also AUTO-unlock the gifted mech — no manual quota, idempotent.
         price = eco.buy_price(args.mech_id)
         if price is None:
             return _receipt(i, kind.value, False, errors.UNKNOWN_MECH)
+        officer = _expert_officer_of_mech(eco, args.mech_id)
+        auto_note = _auto_unlock(
+            ctx, args.mech_id,
+            AUTO_UNLOCK_EXPERT_TAG % officer if officer
+            else "AUTO_UNLOCK_GIFT")
         eid = ctx.entity_seq()
         ctx.spawned_ids.add(eid)
         y = -160.0 if side == 0 else 160.0
@@ -802,7 +854,10 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
             else _next_replay_index(ctx)))
         return _receipt(i, kind.value, True, errors.OK,
                         created_entity_id=eid,
-                        changed_paths=("players[%d].units" % side,))
+                        changed_paths=(("players[%d].units" % side,)
+                                       + (("players[%d].unlocked_mechs" % side,)
+                                          if auto_note else ())),
+                        detail=auto_note or "")
 
     if kind is ActionKind.RAW_UNSUPPORTED:
         unsupported.append(args.raw_type)
@@ -1008,6 +1063,16 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
                     exp=0, x=gx, y=gy, sell_supply=price,
                     replay_index=game_idx))
             spawned = count
+        # T11.4: a unit-grant reinforcement AUTO-unlocks the granted mech in
+        # the SAME atomic transition (deduct + grant + unlock). No manual
+        # quota is consumed — the player may still manually unlock one other
+        # mech this round, in either order (U7).
+        auto_notes = []
+        for auto_mech in eco.reinforcement_auto_unlock_mechs(item_id):
+            note = _auto_unlock(ctx, auto_mech,
+                                AUTO_UNLOCK_REINFORCEMENT_TAG % item_id)
+            if note:
+                auto_notes.append(note)
         # routing: unit-strengthen / expert cards persist into officers;
         # 舰长技能/战术 cards enter the skill inventory (releasable later)
         info = eco.items.get(item_id) if item_id else None
@@ -1029,30 +1094,52 @@ def _apply(ctx, side, i, act, eco, state, unsupported, notes) -> ActionReceipt:
                                    % (item_id, next_idx))
         return _receipt(i, kind.value, True, errors.OK, resource_delta=-cost,
                         created_entity_id=None,
-                        changed_paths=(("players[%d].supply" % side),) if cost else (),
-                        detail="grant=%s" % (spawned or 0))
+                        changed_paths=(("players[%d].supply" % side,)
+                                       + (("players[%d].unlocked_mechs" % side,)
+                                          if auto_notes else ())) if cost
+                        else (("players[%d].unlocked_mechs" % side,)
+                              if auto_notes else ()),
+                        detail="grant=%s%s" % (spawned or 0,
+                                               ("; " + "; ".join(auto_notes))
+                                               if auto_notes else ""))
 
     if kind is ActionKind.UNLOCK_UNIT:
         quote = eco.unlock_quote(args.mech_id, ctx.officers)
         if quote is None:
             return _receipt(i, kind.value, False, errors.UNKNOWN_MECH)
         if args.mech_id in ctx.unlocked:
+            # a query over already-owned state: OK, no charge, and the
+            # per-round manual quota is NOT consumed (T11.1)
             return _receipt(i, kind.value, True, errors.OK,
                             detail="already unlocked (no charge)")
+        if ctx.manual_unlocks >= BASE_MANUAL_UNLOCK_LIMIT:
+            # T11.1: second manual unlock of the round — stable rejection,
+            # supply/unlocked_mechs/counter all untouched
+            q = _ctx_unlock_limit_quote(ctx)
+            return _receipt(i, kind.value, False,
+                            errors.UNLOCK_LIMIT_REACHED,
+                            detail="%s (mech %s)" % (q.breakdown,
+                                                     args.mech_id))
         if ctx.supply < quote.final_price:
             return _receipt(i, kind.value, False, errors.INSUFFICIENT_SUPPLY,
                             detail="need %d have %d (%s)"
                                    % (quote.final_price, ctx.supply,
                                       quote.breakdown))
+        # atomic success: deduct + join unlocked_mechs + counter +1
         ctx.supply -= quote.final_price
         ctx.ledger.add("unlock:%s" % args.mech_id, -quote.final_price,
                        action_index=i)
         ctx.unlocked.add(args.mech_id)
+        ctx.manual_unlocks += 1
         return _receipt(i, kind.value, True, errors.OK,
                         resource_delta=-quote.final_price,
-                        detail=quote.breakdown,
+                        detail="%s | %s" % (quote.breakdown,
+                                            _ctx_unlock_limit_quote(
+                                                ctx).breakdown),
                         changed_paths=("players[%d].unlocked_mechs" % side,
-                                       "players[%d].supply" % side))
+                                       "players[%d].supply" % side,
+                                       "players[%d].manual_unlocks_this_round"
+                                       % side))
 
     if kind is ActionKind.BUY_UNIT:
         price = _buy_cost(ctx, eco, args.mech_id)

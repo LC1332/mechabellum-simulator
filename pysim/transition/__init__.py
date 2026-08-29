@@ -11,7 +11,11 @@ from .model import (SCHEMA_VERSION, RULESET_VERSION, ENGINE_VERSION,
 from .errors import TransitionError
 from .rules import (BASE_BUY_LIMIT, BuyLimitQuote, buy_limit_quote,
                     MovePermission, movement_permission, MOBILITY_TECHS,
-                    DEPLOYMENT_MODULE_EQUIPMENT, REDEPLOY_SKILL_ID)
+                    DEPLOYMENT_MODULE_EQUIPMENT, REDEPLOY_SKILL_ID,
+                    BASE_MANUAL_UNLOCK_LIMIT, UnlockLimitQuote,
+                    unlock_limit_quote, UNIT_EXPERT_OFFICERS,
+                    expert_auto_unlock_mechs, pending_expert_auto_unlocks,
+                    AUTO_UNLOCK_EXPERT_TAG, AUTO_UNLOCK_REINFORCEMENT_TAG)
 from .state_tools import (canonical_dict, state_digest, diff_state,
                           assert_state_invariants, state_to_dict,
                           state_from_dict, copy_state)
@@ -47,6 +51,10 @@ __all__ = [
     "BASE_BUY_LIMIT", "BuyLimitQuote", "buy_limit_quote", "MovePermission",
     "movement_permission", "MOBILITY_TECHS", "DEPLOYMENT_MODULE_EQUIPMENT",
     "REDEPLOY_SKILL_ID",
+    "BASE_MANUAL_UNLOCK_LIMIT", "UnlockLimitQuote", "unlock_limit_quote",
+    "UNIT_EXPERT_OFFICERS", "expert_auto_unlock_mechs",
+    "pending_expert_auto_unlocks", "AUTO_UNLOCK_EXPERT_TAG",
+    "AUTO_UNLOCK_REINFORCEMENT_TAG",
     "diff_state", "assert_state_invariants", "state_to_dict",
     "state_from_dict", "copy_state", "Economy", "InjectedIncome",
     "FixedIncome", "Income200r", "REINFORCE_SKIP_BONUS", "Normalizer",

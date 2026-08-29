@@ -1,0 +1,105 @@
+{
+ "manifest": "crawler-damage-oracle-v2",
+ "date": "2026-08-29",
+ "task_book": "information/pysim伤害标定与逐兵种武器修正oracle执行任务书-2026-08-30.md",
+ "upstream": "information/pysim爬虫动力学与伤害标定修正任务书-2026-08-29.md",
+
+ "environment": {
+  "game_exe_version": "2022.3.62f3 (96770f904ca7) [Unity 2022.3.62f3, FileVersion 2022.3.62.9860879]",
+  "game_exe_sha256_16": "36b8b3822bcfc585",
+  "game_assembly_sha256_16": "7197491e05e007c2",
+  "oracle_dll_sha256_16": "dbc50f04b9b3deb6",
+  "oracle_dll_src_sha256_16": "014417d9b2e1a327",
+  "gamedata_sha256_16": "3b176624df72d7cc (RouteC 与 GitHub 仓库一致)",
+  "hash_file": "RouteC/data/exp/s30/env_freeze.json (机内, 含完整 sha256/size/mtime; 隐私路径不入库)",
+  "game_build_date_note": "2026-08-29 实测注入活体游戏; 注入方式 CreateRemoteThread+LoadLibraryA (step22 Q-A 授权)"
+ },
+
+ "payload_semantics": {
+  "source": "oracle_dll.c collect_units + dump.cs v20260822_045252 + 历史exp扫描(2349记录/23220行)",
+  "rows": "BattleStatisticManager.unitDamageStatisticDatas[team] 字典: key=IDamageRecorder, value=UnitDamageStatisticData",
+  "uid": "IDamageRecorder.GetID() = 兵种 id (mech id), 非实例序号; 同兵种多卡=多行同 uid (Q15 答案)",
+  "rectype": "GetDamageRecorderType(): 0=Mech(单位), 1=Construction(建筑/塔); 历史语料 23217:3 分布",
+  "mechid": "仅 recorder 类==FightMech 时读 FightMech.data.id: 快照部署单位 data=null→0; 运行时生成单位(召唤/转化/地雷) data 有值→=uid",
+  "row_granularity": "部署单位=按卡一行(多成员卡如暴雨x4/猎犬x5合计); 运行时生成单位=按成员一行 (u166: 19行转化爬虫)",
+  "dmgReal": "UnitDamageStatisticData.DamageReal @0x1C = 实际扣血; 击杀时=目标有效血池 (o0a: 14886=剑齿虎lv0 HP; o0t1a: 29772=lv1 HP; o0lvl: 59544=lv3 HP)",
+  "dmgMax": "DamageMax @0x18 = 原始命中累计(含过杀/溅射多重计数, 剑齿虎维修局 dmgMax/dmgReal≈70x) — 无稳定含义, 一律弃用 (Q14 答案)",
+  "kills": "KillCount @0x20 = 击杀成员数 (o0b: 猎犬卡5成员 kills=5)",
+  "alive_score": "alive[]=存活成员数; score=FightReport 价值口径"
+ },
+
+ "level_semantics": {
+  "xml_level": "0-based 升档数, 真实倍率 = 表值 × (Level+1); UI 等级 1..9 = XML 0..8",
+  "evidence": "o0a: lv0 HP=14886(×1); o0t1a: lv1=29772(×2); o0lvl: lv3=59544(×4); 用户标定回放'9级'剑齿虎 XML Level=8",
+  "craft_limit": "XML Level>=9 触发 FightMech..ctor GetBaseLife NullReferenceException (o0c/o2r0/o2r1 实测; lv8 正常)",
+  "pysim_alignment": "pysim battle_from_units 已做 level+1 对齐 (step22 定版), 与 oracle 一致"
+ },
+
+ "determinism": {
+  "same_seed_rerun": "o0d ×3 同 grbr 同 seed11: 逐单位 dmgMax/dmgReal/kills 完全一致 (Q16 答案: 确定性成立)",
+  "channel_drift": "o0h = cal_clr_m_1 原样重craft重跑: 与 s29cal 历史记录逐单位一致 (通道未漂移)"
+ },
+
+ "craft_capability": {
+  "units_position_level": "OK (step24 通道)",
+  "techs_statmod": "OK — autoRecovery(战地维修10321) 末回合注入即生效: o0t1b 靶承伤 47577 = 血池38704+回复~8873; 全回合注入(o0t1c)与末回合等价",
+  "techs_attack_behavior": "NOT SUPPORTED — multiAttack(719双发/725全弹)/extraWeapon(11028燃烧弹)/splash(425高爆)/killExplosion(5322残骸) 在快照部署单位上零效果 (5组A/B + 全回合注入 + 购买路径 三重探针 dmgMax/dmgReal/kills 全部零差分); 疑因 FightMech ctor isInheritTechnologyEffect=false 路径不构建攻击侧技能",
+  "techs_workaround": "K1-K5 A/B 绕行: (a) 真实回放 oracle 复跑做科技组对照 (语料 13700 次选卡可回连); (b) oracle_dll 增强 (O9 评审通过后); 不允许静默降级",
+  "equipment": "OK 但需双注入 — NewUnitData.EquipmentID 引用 + playerData.equipmentDatas 池条目 (对齐真实回放: 池含等量成员条目); o2eq2: 超重型装甲13030006 → 靶有效血池 14886→37215 (x2.5); o2eq1 仅引用无池 → 零效果",
+  "isRotate": "透传但对台风(炮塔)零效果 (o0e1 vs o0e2 全同) — hull-attack 兵种待测(O5); D2 朝向矩阵前提未证实",
+  "officers": "OK — set_officers 覆盖 <int> 列表 (craft_replay step30 扩展); 受控局观测受 payload 限制 (见 unlock_timing)",
+  "buy_actions": "NOT EFFECTIVE in sround 模式 — PAD_BuyUnit 注入末回合 actionRecords 不产生单位 (o3k4a/b; DLL 从快照出兵, 部署动作不重放)",
+  "testcommand_buff": "NOT SUPPORTED — 先进防御 buff 无注入通道; 绕行: 靶有效血池按 表值×等级×装备×维修 显式建模 (本 manifest level_semantics/equipment 数值即口径)"
+ },
+
+ "unlock_census": {
+  "file": "data/crawler_damage_oracle/crawler-damage-replay-v1/unlock_census.json",
+  "corpus": "1106 局 / 20282 回合 / 11716 次 UnlockUnit 动作 (norm 语料, Undo 已折叠)",
+  "action_target_field": "UnlockUnit 动作目标 = UID 字段",
+  "success": "next-pair 快照确认 10149, 同 pair 0, 目标已解锁 0 — 动作要么成功要么局末未确认, 无静默失败",
+  "multi_action_rounds": "722 回合 >1 次动作: 329 局含同 UID 重复记录; 去重后 664 局恰 1 个不同 UID 成功 + 57 局 0 成功 + 仅 1 局 2 个不同 UID 成功 (2207_20260722--67191813 r4 p1: ChooseReinforceItem 后 UnlockUnit(1) 成功 + UnlockUnit(7) 成功 = 增援自动解锁与手动解锁共存, 与冻结规则自洽) → 配额规则 census 无未解释反例 (U1/U10 通过)",
+  "q11_timing": "专家 offcer 首现→mech 解锁滞后 0-2 回合, 无任何 >=3 案例 (犀牛专家 activeRound=4 若生效应见>=3) → activeRound 门不成立, 解锁≈获得即解锁; 引擎 gift/reinforce 路径已即时, advance_round 的 activeRound 门仅影响无获取事件的持有态 — Q11 保持 oracle-pending, corpus 证据支持即时",
+  "expert_20037": "先知专家在语料中无同现事件 (0 案例)"
+ },
+
+ "calibration_findings": {
+  "diff_table": "data/exp/s30/normalized/diff_table.json",
+  "recipe_frozen": "维修剑齿虎靶 = 剑齿虎 XMLlv8 + tech 10321 + equipment 13030006 + 池[13030006,13030006]; 有效血池 174166 + 回复 4.5%/s; 120s 窗口 = FightTime 120 (BattleInfo)",
+  "d1_p0_winner": "12/14 一致",
+  "d1_p0_diffs": {
+   "d1_22_lv8": "台风 pysim 112464 vs oracle 57024 (+97%) — pysim 台风射速/双成员周期高估",
+   "d1_12_lv0/lv8": "暴雨 pysim 7720/69480 vs oracle 18528/166752 (2.4x 低估) — 弹道飞行/首开火周期差异",
+   "d1_29_lv8": "深渊 pysim 2083860 vs oracle 572623 (263%) — pysim 维修回复过强(靶120s不灭) vs oracle TTK≈33s; pysim 维修回复建模需按 oracle 重标",
+   "d1_27_29_d>=95": "pysim 靶在攻击者距离>=95 时 120s 零反击 (未进射程移动缺失); oracle 靶正常走位反击 — pysim 移动进射程 bug",
+   "d1_1_lv0": "堡垒 pysim 双炮齐射 vs oracle 单炮 (垂死时序) — 次级",
+   "d1_23_lv8": "沙虫 lv8 pysim 670148 vs oracle 660399 (1.5% 优)",
+   "d1_17_lv8": "战争工厂 pysim 576686 vs oracle 442647 (+30%)"
+  },
+  "magnetar_chain": "cc_mt1/2: pysim 精确 0.0%; cc_mt4: oracle 链式命中全部4目标(59544) vs pysim 仅2目标(29772) — pysim 链式目标数上限过低 (P1 磁暴修正点)",
+  "taishan_dual": "cc_ts1/2 攻击侧 pysim 0.0% — 双武器独立目标已正确建模",
+  "hacker_scan": "hk_lv0..8: 全部被维修剑齿虎一击秒杀 (骇客HP=3249x(lv+1) 线性冻结), 转化在 payload 不可观测 (Q18: 无转化行/team翻转证据) — T9 阈值实验被 payload+反击双重阻塞, 需 O9 逐帧/事件遥测"
+ },
+
+ "oracle_jobs": {
+  "runner": "RouteC/tools/step30_run.py (craft→oracle→pysim双臂→记录, 断点续跑; pysim-refresh 子命令原地重算 pysim 臂)",
+  "library": "data/step30_scenarios.json (meta.tpl=@step24 运行期解析)",
+  "records": "data/exp/s30/{name}.{seed}.json",
+  "pysim_seed": "pysim 对拍臂 seed = craft seed 20220822 (对齐 oracle RNG 来源, seed11/22 全同实测)",
+  "commands": [
+   "python tools/oracle_b.py status",
+   "python -X utf8 tools/step30_env.py  (环境hash冻结)",
+   "python -X utf8 tools/step30_run.py run --group CAL0/CAP/CAL2/HK",
+   "python -X utf8 tools/step30_run.py pysim-refresh",
+   "python -X utf8 tools/step30_norm.py --only <过滤>"
+  ],
+  "job_count_this_session": 47,
+  "regression": "tests/test_crawler_dynamics.py + tests/test_damage_calibration.py + tests/transition/test_unlock_rules.py = 25 passed (引擎未改, OFF 臂不变性保持)"
+ },
+
+ "o9_per_frame_telemetry_justification": {
+  "blocked_experiments": ["T9 骇客转化阈值(进度/事件不可观测)", "D2 朝向差分(首发时刻不可观测)", "D3 换靶代价(事件不可观测)", "Q1/Q3 footprint/射程接触边界(位置不可观测)", "Q2 内圈容量(同时攻击数不可观测)"],
+  "design_requirement": "oracle_dll.c 增加 per-frame/per-event 采样 (0829 §3.3 契约), 本轮五类实验全部阻塞于该能力 — 评审优先级提升为 P0"
+ },
+
+ "non_goals_respected": "未改 pysim/rl/**, 未改 oracle_dll.c, 未烘焙任何数值 (全部发现为证据, 修正在后续提交)"
+}

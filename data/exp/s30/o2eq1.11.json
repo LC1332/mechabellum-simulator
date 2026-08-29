@@ -1,0 +1,83 @@
+{
+ "name": "o2eq1",
+ "group": "CAP",
+ "desc": "装备对照 ON: 靶带 equipment 13030006 (超重型装甲); NewUnitData.EquipmentID 透传是否在 replay-sim 生效 → dmgReal 差分",
+ "seed": 11,
+ "repeat_idx": 0,
+ "sround": 7,
+ "p0": {
+  "units": [
+   {
+    "id": 12,
+    "level": 3,
+    "x": 0,
+    "y": -110,
+    "index": 0
+   }
+  ]
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 21,
+    "level": 0,
+    "x": 0,
+    "y": 0,
+    "equipment": 13030006,
+    "index": 100
+   }
+  ]
+ },
+ "towers": null,
+ "constructions": null,
+ "use_construction": null,
+ "oracle": {
+  "job": "s30_o2eq1_11",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   200,
+   0
+  ],
+  "alive": [
+   4,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 12,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 15440,
+    "dmgReal": 14886,
+    "kills": 1
+   }
+  ]
+ },
+ "cost_s": 0.5,
+ "ts": "08-29 11:07:10",
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   1
+  ],
+  "end_t": 5.6,
+  "dmg": {
+   "0:12": 32424.0,
+   "1:21": 18384.0
+  },
+  "kills": {
+   "1:21": 4
+  }
+ }
+}

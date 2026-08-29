@@ -1,0 +1,81 @@
+{
+ "name": "o2k2a",
+ "group": "CAP",
+ "desc": "K2 鬼鳐全弹发射 725 control: 鬼鳐lv3 vs 剑齿虎lv0 距离65",
+ "seed": 11,
+ "repeat_idx": 0,
+ "sround": 7,
+ "p0": {
+  "units": [
+   {
+    "id": 25,
+    "level": 3,
+    "x": 0,
+    "y": -65,
+    "index": 0
+   }
+  ]
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 21,
+    "level": 0,
+    "x": 0,
+    "y": 0,
+    "index": 100
+   }
+  ]
+ },
+ "towers": null,
+ "constructions": null,
+ "use_construction": null,
+ "oracle": {
+  "job": "s30_o2k2a_11",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   201,
+   0
+  ],
+  "alive": [
+   3,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 25,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 17392,
+    "dmgReal": 14886,
+    "kills": 1
+   }
+  ]
+ },
+ "cost_s": 0.5,
+ "ts": "08-29 11:08:30",
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   3,
+   0
+  ],
+  "end_t": 4.4,
+  "dmg": {
+   "0:25": 14886.0
+  },
+  "kills": {
+   "0:25": 1
+  }
+ }
+}

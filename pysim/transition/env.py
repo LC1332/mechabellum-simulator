@@ -282,7 +282,7 @@ class TransitionEnv:
                     MoveArgs(ref=EntityRef(handle=h), x=xs[gi],
                              y=ys[(j + gi) % len(ys)], is_rotate=False)))
         from .model import BuyArgs, UnlockArgs, UpgradeArgs, TechArgs
-        from .rules import buy_limit_quote
+        from .rules import buy_limit_quote, unlock_limit_quote
         buy_quote = buy_limit_quote(p)
         for mech in sorted(p.unlocked_mechs):
             price = self.eco.buy_price(mech)
@@ -334,11 +334,14 @@ class TransitionEnv:
                 if price is not None and p.supply >= price:
                     out.append(CanonicalAction(
                         ActionKind.BUY_TECH, TechArgs(mech_id=mech, tech_id=tid)))
-        for mech in sorted(set(self.gd.cards) - set(p.unlocked_mechs)):
-            price = self.eco.unlock_price(mech, p.officers)
-            if price is not None and p.supply >= price:
-                out.append(CanonicalAction(
-                    ActionKind.UNLOCK_UNIT, UnlockArgs(mech_id=mech)))
+        # T11.2 (same rule source as the executor): once this round's manual
+        # unlock quota is spent, no new UNLOCK_UNIT candidates are enumerated
+        if unlock_limit_quote(p).remaining > 0:
+            for mech in sorted(set(self.gd.cards) - set(p.unlocked_mechs)):
+                price = self.eco.unlock_price(mech, p.officers)
+                if price is not None and p.supply >= price:
+                    out.append(CanonicalAction(
+                        ActionKind.UNLOCK_UNIT, UnlockArgs(mech_id=mech)))
         return tuple(out)
 
     # ---------------------------------------------------------------- save/load

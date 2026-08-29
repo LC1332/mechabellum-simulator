@@ -284,6 +284,19 @@ class Economy:
         g = (e or {}).get("grant")
         return (g["mech"], g["count"], g["level"]) if g else None
 
+    def reinforcement_auto_unlock_mechs(self, item_id: int) -> tuple:
+        """Mechs that a reinforcement pick auto-unlocks (NO manual quota).
+
+        爬虫动力学任务书 (2026-08-29) T11.4, single helper: only kinds with
+        oracle/corpus-confirmed unit delivery are included today —
+        单位获得卡 grants its mech units, so that mech unlocks. 单位强化卡
+        (single-mech buff cards) stay OUT until oracle freezes their
+        unlock behavior (Q12): a unitIds field alone is never generalized
+        into an unlock. Multi-mech category buffs, economy cards, equipment
+        cards and commander-skill cards never trigger unlocks."""
+        grant = self.item_grant(item_id)
+        return (int(grant[0]),) if grant else ()
+
     def upgrade_exp_need(self, mech_id: int, current_level: int) -> int:
         """Exp consumed to go from canonical `current_level` to +1.
 

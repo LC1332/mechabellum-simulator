@@ -1,0 +1,91 @@
+{
+ "name": "o2k5a",
+ "group": "CAP",
+ "desc": "K5 台风残骸引爆 5322 control: 台风lv3 vs 剑齿虎lv0 距离90",
+ "seed": 11,
+ "repeat_idx": 0,
+ "sround": 7,
+ "p0": {
+  "units": [
+   {
+    "id": 22,
+    "level": 3,
+    "x": 0,
+    "y": -90,
+    "index": 0
+   }
+  ]
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 21,
+    "level": 0,
+    "x": 0,
+    "y": 0,
+    "index": 100
+   }
+  ]
+ },
+ "towers": null,
+ "constructions": null,
+ "use_construction": null,
+ "oracle": {
+  "job": "s30_o2k5a_11",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   250,
+   0
+  ],
+  "alive": [
+   2,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 22,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 15136,
+    "dmgReal": 14886,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 13762,
+    "dmgReal": 13762,
+    "kills": 0
+   }
+  ]
+ },
+ "cost_s": 0.5,
+ "ts": "08-29 11:08:33",
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   2,
+   0
+  ],
+  "end_t": 3.0,
+  "dmg": {
+   "0:22": 14886.0,
+   "1:21": 6881.0
+  },
+  "kills": {
+   "0:22": 1
+  }
+ }
+}

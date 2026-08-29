@@ -1,0 +1,76 @@
+{
+ "_comment": "爬虫动力学与伤害标定修正任务书 (2026-08-29) — 本轮开发溯源记录 (R0 代码段 + R2 机制原语 + R4 解锁规则 + R1/R10 runner)。oracle 逐帧遥测与数值冻结尚未完成, 所有 provisional 数值未烘焙为默认。",
+ "provenance_version": "step33-provenance-v1",
+ "session_date": "2026-08-29",
+ "baseline_frozen": {
+  "new_replays_parse": "伤害标定.grbr: 3 pairs/18 rounds; 清杂标定.grbr: 7 pairs/9 rounds; 合计 10 pair (replay2json schema rounds_v0.2)",
+  "new_replays_control": "replay_check --skills: 7/8 winner, winner AliveMechCount |err| mean 41.5, 伤害标定 r14 判错 — 与任务书 §1.2 完全一致",
+  "eight_lib": "全量复现 1793/2349 = 76.3% (s24 271/320, s25 140/186, s26 284/450, s27 124/140, s28 803/1004, s29p 39/57, s29cal 20/42, s29c 112/150 — 与 data/calib/step29/bench_ver.json 定版逐库一致, 引擎全部新 flag 默认 OFF 零回归)"
+ },
+ "new_benchmark_first_results": {
+  "crawler_dynamics_ab": "local_data/crawler_damage_ab/crawler_dynamics_results.json — C2/C4 (96 爬虫模块) treatment 臂 10s 接触环 = 20 (与 review 内圈约 20 吻合), 存活 33 vs control 7; C7 768 模块 treatment 51.3s 清场 vs control 67.0s",
+  "damage_calibration": "local_data/crawler_damage_ab/damage_calibration_results.json (PySim 侧 CalibrationRow; oracle diff 待遥测)",
+  "chaff_calibration": "local_data/crawler_damage_ab/chaff_calibration_results.json"
+ },
+ "assets_hashed": {
+  "data/伤害标定.grbr": "c59999384b1699d46472b8f54c6a0af294c9f0cea378dcad1b3292b9b521c192",
+  "data/清杂标定.grbr": "7af4a1e6c34e4af09e776c97ea39cb3d96d84356da917529f9a3c446736bcb19",
+  "data/爬虫动力学.jpg": "9ad392b3c170022788bc2a0d6bfa2fced92b7bfcf4eedc628f05643e427c56b6"
+ },
+ "t0_alignment": {
+  "tool": "tools/build_crawler_damage_cases.py",
+  "manifest": "data/crawler_damage_oracle/crawler-damage-replay-v1/manifest.json",
+  "alignment_schema": "crawler_damage_alignment_v1",
+  "counts": {"pairs_total": 10, "cases_ok": 8, "empty_field": 2, "ambiguous": 0},
+  "round_alignment_rule": "fight_round = pair.round (同轮 units_fight 为花名册); report_round = match.round = pair.round + 1; report 的单位集合不是战斗花名册 (包含下一轮到达的单位), report exp - units_fight exp = 该场战斗 exp 增量 (exp 链 1744→3546→5236→… 逐场验证); 缺失行 = 该场阵亡或被出售 (survived=null 不伪证)"
+ },
+ "mechanics_landed": {
+  "flags_all_default_off": true,
+  "t2_footprint": {
+   "module": "pysim/battlefield/geometry.py (footprint-spec-v1)",
+   "engine_flag": "footprint_box + footprint_reg (opts 注入注册表)",
+   "provisional_spec": "剑齿虎(21) axis_aligned_box 20x20 (evidence: review 0829 3x3 障碍 + 内圈约20爬虫/爬虫直径4 自洽; confidence=provisional, Q1 oracle 未决, 未烘焙为默认)",
+   "engine_paths": ["_surface_matrix (box-aware 对称矩阵)", "_validate_targets", "_move 停走距离", "_separate 硬约束 pass (前+后各一次, box 永不被推)", "_full_target_pass 混合对剔除 (box↔box 保留软分离)"]
+  },
+  "t3_crawler_flow": {
+   "engine_flag": "crawler_flow (+flow_band/flow_w/flow_chirality)",
+   "semantics": "近战爬虫仅在目标邻域 [stop_eff, stop_eff+flow_band] 且未进射程时叠加周界切向速度 (全局手性), 远距正常寻路, 射程内不动 — 任务书 §5/T3 '近目标周界流动与远距离寻路分开'"
+  },
+  "t4_retarget": {
+   "engine_flag": "crawler_retarget (+retarget_hyst=5.0m)",
+   "semantics": "移动中换靶滞回: 原 mv 目标存活时新候选须近 hyst 米以上; 事件审计 (t,row,old,new,reason∈{first_lock,dead,out_of_range,closer_unblocked}) 入 b.retarget_events"
+  },
+  "t1_calibration_ledger": {
+   "module": "pysim/calibration.py (CalibrationRow)",
+   "engine_flag": "calib_ledger (纯探针: fire_events/target_since/walked/retarget_events, 并强制 eq_ledger 记账; 不改模拟结果 — tests/test_damage_calibration.py 断言)",
+   "damage_truth": "DamageReceipt 单一口径 (raw = hp + shield + barrier), card_damage 与 ledger totals 对账断言"
+  },
+  "t11_unlock": {
+   "rules": "rules.py: BASE_MANUAL_UNLOCK_LIMIT=1, unlock_limit_quote (单一事实源), UNIT_EXPERT_OFFICERS={20029,20033,20036,20037,20038,20039} (显式兵种专家 registry, 类别专家 20005/20021 排除), expert_auto_unlock_mechs/pending_expert_auto_unlocks",
+   "state": "PlayerState.manual_unlocks_this_round (旧档默认 0; schema v0.7 bump 延后至 engine freeze, 任务书 §4.3)",
+   "executor": "deploy.py: UNLOCK_UNIT 额度门 (第二次 → UNLOCK_LIMIT_REACHED, 状态不变); 已解锁/失败/Undo(折叠于 normalize) 不占额度; 0 元解锁占额度; GIFT_UNIT 自动解锁 (AUTO_UNLOCK_EXPERT:<officer>); CHOOSE_REINFORCE 单位获得卡自动解锁 (AUTO_UNLOCK_REINFORCEMENT:<item>, 单位强化卡 Q12 未确认前不解锁)",
+   "round_start": "advance_round: 额度双清零 + activeRound 到点的兵种专家自动解锁 (幂等, provenance 记录); 先知专家 20037 无 modeled gift 但自动解锁 mech 26",
+   "env": "legal_action_candidates 额度为 0 时不枚举 UNLOCK_UNIT",
+   "rl_boundary": "未改 pysim/rl/**; RL 方同步前报告须标 RL_UNLOCK_MASK_STALE (任务书 T11.5)"
+  }
+ },
+ "tests_added": [
+  "tests/transition/test_unlock_rules.py (14, 任务书 §6.4 U1-U10 对映)",
+  "tests/test_crawler_dynamics.py (7: 几何/离臂 bit-exact/确定性/不可穿透/内圈容差/绕背/性能)",
+  "tests/test_damage_calibration.py (4: 探针零影响/聚合/对账/唯一受害者)"
+ ],
+ "runners_added": [
+  "benchmarks/crawler_common.py",
+  "benchmarks/run_crawler_dynamics.py (C1-C8 代理 case, control/treatment 双臂)",
+  "benchmarks/run_damage_calibration.py (P0+P1 兵种 120s 单体标定, 0/90/180 朝向, calib_ledger)",
+  "benchmarks/run_chaff_calibration.py (24/96/384/768 密度, kills(t)/clear_t/密度指标, flow OFF/ON 双臂)"
+ ],
+ "next": "下一轮执行计划: information/pysim伤害标定与逐兵种武器修正oracle执行任务书-2026-08-30.md (oracle 工具链事实已核实: oracle_b.py 文件队列协议 / payload units[]{dmgMax,dmgReal,kills} / craft_replay 场景 schema, 见该任务书 §2)",
+ "oracle_pending": [
+  "Q1-Q13 全部未决 (游戏 build hash / 逐帧遥测未采集)",
+  "鬼鳐全弹发射 725 / 高爆 425, 猎犬燃烧弹 11028, 狂蝎双发 719, 台风残骸引爆 5322 — 未实现, 等 oracle (T7/T8)",
+  "重炮转向门控 heavy_facing_set — 未实现, 等 0/90/180° 逐帧 (Q6)",
+  "骇客 lv1-9 阈值扫描 (T9) — runner 就绪, oracle 数值待采",
+  "ENGINE_VERSION 保持 pysim-step31; SCHEMA_VERSION 保持 transition-v0.7; 冻结时一次性 bump"
+ ]
+}

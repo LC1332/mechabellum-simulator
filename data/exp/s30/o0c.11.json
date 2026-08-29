@@ -1,0 +1,62 @@
+{
+ "name": "o0c",
+ "group": "CAL0",
+ "desc": "维修靶侦察: 暴雨lv9 vs 维修剑齿虎lv9(10321 战地维修+30%生命/4.5%每秒回复); 反击与回复可视性侦察",
+ "seed": 11,
+ "repeat_idx": 0,
+ "sround": 7,
+ "p0": {
+  "units": [
+   {
+    "id": 12,
+    "level": 9,
+    "x": 0,
+    "y": -110,
+    "index": 0
+   }
+  ]
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 21,
+    "level": 9,
+    "x": 0,
+    "y": 0,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "21": [
+    10321
+   ]
+  }
+ },
+ "towers": null,
+ "constructions": null,
+ "use_construction": null,
+ "oracle": {
+  "job": "s30_o0c_11",
+  "seed": 11,
+  "ok": 0,
+  "err": "",
+  "winner": -1,
+  "reportCount": 0,
+  "score": [
+   0,
+   0
+  ],
+  "alive": [
+   0,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 0,
+  "units": []
+ },
+ "cost_s": 47.2,
+ "ts": "08-29 11:07:04"
+}

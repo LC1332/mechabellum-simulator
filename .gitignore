@@ -220,3 +220,6 @@ __marimo__/
 # Project: local large data (full replay corpora, bench outputs) - see local_data/README.md
 local_data/*
 !local_data/README.md
+
+# Mechabellum replay files - keep local only
+*.grbr

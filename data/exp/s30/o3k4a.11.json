@@ -1,0 +1,59 @@
+{
+ "name": "o3k4a",
+ "group": "CAP",
+ "desc": "K4 购买路径 control: 狂蝎经 PAD_BuyUnit 部署 (快照单位清空) vs 剑齿虎lv0; 验证购买单位创建路径",
+ "seed": 11,
+ "repeat_idx": 0,
+ "sround": 7,
+ "p0": {
+  "units": []
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 21,
+    "level": 0,
+    "x": 0,
+    "y": 0,
+    "index": 100
+   }
+  ]
+ },
+ "towers": null,
+ "constructions": null,
+ "use_construction": null,
+ "oracle": {
+  "job": "s30_o3k4a_11",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   867
+  ],
+  "alive": [
+   0,
+   22
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 0,
+  "units": []
+ },
+ "cost_s": 0.5,
+ "ts": "08-29 11:28:58",
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   1
+  ],
+  "end_t": 0.0,
+  "dmg": {},
+  "kills": {}
+ }
+}

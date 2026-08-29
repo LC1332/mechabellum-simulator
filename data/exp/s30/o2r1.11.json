@@ -1,0 +1,58 @@
+{
+ "name": "o2r1",
+ "group": "CAP",
+ "desc": "朝向对照 isRotate: 同 o2r0 但 attacker isRotate=true → 若透传为背向翻转, 首发提前 → dmgReal 差分",
+ "seed": 11,
+ "repeat_idx": 0,
+ "sround": 7,
+ "p0": {
+  "units": [
+   {
+    "id": 22,
+    "level": 9,
+    "x": 0,
+    "y": 0,
+    "isRotate": true,
+    "index": 0
+   }
+  ]
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 21,
+    "level": 0,
+    "x": 0,
+    "y": -90,
+    "index": 100
+   }
+  ]
+ },
+ "towers": null,
+ "constructions": null,
+ "use_construction": null,
+ "oracle": {
+  "job": "s30_o2r1_11",
+  "seed": 11,
+  "ok": 0,
+  "err": "",
+  "winner": -1,
+  "reportCount": 0,
+  "score": [
+   0,
+   0
+  ],
+  "alive": [
+   0,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 0,
+  "units": []
+ },
+ "cost_s": 39.0,
+ "ts": "08-29 11:08:27"
+}

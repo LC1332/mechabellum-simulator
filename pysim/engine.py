@@ -361,7 +361,30 @@ class Battle:
                      #   eq_ledger: DamageReceipt 记账 (0=关, 1=auto 场上有
                      #     runtime 装备才记, 2=强制)
                      "eq_runtime": 1, "eq_off": "", "eq_only": "",
-                     "eq_ledger": 1}
+                     "eq_ledger": 1,
+                     # ---- 0829 爬虫动力学 flags (任务书 T2-T4; 全部默认关,
+                     # OFF 臂 = step32 行为逐 case 不变) ----
+                     #   footprint_box: 大型地面单位矩形 footprint 表面距离
+                     #     + 不可穿越 (spec 注册表经 opts.footprint_reg 注入,
+                     #     见 pysim/battlefield/geometry.py; 未注册兵种保持
+                     #     圆半径; Q1 oracle 未决前不烘焙任何默认 spec)
+                     #   crawler_flow: crawler_flow_v1 —— 爬虫仅在目标邻域
+                     #     (stop_eff..stop_eff+flow_band) 且未进入射程时叠加
+                     #     周界切向速度分量 (绕行/周向流动), 全局手性固定避
+                     #     免对称死锁
+                     #   crawler_retarget: 爬虫移动换靶滞回 —— 原 mv 目标存
+                     #     活时, 新候选需比它近 retarget_hyst 米以上才换靶
+                     #     (防两近目标间抖动); 换靶事件记入 self.retarget_events
+                     "footprint_box": 0, "footprint_reg": None,
+                     "crawler_flow": 0, "flow_band": 12.0, "flow_w": 0.65,
+                     "flow_chirality": 1,
+                     "crawler_retarget": 0, "retarget_hyst": 5.0,
+                     # ---- 0829 T1 标定 ledger 探针 (默认关; 只加事件记录,
+                     # 不改任何模拟结果) ----
+                     #   calib_ledger: 1 = fire_events / target_since /
+                     #     walked / retarget_events 探针开启, 供
+                     #     pysim.calibration.build_calibration_rows 聚合
+                     "calib_ledger": 0}
         self.tower_mods = {}        # team -> {"range": +m (ranged only), "speed": +m}
         self._pending = []          # (team, mech_id, level, x, y, is_rotate)
         self._towers = []           # (team, x, y, strengthen)
@@ -1477,8 +1500,94 @@ class Battle:
                                   % (i["team"], i["ax"], i["ay"], i["bx"],
                                      i["by"], i["radius"]))
 
+        # 0829 T2: footprint spec snapshot (opt-in via opts.footprint_reg +
+        # opts.footprint_box). No registry / flag off -> fp_boxes empty and
+        # every code path below keeps the legacy circle results bit-exact.
+        self._fp_finalize()
+        self.retarget_events = []   # T4: (t, row, old, new, reason) when on
+        # 0829 T1: calibration probes (event recording only, zero sim change)
+        self._calib_on = bool(self.opts.get("calib_ledger", 0))
+        if self._calib_on:
+            self.fire_events = []                     # (t, row, card, uid)
+            self.target_since = np.full(self.n, -1.0)  # first lock time
+            self.walked = np.zeros(self.n)             # metres moved
+
         self._finalized = True
         return self
+
+    # ---------- footprint (0829 T2) ----------
+    def _fp_finalize(self):
+        reg = self.opts.get("footprint_reg")
+        on = bool(self.opts.get("footprint_box", 0)) and reg is not None
+        self.fp_box = np.zeros(self.n, dtype=bool)
+        self.fp_hw = np.zeros(self.n)
+        self.fp_hl = np.zeros(self.n)
+        self.fp_ocos = None
+        self.fp_osin = None
+        self.fp_boxes = np.zeros(0, dtype=np.int64)
+        self._fp_on = False
+        if not on:
+            return
+        from .battlefield import geometry as fpgeo
+        self._fpgeo = fpgeo
+        mech_ids = getattr(self, "mech_id", None)
+        if mech_ids is None:
+            return
+        for i in range(self.n):
+            if self.is_tower[i] or self.is_bld[i] or self.is_device[i] \
+                    or self.is_fly[i]:
+                continue
+            spec = reg.get(int(mech_ids[i]))
+            if spec is None or spec.shape not in (fpgeo.SHAPE_AABB,
+                                                  fpgeo.SHAPE_OBOX):
+                continue
+            self.fp_box[i] = True
+            self.fp_hw[i] = float(spec.half_width)
+            self.fp_hl[i] = float(spec.half_length)
+            if spec.shape == fpgeo.SHAPE_OBOX:
+                if self.fp_ocos is None:
+                    self.fp_ocos = np.ones(self.n)
+                    self.fp_osin = np.zeros(self.n)
+                self.fp_ocos[i] = math.cos(self.head[i])
+                self.fp_osin[i] = math.sin(self.head[i])
+        self.fp_boxes = np.where(self.fp_box)[0].astype(np.int64)
+        self._fp_on = len(self.fp_boxes) > 0
+        if self._fp_on and self.trace_enabled:
+            reg_dump = reg.dump()
+            for g in self.fp_boxes:
+                d = reg_dump.get(str(int(self.mech_id[g])), {})
+                self.trace.append("E|0.00|footprint|%d|%.1fx%.1f|%s|%s" % (
+                    int(self.mech_id[g]), self.fp_hw[g] * 2,
+                    self.fp_hl[g] * 2, d.get("shape", "?"),
+                    d.get("confidence", "?")))
+
+    def _fp_box_surface(self, pts, boxes):
+        """Surface distance of points (rows `pts`, circle radius included)
+        to their (per-row) box target rows `boxes` — box-aware replacement
+        for `center_dist - r_pts - r_box`. Vectorized per unique box."""
+        out = np.empty(len(pts), dtype=float)
+        uniq, inv = np.unique(boxes, return_inverse=True)
+        for k, g in enumerate(uniq):
+            g = int(g)
+            sel = inv == k
+            out[sel] = self._fpgeo.surface_distance_circle_box(
+                self.x[pts[sel]], self.y[pts[sel]], self.radius[pts[sel]],
+                self.x[g], self.y[g], self.fp_hw[g], self.fp_hl[g],
+                (self.fp_ocos[g] if self.fp_ocos is not None else None),
+                (self.fp_osin[g] if self.fp_osin is not None else None))
+        return out
+
+    def _fp_adjust(self, pts, boxes, dist):
+        """Replace dist entries with box surface distance where the target
+        row is a footprint box (no-op when the feature is off)."""
+        if not self._fp_on or len(pts) == 0:
+            return dist
+        isbox = self.fp_box[boxes]
+        if not np.any(isbox):
+            return dist
+        dist = np.array(dist, dtype=float, copy=True)
+        dist[isbox] = self._fp_box_surface(pts[isbox], boxes[isbox])
+        return dist
 
     def tower_hp(self):
         return float(self.opts.get("tower_hp", TOWER_HP_BASE))
@@ -1829,6 +1938,19 @@ class Battle:
         dy = y[:, None] - y[None, :]
         d = np.sqrt(dx * dx + dy * dy) - r[:, None] - r[None, :]
         np.fill_diagonal(d, np.inf)
+        # 0829 T2: rows/cols whose unit carries a footprint box use the
+        # circle-to-box surface distance (symmetric; inf diagonal kept)
+        if self._fp_on and len(idx):
+            box_local = np.where(self.fp_box[idx])[0]
+            if len(box_local):
+                # recompute each box column exactly, then mirror to the row
+                pts = np.repeat(np.arange(len(idx)), len(box_local))
+                cols = np.tile(box_local, len(idx))
+                vals = self._fp_box_surface(pts, cols).reshape(
+                    len(idx), len(box_local))
+                d[:, box_local] = vals
+                d[box_local, :] = vals.T
+                np.fill_diagonal(d, np.inf)
         return d
 
     # ---------- targeting ----------
@@ -1955,6 +2077,27 @@ class Battle:
         mv_nn = np.argmin(dm_a, axis=1)
         mv_nd = dm_a[np.arange(len(alive_idx)), mv_nn]
         mv_local = np.where(np.isfinite(mv_nd), mv_nn, -1)
+        # 0829 T4 crawler_retarget: moving crawlers keep their current
+        # movement target unless the nearest candidate is closer by more
+        # than retarget_hyst metres (anti-flicker between two near targets;
+        # review: 射程内保持, 移动中才可因更近目标换靶)
+        hyst = float(self.opts.get("retarget_hyst", 5.0) or 5.0)
+        if self.opts.get("crawler_retarget", 0) and hyst > 0:
+            _pos_mv = np.full(self.n, -1, dtype=np.int64)
+            _pos_mv[alive_idx] = np.arange(len(alive_idx))
+            _om = self.mv_target[alive_idx]
+            _om_safe = np.maximum(_om, 0)
+            _om_local = np.where(_om >= 0, _pos_mv[_om_safe], -1)
+            _crow = (self.mech_id[alive_idx] == 10) & (_om_local >= 0) \
+                & (~self.dead[_om_safe])
+            if np.any(_crow):
+                _d_old = np.full(len(alive_idx), np.inf)
+                _d_old[_crow] = dm_a[_crow, _om_local[_crow]]
+                _keep_mv = _crow & (_d_old <= mv_nd + hyst)
+                if np.any(_keep_mv):
+                    mv_nn = np.where(_keep_mv, _om_local, mv_nn)
+                    mv_nd = dm_a[np.arange(len(alive_idx)), mv_nn]
+                    mv_local = np.where(np.isfinite(mv_nd), mv_nn, -1)
         # step19 lock mask: cloaked (隐形 3925) / 应急装甲-active columns
         # cannot be LOCKED; splash still hits them, movement still advances
         unt_col = self.cloaked[alive_idx] | (self.aegis_until[alive_idx] > self.time)
@@ -2009,6 +2152,36 @@ class Battle:
         # reset prepare when acquired target differs from old
         changed = (~keep) & (new_t >= 0) & (new_t != old)
         gi = alive_idx[changed]
+        # 0829 T4/T1: retarget audit trail (crawler rows under
+        # crawler_retarget; all rows under calib_ledger). Reason taxonomy of
+        # the 任务书: dead / out_of_range / closer_unblocked / first_lock
+        _rt_on = self.opts.get("crawler_retarget", 0) or self._calib_on
+        if _rt_on and len(gi):
+            _gi_changed = np.where(changed)[0]
+            for _k, _r in enumerate(gi):
+                if self.opts.get("crawler_retarget", 0) \
+                        and int(self.mech_id[_r]) != 10:
+                    continue
+                if len(self.retarget_events) >= 100000:
+                    break
+                _o = int(old[_gi_changed[_k]])
+                _ol = int(old_local[_gi_changed[_k]])
+                if _o < 0:
+                    _reason = "first_lock"
+                elif self.dead[_o]:
+                    _reason = "dead"
+                elif _ol >= 0 and d[_gi_changed[_k], _ol] \
+                        > self.range[_r]:
+                    _reason = "out_of_range"
+                else:
+                    _reason = "closer_unblocked"
+                self.retarget_events.append((
+                    float(self.time), int(_r), _o, int(new_t[_gi_changed[_k]]),
+                    _reason))
+            # T1: first target acquisition per row
+            if self._calib_on:
+                first = gi[old[_gi_changed] < 0]
+                self.target_since[first] = self.time
         # step23 定版 (cycle_keep): 换靶不动武器循环 —— 状态/时钟/已发闩锁
         # 全保留, 只换目标。attackDuration 是武器冷却, 与目标存亡无关
         # (旧三连重置使 prep=0 远程单位在目标死亡瞬间再齐射: 暴雨 vs 爬虫墙
@@ -2179,6 +2352,11 @@ class Battle:
         # fields holding the units they protect, not walls to push out of)
         if np.any(dmask := self.is_device[alive_idx]):
             sel &= ~(dmask[iu[0]] | dmask[iu[1]])
+        # 0829 T2: mixed circle↔box pairs leave the radius pair set — the
+        # hard box pass in _separate enforces the rectangle constraint.
+        # box↔box pairs keep the soft split (both sides are heavy).
+        if self._fp_on and np.any(isb := self.fp_box[alive_idx]):
+            sel &= ~(isb[iu[0]] ^ isb[iu[1]])
         self._sep_i = alive_idx[iu[0][sel]]
         self._sep_j = alive_idx[iu[1][sel]]
         # sep_radius rows cached for _separate (half-arm symmetry)
@@ -2195,6 +2373,8 @@ class Battle:
         dx = self.x[tt] - self.x[idx]
         dy = self.y[tt] - self.y[idx]
         dist = np.sqrt(dx * dx + dy * dy) - self.radius[tt] - self.radius[idx]
+        # 0829 T2: box targets measure surface distance to the rectangle
+        dist = self._fp_adjust(idx, tt, dist)
         # step27 近战贴脸修复: 表面距离可为负 (体积重叠), 旧代码
         # `dist >= min_rng` 在 min_rng=0 时把一切贴脸目标判"太近"逐 tick
         # 清锁 → 近战单位永远 IDLE 打不还手 (s27 nt_05v10 犀牛对爬虫
@@ -2223,6 +2403,10 @@ class Battle:
     # ---------- combat ----------
     def _fire_one(self, i):
         self.total_attacks += 1
+        if getattr(self, "_calib_on", False):
+            self.fire_events.append((round(self.time, 4), int(i),
+                                     int(self.card_idx[i]),
+                                     int(self.uid[i])))
         s = self.skill_of.get(self.skill_ref[i])
         t = int(self.target[i])
         if s is None or t < 0:
@@ -2905,7 +3089,10 @@ class Battle:
         # post-amp pre-mitigation raw per event and bar_take tracks the
         # barrier-redirect absorption; receipts are appended at the credit
         # stage below (shield/barrier/HP/overkill/prevented per event).
-        _ledger = self.opts.get("eq_ledger", 1) == 2 or (
+        # 0829 T1: calib_ledger force-arms the receipts (the calibration
+        # rows aggregate FROM this stream — one damage truth source).
+        _ledger = self.opts.get("eq_ledger", 1) == 2 or \
+            getattr(self, "_calib_on", False) or (
             self.opts.get("eq_ledger", 1) == 1
             and bool(self._eq_runtime))
         dm0 = dm.copy() if _ledger else None
@@ -3591,6 +3778,9 @@ class Battle:
                     d = math.hypot(self.x[mt] - self.x[u],
                                    self.y[mt] - self.y[u]) \
                         - self.radius[mt] - self.radius[u]
+                    if self._fp_on and self.fp_box[mt]:
+                        d = float(self._fp_box_surface(
+                            np.array([u]), np.array([mt]))[0])
                     if d <= self.range[u]:
                         continue
                 wx, wy = tx - self.x[u], ty - self.y[u]
@@ -3624,6 +3814,8 @@ class Battle:
         dx = self.x[mt] - self.x[idx]
         dy = self.y[mt] - self.y[idx]
         dist = np.sqrt(dx * dx + dy * dy) - self.radius[mt] - self.radius[idx]
+        # 0829 T2: box targets stop/walk on the rectangle surface distance
+        dist = self._fp_adjust(idx, mt, dist)
         # step7 aggro rule (opts.aggro = R meters, report-fitted): ranged
         # units only pursue the nearest enemy while it is within R; beyond
         # that they hold position (losers die deep at spawn, winners stop
@@ -3676,6 +3868,9 @@ class Battle:
             step_len = np.where(ok, spd * DT, 0.0)
             self.x[w] = np.where(ok, self.x[w] + wx / np.maximum(ln, 1e-9) * step_len, self.x[w])
             self.y[w] = np.where(ok, self.y[w] + wy / np.maximum(ln, 1e-9) * step_len, self.y[w])
+            # 0829 T1: per-row walked distance probe
+            if getattr(self, "_calib_on", False):
+                self.walked[w] += step_len
             # 滚动充能 180808: +1 range per 7m walked (stacks capped at 100)
             if np.any(self.rolling[w]):
                 self.moved[w] += step_len
@@ -3729,6 +3924,12 @@ class Battle:
         np.clip(self.y[idx], -MAP_Y, MAP_Y, out=self.y[idx])
 
     def _separate(self):
+        # 0829 T2 hard footprint-box pass runs BEFORE the soft pair loop:
+        # no ground unit's circle may overlap a footprint rectangle; the box
+        # never moves (attackers cannot shove a large unit along its axis,
+        # 任务书 T3 invariant) and the full correction lands on the unit.
+        if self._fp_on:
+            self._fp_box_pass()
         # sparse: candidate pairs refreshed by the full targeting pass.
         # Default: one soft sweep (each side relieved by half the overlap).
         # opts.stiff_sep: full overlap resolution x 3 sweeps, towers
@@ -3843,6 +4044,93 @@ class Battle:
             np.add.at(self.y, ii, dy * push_i)
             np.add.at(self.x, jj, -dx * push_j)
             np.add.at(self.y, jj, -dy * push_j)
+        # 0829 T2: the soft sweeps above may push units INTO a footprint
+        # rectangle — re-run the hard box pass so the constraint holds
+        # after every separation source of the tick
+        if self._fp_on:
+            self._fp_box_pass()
+
+    def _fp_box_pass(self):
+        """0829 T2: eject any overlapping ground circle from a footprint box
+        (full penetration resolution per tick, deterministic, all movement
+        on the non-box side)."""
+        fpgeo = self._fpgeo
+        ground_ok = (~self.dead) & (~self.is_fly) & (~self.is_tower) \
+            & (~self.is_bld) & (~self.is_device) & (~self.fp_box)
+        rmax = float(self.radius.max()) if self.n else 0.0
+        for g in self.fp_boxes:
+            if self.dead[g]:
+                continue
+            bnd = math.hypot(self.fp_hw[g], self.fp_hl[g])
+            dxg = self.x - self.x[g]
+            dyg = self.y - self.y[g]
+            cand = ground_ok & (dxg * dxg + dyg * dyg
+                                <= (bnd + rmax + 2.0) ** 2)
+            ci = np.where(cand)[0]
+            if len(ci) == 0:
+                continue
+            ocos = self.fp_ocos[g] if self.fp_ocos is not None else None
+            osin = self.fp_osin[g] if self.fp_osin is not None else None
+            nx, ny, depth = fpgeo.circle_box_separation(
+                self.x[ci], self.y[ci], self.x[g], self.y[g],
+                self.fp_hw[g], self.fp_hl[g], ocos, osin)
+            pb = fpgeo.point_box_distance(
+                self.x[ci], self.y[ci], self.x[g], self.y[g],
+                self.fp_hw[g], self.fp_hl[g], ocos, osin)
+            need = self.radius[ci] - pb + depth
+            mv = need > 1e-9
+            if np.any(mv):
+                self.x[ci[mv]] += nx[mv] * need[mv]
+                self.y[ci[mv]] += ny[mv] * need[mv]
+            np.clip(self.x[ci], -MAP_X, MAP_X, out=self.x[ci])
+            np.clip(self.y[ci], -MAP_Y, MAP_Y, out=self.y[ci])
+
+    def _crawler_flow(self):
+        """0829 T3 crawler_flow_v1: crawlers still outside weapon range add
+        a tangential (perimeter-flow) velocity component while inside the
+        target's neighbourhood band [stop_eff, stop_eff + flow_band]. Inside
+        range crawlers are untouched (in-range lock), far crawlers keep
+        normal pursuit, and a fixed global chirality keeps the flow
+        deadlock-free. Deterministic; OFF by default."""
+        rows = np.where((self.mech_id == 10) & (~self.dead)
+                        & (self.mv_target >= 0) & (self.move_speed > 0)
+                        & (~self._spawning))[0]
+        if len(rows) == 0:
+            return
+        mt = self.mv_target[rows]
+        dx = self.x[mt] - self.x[rows]
+        dy = self.y[mt] - self.y[rows]
+        ln = np.sqrt(dx * dx + dy * dy)
+        ok = ln > 1e-6
+        sd = ln - self.radius[mt] - self.radius[rows]
+        sd = self._fp_adjust(rows, mt, sd)
+        stop_eff = np.maximum(5.0, self.stop_dist[rows])
+        band = float(self.opts.get("flow_band", 12.0) or 12.0)
+        if band <= 0:
+            return
+        in_band = ok & (sd > stop_eff) & (sd <= stop_eff + band)
+        k = rows[in_band]
+        if len(k) == 0:
+            return
+        mtk = self.mv_target[k]
+        lnl = ln[in_band]
+        ux = (self.x[mtk] - self.x[k]) / np.maximum(lnl, 1e-9)
+        uy = (self.y[mtk] - self.y[k]) / np.maximum(lnl, 1e-9)
+        chir = float(self.opts.get("flow_chirality", 1) or 1)
+        w = float(self.opts.get("flow_w", 0.65) or 0.65) * \
+            np.clip(1.0 - (sd[in_band] - stop_eff[in_band]) / band, 0.0, 1.0)
+        tx, ty = -uy * chir, ux * chir
+        vx = ux * (1.0 - w) + tx * w
+        vy = uy * (1.0 - w) + ty * w
+        vn = np.maximum(np.hypot(vx, vy), 1e-9)
+        emp_fac = np.where(self.emp_until[k] > self.time, 0.6, 1.0)
+        spd = self.move_speed[k] * self._spd_fac[k] * emp_fac \
+            * self._area_fac[k]
+        step_len = spd * DT
+        self.x[k] += vx / vn * step_len
+        self.y[k] += vy / vn * step_len
+        np.clip(self.x[k], -MAP_X, MAP_X, out=self.x[k])
+        np.clip(self.y[k], -MAP_Y, MAP_Y, out=self.y[k])
 
     def _occlusion_mask(self):
         """step26 P2 遮挡简化模型: 远程单位 (range>=occl_min_rng) 到当前
@@ -4849,6 +5137,10 @@ class Battle:
                 self._bld_reloading[rl] = False
 
         self._move()
+        # 0829 T3: crawler perimeter flow (before separation so the soft
+        # pair sweeps + box pass resolve any overlap the flow creates)
+        if self.opts.get("crawler_flow", 0):
+            self._crawler_flow()
         self._separate()
         # step23 T3: 速度向量 (单位/仿真tick 位移), 供齐射落点前置量
         if not hasattr(self, "_px"):

@@ -1,8 +1,9 @@
 # Round-scoped deploy rules (step4 任务书 §2): the SINGLE rule source for
-# the per-round buy limit and the cross-round movement permission.
+# the per-round buy limit, the per-round manual unlock quota and the
+# cross-round movement permission.
 #
 # deploy_transition, the env legal mask, the GameView and the tests all read
-# these functions — nobody keeps a second constant table. The two axes are
+# these functions — nobody keeps a second constant table. The three axes are
 # pure functions over PlayerState (or the deploy working view), so a
 # mid-round activation (blueprint 2, 部署模块 binding, 高速引擎 tech buy,
 # redeploy release) is visible to the very next action of the same round.
@@ -62,6 +63,82 @@ def buy_limit_quote(player: PlayerState) -> BuyLimitQuote:
     return BuyLimitQuote(base=BASE_BUY_LIMIT, blueprint_bonus=bp,
                          officer_bonus=off, used=used, limit=limit,
                          remaining=max(0, limit - used))
+
+
+# ---------------------------------------------------- manual unlock quota
+# 爬虫动力学与伤害标定修正任务书 (2026-08-29) T11.1, user-frozen rule:
+#   每个玩家每个回合最多成功执行 1 次主动 UnlockUnit。
+# Only a SUCCESS that turns a locked mech into unlocked consumes the quota:
+# already-unlocked queries, failed actions, insufficient supply and
+# undone actions (the normalizer folds Undo BEFORE the executor ever sees
+# the stream) never permanently occupy it. A 0-cost manual unlock still
+# consumes the quota — the limit is on COUNT, not on spend. Quota is per
+# player, per round, independent for both sides; advance_round resets it.
+# Auto unlocks (unit experts / unit-grant reinforcements) never consume it.
+BASE_MANUAL_UNLOCK_LIMIT = 1
+
+
+@dataclass(frozen=True)
+class UnlockLimitQuote:
+    base: int                         # 1
+    used: int                         # manual_unlocks_this_round
+    remaining: int
+
+    @property
+    def breakdown(self) -> str:
+        return "manual unlock %d/%d used" % (self.used, self.base)
+
+
+def unlock_limit_quote(player: PlayerState) -> UnlockLimitQuote:
+    """Per-round manual-unlock quota of one player (the only truth source)."""
+    used = int(getattr(player, "manual_unlocks_this_round", 0) or 0)
+    return UnlockLimitQuote(base=BASE_MANUAL_UNLOCK_LIMIT, used=used,
+                            remaining=max(0, BASE_MANUAL_UNLOCK_LIMIT - used))
+
+
+# ------------------------------------------------- auto unlock (no quota)
+# T11.3: the EXPLICIT unit-expert registry. Category experts (巨型专家 20005
+# with 10 unitIds, 空军专家 20021 with 7 unitIds, target "Air") must NEVER be
+# generalized into batch unlocks — only these six single-mech officers
+# (gamedata target "Custom", exactly one unitId) auto-unlock their mech.
+# The mech id and the activeRound come from gamedata, not from this table;
+# activeRound matches the corpus-verified delayed-gift timing
+# (normalize.GIFT_OFFICERS). Q11 (unlock immediately on selection vs at
+# activeRound) stays oracle-pending: until then the engine unlocks at the
+# activeRound round start, the same timing as the gift spawn evidence.
+# 先知专家 20037 has NO modeled gift spawn yet — it still auto-unlocks mech
+# 26 at its activeRound (the user-frozen rule covers the unlock, not the
+# spawn; the spawn stays unmodeled and never fabricated).
+UNIT_EXPERT_OFFICERS = frozenset({20029, 20033, 20036, 20037, 20038, 20039})
+
+AUTO_UNLOCK_EXPERT_TAG = "AUTO_UNLOCK_EXPERT:%d"      # provenance/receipt tag
+AUTO_UNLOCK_REINFORCEMENT_TAG = "AUTO_UNLOCK_REINFORCEMENT:%d"
+
+
+def expert_auto_unlock_mechs(officers, gd) -> tuple:
+    """(mech_id, officer_id, active_round) triples owed by HELD unit experts.
+
+    Pure over (officers, gamedata); used by advance_round (round-start
+    application at the expert's activeRound), the GIFT_UNIT handler and the
+    reinforcement handler (immediate application on acquisition). Idempotent
+    by construction at the call sites (already-unlocked mechs are skipped)."""
+    out = []
+    for o in officers or ():
+        od = gd.officers.get(int(o)) if gd is not None else None
+        if od is None or int(od.id) not in UNIT_EXPERT_OFFICERS:
+            continue
+        if len(od.unit_ids) != 1:
+            continue          # defense: registry requires a single mech
+        mech = next(iter(od.unit_ids))
+        out.append((int(mech), int(od.id), int(od.active_round or 0)))
+    return tuple(sorted(out))
+
+
+def pending_expert_auto_unlocks(officers, gd, round_no) -> tuple:
+    """Subset of expert_auto_unlock_mechs whose activeRound has arrived
+    (activeRound <= round_no). Round-start view used by advance_round."""
+    return tuple(t for t in expert_auto_unlock_mechs(officers, gd)
+                 if t[2] > 0 and t[2] <= int(round_no))
 
 
 # ------------------------------------------------------ movement permission

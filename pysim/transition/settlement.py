@@ -176,13 +176,21 @@ def advance_round(settled: EnvironmentState,
 
     battlefield M1: consumed skill slots tick their cooldown down (re-arm
     at 0) and this round's spawn set resets (flank delays apply only to
-    units new in THEIR deploy round)."""
+    units new in THEIR deploy round).
+
+    爬虫动力学任务书 (2026-08-29) T11: the manual unlock quota resets to 0
+    for BOTH players (independent per player), and held unit experts whose
+    activeRound has arrived auto-unlock their mech (idempotent, no quota,
+    provenance-tagged AUTO_UNLOCK_EXPERT:<officer_id>; Q11 timing follows
+    the corpus gift evidence until oracle rules otherwise)."""
     if settled.phase is Phase.TERMINAL:
         raise errors.TransitionError("TERMINAL_STATE",
                                      "cannot advance a terminal state")
     if settled.round >= max_round:
         raise errors.TransitionError("MAX_ROUND", "round budget exhausted")
+    new_round = settled.round + 1
     players = []
+    new_provenance = list(settled.provenance)
     for side in (0, 1):
         p = settled.players[side]
         if incomes is not None:
@@ -204,11 +212,13 @@ def advance_round(settled: EnvironmentState,
             if ttl - 1 > 0:
                 areas.append(tuple(a[:6]) + (ttl - 1,))
         equipment = tuple(p.equipment_inventory or ())
+        unlocked = p.unlocked_mechs
         if gd is not None:
             from .equipment import (round_officer_skills,
                                     round_officer_equipment, top_up_skill_slots)
             from .deploy import BLUEPRINT_SKILLS
-            new_round = settled.round + 1
+            from .rules import (pending_expert_auto_unlocks,
+                                AUTO_UNLOCK_EXPERT_TAG)
             grants = round_officer_skills(gd, p.officers, new_round)
             # step4 (user ruling 2026-08-27): blueprint 1/2/3 research
             # unlocks the mapped commander skill — the slot arrives at the
@@ -221,9 +231,20 @@ def advance_round(settled: EnvironmentState,
             eq_grants = round_officer_equipment(p.officers, new_round)
             if eq_grants:
                 equipment = tuple(sorted(tuple(equipment) + eq_grants))
+            # T11.3: expert auto unlocks at the expert's activeRound round
+            # start (Q11 timing pending oracle; idempotent, quota-free)
+            for mech, officer, _active in pending_expert_auto_unlocks(
+                    p.officers, gd, new_round):
+                if mech not in unlocked:
+                    unlocked = frozenset(unlocked | {mech})
+                    new_provenance.append(
+                        (AUTO_UNLOCK_EXPERT_TAG % officer,
+                         "mech %d round %d" % (mech, new_round)))
         players.append(PlayerState(**{**p.__dict__,
                                       "supply": p.supply + inc,
                                       "bought_this_round": 0,
+                                      "manual_unlocks_this_round": 0,
+                                      "unlocked_mechs": unlocked,
                                       "commander_skills_raw": tuple(skills),
                                       "equipment_inventory": equipment,
                                       "blueprints_round": (),
@@ -237,7 +258,7 @@ def advance_round(settled: EnvironmentState,
     return EnvironmentState(
         schema_version=settled.schema_version,
         ruleset_version=settled.ruleset_version,
-        engine_version=settled.engine_version, round=settled.round + 1,
+        engine_version=settled.engine_version, round=new_round,
         phase=Phase.DEPLOYMENT, players=tuple(players),
         finished_deploy=(False, False), next_entity_id=settled.next_entity_id,
-        terminal_reason=None, provenance=settled.provenance)
+        terminal_reason=None, provenance=tuple(new_provenance))

@@ -23,6 +23,10 @@ PLAYER_ALREADY_FINISHED = "PLAYER_ALREADY_FINISHED"
 ACTION_AFTER_END_DEPLOY = "ACTION_AFTER_END_DEPLOY"
 UNDO_EMPTY = "UNDO_EMPTY"
 BUY_LIMIT_REACHED = "BUY_LIMIT_REACHED"
+# 爬虫动力学任务书 (2026-08-29) T11: per-round manual unlock quota — the
+# second UnlockUnit of one player in one round is a stable rejection that
+# leaves supply, unlocked_mechs and the counter untouched
+UNLOCK_LIMIT_REACHED = "UNLOCK_LIMIT_REACHED"
 UNIT_NOT_MOVABLE = "UNIT_NOT_MOVABLE"
 # step4 任务书 §1.2/§1.3/§1.4 precise blockers
 UNIT_NOT_MOVABLE_THIS_ROUND = "UNIT_NOT_MOVABLE_THIS_ROUND"

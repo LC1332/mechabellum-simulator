@@ -1,0 +1,4236 @@
+{
+ "schema": "crawler_damage_alignment_v1",
+ "pairs": [
+  {
+   "oracle_case_id": "伤害标定-r0",
+   "source_replay": "伤害标定.grbr",
+   "source_replay_sha256": "c59999384b1699d46472b8f54c6a0af294c9f0cea378dcad1b3292b9b521c192",
+   "deploy_round": 0,
+   "fight_round": 0,
+   "report_round": 1,
+   "label": "Win",
+   "match_seed": [
+    11919749394831774047,
+    3853249974362208001,
+    5706915253742579997,
+    3002252841954229372
+   ],
+   "status": "empty_field",
+   "attribution": "skipped",
+   "sides": [
+    {
+     "status": "empty",
+     "side": 0
+    },
+    {
+     "status": "empty",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "oracle_case_id": "伤害标定-r14",
+   "source_replay": "伤害标定.grbr",
+   "source_replay_sha256": "c59999384b1699d46472b8f54c6a0af294c9f0cea378dcad1b3292b9b521c192",
+   "deploy_round": 14,
+   "fight_round": 14,
+   "report_round": 15,
+   "label": "Win",
+   "match_seed": [
+    11919749394831774047,
+    3853249974362208001,
+    5706915253742579997,
+    3002252841954229372
+   ],
+   "status": "ok",
+   "attribution": "per_source_ok",
+   "sides": [
+    {
+     "status": "ok",
+     "side": 0,
+     "deploy_round": 14,
+     "fight_round": 14,
+     "report_round": 15,
+     "units": [
+      {
+       "index": 0,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -30.0,
+       "y": -55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 283,
+       "exp_delta": 283,
+       "survived": true
+      },
+      {
+       "index": 1,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -30.0,
+       "y": -105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 283,
+       "exp_delta": 283,
+       "survived": true
+      },
+      {
+       "index": 2,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -30.0,
+       "y": -155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 283,
+       "exp_delta": 283,
+       "survived": true
+      },
+      {
+       "index": 3,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -30.0,
+       "y": -205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 283,
+       "exp_delta": 283,
+       "survived": true
+      },
+      {
+       "index": 4,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -30.0,
+       "y": -255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 283,
+       "exp_delta": 283,
+       "survived": true
+      },
+      {
+       "index": 5,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -45.0,
+       "y": -300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 283,
+       "exp_delta": 283,
+       "survived": true
+      },
+      {
+       "index": 6,
+       "mech_id": 9,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -10.0,
+       "y": -55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 283,
+       "exp_delta": 283,
+       "survived": true
+      },
+      {
+       "index": 7,
+       "mech_id": 9,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -10.0,
+       "y": -105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 283,
+       "exp_delta": 283,
+       "survived": true
+      },
+      {
+       "index": 8,
+       "mech_id": 9,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -10.0,
+       "y": -155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 283,
+       "exp_delta": 283,
+       "survived": true
+      },
+      {
+       "index": 9,
+       "mech_id": 9,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -10.0,
+       "y": -205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 10,
+       "mech_id": 9,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -10.0,
+       "y": -255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 11,
+       "mech_id": 9,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 5.0,
+       "y": -300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 14,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 140.0,
+       "y": -285.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 283,
+       "exp_delta": 283,
+       "survived": true
+      },
+      {
+       "index": 15,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -170.0,
+       "y": -285.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 283,
+       "exp_delta": 283,
+       "survived": true
+      },
+      {
+       "index": 16,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -150.0,
+       "y": -235.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 283,
+       "exp_delta": 283,
+       "survived": true
+      },
+      {
+       "index": 43,
+       "mech_id": 18,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 15.0,
+       "y": -25.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": null,
+       "exp_delta": null,
+       "survived": null,
+       "absence_reason": "died_in_fight_or_sold_before_report"
+      },
+      {
+       "index": 44,
+       "mech_id": 16,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 20.0,
+       "y": -50.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": null,
+       "exp_delta": null,
+       "survived": null,
+       "absence_reason": "died_in_fight_or_sold_before_report"
+      },
+      {
+       "index": 45,
+       "mech_id": 6,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -25.0,
+       "y": -20.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": null,
+       "exp_delta": null,
+       "survived": null,
+       "absence_reason": "died_in_fight_or_sold_before_report"
+      },
+      {
+       "index": 46,
+       "mech_id": 24,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -55.0,
+       "y": -55.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": null,
+       "exp_delta": null,
+       "survived": null,
+       "absence_reason": "died_in_fight_or_sold_before_report"
+      }
+     ],
+     "post_only_report_units": [
+      {
+       "index": 47,
+       "mech_id": 8,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      }
+     ],
+     "ambiguous": [],
+     "round_context": {
+      "techs": [
+       0,
+       0
+      ],
+      "techMap": {
+       "13": [
+        10213
+       ],
+       "20": [
+        10220
+       ]
+      },
+      "officers": [],
+      "unlocked_units": [
+       28,
+       30,
+       15
+      ],
+      "energyTowerSkills_raw": [],
+      "towerStrengthen_raw": [
+       "0",
+       "0"
+      ],
+      "supply": 18600,
+      "preRoundFightResult": "Deuce"
+     },
+     "report_summary": {
+      "score": 1600,
+      "deadScore": 0,
+      "aliveMechCount": 301,
+      "destroyedCrystalCount": 0,
+      "destroyHugeMechCount": 0
+     }
+    },
+    {
+     "status": "ok",
+     "side": 1,
+     "deploy_round": 14,
+     "fight_round": 14,
+     "report_round": 15,
+     "units": [
+      {
+       "index": 0,
+       "mech_id": 21,
+       "level_pre": 8,
+       "exp_pre": 8746,
+       "x": -15.0,
+       "y": 45.0,
+       "equipment": 13030006,
+       "is_rotate": false,
+       "exp_post": 8746,
+       "exp_delta": 0,
+       "survived": true
+      }
+     ],
+     "post_only_report_units": [],
+     "ambiguous": [],
+     "round_context": {
+      "techs": [
+       0
+      ],
+      "techMap": {
+       "21": [
+        10321
+       ]
+      },
+      "officers": [
+       20001,
+       20001,
+       20001
+      ],
+      "unlocked_units": [],
+      "energyTowerSkills_raw": [],
+      "towerStrengthen_raw": [
+       "0",
+       "0"
+      ],
+      "supply": 19000,
+      "preRoundFightResult": "Deuce"
+     },
+     "report_summary": {
+      "score": 0,
+      "deadScore": 0,
+      "aliveMechCount": 0,
+      "destroyedCrystalCount": 2,
+      "destroyHugeMechCount": 0
+     }
+    }
+   ]
+  },
+  {
+   "oracle_case_id": "伤害标定-r16",
+   "source_replay": "伤害标定.grbr",
+   "source_replay_sha256": "c59999384b1699d46472b8f54c6a0af294c9f0cea378dcad1b3292b9b521c192",
+   "deploy_round": 16,
+   "fight_round": 16,
+   "report_round": 17,
+   "label": "Win",
+   "match_seed": [
+    11919749394831774047,
+    3853249974362208001,
+    5706915253742579997,
+    3002252841954229372
+   ],
+   "status": "ok",
+   "attribution": "per_source_ok",
+   "sides": [
+    {
+     "status": "ok",
+     "side": 0,
+     "deploy_round": 16,
+     "fight_round": 16,
+     "report_round": 17,
+     "units": [
+      {
+       "index": 0,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 283,
+       "x": -30.0,
+       "y": -55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 450,
+       "exp_delta": 167,
+       "survived": true
+      },
+      {
+       "index": 1,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 283,
+       "x": -30.0,
+       "y": -105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 450,
+       "exp_delta": 167,
+       "survived": true
+      },
+      {
+       "index": 2,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 283,
+       "x": -30.0,
+       "y": -155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 450,
+       "exp_delta": 167,
+       "survived": true
+      },
+      {
+       "index": 3,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 283,
+       "x": -30.0,
+       "y": -205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 450,
+       "exp_delta": 167,
+       "survived": true
+      },
+      {
+       "index": 4,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 283,
+       "x": -30.0,
+       "y": -255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 450,
+       "exp_delta": 167,
+       "survived": true
+      },
+      {
+       "index": 5,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 283,
+       "x": -45.0,
+       "y": -300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 450,
+       "exp_delta": 167,
+       "survived": true
+      },
+      {
+       "index": 6,
+       "mech_id": 9,
+       "level_pre": 0,
+       "exp_pre": 283,
+       "x": -10.0,
+       "y": -55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 544,
+       "exp_delta": 261,
+       "survived": true
+      },
+      {
+       "index": 7,
+       "mech_id": 9,
+       "level_pre": 0,
+       "exp_pre": 283,
+       "x": -10.0,
+       "y": -105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 544,
+       "exp_delta": 261,
+       "survived": true
+      },
+      {
+       "index": 8,
+       "mech_id": 9,
+       "level_pre": 0,
+       "exp_pre": 283,
+       "x": -10.0,
+       "y": -155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 544,
+       "exp_delta": 261,
+       "survived": true
+      },
+      {
+       "index": 9,
+       "mech_id": 9,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -10.0,
+       "y": -205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 261,
+       "exp_delta": 261,
+       "survived": true
+      },
+      {
+       "index": 10,
+       "mech_id": 9,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -10.0,
+       "y": -255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 11,
+       "mech_id": 9,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 5.0,
+       "y": -300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 14,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 283,
+       "x": 140.0,
+       "y": -285.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 450,
+       "exp_delta": 167,
+       "survived": true
+      },
+      {
+       "index": 15,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 283,
+       "x": -170.0,
+       "y": -285.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 450,
+       "exp_delta": 167,
+       "survived": true
+      },
+      {
+       "index": 16,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 283,
+       "x": -150.0,
+       "y": -235.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 450,
+       "exp_delta": 167,
+       "survived": true
+      },
+      {
+       "index": 48,
+       "mech_id": 14,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -55.0,
+       "y": -65.0,
+       "equipment": 13030001,
+       "is_rotate": false,
+       "exp_post": null,
+       "exp_delta": null,
+       "survived": null,
+       "absence_reason": "died_in_fight_or_sold_before_report"
+      },
+      {
+       "index": 49,
+       "mech_id": 4,
+       "level_pre": 1,
+       "exp_pre": 0,
+       "x": -60.0,
+       "y": -70.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 1400,
+       "exp_delta": 1400,
+       "survived": true
+      }
+     ],
+     "post_only_report_units": [],
+     "ambiguous": [],
+     "round_context": {
+      "techs": [
+       0,
+       0,
+       0
+      ],
+      "techMap": {
+       "13": [
+        10213
+       ],
+       "20": [
+        10220
+       ],
+       "8": [
+        10208
+       ]
+      },
+      "officers": [],
+      "unlocked_units": [
+       28,
+       30,
+       15,
+       14
+      ],
+      "energyTowerSkills_raw": [],
+      "towerStrengthen_raw": [
+       "0",
+       "0"
+      ],
+      "supply": 23800,
+      "preRoundFightResult": "Deuce"
+     },
+     "report_summary": {
+      "score": 1706,
+      "deadScore": 0,
+      "aliveMechCount": 287,
+      "destroyedCrystalCount": 0,
+      "destroyHugeMechCount": 0
+     }
+    },
+    {
+     "status": "ok",
+     "side": 1,
+     "deploy_round": 16,
+     "fight_round": 16,
+     "report_round": 17,
+     "units": [
+      {
+       "index": 0,
+       "mech_id": 21,
+       "level_pre": 8,
+       "exp_pre": 8746,
+       "x": -15.0,
+       "y": 45.0,
+       "equipment": 13030006,
+       "is_rotate": false,
+       "exp_post": 8746,
+       "exp_delta": 0,
+       "survived": true
+      }
+     ],
+     "post_only_report_units": [],
+     "ambiguous": [],
+     "round_context": {
+      "techs": [
+       0
+      ],
+      "techMap": {
+       "21": [
+        10321
+       ]
+      },
+      "officers": [
+       20001,
+       20001,
+       20001
+      ],
+      "unlocked_units": [],
+      "energyTowerSkills_raw": [],
+      "towerStrengthen_raw": [
+       "0",
+       "0"
+      ],
+      "supply": 24800,
+      "preRoundFightResult": "Deuce"
+     },
+     "report_summary": {
+      "score": 0,
+      "deadScore": 0,
+      "aliveMechCount": 0,
+      "destroyedCrystalCount": 2,
+      "destroyHugeMechCount": 0
+     }
+    }
+   ]
+  },
+  {
+   "oracle_case_id": "清杂标定-r0",
+   "source_replay": "清杂标定.grbr",
+   "source_replay_sha256": "7af4a1e6c34e4af09e776c97ea39cb3d96d84356da917529f9a3c446736bcb19",
+   "deploy_round": 0,
+   "fight_round": 0,
+   "report_round": 1,
+   "label": "Win",
+   "match_seed": [
+    5674275841081122986,
+    15724237579910450988,
+    16020659583860418792,
+    15908794548279543102
+   ],
+   "status": "empty_field",
+   "attribution": "skipped",
+   "sides": [
+    {
+     "status": "empty",
+     "side": 0
+    },
+    {
+     "status": "empty",
+     "side": 1
+    }
+   ]
+  },
+  {
+   "oracle_case_id": "清杂标定-r2",
+   "source_replay": "清杂标定.grbr",
+   "source_replay_sha256": "7af4a1e6c34e4af09e776c97ea39cb3d96d84356da917529f9a3c446736bcb19",
+   "deploy_round": 2,
+   "fight_round": 2,
+   "report_round": 3,
+   "label": "Win",
+   "match_seed": [
+    5674275841081122986,
+    15724237579910450988,
+    16020659583860418792,
+    15908794548279543102
+   ],
+   "status": "ok",
+   "attribution": "per_source_ok",
+   "sides": [
+    {
+     "status": "ok",
+     "side": 0,
+     "deploy_round": 2,
+     "fight_round": 2,
+     "report_round": 3,
+     "units": [
+      {
+       "index": 0,
+       "mech_id": 21,
+       "level_pre": 8,
+       "exp_pre": 1744,
+       "x": 105.0,
+       "y": -45.0,
+       "equipment": 13030006,
+       "is_rotate": false,
+       "exp_post": 3546,
+       "exp_delta": 1802,
+       "survived": true
+      },
+      {
+       "index": 1,
+       "mech_id": 21,
+       "level_pre": 8,
+       "exp_pre": 1832,
+       "x": -85.0,
+       "y": -45.0,
+       "equipment": 13030006,
+       "is_rotate": false,
+       "exp_post": 2952,
+       "exp_delta": 1120,
+       "survived": true
+      }
+     ],
+     "post_only_report_units": [
+      {
+       "index": 2,
+       "mech_id": 28,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      },
+      {
+       "index": 4,
+       "mech_id": 3,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      }
+     ],
+     "ambiguous": [],
+     "round_context": {
+      "techs": [
+       0
+      ],
+      "techMap": {
+       "21": [
+        10321
+       ]
+      },
+      "officers": [
+       20001,
+       20001,
+       20001,
+       20001,
+       20001,
+       20001,
+       20001
+      ],
+      "unlocked_units": [],
+      "energyTowerSkills_raw": [],
+      "towerStrengthen_raw": [
+       "0",
+       "0"
+      ],
+      "supply": 1000,
+      "preRoundFightResult": "Deuce"
+     },
+     "report_summary": {
+      "score": 750,
+      "deadScore": 0,
+      "aliveMechCount": 3,
+      "destroyedCrystalCount": 1,
+      "destroyHugeMechCount": 0
+     }
+    },
+    {
+     "status": "ok",
+     "side": 1,
+     "deploy_round": 2,
+     "fight_round": 2,
+     "report_round": 3,
+     "units": [
+      {
+       "index": 0,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 100.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 9,
+       "exp_delta": 9,
+       "survived": true
+      },
+      {
+       "index": 1,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 2,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 80.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 162,
+       "exp_delta": 162,
+       "survived": true
+      },
+      {
+       "index": 3,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -70.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 4,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 120.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 9,
+       "exp_delta": 9,
+       "survived": true
+      },
+      {
+       "index": 5,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -110.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 6,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -110.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 7,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 8,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 9,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -70.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 10,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 11,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 120.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 49,
+       "exp_delta": 49,
+       "survived": true
+      },
+      {
+       "index": 12,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 80.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 62,
+       "exp_delta": 62,
+       "survived": true
+      },
+      {
+       "index": 13,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 100.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 9,
+       "exp_delta": 9,
+       "survived": true
+      },
+      {
+       "index": 14,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 100.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 62,
+       "exp_delta": 62,
+       "survived": true
+      },
+      {
+       "index": 15,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 100.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 9,
+       "exp_delta": 9,
+       "survived": true
+      },
+      {
+       "index": 16,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -105.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 17,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 100.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 6,
+       "exp_delta": 6,
+       "survived": true
+      },
+      {
+       "index": 18,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 115.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 19,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 20,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 190.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 5,
+       "exp_delta": 5,
+       "survived": true
+      },
+      {
+       "index": 21,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -190.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      }
+     ],
+     "post_only_report_units": [
+      {
+       "index": 22,
+       "mech_id": 10,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      },
+      {
+       "index": 23,
+       "mech_id": 10,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      },
+      {
+       "index": 24,
+       "mech_id": 10,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      },
+      {
+       "index": 25,
+       "mech_id": 10,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      },
+      {
+       "index": 26,
+       "mech_id": 10,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      },
+      {
+       "index": 27,
+       "mech_id": 10,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      },
+      {
+       "index": 28,
+       "mech_id": 10,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      },
+      {
+       "index": 29,
+       "mech_id": 10,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      },
+      {
+       "index": 30,
+       "mech_id": 10,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      },
+      {
+       "index": 31,
+       "mech_id": 10,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      }
+     ],
+     "ambiguous": [],
+     "round_context": {
+      "techs": [],
+      "techMap": {},
+      "officers": [],
+      "unlocked_units": [
+       10
+      ],
+      "energyTowerSkills_raw": [],
+      "towerStrengthen_raw": [
+       "0",
+       "0"
+      ],
+      "supply": 0,
+      "preRoundFightResult": "Deuce"
+     },
+     "report_summary": {
+      "score": 0,
+      "deadScore": 0,
+      "aliveMechCount": 0,
+      "destroyedCrystalCount": 1,
+      "destroyHugeMechCount": 0
+     }
+    }
+   ]
+  },
+  {
+   "oracle_case_id": "清杂标定-r3",
+   "source_replay": "清杂标定.grbr",
+   "source_replay_sha256": "7af4a1e6c34e4af09e776c97ea39cb3d96d84356da917529f9a3c446736bcb19",
+   "deploy_round": 3,
+   "fight_round": 3,
+   "report_round": 4,
+   "label": "Win",
+   "match_seed": [
+    5674275841081122986,
+    15724237579910450988,
+    16020659583860418792,
+    15908794548279543102
+   ],
+   "status": "ok",
+   "attribution": "per_source_ok",
+   "sides": [
+    {
+     "status": "ok",
+     "side": 0,
+     "deploy_round": 3,
+     "fight_round": 3,
+     "report_round": 4,
+     "units": [
+      {
+       "index": 0,
+       "mech_id": 21,
+       "level_pre": 8,
+       "exp_pre": 3546,
+       "x": 115.0,
+       "y": -25.0,
+       "equipment": 13030006,
+       "is_rotate": false,
+       "exp_post": 5236,
+       "exp_delta": 1690,
+       "survived": true
+      },
+      {
+       "index": 1,
+       "mech_id": 21,
+       "level_pre": 8,
+       "exp_pre": 2952,
+       "x": -95.0,
+       "y": -25.0,
+       "equipment": 13030006,
+       "is_rotate": false,
+       "exp_post": 4362,
+       "exp_delta": 1410,
+       "survived": true
+      },
+      {
+       "index": 2,
+       "mech_id": 28,
+       "level_pre": 0,
+       "exp_pre": 442,
+       "x": 110.0,
+       "y": -70.0,
+       "equipment": 13020001,
+       "is_rotate": false,
+       "exp_post": 750,
+       "exp_delta": 308,
+       "survived": true
+      },
+      {
+       "index": 4,
+       "mech_id": 3,
+       "level_pre": 0,
+       "exp_pre": 2200,
+       "x": -90.0,
+       "y": -90.0,
+       "equipment": 13020001,
+       "is_rotate": false,
+       "exp_post": null,
+       "exp_delta": null,
+       "survived": null,
+       "absence_reason": "died_in_fight_or_sold_before_report"
+      }
+     ],
+     "post_only_report_units": [
+      {
+       "index": 5,
+       "mech_id": 22,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      }
+     ],
+     "ambiguous": [],
+     "round_context": {
+      "techs": [
+       0
+      ],
+      "techMap": {
+       "21": [
+        10321
+       ]
+      },
+      "officers": [
+       20001,
+       20001,
+       20001,
+       20001,
+       20001,
+       20001,
+       20001
+      ],
+      "unlocked_units": [],
+      "energyTowerSkills_raw": [],
+      "towerStrengthen_raw": [
+       "0",
+       "0"
+      ],
+      "supply": 1300,
+      "preRoundFightResult": "Win"
+     },
+     "report_summary": {
+      "score": 710,
+      "deadScore": 0,
+      "aliveMechCount": 7,
+      "destroyedCrystalCount": 0,
+      "destroyHugeMechCount": 0
+     }
+    },
+    {
+     "status": "ok",
+     "side": 1,
+     "deploy_round": 3,
+     "fight_round": 3,
+     "report_round": 4,
+     "units": [
+      {
+       "index": 0,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 9,
+       "x": 100.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 9,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 1,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 2,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 162,
+       "x": 80.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 162,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 3,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -70.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 4,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 9,
+       "x": 120.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 9,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 5,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -110.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 6,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -110.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 7,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 8,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 9,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -70.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 10,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 11,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 49,
+       "x": 120.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 49,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 12,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 62,
+       "x": 80.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 64,
+       "exp_delta": 2,
+       "survived": true
+      },
+      {
+       "index": 13,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 9,
+       "x": 100.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 11,
+       "exp_delta": 2,
+       "survived": true
+      },
+      {
+       "index": 14,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 62,
+       "x": 100.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 64,
+       "exp_delta": 2,
+       "survived": true
+      },
+      {
+       "index": 15,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 9,
+       "x": 100.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 14,
+       "exp_delta": 5,
+       "survived": true
+      },
+      {
+       "index": 16,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -105.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 17,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 6,
+       "x": 100.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 31,
+       "exp_delta": 25,
+       "survived": true
+      },
+      {
+       "index": 18,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 115.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 5,
+       "exp_delta": 5,
+       "survived": true
+      },
+      {
+       "index": 19,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 20,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 5,
+       "x": 190.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 10,
+       "exp_delta": 5,
+       "survived": true
+      },
+      {
+       "index": 21,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -190.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 22,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -85.0,
+       "y": 20.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 23,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 105.0,
+       "y": 20.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 24,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -195.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 25,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 205.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 2,
+       "exp_delta": 2,
+       "survived": true
+      },
+      {
+       "index": 26,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 6,
+       "x": 190.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 11,
+       "exp_delta": 5,
+       "survived": true
+      },
+      {
+       "index": 27,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -190.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 28,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -290.0,
+       "y": 285.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 29,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -190.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 30,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 290.0,
+       "y": 285.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 31,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 9,
+       "x": 190.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 34,
+       "exp_delta": 25,
+       "survived": true
+      }
+     ],
+     "post_only_report_units": [],
+     "ambiguous": [],
+     "round_context": {
+      "techs": [],
+      "techMap": {},
+      "officers": [],
+      "unlocked_units": [
+       10
+      ],
+      "energyTowerSkills_raw": [],
+      "towerStrengthen_raw": [
+       "0",
+       "0"
+      ],
+      "supply": 400,
+      "preRoundFightResult": "Lose"
+     },
+     "report_summary": {
+      "score": 0,
+      "deadScore": 0,
+      "aliveMechCount": 0,
+      "destroyedCrystalCount": 1,
+      "destroyHugeMechCount": 0
+     }
+    }
+   ]
+  },
+  {
+   "oracle_case_id": "清杂标定-r4",
+   "source_replay": "清杂标定.grbr",
+   "source_replay_sha256": "7af4a1e6c34e4af09e776c97ea39cb3d96d84356da917529f9a3c446736bcb19",
+   "deploy_round": 4,
+   "fight_round": 4,
+   "report_round": 5,
+   "label": "Win",
+   "match_seed": [
+    5674275841081122986,
+    15724237579910450988,
+    16020659583860418792,
+    15908794548279543102
+   ],
+   "status": "ok",
+   "attribution": "per_source_ok",
+   "sides": [
+    {
+     "status": "ok",
+     "side": 0,
+     "deploy_round": 4,
+     "fight_round": 4,
+     "report_round": 5,
+     "units": [
+      {
+       "index": 0,
+       "mech_id": 21,
+       "level_pre": 8,
+       "exp_pre": 5236,
+       "x": 115.0,
+       "y": -25.0,
+       "equipment": 13030006,
+       "is_rotate": false,
+       "exp_post": 6348,
+       "exp_delta": 1112,
+       "survived": true
+      },
+      {
+       "index": 1,
+       "mech_id": 21,
+       "level_pre": 8,
+       "exp_pre": 4362,
+       "x": -95.0,
+       "y": -25.0,
+       "equipment": 13030006,
+       "is_rotate": false,
+       "exp_post": 5744,
+       "exp_delta": 1382,
+       "survived": true
+      },
+      {
+       "index": 2,
+       "mech_id": 28,
+       "level_pre": 0,
+       "exp_pre": 750,
+       "x": 110.0,
+       "y": -120.0,
+       "equipment": 13020001,
+       "is_rotate": false,
+       "exp_post": null,
+       "exp_delta": null,
+       "survived": null,
+       "absence_reason": "died_in_fight_or_sold_before_report"
+      },
+      {
+       "index": 5,
+       "mech_id": 22,
+       "level_pre": 0,
+       "exp_pre": 1950,
+       "x": -90.0,
+       "y": -120.0,
+       "equipment": 13020001,
+       "is_rotate": false,
+       "exp_post": null,
+       "exp_delta": null,
+       "survived": null,
+       "absence_reason": "died_in_fight_or_sold_before_report"
+      }
+     ],
+     "post_only_report_units": [
+      {
+       "index": 6,
+       "mech_id": 26,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      },
+      {
+       "index": 7,
+       "mech_id": 18,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      }
+     ],
+     "ambiguous": [],
+     "round_context": {
+      "techs": [
+       0,
+       0,
+       0
+      ],
+      "techMap": {
+       "21": [
+        10321
+       ],
+       "28": [
+        10228
+       ],
+       "22": [
+        10222
+       ]
+      },
+      "officers": [
+       20001,
+       20001,
+       20001,
+       20001,
+       20001,
+       20001,
+       20001
+      ],
+      "unlocked_units": [],
+      "energyTowerSkills_raw": [],
+      "towerStrengthen_raw": [
+       "0",
+       "0"
+      ],
+      "supply": 1200,
+      "preRoundFightResult": "Win"
+     },
+     "report_summary": {
+      "score": 900,
+      "deadScore": 0,
+      "aliveMechCount": 4,
+      "destroyedCrystalCount": 0,
+      "destroyHugeMechCount": 0
+     }
+    },
+    {
+     "status": "ok",
+     "side": 1,
+     "deploy_round": 4,
+     "fight_round": 4,
+     "report_round": 5,
+     "units": [
+      {
+       "index": 0,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 9,
+       "x": 100.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 9,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 1,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 2,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 162,
+       "x": 80.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 162,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 3,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -70.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 4,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 9,
+       "x": 120.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 9,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 5,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -110.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 6,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -110.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 7,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 8,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 9,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -70.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 10,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 11,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 49,
+       "x": 120.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 49,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 12,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 64,
+       "x": 80.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 64,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 13,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 11,
+       "x": 100.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 11,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 14,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 64,
+       "x": 100.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 64,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 15,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 14,
+       "x": 100.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 14,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 16,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -105.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 17,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 31,
+       "x": 100.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 31,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 18,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 5,
+       "x": 115.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 5,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 19,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 20,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 10,
+       "x": 190.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 10,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 21,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -190.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 22,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -85.0,
+       "y": 20.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 23,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 105.0,
+       "y": 20.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 24,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -195.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 25,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 2,
+       "x": 205.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 2,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 26,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 11,
+       "x": 190.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 11,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 27,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -190.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 28,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -290.0,
+       "y": 285.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 29,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -190.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 30,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 290.0,
+       "y": 285.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 31,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 34,
+       "x": 190.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 34,
+       "exp_delta": 0,
+       "survived": true
+      }
+     ],
+     "post_only_report_units": [],
+     "ambiguous": [],
+     "round_context": {
+      "techs": [],
+      "techMap": {},
+      "officers": [],
+      "unlocked_units": [
+       10
+      ],
+      "energyTowerSkills_raw": [],
+      "towerStrengthen_raw": [
+       "0",
+       "0"
+      ],
+      "supply": 1000,
+      "preRoundFightResult": "Lose"
+     },
+     "report_summary": {
+      "score": 0,
+      "deadScore": 0,
+      "aliveMechCount": 0,
+      "destroyedCrystalCount": 1,
+      "destroyHugeMechCount": 0
+     }
+    }
+   ]
+  },
+  {
+   "oracle_case_id": "清杂标定-r5",
+   "source_replay": "清杂标定.grbr",
+   "source_replay_sha256": "7af4a1e6c34e4af09e776c97ea39cb3d96d84356da917529f9a3c446736bcb19",
+   "deploy_round": 5,
+   "fight_round": 5,
+   "report_round": 6,
+   "label": "Win",
+   "match_seed": [
+    5674275841081122986,
+    15724237579910450988,
+    16020659583860418792,
+    15908794548279543102
+   ],
+   "status": "ok",
+   "attribution": "per_source_ok",
+   "sides": [
+    {
+     "status": "ok",
+     "side": 0,
+     "deploy_round": 5,
+     "fight_round": 5,
+     "report_round": 6,
+     "units": [
+      {
+       "index": 0,
+       "mech_id": 21,
+       "level_pre": 8,
+       "exp_pre": 6348,
+       "x": 115.0,
+       "y": -25.0,
+       "equipment": 13030006,
+       "is_rotate": false,
+       "exp_post": 7816,
+       "exp_delta": 1468,
+       "survived": true
+      },
+      {
+       "index": 1,
+       "mech_id": 21,
+       "level_pre": 8,
+       "exp_pre": 5744,
+       "x": -95.0,
+       "y": -25.0,
+       "equipment": 13030006,
+       "is_rotate": false,
+       "exp_post": 7232,
+       "exp_delta": 1488,
+       "survived": true
+      },
+      {
+       "index": 6,
+       "mech_id": 26,
+       "level_pre": 0,
+       "exp_pre": 1248,
+       "x": -85.0,
+       "y": -145.0,
+       "equipment": 13020001,
+       "is_rotate": false,
+       "exp_post": null,
+       "exp_delta": null,
+       "survived": null,
+       "absence_reason": "died_in_fight_or_sold_before_report"
+      },
+      {
+       "index": 7,
+       "mech_id": 18,
+       "level_pre": 0,
+       "exp_pre": 2250,
+       "x": 85.0,
+       "y": -25.0,
+       "equipment": 13020001,
+       "is_rotate": false,
+       "exp_post": null,
+       "exp_delta": null,
+       "survived": null,
+       "absence_reason": "died_in_fight_or_sold_before_report"
+      }
+     ],
+     "post_only_report_units": [
+      {
+       "index": 8,
+       "mech_id": 19,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      },
+      {
+       "index": 9,
+       "mech_id": 24,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      }
+     ],
+     "ambiguous": [],
+     "round_context": {
+      "techs": [
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "techMap": {
+       "21": [
+        10321
+       ],
+       "28": [
+        10228
+       ],
+       "22": [
+        10222
+       ],
+       "18": [
+        10218
+       ],
+       "26": [
+        10226
+       ]
+      },
+      "officers": [
+       20001,
+       20001,
+       20001,
+       20001,
+       20001,
+       20001,
+       20001
+      ],
+      "unlocked_units": [],
+      "energyTowerSkills_raw": [],
+      "towerStrengthen_raw": [
+       "0",
+       "0"
+      ],
+      "supply": 1400,
+      "preRoundFightResult": "Win"
+     },
+     "report_summary": {
+      "score": 850,
+      "deadScore": 0,
+      "aliveMechCount": 4,
+      "destroyedCrystalCount": 0,
+      "destroyHugeMechCount": 0
+     }
+    },
+    {
+     "status": "ok",
+     "side": 1,
+     "deploy_round": 5,
+     "fight_round": 5,
+     "report_round": 6,
+     "units": [
+      {
+       "index": 0,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 9,
+       "x": 100.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 9,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 1,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 2,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 162,
+       "x": 80.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 162,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 3,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -70.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 4,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 9,
+       "x": 120.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 9,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 5,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -110.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 6,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -110.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 7,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 8,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 9,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -70.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 10,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 11,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 49,
+       "x": 120.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 49,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 12,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 64,
+       "x": 80.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 64,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 13,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 11,
+       "x": 100.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 11,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 14,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 64,
+       "x": 100.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 64,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 15,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 14,
+       "x": 100.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 14,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 16,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -105.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 17,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 31,
+       "x": 100.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 31,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 18,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 5,
+       "x": 115.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 5,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 19,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 20,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 10,
+       "x": 190.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 10,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 21,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -190.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 22,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -85.0,
+       "y": 20.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 23,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 105.0,
+       "y": 20.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 24,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -195.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 25,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 2,
+       "x": 205.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 2,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 26,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 11,
+       "x": 190.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 11,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 27,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -190.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 28,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -290.0,
+       "y": 285.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 29,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -190.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 30,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 290.0,
+       "y": 285.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 31,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 34,
+       "x": 190.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 34,
+       "exp_delta": 0,
+       "survived": true
+      }
+     ],
+     "post_only_report_units": [],
+     "ambiguous": [],
+     "round_context": {
+      "techs": [],
+      "techMap": {},
+      "officers": [],
+      "unlocked_units": [
+       10
+      ],
+      "energyTowerSkills_raw": [],
+      "towerStrengthen_raw": [
+       "0",
+       "0"
+      ],
+      "supply": 1800,
+      "preRoundFightResult": "Lose"
+     },
+     "report_summary": {
+      "score": 0,
+      "deadScore": 0,
+      "aliveMechCount": 0,
+      "destroyedCrystalCount": 0,
+      "destroyHugeMechCount": 0
+     }
+    }
+   ]
+  },
+  {
+   "oracle_case_id": "清杂标定-r6",
+   "source_replay": "清杂标定.grbr",
+   "source_replay_sha256": "7af4a1e6c34e4af09e776c97ea39cb3d96d84356da917529f9a3c446736bcb19",
+   "deploy_round": 6,
+   "fight_round": 6,
+   "report_round": 7,
+   "label": "Win",
+   "match_seed": [
+    5674275841081122986,
+    15724237579910450988,
+    16020659583860418792,
+    15908794548279543102
+   ],
+   "status": "ok",
+   "attribution": "per_source_ok",
+   "sides": [
+    {
+     "status": "ok",
+     "side": 0,
+     "deploy_round": 6,
+     "fight_round": 6,
+     "report_round": 7,
+     "units": [
+      {
+       "index": 0,
+       "mech_id": 21,
+       "level_pre": 8,
+       "exp_pre": 7816,
+       "x": 115.0,
+       "y": -25.0,
+       "equipment": 13030006,
+       "is_rotate": false,
+       "exp_post": 8746,
+       "exp_delta": 930,
+       "survived": true
+      },
+      {
+       "index": 1,
+       "mech_id": 21,
+       "level_pre": 8,
+       "exp_pre": 7232,
+       "x": -95.0,
+       "y": -25.0,
+       "equipment": 13030006,
+       "is_rotate": false,
+       "exp_post": 8528,
+       "exp_delta": 1296,
+       "survived": true
+      },
+      {
+       "index": 8,
+       "mech_id": 19,
+       "level_pre": 0,
+       "exp_pre": 1500,
+       "x": -95.0,
+       "y": -125.0,
+       "equipment": 13020001,
+       "is_rotate": false,
+       "exp_post": null,
+       "exp_delta": null,
+       "survived": null,
+       "absence_reason": "died_in_fight_or_sold_before_report"
+      },
+      {
+       "index": 9,
+       "mech_id": 24,
+       "level_pre": 0,
+       "exp_pre": 1500,
+       "x": 115.0,
+       "y": -115.0,
+       "equipment": 13020001,
+       "is_rotate": false,
+       "exp_post": null,
+       "exp_delta": null,
+       "survived": null,
+       "absence_reason": "died_in_fight_or_sold_before_report"
+      }
+     ],
+     "post_only_report_units": [
+      {
+       "index": 10,
+       "mech_id": 6,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      },
+      {
+       "index": 11,
+       "mech_id": 20,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      }
+     ],
+     "ambiguous": [],
+     "round_context": {
+      "techs": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "techMap": {
+       "21": [
+        10321
+       ],
+       "28": [
+        10228
+       ],
+       "22": [
+        10222
+       ],
+       "18": [
+        10218
+       ],
+       "26": [
+        10226
+       ],
+       "19": [
+        10219
+       ],
+       "24": [
+        10224
+       ]
+      },
+      "officers": [
+       20001,
+       20001,
+       20001,
+       20001,
+       20001,
+       20001,
+       20001
+      ],
+      "unlocked_units": [],
+      "energyTowerSkills_raw": [],
+      "towerStrengthen_raw": [
+       "0",
+       "0"
+      ],
+      "supply": 1700,
+      "preRoundFightResult": "Win"
+     },
+     "report_summary": {
+      "score": 805,
+      "deadScore": 0,
+      "aliveMechCount": 17,
+      "destroyedCrystalCount": 0,
+      "destroyHugeMechCount": 0
+     }
+    },
+    {
+     "status": "ok",
+     "side": 1,
+     "deploy_round": 6,
+     "fight_round": 6,
+     "report_round": 7,
+     "units": [
+      {
+       "index": 0,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 9,
+       "x": 100.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 9,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 1,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 2,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 162,
+       "x": 80.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 162,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 3,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -70.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 4,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 9,
+       "x": 120.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 9,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 5,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -110.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 6,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -110.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 7,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 8,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 9,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -70.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 10,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 11,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 49,
+       "x": 120.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 49,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 12,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 64,
+       "x": 80.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 64,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 13,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 11,
+       "x": 100.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 11,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 14,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 64,
+       "x": 100.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 64,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 15,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 14,
+       "x": 100.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 14,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 16,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -105.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 17,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 31,
+       "x": 100.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 31,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 18,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 5,
+       "x": 115.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 5,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 19,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 20,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 10,
+       "x": 190.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 10,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 21,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -190.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 22,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -85.0,
+       "y": 20.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 23,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 105.0,
+       "y": 20.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 24,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -195.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 25,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 2,
+       "x": 205.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 2,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 26,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 11,
+       "x": 190.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 11,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 27,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -190.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 28,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -290.0,
+       "y": 285.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 29,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -190.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 30,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 290.0,
+       "y": 285.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 31,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 34,
+       "x": 190.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 34,
+       "exp_delta": 0,
+       "survived": true
+      }
+     ],
+     "post_only_report_units": [],
+     "ambiguous": [],
+     "round_context": {
+      "techs": [],
+      "techMap": {},
+      "officers": [],
+      "unlocked_units": [
+       10
+      ],
+      "energyTowerSkills_raw": [],
+      "towerStrengthen_raw": [
+       "0",
+       "0"
+      ],
+      "supply": 2800,
+      "preRoundFightResult": "Lose"
+     },
+     "report_summary": {
+      "score": 0,
+      "deadScore": 0,
+      "aliveMechCount": 0,
+      "destroyedCrystalCount": 1,
+      "destroyHugeMechCount": 0
+     }
+    }
+   ]
+  },
+  {
+   "oracle_case_id": "清杂标定-r7",
+   "source_replay": "清杂标定.grbr",
+   "source_replay_sha256": "7af4a1e6c34e4af09e776c97ea39cb3d96d84356da917529f9a3c446736bcb19",
+   "deploy_round": 7,
+   "fight_round": 7,
+   "report_round": 8,
+   "label": "Win",
+   "match_seed": [
+    5674275841081122986,
+    15724237579910450988,
+    16020659583860418792,
+    15908794548279543102
+   ],
+   "status": "ok",
+   "attribution": "per_source_ok",
+   "sides": [
+    {
+     "status": "ok",
+     "side": 0,
+     "deploy_round": 7,
+     "fight_round": 7,
+     "report_round": 8,
+     "units": [
+      {
+       "index": 0,
+       "mech_id": 21,
+       "level_pre": 8,
+       "exp_pre": 8746,
+       "x": 115.0,
+       "y": -25.0,
+       "equipment": 13030006,
+       "is_rotate": false,
+       "exp_post": 8746,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 1,
+       "mech_id": 21,
+       "level_pre": 8,
+       "exp_pre": 8528,
+       "x": -95.0,
+       "y": -25.0,
+       "equipment": 13030006,
+       "is_rotate": false,
+       "exp_post": 8746,
+       "exp_delta": 218,
+       "survived": true
+      },
+      {
+       "index": 10,
+       "mech_id": 6,
+       "level_pre": 0,
+       "exp_pre": 900,
+       "x": -85.0,
+       "y": -50.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": null,
+       "exp_delta": null,
+       "survived": null,
+       "absence_reason": "died_in_fight_or_sold_before_report"
+      },
+      {
+       "index": 11,
+       "mech_id": 20,
+       "level_pre": 0,
+       "exp_pre": 1400,
+       "x": 105.0,
+       "y": -90.0,
+       "equipment": 13020001,
+       "is_rotate": false,
+       "exp_post": null,
+       "exp_delta": null,
+       "survived": null,
+       "absence_reason": "died_in_fight_or_sold_before_report"
+      }
+     ],
+     "post_only_report_units": [
+      {
+       "index": 12,
+       "mech_id": 7,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      },
+      {
+       "index": 13,
+       "mech_id": 13,
+       "level": 0,
+       "reason": "not_in_fight_roster (arrived by report round)"
+      }
+     ],
+     "ambiguous": [],
+     "round_context": {
+      "techs": [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      "techMap": {
+       "21": [
+        10321
+       ],
+       "28": [
+        10228
+       ],
+       "22": [
+        10222
+       ],
+       "18": [
+        10218
+       ],
+       "26": [
+        10226
+       ],
+       "19": [
+        10219
+       ],
+       "24": [
+        10224
+       ],
+       "6": [
+        10206
+       ],
+       "20": [
+        10220
+       ]
+      },
+      "officers": [
+       20001,
+       20001,
+       20001,
+       20001,
+       20001,
+       20001,
+       20001
+      ],
+      "unlocked_units": [],
+      "energyTowerSkills_raw": [],
+      "towerStrengthen_raw": [
+       "0",
+       "0"
+      ],
+      "supply": 2300,
+      "preRoundFightResult": "Win"
+     },
+     "report_summary": {
+      "score": 804,
+      "deadScore": 0,
+      "aliveMechCount": 19,
+      "destroyedCrystalCount": 0,
+      "destroyHugeMechCount": 0
+     }
+    },
+    {
+     "status": "ok",
+     "side": 1,
+     "deploy_round": 7,
+     "fight_round": 7,
+     "report_round": 8,
+     "units": [
+      {
+       "index": 0,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 9,
+       "x": 100.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 9,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 1,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 2,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 162,
+       "x": 80.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 162,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 3,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -70.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 4,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 9,
+       "x": 120.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 9,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 5,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -110.0,
+       "y": 55.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 6,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -110.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 7,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 8,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 9,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -70.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 10,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 11,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 49,
+       "x": 120.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 49,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 12,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 64,
+       "x": 80.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 64,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 13,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 11,
+       "x": 100.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 11,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 14,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 64,
+       "x": 100.0,
+       "y": 105.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 64,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 15,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 14,
+       "x": 100.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 14,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 16,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -105.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 17,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 31,
+       "x": 100.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 31,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 18,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 5,
+       "x": 115.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 5,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 19,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -90.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 20,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 10,
+       "x": 190.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 10,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 21,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -190.0,
+       "y": 255.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 22,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -85.0,
+       "y": 20.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 23,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 105.0,
+       "y": 20.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 24,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -195.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 25,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 2,
+       "x": 205.0,
+       "y": 300.0,
+       "equipment": 0,
+       "is_rotate": false,
+       "exp_post": 2,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 26,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 11,
+       "x": 190.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 11,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 27,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -190.0,
+       "y": 205.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 28,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -290.0,
+       "y": 285.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 29,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": -190.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 30,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 0,
+       "x": 290.0,
+       "y": 285.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 0,
+       "exp_delta": 0,
+       "survived": true
+      },
+      {
+       "index": 31,
+       "mech_id": 10,
+       "level_pre": 0,
+       "exp_pre": 34,
+       "x": 190.0,
+       "y": 155.0,
+       "equipment": 0,
+       "is_rotate": true,
+       "exp_post": 34,
+       "exp_delta": 0,
+       "survived": true
+      }
+     ],
+     "post_only_report_units": [],
+     "ambiguous": [],
+     "round_context": {
+      "techs": [],
+      "techMap": {},
+      "officers": [],
+      "unlocked_units": [
+       10
+      ],
+      "energyTowerSkills_raw": [],
+      "towerStrengthen_raw": [
+       "0",
+       "0"
+      ],
+      "supply": 4000,
+      "preRoundFightResult": "Lose"
+     },
+     "report_summary": {
+      "score": 0,
+      "deadScore": 0,
+      "aliveMechCount": 0,
+      "destroyedCrystalCount": 0,
+      "destroyHugeMechCount": 0
+     }
+    }
+   ]
+  }
+ ]
+}

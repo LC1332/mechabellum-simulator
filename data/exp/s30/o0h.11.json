@@ -1,0 +1,242 @@
+{
+ "name": "o0h",
+ "group": "CAL0",
+ "desc": "历史复跑: cal_clr_m_1 (s29cal) 原样重craft重跑 seed11, 与历史 oracle 记录逐单位对账 (通道未漂移)",
+ "seed": 11,
+ "repeat_idx": 0,
+ "sround": 7,
+ "p0": {
+  "units": [
+   {
+    "id": 21,
+    "level": 8,
+    "x": 0,
+    "y": -60,
+    "index": 0
+   },
+   {
+    "id": 1,
+    "level": 0,
+    "x": -17,
+    "y": -130,
+    "index": 1
+   },
+   {
+    "id": 1,
+    "level": 0,
+    "x": 17,
+    "y": -130,
+    "index": 2
+   }
+  ],
+  "techs": {
+   "21": [
+    10321
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 28,
+    "level": 0,
+    "x": -105,
+    "y": 150,
+    "index": 100
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": -75,
+    "y": 150,
+    "index": 101
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": -45,
+    "y": 150,
+    "index": 102
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": -15,
+    "y": 150,
+    "index": 103
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": 15,
+    "y": 150,
+    "index": 104
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": 45,
+    "y": 150,
+    "index": 105
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": 75,
+    "y": 150,
+    "index": 106
+   },
+   {
+    "id": 28,
+    "level": 0,
+    "x": 105,
+    "y": 150,
+    "index": 107
+   }
+  ]
+ },
+ "towers": null,
+ "constructions": null,
+ "use_construction": null,
+ "oracle": {
+  "job": "s30_o0h_11",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   900,
+   0
+  ],
+  "alive": [
+   3,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 557361,
+    "dmgReal": 7911,
+    "kills": 9
+   },
+   {
+    "team": 0,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 104384,
+    "dmgReal": 14064,
+    "kills": 16
+   },
+   {
+    "team": 0,
+    "uid": 1,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 97860,
+    "dmgReal": 13185,
+    "kills": 15
+   },
+   {
+    "team": 1,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 1230,
+    "dmgReal": 1230,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8856,
+    "dmgReal": 8856,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 7626,
+    "dmgReal": 7626,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5658,
+    "dmgReal": 5658,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8364,
+    "dmgReal": 8364,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5658,
+    "dmgReal": 5658,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 8364,
+    "dmgReal": 8364,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 5658,
+    "dmgReal": 5658,
+    "kills": 0
+   }
+  ]
+ },
+ "cost_s": 1.5,
+ "ts": "08-29 11:07:09",
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   3,
+   0
+  ],
+  "end_t": 28.5,
+  "dmg": {
+   "0:21": 15822.0,
+   "0:1": 19338.0,
+   "1:28": 75030.0
+  },
+  "kills": {
+   "0:21": 18,
+   "0:1": 22
+  }
+ }
+}

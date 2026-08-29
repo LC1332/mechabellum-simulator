@@ -1,0 +1,432 @@
+{
+ "meta": {
+  "version": "s30-v1",
+  "tpl": "@step24",
+  "craft_seed": 20220822,
+  "note": "O0 payload语义/确定性 + O2 craft能力探针。坐标: p0 在负 y 朝 +y, p1 在正 y。距离按攻击方 minRange..range 布点。group CAL0=O0探针, CAP=O2能力探针",
+  "generated": "2026-08-29"
+ },
+ "scenarios": [
+  {
+   "name": "o0a", "group": "CAL0",
+   "desc": "语义A: 暴雨lv3(minRange70,range180,8弹/6.6s) vs 剑齿虎lv0(range95,2炮/3.2s), 距离110, 双方在射程交互; 手工可算 dmgMax/dmgReal 口径",
+   "p0": {"units": [{"id": 12, "level": 3, "x": 0, "y": -110}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o0b", "group": "CAL0",
+   "desc": "语义B: 猎犬lv1(简单单弹,range70) vs 剑齿虎lv0, 距离60; 单弹口径验证",
+   "p0": {"units": [{"id": 28, "level": 1, "x": 0, "y": -60}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o0c", "group": "CAL0",
+   "desc": "维修靶侦察: 暴雨lv9 vs 维修剑齿虎lv9(10321 战地维修+30%生命/4.5%每秒回复); 反击与回复可视性侦察",
+   "p0": {"units": [{"id": 12, "level": 9, "x": 0, "y": -110}]},
+   "p1": {"units": [{"id": 21, "level": 9, "x": 0, "y": 0}], "techs": {"21": [10321]}}
+  },
+  {
+   "name": "o0d", "group": "CAL0", "repeat": 3,
+   "desc": "确定性: 同 o0a 场景同 seed 复跑 x3, 逐单位 dmgReal/kills 必须一致 (Q16)",
+   "p0": {"units": [{"id": 12, "level": 3, "x": 0, "y": -110}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o0h", "group": "CAL0",
+   "desc": "历史复跑: cal_clr_m_1 (s29cal) 原样重craft重跑 seed11, 与历史 oracle 记录逐单位对账 (通道未漂移)",
+   "p0": {"units": [{"id": 21, "level": 8, "x": 0, "y": -60}, {"id": 1, "level": 0, "x": -17, "y": -130}, {"id": 1, "level": 0, "x": 17, "y": -130}], "techs": {"21": [10321]}},
+   "p1": {"units": [{"id": 28, "level": 0, "x": -105, "y": 150}, {"id": 28, "level": 0, "x": -75, "y": 150}, {"id": 28, "level": 0, "x": -45, "y": 150}, {"id": 28, "level": 0, "x": -15, "y": 150}, {"id": 28, "level": 0, "x": 15, "y": 150}, {"id": 28, "level": 0, "x": 45, "y": 150}, {"id": 28, "level": 0, "x": 75, "y": 150}, {"id": 28, "level": 0, "x": 105, "y": 150}]}
+  },
+  {
+   "name": "o2eq0", "group": "CAP",
+   "desc": "装备对照 OFF: 暴雨lv3 vs 剑齿虎lv0 距离110 (同 o0a 几何); A/B 基线",
+   "p0": {"units": [{"id": 12, "level": 3, "x": 0, "y": -110}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o2eq1", "group": "CAP",
+   "desc": "装备对照 ON: 靶带 equipment 13030006 (超重型装甲); NewUnitData.EquipmentID 透传是否在 replay-sim 生效 → dmgReal 差分",
+   "p0": {"units": [{"id": 12, "level": 3, "x": 0, "y": -110}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0, "equipment": 13030006}]}
+  },
+  {
+   "name": "o2r0", "group": "CAP",
+   "desc": "朝向对照 0°: 台风lv9(HP85.7k可抗反击) 在 (0,0) 默认朝 +y, 靶在其背后 (0,-90) → 需转向180°",
+   "p0": {"units": [{"id": 22, "level": 9, "x": 0, "y": 0}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": -90}]}
+  },
+  {
+   "name": "o2r1", "group": "CAP",
+   "desc": "朝向对照 isRotate: 同 o2r0 但 attacker isRotate=true → 若透传为背向翻转, 首发提前 → dmgReal 差分",
+   "p0": {"units": [{"id": 22, "level": 9, "x": 0, "y": 0, "isRotate": true}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": -90}]}
+  },
+  {
+   "name": "o2k1a", "group": "CAP",
+   "desc": "K1 猎犬燃烧弹 11028 control: 猎犬lv3 vs 剑齿虎lv0 距离60",
+   "p0": {"units": [{"id": 28, "level": 3, "x": 0, "y": -60}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o2k1b", "group": "CAP",
+   "desc": "K1 猎犬燃烧弹 11028 treatment: 同 o2k1a + tech 11028 (extra skill 28002, fireLifeTime 10s)",
+   "p0": {"units": [{"id": 28, "level": 3, "x": 0, "y": -60}], "techs": {"28": [11028]}},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o2k2a", "group": "CAP",
+   "desc": "K2 鬼鳐全弹发射 725 control: 鬼鳐lv3 vs 剑齿虎lv0 距离65",
+   "p0": {"units": [{"id": 25, "level": 3, "x": 0, "y": -65}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o2k2b", "group": "CAP",
+   "desc": "K2 鬼鳐全弹发射 725 treatment: 2→10枚, 上弹+150% (总cycle 2.5x)",
+   "p0": {"units": [{"id": 25, "level": 3, "x": 0, "y": -65}], "techs": {"25": [725]}},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o2k3a", "group": "CAP",
+   "desc": "K3 鬼鳐高爆 425 control: 同 o2k2a 几何",
+   "p0": {"units": [{"id": 25, "level": 3, "x": 0, "y": -65}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o2k3b", "group": "CAP",
+   "desc": "K3 鬼鳐高爆 425 treatment: 溅射+7m, 攻击力-40%",
+   "p0": {"units": [{"id": 25, "level": 3, "x": 0, "y": -65}], "techs": {"25": [425]}},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o2k4a", "group": "CAP",
+   "desc": "K4 狂蝎双发 719 control: 狂蝎lv3(HP55.9k抗4轮反击) vs 剑齿虎lv0 距离90",
+   "p0": {"units": [{"id": 19, "level": 3, "x": 0, "y": -90}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o2k4b", "group": "CAP",
+   "desc": "K4 狂蝎双发 719 treatment: 2连发, 上弹+12%",
+   "p0": {"units": [{"id": 19, "level": 3, "x": 0, "y": -90}], "techs": {"19": [719]}},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o2k5a", "group": "CAP",
+   "desc": "K5 台风残骸引爆 5322 control: 台风lv3 vs 剑齿虎lv0 距离90",
+   "p0": {"units": [{"id": 22, "level": 3, "x": 0, "y": -90}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o2k5b", "group": "CAP",
+   "desc": "K5 台风残骸引爆 5322 treatment: 击杀爆炸115伤害半径12 canHitAlly",
+   "p0": {"units": [{"id": 22, "level": 3, "x": 0, "y": -90}], "techs": {"22": [5322]}},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o0lvl", "group": "CAL0",
+   "desc": "等级语义: 暴雨lv3 vs 剑齿虎XMLlv3; dmgReal=靶HP → 定 XML level 与数值倍率对齐 (pysim levelScale 口径)",
+   "p0": {"units": [{"id": 12, "level": 3, "x": 0, "y": -110}]},
+   "p1": {"units": [{"id": 21, "level": 3, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o0e1", "group": "CAP",
+   "desc": "朝向对照 0°(几何修复): 台风XMLlv8 在 (0,-110) 默认朝 +y 对准靶 (0,0); 对照 o2r0 的非法布点",
+   "p0": {"units": [{"id": 22, "level": 8, "x": 0, "y": -110}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o0e2", "group": "CAP",
+   "desc": "朝向对照 isRotate: 同 o0e1 但 attacker isRotate=true → 若透传为背向翻转, 需转180° → dmgReal 降",
+   "p0": {"units": [{"id": 22, "level": 8, "x": 0, "y": -110, "isRotate": true}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o0e3", "group": "CAL0",
+   "desc": "维修靶稳态(lv8修正): 暴雨XMLlv8 vs 维修剑齿虎XMLlv8(10321全回合注入); 回复与反击可视性",
+   "techs_all_rounds": true,
+   "p0": {"units": [{"id": 12, "level": 8, "x": 0, "y": -110}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0}], "techs": {"21": [10321]}}
+  },
+  {
+   "name": "o2eq2", "group": "CAP",
+   "desc": "装备探针 v2: 靶 equipment=13030006 + equipmentDatas 池注入 [13030006,13030006] (对齐真实回放双条目); 对照 o2eq0 差分",
+   "p0": {"units": [{"id": 12, "level": 3, "x": 0, "y": -110}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0, "equipment": 13030006}], "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "o2k4c", "group": "CAP",
+   "desc": "K4 全回合科技: 狂蝎lv3+719, techs 写入全部回合快照 (对齐真实回放编码); 对照 o2k4a 差分 → dmgMax 应翻倍",
+   "techs_all_rounds": true,
+   "p0": {"units": [{"id": 19, "level": 3, "x": 0, "y": -90}], "techs": {"19": [719]}},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o2k1c", "group": "CAP",
+   "desc": "K1 全回合科技: 猎犬lv3+11028 全回合注入; 对照 o2k1a 差分 → 火场伤害应出现",
+   "techs_all_rounds": true,
+   "p0": {"units": [{"id": 28, "level": 3, "x": 0, "y": -60}], "techs": {"28": [11028]}},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o2k2c", "group": "CAP",
+   "desc": "K2 全回合科技: 鬼鳐lv3+725 全回合注入; 对照 o2k2a → dmgMax 应显著抬升",
+   "techs_all_rounds": true,
+   "p0": {"units": [{"id": 25, "level": 3, "x": 0, "y": -65}], "techs": {"25": [725]}},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o2k4d", "group": "CAP",
+   "desc": "K4 双发对照 control(全回合注入同构): 狂蝎lv3 无 tech, 仅验证全回合注入通路本身不改变基线",
+   "techs_all_rounds": true,
+   "p0": {"units": [{"id": 19, "level": 3, "x": 0, "y": -90}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o0t1a", "group": "CAL0",
+   "desc": "维修A/B control: 暴雨lv3 vs 剑齿虎lv1 (HP=29772) — dmgReal 基线",
+   "p0": {"units": [{"id": 12, "level": 3, "x": 0, "y": -110}]},
+   "p1": {"units": [{"id": 21, "level": 1, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o0t1b", "group": "CAL0",
+   "desc": "维修A/B treatment(末回合注入): 同 o0t1a + 靶 tech 10321 → 若 dmgReal>32k 则末回合注入即生效",
+   "p0": {"units": [{"id": 12, "level": 3, "x": 0, "y": -110}]},
+   "p1": {"units": [{"id": 21, "level": 1, "x": 0, "y": 0}], "techs": {"21": [10321]}}
+  },
+  {
+   "name": "o0t1c", "group": "CAL0",
+   "desc": "维修A/B treatment(全回合注入): 同 o0t1b 但 techs_all_rounds → 与 o0t1b 差分分离注入粒度",
+   "techs_all_rounds": true,
+   "p0": {"units": [{"id": 12, "level": 3, "x": 0, "y": -110}]},
+   "p1": {"units": [{"id": 21, "level": 1, "x": 0, "y": 0}], "techs": {"21": [10321]}}
+  },
+  {
+   "name": "o3k4a", "group": "CAP",
+   "desc": "K4 购买路径 control: 狂蝎经 PAD_BuyUnit 部署 (快照单位清空) vs 剑齿虎lv0; 验证购买单位创建路径",
+   "supply": {"0": 9999},
+   "actions": {"0": [{"type": "PAD_BuyUnit", "UID": 19, "LocalTime": 0.3, "position": {"x": 0, "y": -90}}]},
+   "p0": {"units": []},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o3k4b", "group": "CAP",
+   "desc": "K4 购买路径 treatment: PAD_UpgradeTechnology(19,719) 先于 PAD_BuyUnit → 若 dmgMax 翻倍则科技经购买路径生效",
+   "supply": {"0": 9999},
+   "actions": {"0": [
+     {"type": "PAD_UpgradeTechnology", "UID": 19, "TechID": 719, "LocalTime": 0.1},
+     {"type": "PAD_BuyUnit", "UID": 19, "LocalTime": 0.3, "position": {"x": 0, "y": -90}}]},
+   "p0": {"units": [], "techs": {"19": [719]}},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "o3k1b", "group": "CAP",
+   "desc": "K1 购买路径 treatment: PAD_UpgradeTechnology(28,11028)+PAD_BuyUnit(猎犬) → 火场伤害应出现",
+   "supply": {"0": 9999},
+   "actions": {"0": [
+     {"type": "PAD_UpgradeTechnology", "UID": 28, "TechID": 11028, "LocalTime": 0.1},
+     {"type": "PAD_BuyUnit", "UID": 28, "LocalTime": 0.3, "position": {"x": 0, "y": -60}}]},
+   "p0": {"units": [], "techs": {"28": [11028]}},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "d1_27_lv0", "group": "CAL2",
+   "desc": "D1 雷霆 lv0(UI1) vs 维修剑齿虎lv8(10321+13030006): 距离100 (range110)",
+   "p0": {"units": [{"id": 27, "level": 0, "x": 0, "y": -100}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "d1_27_lv8", "group": "CAL2",
+   "desc": "D1 雷霆 lv8(UI9) vs 维修剑齿虎lv8: 距离100",
+   "p0": {"units": [{"id": 27, "level": 8, "x": 0, "y": -100}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "d1_29_lv0", "group": "CAL2",
+   "desc": "D1 深渊 lv0 vs 维修剑齿虎lv8: 距离95 (range100)",
+   "p0": {"units": [{"id": 29, "level": 0, "x": 0, "y": -95}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "d1_29_lv8", "group": "CAL2",
+   "desc": "D1 深渊 lv8 vs 维修剑齿虎lv8: 距离95",
+   "p0": {"units": [{"id": 29, "level": 8, "x": 0, "y": -95}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "d1_17_lv0", "group": "CAL2",
+   "desc": "D1 战争工厂 lv0 vs 维修剑齿虎lv8: 距离95",
+   "p0": {"units": [{"id": 17, "level": 0, "x": 0, "y": -95}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "d1_17_lv8", "group": "CAL2",
+   "desc": "D1 战争工厂 lv8 vs 维修剑齿虎lv8: 距离95",
+   "p0": {"units": [{"id": 17, "level": 8, "x": 0, "y": -95}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "d1_12_lv0", "group": "CAL2",
+   "desc": "D1 暴雨 lv0 vs 维修剑齿虎lv8: 距离175 (minRange70,range180)",
+   "p0": {"units": [{"id": 12, "level": 0, "x": 0, "y": -175}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "d1_12_lv8", "group": "CAL2",
+   "desc": "D1 暴雨 lv8 vs 维修剑齿虎lv8: 距离175",
+   "p0": {"units": [{"id": 12, "level": 8, "x": 0, "y": -175}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "d1_23_lv0", "group": "CAL2",
+   "desc": "D1 沙虫 lv0 vs 维修剑齿虎lv8: 距离55 (range60)",
+   "p0": {"units": [{"id": 23, "level": 0, "x": 0, "y": -55}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "d1_23_lv8", "group": "CAL2",
+   "desc": "D1 沙虫 lv8 vs 维修剑齿虎lv8: 距离55",
+   "p0": {"units": [{"id": 23, "level": 8, "x": 0, "y": -55}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "d1_22_lv0", "group": "CAL2",
+   "desc": "D1 台风 lv0 vs 维修剑齿虎lv8: 距离95",
+   "p0": {"units": [{"id": 22, "level": 0, "x": 0, "y": -95}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "d1_22_lv8", "group": "CAL2",
+   "desc": "D1 台风 lv8 vs 维修剑齿虎lv8: 距离95",
+   "p0": {"units": [{"id": 22, "level": 8, "x": 0, "y": -95}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "d1_1_lv0", "group": "CAL2",
+   "desc": "D1 堡垒 lv0 vs 维修剑齿虎lv8: 距离95",
+   "p0": {"units": [{"id": 1, "level": 0, "x": 0, "y": -95}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "d1_1_lv8", "group": "CAL2",
+   "desc": "D1 堡垒 lv8 vs 维修剑齿虎lv8: 距离95",
+   "p0": {"units": [{"id": 1, "level": 8, "x": 0, "y": -95}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "hk_lv0", "group": "HK",
+   "desc": "骇客 lv0(UI1) vs 维修剑齿虎lv8配方: 120s 转化/击杀拐点扫描基线",
+   "p0": {"units": [{"id": 14, "level": 0, "x": 0, "y": -95}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "hk_lv1", "group": "HK",
+   "desc": "骇客 lv1 vs 维修剑齿虎lv8配方",
+   "p0": {"units": [{"id": 14, "level": 1, "x": 0, "y": -95}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "hk_lv2", "group": "HK",
+   "desc": "骇客 lv2 vs 维修剑齿虎lv8配方",
+   "p0": {"units": [{"id": 14, "level": 2, "x": 0, "y": -95}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "hk_lv3", "group": "HK",
+   "desc": "骇客 lv3 vs 维修剑齿虎lv8配方",
+   "p0": {"units": [{"id": 14, "level": 3, "x": 0, "y": -95}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "hk_lv4", "group": "HK",
+   "desc": "骇客 lv4 vs 维修剑齿虎lv8配方",
+   "p0": {"units": [{"id": 14, "level": 4, "x": 0, "y": -95}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "hk_lv5", "group": "HK",
+   "desc": "骇客 lv5 vs 维修剑齿虎lv8配方",
+   "p0": {"units": [{"id": 14, "level": 5, "x": 0, "y": -95}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "hk_lv6", "group": "HK",
+   "desc": "骇客 lv6 vs 维修剑齿虎lv8配方",
+   "p0": {"units": [{"id": 14, "level": 6, "x": 0, "y": -95}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "hk_lv7", "group": "HK",
+   "desc": "骇客 lv7 vs 维修剑齿虎lv8配方",
+   "p0": {"units": [{"id": 14, "level": 7, "x": 0, "y": -95}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "hk_lv8", "group": "HK",
+   "desc": "骇客 lv8(UI9) vs 维修剑齿虎lv8配方",
+   "p0": {"units": [{"id": 14, "level": 8, "x": 0, "y": -95}]},
+   "p1": {"units": [{"id": 21, "level": 8, "x": 0, "y": 0, "equipment": 13030006}],
+          "techs": {"21": [10321]}, "equipment_pool": [13030006, 13030006]}
+  },
+  {
+   "name": "cc_mt1", "group": "CAL2",
+   "desc": "磁暴目标数梯度 1靶: 磁暴lv5 vs 剑齿虎lv0 (链式跳跃基线)",
+   "p0": {"units": [{"id": 31, "level": 5, "x": 0, "y": -80}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "cc_mt2", "group": "CAL2",
+   "desc": "磁暴目标数梯度 2靶: 两剑齿虎lv0 间隔40 → 链式增益",
+   "p0": {"units": [{"id": 31, "level": 5, "x": 0, "y": -80}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}, {"id": 21, "level": 0, "x": 40, "y": 0}]}
+  },
+  {
+   "name": "cc_mt4", "group": "CAL2",
+   "desc": "磁暴目标数梯度 4靶: 四剑齿虎lv0 间隔40",
+   "p0": {"units": [{"id": 31, "level": 5, "x": 0, "y": -80}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}, {"id": 21, "level": 0, "x": 40, "y": 0},
+                    {"id": 21, "level": 0, "x": 80, "y": 0}, {"id": 21, "level": 0, "x": 120, "y": 0}]}
+  },
+  {
+   "name": "cc_mt8", "group": "CAL2",
+   "desc": "磁暴目标数梯度 8靶: 八剑齿虎lv0 间隔40",
+   "p0": {"units": [{"id": 31, "level": 5, "x": 0, "y": -80}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}, {"id": 21, "level": 0, "x": 40, "y": 0},
+                    {"id": 21, "level": 0, "x": 80, "y": 0}, {"id": 21, "level": 0, "x": 120, "y": 0},
+                    {"id": 21, "level": 0, "x": 160, "y": 0}, {"id": 21, "level": 0, "x": -40, "y": 0},
+                    {"id": 21, "level": 0, "x": -80, "y": 0}, {"id": 21, "level": 0, "x": -120, "y": 0}]}
+  },
+  {
+   "name": "cc_ts1", "group": "CAL2",
+   "desc": "泰山双武器 1靶: 泰山lv8 vs 剑齿虎lv0 (单靶 dmgReal 基线)",
+   "p0": {"units": [{"id": 2002, "level": 8, "x": 0, "y": -90}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": 0, "y": 0}]}
+  },
+  {
+   "name": "cc_ts2", "group": "CAL2",
+   "desc": "泰山双武器 2靶: 泰山lv8 vs 两剑齿虎lv0 (间隔80, 双武器独立目标 → dmgReal 增益)",
+   "p0": {"units": [{"id": 2002, "level": 8, "x": 0, "y": -90}]},
+   "p1": {"units": [{"id": 21, "level": 0, "x": -40, "y": 0}, {"id": 21, "level": 0, "x": 40, "y": 0}]}
+  }
+ ]
+}

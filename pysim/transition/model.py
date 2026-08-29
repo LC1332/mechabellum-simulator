@@ -114,6 +114,13 @@ class PlayerState:
     # round (units that fought last round become movable). Reset by
     # advance_round; old states/saves adapt to ()
     redeployed_this_round: tuple = ()
+    # 爬虫动力学任务书 (2026-08-29) T11: manual UnlockUnit successes THIS
+    # round (one player, one round, limit 1 — rules.unlock_limit_quote is the
+    # single truth source). Auto unlocks (unit experts / unit-grant
+    # reinforcements) NEVER increment this. Reset by advance_round; old
+    # states/saves adapt to 0. Schema bump (v0.7 -> v0.8) is deferred to the
+    # engine freeze per 任务书 §4.3.
+    manual_unlocks_this_round: int = 0
 
 
 @dataclass(frozen=True)

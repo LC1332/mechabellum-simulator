@@ -1,0 +1,63 @@
+{
+ "provenance": "step34",
+ "session_date": "2026-08-29",
+ "task_book": "pysim伤害标定与逐兵种武器修正oracle执行任务书-2026-08-30.md",
+ "engine_untouched": true,
+ "engine_version_note": "ENGINE_VERSION/SCHEMA_VERSION 未 bump (冻结纪律: O14 结项一次性 bump; 本轮无引擎数值修改)",
+
+ "deliverables": {
+  "v2_manifest": "data/crawler_damage_oracle/crawler-damage-oracle-v2/manifest.json",
+  "s30_library": "data/step30_scenarios.json",
+  "s30_records": "data/exp/s30/*.json (46+ oracle 作业, 63 有效记录, 双臂含 pysim)",
+  "diff_table": "data/exp/s30/normalized/diff_table.json",
+  "unlock_census": "data/crawler_damage_oracle/crawler-damage-replay-v1/unlock_census.json",
+  "env_freeze": "RouteC/data/exp/s30/env_freeze.json (机内)",
+  "routec_tools": [
+   "RouteC/tools/step30_env.py  环境 hash 冻结",
+   "RouteC/tools/step30_run.py  craft→oracle→pysim 双臂 runner (run / pysim-refresh)",
+   "RouteC/tools/step30_norm.py oracle/pysim 归一化 + diff (输出 schema 入库)",
+   "RouteC/tools/step30_unlock_census.py → GitHub tools/ (O1 census)",
+   "RouteC/tools/step30_boot.py 游戏启动+注入",
+   "RouteC/tools/step30_view.py 记录视图 (GitHub tools/)"
+  ],
+  "craft_replay_extensions": [
+   "set_units: EquipmentID 透传 (u.equipment, 默认 0 原行为)",
+   "set_officers: officers <int> 列表注入/清空",
+   "set_equipment_pool: equipmentDatas 池注入 (装备生效前提)"
+  ]
+ },
+
+ "evidence_chain": {
+  "Q14_dmgMax_dmgReal": "dump.cs UnitDamageStatisticData(DamageMax@0x18/DamageReal@0x1C/KillCount@0x20, Record(damageMax,damageReal,killCount)); oracle 实测 dmgReal=精确扣血(击杀=血池), dmgMax=原始口径弃用",
+  "Q15_uid": "IDamageRecorder.GetID()=mech id; 部署单位按卡一行, 运行时生成单位按成员一行 (DLL collect_units + u166 19行转化爬虫)",
+  "Q16_determinism": "o0d x3 逐单位一致; seed11 vs seed22 全同 → oracle RNG 来自 grbr randomStateData (craft seed 20220822), job seed 仅标签",
+  "Q17_craft": "manifest craft_capability 节: statmod tech OK / 攻击类 tech 不可 / equipment 双注入 OK / isRotate 对炮塔无效果 / officers OK / buy 动作 sround 不重放 / TestCommand 不可 → 绕行方案均已写",
+  "Q18_conversion": "不可观测 (无转化行/无 team 翻转) → 骇客阈值实验需 O9 逐帧遥测",
+  "level_semantics": "XML Level 0-based, 倍率=表值x(L+1); Level>=9 崩溃 (GetBaseLife NRE); pysim 已对齐",
+  "unlock_U1": "722 多动作回合: 664 恰 1 成功 + 57 零成功 + 1 局双成功 = 增援自动解锁+手动共存 (与冻结规则自洽) → 配额规则 census 无未解释反例",
+  "Q11_timing": "专家 officer 首现→mech 解锁滞后 0-2 回合, 无 >=3 案例 (activeRound=4 若生效应见 >=3) → 即时解锁; corpus 与引擎 gift/reinforce 即时路径一致, activeRound 门仅剩无获取事件持有态"
+ },
+
+ "o4_first_batch_findings": {
+  "winner": "12/14 一致",
+  "high_priority_engine_fixes": [
+   "台风 lv8: pysim 射速 x2 高估 (112464 vs 57024)",
+   "暴雨: pysim 2.4x 低估 (弹道飞行/首开火/周期)",
+   "维修回复: pysim 过强 (深渊 lv8 靶 120s 不灭 vs oracle TTK≈33s)",
+   "pysim 靶 d>=95 未进射程移动 (雷霆/深渊局零反击)",
+   "磁暴链式: pysim 2 目标上限 vs oracle >=4 (cc_mt4)",
+   "战争工厂 lv8: pysim +30%"
+  ],
+  "clean_cases": ["沙虫 lv8 1.5%", "台风 lv0 8.3%", "磁暴 1/2 靶 0.0%", "泰山 1/2 靶 0.0%"]
+ },
+
+ "blocked_on_o9": ["T9 骇客阈值", "D2 朝向矩阵", "D3 换靶代价", "Q1/Q3 接触边界", "Q2 内圈容量", "K1-K5 攻击类科技 A/B (craft 路径不可用, 需 DLL 增强或真实回放对照)"],
+
+ "next_steps": [
+  "O9 逐帧遥测设计评审 → 实现 (解除 5 类阻塞实验)",
+  "R2': 逐兵种修正按固定顺序实现 (静态表→首发→周期→弹道→换靶), 每项独立 flag + oracle A/B",
+  "O6 K1-K5: 先做真实回放 oracle 对照 (绕行), DLL 增强评审后再走 craft 路径",
+  "O13 8 pair 过程量对齐 (v1 对齐表 + oracle 复跑)",
+  "O14: 单项 flag gate → 组合臂 A/B → OFF 臂 bit-exact → bump"
+ ]
+}

@@ -1,0 +1,96 @@
+{
+ "name": "o2k4c",
+ "group": "CAP",
+ "desc": "K4 全回合科技: 狂蝎lv3+719, techs 写入全部回合快照 (对齐真实回放编码); 对照 o2k4a 差分 → dmgMax 应翻倍",
+ "seed": 11,
+ "repeat_idx": 0,
+ "sround": 7,
+ "p0": {
+  "units": [
+   {
+    "id": 19,
+    "level": 3,
+    "x": 0,
+    "y": -90,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "19": [
+    719
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 21,
+    "level": 0,
+    "x": 0,
+    "y": 0,
+    "index": 100
+   }
+  ]
+ },
+ "towers": null,
+ "constructions": null,
+ "use_construction": null,
+ "oracle": {
+  "job": "s30_o2k4c_11",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   250,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 19,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 42600,
+    "dmgReal": 14886,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6881,
+    "dmgReal": 6881,
+    "kills": 0
+   }
+  ]
+ },
+ "cost_s": 0.5,
+ "ts": "08-29 11:18:00",
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   1,
+   0
+  ],
+  "end_t": 1.6,
+  "dmg": {
+   "0:19": 14886.0,
+   "1:21": 6881.0
+  },
+  "kills": {
+   "0:19": 1
+  }
+ }
+}

@@ -1,0 +1,107 @@
+{
+ "name": "cc_mt2",
+ "group": "CAL2",
+ "desc": "磁暴目标数梯度 2靶: 两剑齿虎lv0 间隔40 → 链式增益",
+ "seed": 11,
+ "repeat_idx": 0,
+ "sround": 7,
+ "p0": {
+  "units": [
+   {
+    "id": 31,
+    "level": 5,
+    "x": 0,
+    "y": -80,
+    "index": 0
+   }
+  ]
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 21,
+    "level": 0,
+    "x": 0,
+    "y": 0,
+    "index": 100
+   },
+   {
+    "id": 21,
+    "level": 0,
+    "x": 40,
+    "y": 0,
+    "index": 101
+   }
+  ]
+ },
+ "towers": null,
+ "constructions": null,
+ "use_construction": null,
+ "oracle": {
+  "job": "s30_cc_mt2_11",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   100,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 31,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 31416,
+    "dmgReal": 29772,
+    "kills": 2
+   },
+   {
+    "team": 1,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6881,
+    "dmgReal": 6881,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 6881,
+    "dmgReal": 6881,
+    "kills": 0
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   1,
+   0
+  ],
+  "end_t": 5.1,
+  "dmg": {
+   "0:31": 29772.0,
+   "1:21": 13762.0
+  },
+  "kills": {
+   "0:31": 2
+  }
+ },
+ "cost_s": 0.5,
+ "ts": "08-29 11:41:04"
+}

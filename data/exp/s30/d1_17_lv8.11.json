@@ -1,0 +1,101 @@
+{
+ "name": "d1_17_lv8",
+ "group": "CAL2",
+ "desc": "D1 战争工厂 lv8 vs 维修剑齿虎lv8: 距离95",
+ "seed": 11,
+ "repeat_idx": 0,
+ "sround": 7,
+ "p0": {
+  "units": [
+   {
+    "id": 17,
+    "level": 8,
+    "x": 0,
+    "y": -95,
+    "index": 0
+   }
+  ]
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 21,
+    "level": 8,
+    "x": 0,
+    "y": 0,
+    "equipment": 13030006,
+    "index": 100
+   }
+  ],
+  "techs": {
+   "21": [
+    10321
+   ]
+  },
+  "equipment_pool": [
+   13030006,
+   13030006
+  ]
+ },
+ "towers": null,
+ "constructions": null,
+ "use_construction": null,
+ "oracle": {
+  "job": "s30_d1_17_lv8_11",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 0,
+  "reportCount": 2,
+  "score": [
+   500,
+   0
+  ],
+  "alive": [
+   1,
+   0
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 17,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 473760,
+    "dmgReal": 442647,
+    "kills": 1
+   },
+   {
+    "team": 1,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 123858,
+    "dmgReal": 123858,
+    "kills": 0
+   }
+  ]
+ },
+ "pysim": {
+  "winner": 0,
+  "alive": [
+   1,
+   0
+  ],
+  "end_t": 8.5,
+  "dmg": {
+   "0:17": 576686.1,
+   "1:21": 123858.0
+  },
+  "kills": {
+   "0:17": 1
+  }
+ },
+ "cost_s": 0.5,
+ "ts": "08-29 11:34:45"
+}

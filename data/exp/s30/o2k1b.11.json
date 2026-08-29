@@ -1,0 +1,96 @@
+{
+ "name": "o2k1b",
+ "group": "CAP",
+ "desc": "K1 猎犬燃烧弹 11028 treatment: 同 o2k1a + tech 11028 (extra skill 28002, fireLifeTime 10s)",
+ "seed": 11,
+ "repeat_idx": 0,
+ "sround": 7,
+ "p0": {
+  "units": [
+   {
+    "id": 28,
+    "level": 3,
+    "x": 0,
+    "y": -60,
+    "index": 0
+   }
+  ],
+  "techs": {
+   "28": [
+    11028
+   ]
+  }
+ },
+ "p1": {
+  "units": [
+   {
+    "id": 21,
+    "level": 0,
+    "x": 0,
+    "y": 0,
+    "index": 100
+   }
+  ]
+ },
+ "towers": null,
+ "constructions": null,
+ "use_construction": null,
+ "oracle": {
+  "job": "s30_o2k1b_11",
+  "seed": 11,
+  "ok": 1,
+  "err": "",
+  "winner": 1,
+  "reportCount": 2,
+  "score": [
+   0,
+   200
+  ],
+  "alive": [
+   0,
+   1
+  ],
+  "deadScore": [
+   0,
+   0
+  ],
+  "bsmEnabled": 1,
+  "units": [
+   {
+    "team": 0,
+    "uid": 28,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 11808,
+    "dmgReal": 11808,
+    "kills": 0
+   },
+   {
+    "team": 1,
+    "uid": 21,
+    "rectype": 0,
+    "mechid": 0,
+    "dmgMax": 34405,
+    "dmgReal": 17580,
+    "kills": 5
+   }
+  ]
+ },
+ "cost_s": 0.5,
+ "ts": "08-29 11:08:29",
+ "pysim": {
+  "winner": 1,
+  "alive": [
+   0,
+   1
+  ],
+  "end_t": 6.2,
+  "dmg": {
+   "0:28": 8856.0,
+   "1:21": 17580.0
+  },
+  "kills": {
+   "1:21": 5
+  }
+ }
+}
